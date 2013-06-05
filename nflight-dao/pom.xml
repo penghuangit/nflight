@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>nflight</artifactId>
+		<groupId>com.abreqadhabra.nflight</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<!--<groupId>com.abreqadhabra.nflight</groupId> -->
+	<artifactId>nflight-dao</artifactId>
+	<dependencies>
+		<dependency>
+			<groupId>com.abreqadhabra.nflight</groupId>
+			<artifactId>nflight-commons</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derbyclient</artifactId>
+			<version>10.10.1.1</version>
+			<type>jar</type>
+		</dependency>
+	<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+	</dependencies>
+
+	<!-- <encodingtype>utf-8</encodingtype> <jdkversion>1.7</jdkversion> -->
+
+	<build>
+		<directory>target/${project.artifactId}/${project.version}</directory>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<!-- Copy this project's dependencies to the dependency directory -->
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>install</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>target/${project.artifactId}/${project.version}/dependencies</outputDirectory>
+							<includeScope>compile</includeScope>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
