@@ -46,6 +46,11 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.4.1</version>
+			</plugin>
 		</plugins>
 	</build>
 	<reporting />
@@ -72,7 +77,11 @@
 	</issueManagement>
 	<ciManagement />
 	<mailingLists />
-	<scm />
+	<scm >
+		<connection>scm:git:git@github.com:abreqadhabra/nflight.git</connection>
+		<developerConnection>scm:git:git@github.com:abreqadhabra/nflight.git</developerConnection>
+		<url>scm:git:git@github.com:abreqadhabra/nflight.git</url>
+	</scm>
 	<prerequisites />
 	<repositories>
 		<repository>
