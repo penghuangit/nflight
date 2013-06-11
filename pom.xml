@@ -79,8 +79,8 @@
 	<scm>
 		<connection>scm:git:git@github.com:abreqadhabra/nflight.git</connection>
 		<developerConnection>scm:git:git@github.com:abreqadhabra/nflight.git</developerConnection>
-		<url>scm:git:git@github.com:abreqadhabra/nflight.git</url>
-	  <tag>nflight-0.0.1</tag>
+		<url>https://github.com/abreqadhabra/nflight</url>	  
+    <tag>nflight-0.0.1</tag>
   </scm>
 	<prerequisites />
 	<repositories>
