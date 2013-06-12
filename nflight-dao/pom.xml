@@ -29,6 +29,7 @@
 		</dependency>
 	</dependencies>
 
+	<!-- <encodingtype>utf-8</encodingtype> <jdkversion>1.7</jdkversion> -->
 
 	<build>
 		<directory>target/${project.artifactId}/${project.version}</directory>
