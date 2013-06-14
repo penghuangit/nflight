@@ -14,6 +14,7 @@ public class CustomLogger extends Logger {
 		super(name, resourceBundleName);
 	}
 
+
 	@SuppressWarnings("rawtypes")
 	public static Logger getLogger(Class clazz, String configurationPath,
 			String fileType) throws Exception {

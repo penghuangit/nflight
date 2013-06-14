@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -16,28 +17,29 @@ import com.abreqadhabra.nflight.commons.util.PropertyFileUtil;
 
 public abstract class GenericDAO {
 
-	protected String databaseType;
-	protected Properties dbProperties;
-	protected Connection connection;
-	private Driver jdbcDriverInstance;
+	private String databaseType;
+	private Properties dbProperties;
+	private Connection connection;
 
 	private static final String DB_PROPERTY_FILE_NAME = "com/abreqadhabra/nflight/app/dao/resources/config/db.properties";
 	private static final String JDBC_DRIVER = ".jdbc.driver";
 	private static final String JDBC_URL = ".jdbc.url";
 	private static final String JDBC_USER = ".jdbc.user";
 	private static final String JDBC_PASSWORD = ".jdbc.password";
-	
+
 	/**
 	 * Finder methods will pass this value to the JDBC setMaxRows method
 	 */
-	protected int maxRows;
+	private int maxRows;
 
 	protected GenericDAO(String databaseType) throws DAORuntimeException {
 		this.databaseType = databaseType;
 		this.dbProperties = PropertyFileUtil
-				.readTraditionalPropertyFile(GenericDAO.class.getProtectionDomain()
-						.getCodeSource().getLocation().getFile() + DB_PROPERTY_FILE_NAME);
-		this.connection = getConnection();
+				.readTraditionalPropertyFile(GenericDAO.class
+						.getProtectionDomain().getCodeSource().getLocation()
+						.getFile()
+						+ DB_PROPERTY_FILE_NAME);
+		this.connection = this.getConnection();
 	}
 
 	protected synchronized Connection getConnection() {
@@ -49,7 +51,7 @@ public abstract class GenericDAO {
 
 		try {
 			Class<?> jdbcDriverClass = Class.forName(jdbcDriver);
-			jdbcDriverInstance = (Driver) jdbcDriverClass.newInstance();
+			Driver jdbcDriverInstance = (Driver) jdbcDriverClass.newInstance();
 			DriverManager.registerDriver(jdbcDriverInstance);
 		} catch (Exception e) {
 			System.out.println("Failed to initialise JDBC driver");
@@ -77,7 +79,6 @@ public abstract class GenericDAO {
 
 	protected void executeUpdateByDynamicQuery(String sql, String[] sqlParams) {
 		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setMaxRows(maxRows);
@@ -86,12 +87,13 @@ public abstract class GenericDAO {
 				preparedStatement.setObject(i + 1, sqlParams[i]);
 			}
 
-			int rows = preparedStatement.executeUpdate();
+			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} /*
-		 * finally { closeAll(connection, preparedStatement, resultSet); }
-		 */
+		} finally {
+			closeAll(connection, preparedStatement);
+		}
+
 	}
 
 	/**
@@ -212,11 +214,11 @@ public abstract class GenericDAO {
 		}
 	}
 
-	protected static void closeAll(Connection connection,
-			PreparedStatement statement, ResultSet resultSet) {
-		if (resultSet != null) {
+	protected static void closeAll(Connection connection, Statement statement,
+			ResultSet resultSet) {
+		if (connection != null) {
 			try {
-				resultSet.close();
+				connection.close();
 			} catch (Exception exception) {
 			}
 		}
@@ -226,13 +228,31 @@ public abstract class GenericDAO {
 			} catch (Exception exception) {
 			}
 		}
+		if (resultSet != null) {
+			try {
+				resultSet.close();
+			} catch (Exception exception) {
+			}
+		}
+
+		return;
+	}
+
+	private void closeAll(Connection connection, Statement statement) {
+
 		if (connection != null) {
 			try {
 				connection.close();
 			} catch (Exception exception) {
 			}
 		}
-		return;
+		if (statement != null) {
+			try {
+				statement.close();
+			} catch (Exception exception) {
+			}
+		}
+
 	}
 
 }

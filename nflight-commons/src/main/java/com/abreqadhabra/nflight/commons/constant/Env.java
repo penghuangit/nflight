@@ -7,7 +7,4 @@ public class Env {
 				.getCodeSource().getLocation().getFile();
 	}
 
-
-
-
 }

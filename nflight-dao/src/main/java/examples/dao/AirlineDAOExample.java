@@ -17,7 +17,7 @@ import com.abreqadhabra.nflight.app.dao.exception.DAORuntimeException;
 
 public class AirlineDAOExample {
 
-    AirlineDAO airlineDAO = null;
+    private AirlineDAO airlineDAO = null;
 
 
     public AirlineDAOExample (){
