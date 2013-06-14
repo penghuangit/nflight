@@ -1,0 +1,14 @@
+com.abreqadhabra.nflight.app.dao
+com.abreqadhabra.nflight.app.dao.dto
+com.abreqadhabra.nflight.app.dao.exception
+com.abreqadhabra.nflight.app.dao.util
+com.abreqadhabra.nflight.commons.constant
+com.abreqadhabra.nflight.commons.exception
+com.abreqadhabra.nflight.commons.i18n
+com.abreqadhabra.nflight.commons.logging
+com.abreqadhabra.nflight.commons.util
+examples.dao
+examples.exception
+examples.i18n
+examples.jdbc
+examples.logging
