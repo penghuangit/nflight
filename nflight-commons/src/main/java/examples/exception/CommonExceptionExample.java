@@ -60,6 +60,7 @@ public class CommonExceptionExample {
 	try {
 	    test.level1();
 	} catch (Exception e) {
+	    System.out.println(e.getClass().getCanonicalName());
 	    e.printStackTrace();
 	}
     }
