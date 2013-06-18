@@ -17,6 +17,19 @@ import com.abreqadhabra.nflight.app.dao.exception.DAORuntimeException;
 
 public class AirlineDAOExample {
 
+	
+	String componentName = AirlineDAOExample.class.getSimpleName();
+
+	//Logger logger = CustomLogger.getLogger(AirlineDAOExample.class);
+	
+	
+	String resourceBundleName = "com.abreqadhabra.nflight.commons.resources.logging.LoggingMessages";
+
+	
+/*	
+	String resourceBundleName = "com.ibm.websphere.componentX.Messages";
+	Logger logger = Logger.getLogger(componentName, resourceBundleName);*/
+	
     private AirlineDAO airlineDAO = null;
 
 
@@ -26,6 +39,12 @@ public class AirlineDAOExample {
 	} catch (DAORuntimeException e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
+/*	    
+	    if (logger.isLoggable(Level.FINEST)) {
+ 	String s = dumpComponentState();	// some expensive to compute method
+ 	logger.logp(Level.FINEST, className, methodName, "componentX statedump:\n{0}", s);
+ }
+	    */
 	}
 	    
     }
@@ -33,9 +52,10 @@ public class AirlineDAOExample {
     public static void main(String[] arg) {
 
 	AirlineDAOExample airlineDAOExample = new AirlineDAOExample();
+	System.out.println("-> "+airlineDAOExample.componentName);
+
 	airlineDAOExample.excute();
 
-	
     }
 
     private void excute() {

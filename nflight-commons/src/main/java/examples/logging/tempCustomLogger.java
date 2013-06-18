@@ -8,13 +8,61 @@ import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-public class CustomLogger extends Logger {
+import com.abreqadhabra.nflight.commons.logging.LoggingHelper;
 
-	protected CustomLogger(String name, String resourceBundleName) {
+public class tempCustomLogger extends Logger {
+
+	
+	private static String resourceBundleName ="com.abreqadhabra.nflight.commons.resources.logging.LoggingMessages";
+	
+	public static Logger getLogger(Class<?> clazz) {
+		String componentName = clazz.getPackage().getName();
+		Logger logger = Logger.getLogger(componentName, resourceBundleName);
+
+		return logger;
+	}
+	
+	
+		protected tempCustomLogger(String name, String resourceBundleName) {
 		super(name, resourceBundleName);
 	}
 
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@SuppressWarnings("rawtypes")
 	public static Logger getLogger(Class clazz, String configurationPath,
 			String fileType) throws Exception {
@@ -79,7 +127,7 @@ public class CustomLogger extends Logger {
 		try {
 
 			Logger logger = Logger
-					.getLogger(CustomLogger.class.getSimpleName(),
+					.getLogger(LoggingHelper.class.getSimpleName(),
 							"com.abreqadhabra.nflight.commons.resources.logging.LoggingMessages");
 
 			LogRecord logRecord = new LogRecord(Level.SEVERE, "MSG_KEY_01");

@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<comment>logging.xml</comment>
-<entry key=".level">SEVERE</entry>
-<entry key="java.util.logging.FileHandler.limit">0</entry>
-<entry key="loggingdemo.level">ALL</entry>
+<comment>CustomLogger.xml</comment>
+<entry key=".level">INFO</entry>
+<entry key="java.util.logging.FileHandler.limit">50000</entry>
 <entry key="java.util.logging.ConsoleHandler.formatter">java.util.logging.SimpleFormatter</entry>
-<entry key="handlers">java.util.logging.FileHandler, java.util.logging.ConsoleHandler</entry>
+<entry key="handlers">java.util.logging.ConsoleHandler</entry>
 <entry key="java.util.logging.FileHandler.count">1</entry>
-<entry key="java.util.logging.FileHandler.formatter">java.util.logging.SimpleFormatter</entry>
-<entry key="java.util.logging.ConsoleHandler.level">ALL</entry>
-<entry key="java.util.logging.FileHandler.pattern">system.log</entry>
-<entry key="java.util.logging.FileHandler.level">ALL</entry>
-<entry key="java.util.logging.FileHandler.append">true</entry>
+<entry key="com.xyz.foo.level">SEVERE</entry>
+<entry key="java.util.logging.FileHandler.formatter">java.util.logging.XMLFormatter</entry>
+<entry key="java.util.logging.ConsoleHandler.level">INFO</entry>
+<entry key="java.util.logging.FileHandler.pattern">%h/java%u.log</entry>
 </properties>
