@@ -1,8 +1,8 @@
 package com.abreqadhabra.nflight.examples.common.exception;
 
-import com.abreqadhabra.nflight.common.exception.NestedRuntimeException;
+import com.abreqadhabra.nflight.common.exception.CommonRuntimeException;
 
-public class NestedRuntimeExceptionExample {
+public class CommonRuntimeExceptionExample {
     public static void main(String[] args) {
 	try {
 	    a(null);
@@ -15,7 +15,7 @@ public class NestedRuntimeExceptionExample {
 	try {
 	    b(strArg);
 	} catch (Exception e) {
-	    throw new NestedRuntimeException("foo", e);
+	    throw new CommonRuntimeException("foo", e);
 	}
     }
 
@@ -23,7 +23,7 @@ public class NestedRuntimeExceptionExample {
 	try {
 	    c(strArg);
 	} catch (Exception e) {
-	    throw new NestedRuntimeException("bar", e);
+	    throw new CommonRuntimeException("bar", e);
 	}
     }
 
@@ -31,7 +31,7 @@ public class NestedRuntimeExceptionExample {
 	// 파라미터가 null인 경우
 	if (strArg == null) {
 	    // 예외를 던집니다.
-	    throw new NestedRuntimeException("strArg 파라미터는 null 값을 허용하지 않습니다.");
+	    throw new CommonRuntimeException("strArg 파라미터는 null 값을 허용하지 않습니다.");
 	}
 
     }

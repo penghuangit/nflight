@@ -8,7 +8,7 @@ import com.abreqadhabra.nf.common.exception.NestedError;
 import com.abreqadhabra.nf.common.exception.NestedRuntimeException;
 import com.abreqadhabra.nf.common.exception.SystemException;
 import com.abreqadhabra.nf.common.exception.SystemLogicException;
-import com.abreqadhabra.nf.commons.logging.LoggingHelper;
+import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 
 

@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 
 /**
  * <p>
- * [개 요] 중첩된 예외 처리를 지원하는 시스템 공통 예외 클래스
+ * [개 요] 중첩된 예외 처리를 지원하는 시스템 공통 런타임 예외 클래스
  * </p>
  * <p>
  * [상 세] printStackTrace()메서드에서 자식 예외의 예외 정보를 재귀적으로 출력합니다.
@@ -24,12 +24,12 @@ import java.io.PrintWriter;
  * @since STEP1
  */
 
-public class NestedException extends RuntimeException {
+public class CommonRuntimeException extends RuntimeException {
 
     /**
-     * serialVersionUID 상수
+     * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정
      */
-    private static final long serialVersionUID = -3209880070089874910L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 자식 예외
@@ -37,29 +37,8 @@ public class NestedException extends RuntimeException {
     private Throwable childException = null;
 
     /**
-     * 에러ID
-     * 
-     * @since STEP1
-     */
-    private String errorId;
-
-    /**
-     * 메시지ID
-     * 
-     * @since STEP1
-     */
-    private String messageId;
-
-    /**
-     * 상세메시지
-     * 
-     * @since STEP1
-     */
-    private String detailMessage;
-
-    /**
      * <p>
-     * [개 요] 설정된 상세 메시지를 가진 객체를 생성합니다.
+     * [개 요] 지정된 상세 메시지를 가진 객체를 생성합니다.
      * </p>
      * <p>
      * [상 세]
@@ -72,14 +51,14 @@ public class NestedException extends RuntimeException {
      *            상세 메시지
      * @since STEP1
      */
-    public NestedException(String message) {
+    public CommonRuntimeException(String message) {
 	// 슈퍼 클래스의 동일 인수를 가진 생성자를 호출합니다.
 	super(message);
     }
 
     /**
      * <p>
-     * [개 요] 설정된 상세 메시지와 자식 예외를 가진 객체를 생성합니다.
+     * [개 요] 지정된 상세 메시지와 자식 예외를 가진 객체를 생성합니다.
      * </p>
      * <p>
      * [상 세]
@@ -94,7 +73,7 @@ public class NestedException extends RuntimeException {
      *            자식 예외
      * @since STEP1
      */
-    public NestedException(String message, Throwable childException) {
+    public CommonRuntimeException(String message, Throwable childException) {
 	// 부모 클래스의 동일 인수를 가진 생성자를 호출합니다.
 	super(message);
 
@@ -123,117 +102,6 @@ public class NestedException extends RuntimeException {
 
     /**
      * <p>
-     * [개 요] 에러 ID를 가져옵니다.
-     * </p>
-     * <p>
-     * [상 세]
-     * </p>
-     * <p>
-     * [비 고]
-     * </p>
-     * 
-     * @return 에러 ID
-     * @since STEP1
-     */
-    public String getErrorId() {
-	return errorId;
-    }
-
-    /**
-     * <p>
-     * [개 요] 에러 ID를 설정합니다.
-     * </p>
-     * <p>
-     * [상 세]
-     * </p>
-     * <p>
-     * [비 고]
-     * </p>
-     * 
-     * @param errorId
-     *            에러 ID
-     * @since STEP1
-     */
-    public void setErrorId(String errorId) {
-	this.errorId = errorId;
-    }
-
-    /**
-     * <p>
-     * [개 요] 메시지 ID를 가져옵니다.
-     * </p>
-     * <p>
-     * [상 세]
-     * </p>
-     * <p>
-     * [비 고]
-     * </p>
-     * 
-     * @return 메시지 ID
-     * @since STEP1
-     */
-    public String getMessageId() {
-	return messageId;
-    }
-
-    /**
-     * <p>
-     * [개 요] 메시지 ID를 설정합니다.
-     * </p>
-     * <p>
-     * [상 세]
-     * </p>
-     * <p>
-     * [비 고]
-     * </p>
-     * 
-     * @param messageId
-     *            메시지 ID
-     * @since STEP1
-     */
-    public void setMessageId(String messageId) {
-	this.messageId = messageId;
-    }
-
-    /**
-     * <p>
-     * [개 요] 상세 메시지를 가져옵니다.
-     * </p>
-     * <p>
-     * [상 세]
-     * </p>
-     * <p>
-     * [비 고]
-     * </p>
-     * 
-     * @return 상세 메시지
-     * @since STEP1
-     */
-    public String getDetailMessage() {
-	return detailMessage;
-    }
-
-    /**
-     * <p>
-     * [개 요] 상세 메시지를 설정합니다.
-     * </p>
-     * <p>
-     * [상 세]
-     * </p>
-     * <p>
-     * [비 고]
-     * </p>
-     * 
-     * @param detailMessage
-     *            상세 메시지
-     * @since STEP1
-     */
-    public void setDetailMessage(String detailMessage) {
-	this.detailMessage = detailMessage;
-    }
-
-    /**
-     * <p>
      * [개 요] Throwable의 추적값(Stack Trace)을 표준 에러 스트림에 출력합니다.
      * </p>
      * <p>
@@ -252,7 +120,7 @@ public class NestedException extends RuntimeException {
 
     /**
      * <p>
-     * [개 요] Throwable의 추적값(Stack Trace)을 설정된 PrintStream에 출력합니다.
+     * [개 요] Throwable의 추적값(Stack Trace)을 지정된 PrintStream에 출력합니다.
      * </p>
      * <p>
      * [상 세]
@@ -286,7 +154,7 @@ public class NestedException extends RuntimeException {
 
     /**
      * <p>
-     * [개 요] Throwable의 추적값(Stack Trace)을 설정된 PrintWriter 출력합니다.
+     * [개 요] Throwable의 추적값(Stack Trace)을 지정된 PrintWriter 출력합니다.
      * </p>
      * <p>
      * [상 세]

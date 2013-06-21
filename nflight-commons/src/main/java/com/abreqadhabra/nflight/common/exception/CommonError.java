@@ -5,13 +5,13 @@ import java.io.PrintWriter;
 
 /**
  * <p>
- * [개 요] 중첩된 예외 처리를 지원하는 시스템 공통 런타임 예외 클래스
+ * [개 요] 중첩된 예외 처리를 지원하는 시스템 공통 오류 클래스
  * </p>
  * <p>
  * [상 세] printStackTrace()메서드에서 자식 예외의 예외 정보를 재귀적으로 출력합니다.
  * </p>
  * <p>
- * [비 고] RunTimeException을 상속받고 있기 때문에 반드시 try ~ catch를 추가할 필요는 없습니다.
+ * [비 고] 오류이므로 catch하지 않습니다.
  * </p>
  * <p>
  * [환 경] Java SDK 1.7_21
@@ -24,13 +24,13 @@ import java.io.PrintWriter;
  * @since STEP1
  */
 
-public class NestedRuntimeException extends RuntimeException {
+public class CommonError extends Error {
 
     /**
-     * serialVersionUID 상수
+     * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정
      */
-    private static final long serialVersionUID = -6965593075432839481L;
-
+    private static final long serialVersionUID = 1L;
+    
     /**
      * 자식 예외
      */
@@ -51,7 +51,7 @@ public class NestedRuntimeException extends RuntimeException {
      *            상세 메시지
      * @since STEP1
      */
-    public NestedRuntimeException(String message) {
+    public CommonError(String message) {
 	// 슈퍼 클래스의 동일 인수를 가진 생성자를 호출합니다.
 	super(message);
     }
@@ -73,7 +73,7 @@ public class NestedRuntimeException extends RuntimeException {
      *            자식 예외
      * @since STEP1
      */
-    public NestedRuntimeException(String message, Throwable childException) {
+    public CommonError(String message, Throwable childException) {
 	// 부모 클래스의 동일 인수를 가진 생성자를 호출합니다.
 	super(message);
 
