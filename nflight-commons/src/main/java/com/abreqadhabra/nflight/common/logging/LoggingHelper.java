@@ -1,4 +1,4 @@
-package com.abreqadhabra.nf.commons.logging;
+package com.abreqadhabra.nflight.common.logging;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class LoggingHelper extends Logger {
 
-    private static final Class THIS_CLASS = LoggingHelper.class;
+    private static final Class<LoggingHelper> THIS_CLASS = LoggingHelper.class;
 
     private static final String LOGGING_RESOURCE_BUNDLE_NAME = "com.abreqadhabra.nflight.commons.resources.logging.LoggingMessages";
     private static final String LOGGING_CONFIG_FILE = "/com/abreqadhabra/nflight/commons/resources/config/CustomLogger.xml";

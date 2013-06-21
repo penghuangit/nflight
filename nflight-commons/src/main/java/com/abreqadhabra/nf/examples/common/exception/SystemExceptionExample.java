@@ -10,6 +10,8 @@ import com.abreqadhabra.nf.common.exception.SystemException;
 import com.abreqadhabra.nf.common.exception.SystemLogicException;
 import com.abreqadhabra.nf.commons.logging.LoggingHelper;
 
+
+
 public class SystemExceptionExample {
 
     private static final Logger LOGGER = LoggingHelper
@@ -19,16 +21,15 @@ public class SystemExceptionExample {
 	SystemExceptionExample example = new SystemExceptionExample();
 
 	try {
-	     example.excute1(4);
+	     example.excute1(3);
 	    // example.excute1(1);
 	    example.excute1(2);
 	    example.excute1(3);
 
 	} catch (Exception e) {
 	     
-	  e.printStackTrace();
 	  
-	  System.out.println("\n\n\n");
+	  LOGGER.info(e.toString());
 	  
 
 	    if (e instanceof SystemLogicException) {
@@ -49,13 +50,7 @@ public class SystemExceptionExample {
 
     }
 
-    
-    
-    
-    
-    
-    
-    
+
     
     private void excute1(int type) throws SystemException {
 	try {

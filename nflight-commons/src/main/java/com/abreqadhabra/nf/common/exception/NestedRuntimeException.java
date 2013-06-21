@@ -6,136 +6,130 @@ import java.io.PrintWriter;
 
 
 /**
- * <p>[概要] 子例外を持つ実行時例外。</p>
- * <p>[詳細] printStackTrace()メソッドで子例外の例外情報も再帰的に出力します。</p>
- * <p>[備考] RunTimeExceptionを継承しているので、必ずしもtry～catchで補足する必要はありません。</p>
- * <p>[環境] Java2SDK 1.4.2_06</p>
- * <p>Copyright(c) NTT COMWARE 2004</p>
- * <p>$Revision: 1.1 $</p>
- * @author USE imatomi
+ * <p>[개 요] 중첩된 예외 처리를 지원하는 시스템 공통 런타임 예외 클래스</p>
+ * <p>[상 세] printStackTrace()메서드에서 중첩 예외의 예외 정보를 재귀적으로 출력합니다.</p>
+ * <p>[비 고] RunTimeException을 상속받고 있기 때문에 반드시 try ~ catch를 추가할 필요는 없습니다.</p>
+ * <p>[환 경] Java SDK 1.7_21</p>
+ * <p>Copyright(c) Kim, Dong-Sup 2013</p>
+ * @author dongsup.kim@gmail.com
  * @since STEP1
  */
+
 public class NestedRuntimeException extends RuntimeException {
     
-    /** 
-     * 履歴情報格納変数です。
+
+    /**
+     * serialVersionUID 상수
      */
-    private static final String rcsid = "$Id: NestedRuntimeException.java,v 1.1 2005/10/18 02:52:23 koshida Exp $";
+    private static final long serialVersionUID = -6965593075432839481L;
     
     /**
-     * 子例外。
+     * 중첩 예외
      */
-    private Throwable _childException = null;
-    
+    private Throwable nestedException = null;    
     
     /**
-     * <p>[概 要] 指定された詳細メッセージを持つ Exception を構築します。</p>
-     * <p>[詳 細] </p>
-     * <p>[備 考] </p>
-     * @param strArg 詳細メッセージ
+     * <p>[개 요] 지정된 상세 메시지를 가진 객체를 생성합니다.</p>
+     * <p>[상 세] </p>
+     * <p>[비 고] </p>
+     * @param message 상세 메시지
      * @since STEP1
      */
-    public NestedRuntimeException(String strArg) {
-        // 基底クラスの引数付きコンストラクタをそのまま呼び出す
-        super(strArg);
+    public NestedRuntimeException(String message) {
+        // 슈퍼 클래스의 동일 인수를 가진 생성자를 호출합니다.
+        super(message);
     }
     
     /**
-     * <p>[概 要] 指定された詳細メッセージと子例外を持つ Exception を構築します。</p>
-     * <p>[詳 細] </p>
-     * <p>[備 考] </p>
-     * @param strArg 詳細メッセージ
-     * @param childExceptionArg 子例外
+     * <p>[개 요] 지정된 상세 메시지와 중첩 예외를 가진 객체를 생성합니다.</p>
+     * <p>[상 세] </p>
+     * <p>[비 고] </p>
+     * @param message 상세 메시지
+     * @param nestedException 중첩 예외
      * @since STEP1
      */
-    public NestedRuntimeException(String strArg, Throwable childExceptionArg) {
-        // 基底クラスの引数付きコンストラクタの呼び出し
-        super(strArg);
+    public NestedRuntimeException(String message, Throwable nestedException) {
+	// 부모  클래스의 동일 인수를 가진 생성자를 호출합니다.
+	super(message);
         
-        // 子例外
-        this._childException = childExceptionArg;
+        // 중첩 예외
+        this.nestedException = nestedException;
     }
     
     /**
-     * <p>[概 要] 子例外を取得します。</p>
-     * <p>[詳 細] </p>
-     * <p>[備 考] </p>
-     * @return 子例外
+     * <p>[개 요] 중첩 예외를 가져옵니다.</p>
+     * <p>[상 세] </p>
+     * <p>[비 고] </p>
+     * @return 중첩 예외
      * @since STEP1
      */
     public Throwable getChildException() {
-        // フィールドの値をそのまま返す
-        return this._childException;
+        // 필드의 값을 그대로 반환
+        return this.nestedException;
     }
     
     /**
-     * <p>[概 要] Throwable とそのバックトレースを標準エラーストリームに出力します。</p>
-     * <p>[詳 細] </p>
-     * <p>[備 考] </p>
+     * <p>[개 요] Throwable의 추적값(Stack Trace)을 표준 에러 스트림에 출력합니다.</p>
+     * <p>[상 세] </p>
+     * <p>[비 고] </p>
      * @since STEP1
      */
     public void printStackTrace() {
-        // 標準エラーストリームを引数に渡して、実際に処理を行うメソッドを呼び出す
+        // 표준 오류 스트림을 인수에 전달하여 실제로 처리 할 메서드를 호출
         printStackTrace(System.err);
     }
     
     /**
-     * <p>[概 要] Throwable とそのバックトレースを指定された印刷ストリームに出力します。</p>
-     * <p>[詳 細] </p>
-     * <p>[備 考] </p>
-     * @param streamArg 出力に使用するPrintStream
+     * <p>[개 요] Throwable의 추적값(Stack Trace)을 지정된 PrintStream에 출력합니다.</p>
+     * <p>[상 세] </p>
+     * <p>[비 고] </p>
+     * @param printStream 출력에 사용할 PrintStream
      * @since STEP1
      */
-    public void printStackTrace(PrintStream streamArg) {
-        // 子例外が存在しない場合
-        if (getChildException() == null) {
-            // 基底クラスのメソッドをそのまま呼び出す
-            super.printStackTrace(streamArg);
-            
-        // 子例外が存在する場合
-        } else {
-            // 自分自身の文字列表現を出力
-            streamArg.println(this.toString());
+    public void printStackTrace(PrintStream printStream) {
+	// 중첩 예외가 존재하지 않는 경우
+	if (getChildException() == null) {
+	    // 부모 클래스의 메서드를 그대로 호출
+	    super.printStackTrace(printStream);
 
-            // 入れ子の例外の始まりの目印を出力
-            streamArg.println("  nested exception is:");
+	    // 중첩 예외가 존재하는 경우
+	} else {
+	    // 자신의 toString 메서드 문자열을 출력
+	    printStream.println(this.toString());
 
-            // 子例外のprintStackTrace()を呼び出す
-            getChildException().printStackTrace(streamArg);
-        }
+	    // 중첩된 예외의 시작 메시지를 출력
+	    printStream.println("  nested exception is:");
+
+	    // 중첩 예외의 printStackTrace()를 호출
+	    getChildException().printStackTrace(printStream);
+	}
     }
     
     /**
-     * <p>[概 要] Throwable とそのバックトレースを指定されたプリントライターに出力します。</p>
-     * <p>[詳 細] </p>
-     * <p>[備 考] </p>
-     * @param writerArg 出力に使用するPrintWriter
+     * <p>[개 요] Throwable의 추적값(Stack Trace)을 지정된 PrintWriter 출력합니다.</p>
+     * <p>[상 세] </p>
+     * <p>[비 고] </p>
+     * @param printWriter 출력에 사용할 PrintWriter
      * @since STEP1
      */
-    public void printStackTrace(PrintWriter writerArg) {
-        // 子例外が存在しない場合
-        if (getChildException() == null) {
-            // 基底クラスのメソッドをそのまま呼び出す
-            super.printStackTrace(writerArg);
-            
-        // 子例外が存在する場合
-        } else {
-            // 自分自身の文字列表現を出力
-            writerArg.println(this.toString());
-            
-            // 入れ子の例外の始まりの目印を出力
-            writerArg.println("  nested exception is:");
-            
-            // 子例外のprintStackTrace()を呼び出す
-            getChildException().printStackTrace(writerArg);
-        }
+    public void printStackTrace(PrintWriter printWriter) {
+	// 중첩 예외가 존재하지 않는 경우
+	if (getChildException() == null) {
+	    // 부모 클래스의 메서드를 그대로 호출
+	    super.printStackTrace(printWriter);
+
+	    // 중첩 예외가 존재하는 경우
+	} else {
+	    // 자신의 toString 메서드 문자열을 출력
+	    printWriter.println(this.toString());
+
+	    // 중첩된 예외의 시작 메시지를 출력
+	    printWriter.println("  nested exception is:");
+
+	    // 중첩 예외의 printStackTrace()를 호출
+	    getChildException().printStackTrace(printWriter);
+	}
     }
 
+    
 }
-
-/*
- * $Log: NestedRuntimeException.java,v $
- * Revision 1.1  2005/10/18 02:52:23  koshida
- * 新規登録
- *
- */
