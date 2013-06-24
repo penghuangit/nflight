@@ -1,38 +1,64 @@
 package com.abreqadhabra.nflight.examples.common.exception;
 
+import java.util.logging.Logger;
+
 import com.abreqadhabra.nflight.common.exception.CommonRuntimeException;
+import com.abreqadhabra.nflight.common.exception.UnexpectedRuntimeException;
+import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class CommonRuntimeExceptionExample {
+    private static final Logger LOGGER = LoggingHelper
+	    .getLogger(UnexpectedRuntimeExceptionExample.class);
+
     public static void main(String[] args) {
 	try {
-	    a(null);
+	    a();
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    if (e instanceof CommonRuntimeException) {
+		CommonRuntimeException ce = (CommonRuntimeException) e;
+		System.out.println("에러ID:" + ce.getErrorId());
+		System.out.println("메시지ID:" + ce.getMessageId());
+		System.out.println("Stack Trace:\n" + ce.getStackTrace(e));
+	    }
+		e.printStackTrace();
+
 	}
     }
 
-    public static void a(String strArg) throws Exception {
+    public static void a() throws Exception {
+	String transactionId = "TX0001";
 	try {
-	    b(strArg);
+	    b();
 	} catch (Exception e) {
-	    throw new CommonRuntimeException("foo", e);
+	    if (e instanceof UnexpectedRuntimeException) {
+		throw new UnexpectedRuntimeException(e).addContextValue(
+			"Transaction Id", transactionId);
+	    }
 	}
     }
 
-    public static void b(String strArg) throws Exception {
+    public static void b() throws Exception {
+	String empno = "1234";
+	String empName = "홍길동";
+	String deptCode = "ABCD";
+	String deptName = "IT기획팀";
 	try {
-	    c(strArg);
+	    c();
 	} catch (Exception e) {
-	    throw new CommonRuntimeException("bar", e);
+	    if (e instanceof CommonRuntimeException) {
+		throw new CommonRuntimeException("b", e);
+	    } else {
+		LOGGER.severe("예기치 않은 오류가 발생했습니다.");
+		UnexpectedRuntimeException ue = (UnexpectedRuntimeException) new UnexpectedRuntimeException(
+			"b", e).addContextValue("empno", empno)
+			.addContextValue("empName", empName);
+		ue.setContextValue("deptCode", deptCode);
+		ue.setContextValue("deptName", deptName);
+		throw ue;
+	    }
 	}
     }
 
-    public static void c(String strArg) throws Exception {
-	// 파라미터가 null인 경우
-	if (strArg == null) {
-	    // 예외를 던집니다.
-	    throw new CommonRuntimeException("strArg 파라미터는 null 값을 허용하지 않습니다.");
-	}
-
+    public static void c() throws Exception {
+	throw new Exception("c");
     }
-}

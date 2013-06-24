@@ -5,7 +5,7 @@ package com.abreqadhabra.nflight.common.exception;
  * [개 요] 시스템공통 기본 예외클래스
  * </p>
  * <p>
- * [상 세] CommonException를 상속받은 시스템공통 기본 예외클래스
+ * [상 세] CommonException을 상속받은 시스템공통 기본 예외클래스
  * </p>
  * <p>
  * [비 고]
@@ -19,9 +19,9 @@ package com.abreqadhabra.nflight.common.exception;
  * 
  * @author dongsup.kim@gmail.com
  * @since STEP1
- * @see CommonException
+ * @see ZCommonException
  */
-public class NFlightSystemException extends CommonException {
+public class UnexpectedRuntimeException extends CommonRuntimeException {
 
     /**
      * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정
@@ -64,7 +64,7 @@ public class NFlightSystemException extends CommonException {
      *            상세 메시지
      * @since STEP1
      */
-    public NFlightSystemException(String message) {
+    public UnexpectedRuntimeException(String message) {
 	super(message);
 
 	// NFlightException의 에러ID를 설정합니다.
@@ -92,7 +92,7 @@ public class NFlightSystemException extends CommonException {
      *            자식 예외
      * @since STEP1
      */
-    public NFlightSystemException(String message, Throwable cause) {
+    public UnexpectedRuntimeException(String message, Throwable cause) {
 	super(message, cause);
 
 	// NFlightException의 에러ID를 설정합니다.
@@ -117,7 +117,7 @@ public class NFlightSystemException extends CommonException {
      *            자식 예외
      * @since STEP1
      */
-    public NFlightSystemException(Throwable cause) {
+    public UnexpectedRuntimeException(Throwable cause) {
 	super(MESSAGE, cause);
 
 	// NFlightException의 에러ID를 설정합니다.
