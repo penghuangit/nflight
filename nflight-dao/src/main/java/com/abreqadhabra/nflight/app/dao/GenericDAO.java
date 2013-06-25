@@ -10,13 +10,22 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.app.dao.exception.DAORuntimeException;
 import com.abreqadhabra.nflight.app.dao.util.ResultSetBeanUtil;
+import com.abreqadhabra.nflight.common.exception.CommonRuntimeException;
+import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.commons.util.PropertyFileUtil;
 
 public abstract class GenericDAO {
 
+	private static final String CLASSNAME = 
+			GenericDAO.CLASSNAME; 
+    private static final Logger LOGGER = LoggingHelper
+    	    .getLogger(CLASSNAME);
+    
 	private String databaseType;
 	private Properties dbProperties;
 	private Connection connection;
@@ -53,10 +62,17 @@ public abstract class GenericDAO {
 			Class<?> jdbcDriverClass = Class.forName(jdbcDriver);
 			Driver jdbcDriverInstance = (Driver) jdbcDriverClass.newInstance();
 			DriverManager.registerDriver(jdbcDriverInstance);
-		} catch (Exception e) {
-			System.out.println("Failed to initialise JDBC driver");
-			e.printStackTrace();
+		} catch (SQLException | ClassNotFoundException | InstantiationException
+				| IllegalAccessException e) {
+		//	LOGGER.logp(Level.SEVERE, this.getClass().getSimpleName(), sourceMethod, msg, param1)
+			throw new CommonRuntimeException(e.getClass().getSimpleName(), e)
+					.addContextValue("jdbcDriver", jdbcDriver);
 		}
+
+//		catch (Exception e) {
+//			System.out.println("Failed to initialise JDBC driver");
+//			e.printStackTrace();
+//		}
 
 		try {
 			connection = DriverManager.getConnection(jdbcURL, jdbcUser,

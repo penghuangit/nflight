@@ -1,4 +1,4 @@
-package examples.jdbc;
+package com.abreqadhabra.nflight.examples.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

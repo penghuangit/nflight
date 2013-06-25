@@ -1,4 +1,4 @@
-package examples.dao;
+package com.abreqadhabra.nflight.examples.dao;
 
 import com.abreqadhabra.nflight.app.dao.AirlineDAO;
 import com.abreqadhabra.nflight.app.dao.DAOFactory;
@@ -36,7 +36,7 @@ public class AirlineDAOExample {
     public AirlineDAOExample (){
 	try {
 	    this.airlineDAO = this.getAirlineDAO();
-	} catch (DAORuntimeException e) {
+	} catch (Exception e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 /*	    

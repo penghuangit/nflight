@@ -8,7 +8,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class CommonRuntimeExceptionExample {
     private static final Logger LOGGER = LoggingHelper
-	    .getLogger(UnexpectedRuntimeExceptionExample.class);
+	    .getLogger(CommonRuntimeExceptionExample.class.getName());
 
     public static void main(String[] args) {
 	try {
@@ -62,3 +62,4 @@ public class CommonRuntimeExceptionExample {
     public static void c() throws Exception {
 	throw new Exception("c");
     }
+}

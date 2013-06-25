@@ -23,7 +23,7 @@ public class tempCustomLoggerExample {
 		// "com.abreqadhabra.nflight.example.logging.CustomLoggingExample";
 		String resourceBundleName = "com.abreqadhabra.nflight.commons.resources.logging.LoggingMessages";
 
-		String configFile = "/com/abreqadhabra/nflight/commons/resources/config/CustomLogger.xml";
+		String configFile = "/com/abreqadhabra/nflight/commons/resources/config/logging.properties";
 
 		Logger logger = Logger.getLogger(componentName, resourceBundleName);
 
