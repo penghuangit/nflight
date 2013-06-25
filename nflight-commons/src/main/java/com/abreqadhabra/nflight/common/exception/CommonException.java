@@ -7,7 +7,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommonRuntimeException extends RuntimeException implements
+public class CommonException extends Exception implements
 	ICommonException {
 
     /**
@@ -47,7 +47,7 @@ public class CommonRuntimeException extends RuntimeException implements
      *            상세 메시지
      * @since STEP1
      */
-    public CommonRuntimeException(String message) {
+    public CommonException(String message) {
 	// 슈퍼 클래스의 동일 인수를 가진 생성자를 호출합니다.
 	super(message);
     }
@@ -69,7 +69,7 @@ public class CommonRuntimeException extends RuntimeException implements
      *            자식 예외
      * @since STEP1
      */
-    public CommonRuntimeException(String message, Throwable childException) {
+    public CommonException(String message, Throwable childException) {
 	// 부모 클래스의 동일 인수를 가진 생성자를 호출합니다.
 	super(message);
 	// 자식 예외
@@ -91,7 +91,7 @@ public class CommonRuntimeException extends RuntimeException implements
      *            자식 예외
      * @since STEP1
      */
-    public CommonRuntimeException(Throwable childException) {
+    public CommonException(Throwable childException) {
 	// 자식 예외
 	this.childException = childException;
     }
@@ -127,13 +127,13 @@ public class CommonRuntimeException extends RuntimeException implements
     }
 
     @Override
-    public CommonRuntimeException addContextValue(String label, Object value) {
+    public CommonException addContextValue(String label, Object value) {
 	contextEntries.add(new ExceptionContext(label, value));
 	return this;
     }
 
     @Override
-    public CommonRuntimeException setContextValue(String label, Object value) {
+    public CommonException setContextValue(String label, Object value) {
 	contextEntries.add(new ExceptionContext(label, value));
 	return this;
     }

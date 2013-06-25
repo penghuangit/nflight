@@ -10,30 +10,31 @@ import java.util.logging.LogRecord;
  */
 public class CustomFormatter extends Formatter {
 
-	public CustomFormatter() {
-		super();
-	}
+    public CustomFormatter() {
+	super();
+    }
 
-	@Override
-	public String format(LogRecord record) {
-		// Create a StringBuffer to contain the formatted record
-		// start with the date.
-		StringBuffer sb = new StringBuffer();
+    @Override
+    public String format(LogRecord record) {
+	// Create a StringBuffer to contain the formatted record
+	// start with the date.
+	StringBuffer sb = new StringBuffer();
 
-		// Get the date from the LogRecord and add it to the buffer
-		Date date = new Date(record.getMillis());
-		sb.append(date.toString());
-		sb.append(" ");
+	// Get the date from the LogRecord and add it to the buffer
+	Date date = new Date(record.getMillis());
+	sb.append(date.toString());
+	sb.append(" ");
 
-		// Get the level name and add it to the buffer
-		sb.append(record.getLevel().getName());
-		sb.append(" ");
+	// Get the level name and add it to the buffer
+	sb.append(record.getLevel().getName());
+	sb.append(" ");
 
-		// Get the formatted message (includes localization
-		// and substitution of paramters) and add it to the buffer
-		sb.append(formatMessage(record));
+	// Get the formatted message (includes localization
+	// and substitution of paramters) and add it to the buffer
+	sb.append(formatMessage(record));
+	sb.append("\n");
 
-		return sb.toString();
-	}
+	return sb.toString();
+    }
 
 }

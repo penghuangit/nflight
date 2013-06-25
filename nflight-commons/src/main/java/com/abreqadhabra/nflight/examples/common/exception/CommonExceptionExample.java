@@ -4,8 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import com.abreqadhabra.nflight.common.exception.CommonRuntimeException;
-import com.abreqadhabra.nflight.commons.exception.CommonException;
+import com.abreqadhabra.nflight.common.exception.CommonException;
 
 public class CommonExceptionExample {
 
@@ -18,7 +17,7 @@ public class CommonExceptionExample {
 	    try {
 		throw new Exception("foo");
 	    } catch (Exception e) {
-		throw new Exception("bar");
+		throw new SQLException("bar");
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace(System.out);
@@ -27,7 +26,7 @@ public class CommonExceptionExample {
 	System.out.println("\nChaining:");
 	try {
 	    try {
-		throw new Exception("foo");
+		throw new SQLException("foo");
 	    } catch (Exception e) {
 		throw new Exception("bar", e);
 	    }
@@ -38,14 +37,17 @@ public class CommonExceptionExample {
 	
 	System.out.println("\nCommonRuntimeException:");
 	try {
+	    try{
 	    try {
-		throw new Exception("foo");
+		throw new SQLException("foo");
 	    } catch (Exception e) {
-		throw new CommonRuntimeException("bar", e);
+		throw new CommonException("bar", e);
+	    }
+	    } catch (Exception e) {
+		throw new CommonException("zar", e);
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace(System.out);
-
 	}
 	
 /*	try {
@@ -65,7 +67,7 @@ public class CommonExceptionExample {
 	try {
 	    b();
 	} catch (Exception e) {
-	    throw new CommonRuntimeException("a", e);
+	    throw new CommonException("a", e);
 	}
     }
 
@@ -73,7 +75,7 @@ public class CommonExceptionExample {
 	try {
 	    c();
 	} catch (Exception e) {
-	    throw new CommonRuntimeException("b", e);
+	    throw new CommonException("b", e);
 	}
     }
 

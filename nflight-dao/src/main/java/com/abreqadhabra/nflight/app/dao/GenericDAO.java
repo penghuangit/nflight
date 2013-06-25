@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.app.dao.exception.DAORuntimeException;
 import com.abreqadhabra.nflight.app.dao.util.ResultSetBeanUtil;
-import com.abreqadhabra.nflight.common.exception.CommonRuntimeException;
+import com.abreqadhabra.nflight.common.exception.CommonException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.commons.util.PropertyFileUtil;
 
@@ -65,7 +65,7 @@ public abstract class GenericDAO {
 		} catch (SQLException | ClassNotFoundException | InstantiationException
 				| IllegalAccessException e) {
 		//	LOGGER.logp(Level.SEVERE, this.getClass().getSimpleName(), sourceMethod, msg, param1)
-			throw new CommonRuntimeException(e.getClass().getSimpleName(), e)
+			throw new CommonException(e.getClass().getSimpleName(), e)
 					.addContextValue("jdbcDriver", jdbcDriver);
 		}
 

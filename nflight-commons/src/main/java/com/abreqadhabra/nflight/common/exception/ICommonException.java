@@ -86,9 +86,9 @@ public interface ICommonException {
      */
     public String getMessageId();
 
-    public CommonRuntimeException addContextValue(String label, Object value);
+    public CommonException addContextValue(String label, Object value);
 
-    public CommonRuntimeException setContextValue(String label, Object value);
+    public CommonException setContextValue(String label, Object value);
 
     public List<ExceptionContext> getContextEntries();
     

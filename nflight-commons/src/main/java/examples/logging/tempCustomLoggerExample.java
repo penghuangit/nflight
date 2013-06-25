@@ -23,7 +23,7 @@ public class tempCustomLoggerExample {
 		// "com.abreqadhabra.nflight.example.logging.CustomLoggingExample";
 		String resourceBundleName = "com.abreqadhabra.nflight.commons.resources.logging.LoggingMessages";
 
-		String configFile = "/com/abreqadhabra/nflight/commons/resources/config/logging.properties";
+		String configFile = "/com/abreqadhabra/nflight/common/resources/conf/logging.properties";
 
 		Logger logger = Logger.getLogger(componentName, resourceBundleName);
 
@@ -42,6 +42,9 @@ public class tempCustomLoggerExample {
 
 		FileHandler fileHandler = new FileHandler(loggingPath.getAbsolutePath()
 				+ "/" + resourceBundleName + ".%u.%g.log");
+		
+		System.out.println(loggingPath.getAbsolutePath()
+			+ "/" + resourceBundleName + ".%u.%g.log");
 
 		/*
 		 * // Set up a custom Filter (see MyCustomFilter example) Vector<Level>

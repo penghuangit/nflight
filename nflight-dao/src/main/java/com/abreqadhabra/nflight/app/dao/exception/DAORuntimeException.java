@@ -1,6 +1,6 @@
 package com.abreqadhabra.nflight.app.dao.exception;
 
-import com.abreqadhabra.nflight.common.exception.CommonRuntimeException;
+import com.abreqadhabra.nflight.common.exception.CommonException;
 
 /**
  * <p>
@@ -23,7 +23,7 @@ import com.abreqadhabra.nflight.common.exception.CommonRuntimeException;
  * @since STEP1
  * @see ZCommonException
  */
-public class DAORuntimeException extends CommonRuntimeException {
+public class DAORuntimeException extends CommonException {
 
     /**
      * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정
