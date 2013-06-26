@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.app.dao.util;
+package com.abreqadhabra.nflight.dao.util;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;

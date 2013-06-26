@@ -1,10 +1,8 @@
-package com.abreqadhabra.nflight.app.dao;
+package com.abreqadhabra.nflight.dao;
 
 import java.util.List;
 
-import com.abreqadhabra.nflight.app.dao.dto.Airline;
-import com.abreqadhabra.nflight.app.dao.exception.DAORuntimeException;
-import com.abreqadhabra.nflight.common.exception.NFlightException;
+import com.abreqadhabra.nflight.dao.dto.Airline;
 
 public class AirlineDAOImpl extends GenericDAO implements AirlineDAO {
 
@@ -16,33 +14,33 @@ public class AirlineDAOImpl extends GenericDAO implements AirlineDAO {
 	private static final String AIRLINE_DAO_MATCH_BY_AIRLINE_NAME = ".sql.AirlineDAOImpl.matchByAirlineName(String)";
 	private static final String AIRLINE_DAO_UPDATE_BY_PRIMARY_KEY = ".sql.AirlineDAOImpl.updateByPrimaryKey(Airline)";
 
-	public AirlineDAOImpl(String databaseType) throws NFlightException {
+	public AirlineDAOImpl(String databaseType) throws Exception {
 
 		super(databaseType);
 
 	}
 
 	@Override
-	public void commit() {
+	public void commit() throws Exception {
 		super.commit();
 
 	}
 
 	@Override
-	public void deleteAll() {
+	public void deleteAll() throws Exception {
 		String sql = super.getPropertyByDatabaseType(AIRLINE_DAO_DELETE_ALL);
 		super.executeUpdateByDynamicQuery(sql, null);
 	}
 
 	@Override
-	public void deleteByPrimaryKey(String airlineCode) {
+	public void deleteByPrimaryKey(String airlineCode) throws Exception {
 		String sql = super
 				.getPropertyByDatabaseType(AIRLINE_DAO_DELETE_BY_PRIMARY_KEY);
 		super.executeUpdateByDynamicQuery(sql, new String[] { airlineCode });
 	}
 
 	@Override
-	public Airline[] findAll() {
+	public Airline[] findAll() throws Exception {
 		String sql = super.getPropertyByDatabaseType(AIRLINE_DAO_FIND_ALL);
 		List<Airline> results = super.findByDynamicQuery(sql, null,
 				Airline.class);
@@ -53,7 +51,7 @@ public class AirlineDAOImpl extends GenericDAO implements AirlineDAO {
 	}
 
 	@Override
-	public Airline findByPrimaryKey(String airlineCode) {
+	public Airline findByPrimaryKey(String airlineCode) throws Exception {
 		String sql = super
 				.getPropertyByDatabaseType(AIRLINE_DAO_FIND_BY_PRIMARYKEY);
 
@@ -66,7 +64,7 @@ public class AirlineDAOImpl extends GenericDAO implements AirlineDAO {
 	}
 
 	@Override
-	public void insert(Airline airline) {
+	public void insert(Airline airline) throws Exception {
 		String sql = super.getPropertyByDatabaseType(AIRLINE_DAO_INSERT);
 
 		super.executeUpdateByDynamicQuery(
@@ -76,7 +74,7 @@ public class AirlineDAOImpl extends GenericDAO implements AirlineDAO {
 	}
 
 	@Override
-	public Airline[] matchByAirlineName(String airlineName) {
+	public Airline[] matchByAirlineName(String airlineName) throws Exception {
 		String sql = super
 				.getPropertyByDatabaseType(AIRLINE_DAO_MATCH_BY_AIRLINE_NAME);
 		List<Airline> results = super.findByDynamicQuery(sql,
@@ -88,17 +86,17 @@ public class AirlineDAOImpl extends GenericDAO implements AirlineDAO {
 	}
 
 	@Override
-	public void rollback() {
+	public void rollback() throws Exception {
 		super.commit();
 	}
 
 	@Override
-	public void setAutoCommit(boolean autoCommit) {
+	public void setAutoCommit(boolean autoCommit) throws Exception {
 		super.setAutoCommit(autoCommit);
 	}
 
 	@Override
-	public void updateByPrimaryKey(Airline airline) {
+	public void updateByPrimaryKey(Airline airline) throws Exception {
 		String sql = super
 				.getPropertyByDatabaseType(AIRLINE_DAO_UPDATE_BY_PRIMARY_KEY);
 		super.executeUpdateByDynamicQuery(

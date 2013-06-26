@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.app.dao;
+package com.abreqadhabra.nflight.dao;
 
 import java.sql.Connection;
 import java.sql.Driver;
@@ -8,23 +8,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.app.dao.exception.DAORuntimeException;
-import com.abreqadhabra.nflight.app.dao.util.ResultSetBeanUtil;
-import com.abreqadhabra.nflight.common.exception.NFlightException;
+import com.abreqadhabra.nflight.common.exception.CommonException;
+import com.abreqadhabra.nflight.common.exception.NFlightUnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFileUtil;
+import com.abreqadhabra.nflight.dao.exception.NFlightDAOException;
+import com.abreqadhabra.nflight.dao.util.ResultSetBeanUtil;
 
 public abstract class GenericDAO {
 
-	private static final Class THIS_CLASS = 
-			GenericDAO.class; 
-    private static final Logger LOGGER = LoggingHelper
-    	    .getLogger(THIS_CLASS);
-    
+	private static final Class<GenericDAO> THIS_CLAZZ = GenericDAO.class;
+	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+
 	private String databaseType;
 	private Properties dbProperties;
 	private Connection connection;
@@ -40,7 +40,7 @@ public abstract class GenericDAO {
 	 */
 	private int maxRows;
 
-	protected GenericDAO(String databaseType) throws NFlightException {
+	protected GenericDAO(String databaseType) throws Exception {
 		this.databaseType = databaseType;
 		this.dbProperties = PropertyFileUtil
 				.readTraditionalPropertyFile(GenericDAO.class
@@ -48,36 +48,30 @@ public abstract class GenericDAO {
 						.getFile()
 						+ DB_PROPERTY_FILE_NAME);
 		this.connection = this.getConnection();
+
 	}
 
-	protected synchronized Connection getConnection() throws NFlightException {
-
+	protected synchronized Connection getConnection() throws Exception {
 		String jdbcDriver = getPropertyByDatabaseType(JDBC_DRIVER);
 		String jdbcURL = getPropertyByDatabaseType(JDBC_URL);
 		String jdbcUser = getPropertyByDatabaseType(JDBC_USER);
 		String jdbcPassword = getPropertyByDatabaseType(JDBC_PASSWORD);
-
 		try {
 			Class<?> jdbcDriverClass = Class.forName(jdbcDriver);
 			Driver jdbcDriverInstance = (Driver) jdbcDriverClass.newInstance();
 			DriverManager.registerDriver(jdbcDriverInstance);
-		} catch (SQLException | ClassNotFoundException | InstantiationException
-				| IllegalAccessException e) {
-		//	LOGGER.logp(Level.SEVERE, this.getClass().getSimpleName(), sourceMethod, msg, param1)
-			throw new DAORuntimeException(e.getClass().getSimpleName(), e)
-					.addContextValue("jdbcDriver", jdbcDriver);
-		}
 
-//		catch (Exception e) {
-//			System.out.println("Failed to initialise JDBC driver");
-//			e.printStackTrace();
-//		}
-
-		try {
 			connection = DriverManager.getConnection(jdbcURL, jdbcUser,
 					jdbcPassword);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | SQLException e) {
+			throw new NFlightDAOException(e)
+					.addContextValue("jdbcDriver", jdbcDriver)
+					.addContextValue("jdbcURL", jdbcURL)
+					.addContextValue("jdbcUser", jdbcUser)
+					.addContextValue("jdbcPassword", jdbcPassword);
+		} catch (Exception e) {
+			throw new NFlightUnexpectedException(e);
 		}
 
 		return connection;
@@ -90,9 +84,14 @@ public abstract class GenericDAO {
 	/**
 	 * Returns all rows from the table that match the specified arbitrary SQL
 	 * statement
+	 * 
+	 * @throws SQLException
+	 * @throws Exception
+	 * @throws CommonException
 	 */
 
-	protected void executeUpdateByDynamicQuery(String sql, String[] sqlParams) {
+	protected void executeUpdateByDynamicQuery(String sql, String[] sqlParams)
+			throws Exception {
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
@@ -101,23 +100,28 @@ public abstract class GenericDAO {
 			for (int i = 0; sqlParams != null && i < sqlParams.length; i++) {
 				preparedStatement.setObject(i + 1, sqlParams[i]);
 			}
-
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new NFlightDAOException(e).addContextValue("sql", sql)
+					.addContextValue("sqlParams", Arrays.toString(sqlParams));
+		} catch (Exception e) {
+			throw new NFlightUnexpectedException(e);
 		} finally {
 			closeAll(connection, preparedStatement);
 		}
-
 	}
 
 	/**
 	 * Returns all rows from the table that match the specified arbitrary SQL
 	 * statement
+	 * 
+	 * @throws SQLException
+	 * 
+	 * @throws Exception
 	 */
 
 	protected <T> List<T> findByDynamicQuery(String sql, String[] sqlParams,
-			Class<T> type) {
+			Class<T> type) throws Exception {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		List<T> results = null;
@@ -132,10 +136,14 @@ public abstract class GenericDAO {
 			// fetch the results
 			results = fetchMultiResults(resultSet, type);
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} /*
-		 * finally { closeAll(connection, preparedStatement, resultSet); }
-		 */
+			throw new NFlightDAOException(e).addContextValue("sql", sql)
+					.addContextValue("sqlParams", Arrays.toString(sqlParams))
+					.addContextValue("type", type.getCanonicalName());
+		} catch (Exception e) {
+			throw new NFlightUnexpectedException(e);
+		} finally {
+			closeAll(connection, preparedStatement);
+		}
 
 		return results;
 	}
@@ -165,109 +173,110 @@ public abstract class GenericDAO {
 	 * Fetches multiple rows from the result set
 	 * 
 	 * @throws SQLException
+	 * 
+	 * @throws Exception
 	 */
 	protected <T> List<T> fetchMultiResults(ResultSet resultSet, Class<T> type)
-			throws SQLException {
+			throws Exception {
 		List<T> results = new ArrayList<T>();
-		while (resultSet.next()) {
-			results.add(ResultSetBeanUtil.populateDTO(resultSet, type));
+		try {
+			while (resultSet.next()) {
+				results.add(ResultSetBeanUtil.populateDTO(resultSet, type));
+			}
+		} catch (SQLException e) {
+			throw new NFlightDAOException(e)
+					.addContextValue("results", results).addContextValue(
+							"type", type.getCanonicalName());
+		} catch (Exception e) {
+			throw new NFlightUnexpectedException(e);
 		}
 		return results;
 	}
 
-	protected void setAutoCommit(boolean autoCommit) {
+	protected void setAutoCommit(boolean autoCommit) throws Exception {
 		try {
 			connection.setAutoCommit(autoCommit);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new NFlightDAOException(e).addContextValue("autoCommit",
+					autoCommit);
+		} catch (Exception e) {
+			throw new NFlightUnexpectedException(e);
 		}
 	}
 
-	protected void commit() {
+	protected void commit() throws Exception {
 		try {
 			connection.commit();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new NFlightDAOException(e);
+		} catch (Exception e) {
+			throw new NFlightUnexpectedException(e);
 		}
 	}
 
-	protected void rollback() {
+	protected void rollback() throws Exception {
 		try {
 			connection.rollback();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new NFlightDAOException(e);
+		} catch (Exception e) {
+			throw new NFlightUnexpectedException(e);
 		}
 	}
 
-	protected void close(Connection conn) {
+	protected void close(Connection conn) throws Exception {
 		try {
-			if (conn != null)
-				conn.close();
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+			conn.close();
+		} catch (SQLException e) {
+			throw new NFlightDAOException(e);
+		} catch (Exception e) {
+			throw new NFlightUnexpectedException(e);
 		}
 	}
 
-	protected void close(PreparedStatement stmt) {
+	protected void close(PreparedStatement stmt) throws Exception {
 		try {
-			if (stmt != null)
-				stmt.close();
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+			stmt.close();
+		} catch (SQLException e) {
+			throw new NFlightDAOException(e);
+		} catch (Exception e) {
+			throw new NFlightUnexpectedException(e);
 		}
 	}
 
-	protected void close(ResultSet rs) {
+	protected void close(ResultSet rs) throws Exception {
 		try {
-			if (rs != null)
-				rs.close();
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+			rs.close();
+		} catch (SQLException e) {
+			throw new NFlightDAOException(e);
+		} catch (Exception e) {
+			throw new NFlightUnexpectedException(e);
 		}
 	}
 
 	protected static void closeAll(Connection connection, Statement statement,
-			ResultSet resultSet) {
-		if (connection != null) {
-			try {
-				connection.close();
-			} catch (Exception exception) {
-			}
+			ResultSet resultSet) throws Exception {
+		try {
+			connection.close();
+			statement.close();
+			resultSet.close();
+		} catch (SQLException e) {
+			throw new NFlightDAOException(e);
+		} catch (Exception e) {
+			throw new NFlightUnexpectedException(e);
 		}
-		if (statement != null) {
-			try {
-				statement.close();
-			} catch (Exception exception) {
-			}
-		}
-		if (resultSet != null) {
-			try {
-				resultSet.close();
-			} catch (Exception exception) {
-			}
-		}
-
-		return;
 	}
 
-	private void closeAll(Connection connection, Statement statement) {
-
-		if (connection != null) {
-			try {
-				connection.close();
-			} catch (Exception exception) {
-			}
+	private void closeAll(Connection connection, Statement statement)
+			throws Exception {
+		try {
+			connection.close();
+			statement.close();
+		} catch (SQLException e) {
+			throw new NFlightDAOException(e);
+		} catch (Exception e) {
+			throw new NFlightUnexpectedException(e);
 		}
-		if (statement != null) {
-			try {
-				statement.close();
-			} catch (Exception exception) {
-			}
-		}
-
 	}
 
 }

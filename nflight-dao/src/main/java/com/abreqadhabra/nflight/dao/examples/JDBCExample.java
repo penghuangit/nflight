@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.examples.jdbc;
+package com.abreqadhabra.nflight.dao.examples;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,7 +7,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class jdbcExample {
+public class JDBCExample {
 
 	private static String dbURL = "jdbc:derby://localhost:1527/JavaDB/nflightDB;create=true;user=freelec;password=password1!";
 	private static String tableName = "FREELEC.AIRLINE";

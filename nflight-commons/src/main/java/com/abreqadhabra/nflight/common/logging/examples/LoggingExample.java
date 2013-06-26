@@ -3,8 +3,8 @@ package com.abreqadhabra.nflight.common.logging.examples;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.exception.NFlightException;
-import com.abreqadhabra.nflight.common.exception.UnexpectedException;
+import com.abreqadhabra.nflight.common.exception.CommonException;
+import com.abreqadhabra.nflight.common.exception.NFlightUnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class LoggingExample {
@@ -12,7 +12,7 @@ public class LoggingExample {
     private static final Class<LoggingExample> THIS_CLAZZ = LoggingExample.class;
     private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-    public static void main(String[] args) throws UnexpectedException {
+    public static void main(String[] args) throws NFlightUnexpectedException {
 	final String METHOD_NAME = "main";
 
 	try {
@@ -44,12 +44,12 @@ public class LoggingExample {
 	    }
 	} catch (Exception e) {
 	    StackTraceElement[] current = e.getStackTrace();
-	    if (e instanceof NFlightException) {
-		NFlightException ce = (NFlightException) e;
+	    if (e instanceof CommonException) {
+		CommonException ce = (CommonException) e;
 		LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 			current[0].getMethodName(), "\n" + ce.getStackTrace(e));
 	    }else{
-		throw new UnexpectedException(e);
+		throw new NFlightUnexpectedException(e);
 	    }
 	}
 
@@ -67,7 +67,7 @@ public class LoggingExample {
 	    return number1 -= number2; // minus
 	case "/":
 	    if (number2 == 0) {
-		throw new NFlightException("Divide zero")
+		throw new CommonException("Divide zero")
 			.addContextValue("number1", number1)
 			.addContextValue("number2", number2)
 			.addContextValue("operator", operator); // divide
@@ -76,7 +76,7 @@ public class LoggingExample {
 	    }
 	case "%":
 	    if (number2 == 0) {
-		throw new NFlightException("Divide zero")
+		throw new CommonException("Divide zero")
 			.addContextValue("number1", number1)
 			.addContextValue("number2", number2)
 			.addContextValue("operator", operator); // mod
@@ -84,7 +84,7 @@ public class LoggingExample {
 		return number1 %= number2;
 	    }
 	default:
-	    throw new NFlightException("Unknown operator");
+	    throw new CommonException("Unknown operator");
 	}
     }
 

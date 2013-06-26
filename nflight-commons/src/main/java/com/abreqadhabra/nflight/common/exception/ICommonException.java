@@ -86,9 +86,9 @@ public interface ICommonException {
      */
     public String getMessageId();
 
-    public NFlightException addContextValue(String label, Object value);
+    public CommonException addContextValue(String label, Object value);
 
-    public NFlightException setContextValue(String label, Object value);
+    public CommonException setContextValue(String label, Object value);
 
     public List<ExceptionContext> getContextEntries();
     

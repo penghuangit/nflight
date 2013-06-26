@@ -6,7 +6,7 @@
  * For more information please visit http://www.codefutures.com/products/firestorm
  */
 
-package com.abreqadhabra.nflight.app.dao.dto;
+package com.abreqadhabra.nflight.dao.dto;
 
 import java.io.Serializable;
 

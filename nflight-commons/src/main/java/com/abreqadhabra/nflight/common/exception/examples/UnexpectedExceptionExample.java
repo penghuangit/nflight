@@ -3,8 +3,8 @@ package com.abreqadhabra.nflight.common.exception.examples;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.exception.NFlightException;
-import com.abreqadhabra.nflight.common.exception.UnexpectedException;
+import com.abreqadhabra.nflight.common.exception.CommonException;
+import com.abreqadhabra.nflight.common.exception.NFlightUnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class UnexpectedExceptionExample {
@@ -25,8 +25,8 @@ public class UnexpectedExceptionExample {
 	    LOGGER.exiting(THIS_CLAZZ.getName(), METHOD_NAME);
 	} catch (Exception e) {
 	    StackTraceElement[] current = e.getStackTrace();
-	    if (e instanceof NFlightException) {
-		NFlightException ce = (NFlightException) e;
+	    if (e instanceof CommonException) {
+		CommonException ce = (CommonException) e;
 		LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 			current[0].getMethodName(), "\n" + ce.getStackTrace(e));
 	    }
@@ -38,8 +38,8 @@ public class UnexpectedExceptionExample {
 	try {
 	    level2();
 	} catch (Exception e) {
-	    if (e instanceof UnexpectedException) {
-		throw new UnexpectedException("Error at level 1", e)
+	    if (e instanceof NFlightUnexpectedException) {
+		throw new NFlightUnexpectedException("Error at level 1", e)
 			.addContextValue("Transaction Id", transactionId);
 	    }
 	}
@@ -54,10 +54,10 @@ public class UnexpectedExceptionExample {
 	    level3();
 	} catch (Exception e) {
 	    StackTraceElement[] current = e.getStackTrace();
-	    if (e instanceof NFlightException) {
-		throw new NFlightException("Error at level 2", e);
+	    if (e instanceof CommonException) {
+		throw new CommonException("Error at level 2", e);
 	    } else {
-		UnexpectedException ure = new UnexpectedException(
+		NFlightUnexpectedException ure = new NFlightUnexpectedException(
 			"Error at level 2", e);
 		ure.setContextValue("empno", empno);
 		ure.setContextValue("empName", empName);
