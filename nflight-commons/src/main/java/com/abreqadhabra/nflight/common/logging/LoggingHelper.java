@@ -106,7 +106,7 @@ public class LoggingHelper extends Logger {
     private static final String LOGGING_RESOURCE_BUNDLE_NAME = "com.abreqadhabra.nflight.commons.resources.logging.LoggingMessages";
     // private static final String LOGGING_CONFIG_FILE =
     // "/com/abreqadhabra/nflight/commons/resources/config/CustomLogger.xml";
-    private static final String LOGGING_CONFIG_FILE_NAME = "/com/abreqadhabra/nflight/common/resources/conf/logging.properties";
+    private static final String LOGGING_CONFIG_FILE_NAME = "/com/abreqadhabra/nflight/common/resources/config/logging.properties";
 
 
 
