@@ -1,11 +1,11 @@
-package examples.i18n;
+package com.abreqadhabra.nflight.common.i18n.examples;
 
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import com.abreqadhabra.nflight.commons.i18n.XMLResourceBundleControl;
+import com.abreqadhabra.nflight.common.i18n.XMLResourceBundleControl;
 
 public class ResourceBundleExample {
 

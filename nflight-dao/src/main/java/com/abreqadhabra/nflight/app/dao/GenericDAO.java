@@ -10,21 +10,20 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.app.dao.exception.DAORuntimeException;
 import com.abreqadhabra.nflight.app.dao.util.ResultSetBeanUtil;
-import com.abreqadhabra.nflight.common.exception.CommonException;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.commons.util.PropertyFileUtil;
+import com.abreqadhabra.nflight.common.util.PropertyFileUtil;
 
 public abstract class GenericDAO {
 
-	private static final String CLASSNAME = 
-			GenericDAO.CLASSNAME; 
+	private static final Class THIS_CLASS = 
+			GenericDAO.class; 
     private static final Logger LOGGER = LoggingHelper
-    	    .getLogger(CLASSNAME);
+    	    .getLogger(THIS_CLASS);
     
 	private String databaseType;
 	private Properties dbProperties;
@@ -41,7 +40,7 @@ public abstract class GenericDAO {
 	 */
 	private int maxRows;
 
-	protected GenericDAO(String databaseType) throws DAORuntimeException {
+	protected GenericDAO(String databaseType) throws NFlightException {
 		this.databaseType = databaseType;
 		this.dbProperties = PropertyFileUtil
 				.readTraditionalPropertyFile(GenericDAO.class
@@ -51,7 +50,7 @@ public abstract class GenericDAO {
 		this.connection = this.getConnection();
 	}
 
-	protected synchronized Connection getConnection() {
+	protected synchronized Connection getConnection() throws NFlightException {
 
 		String jdbcDriver = getPropertyByDatabaseType(JDBC_DRIVER);
 		String jdbcURL = getPropertyByDatabaseType(JDBC_URL);
@@ -65,7 +64,7 @@ public abstract class GenericDAO {
 		} catch (SQLException | ClassNotFoundException | InstantiationException
 				| IllegalAccessException e) {
 		//	LOGGER.logp(Level.SEVERE, this.getClass().getSimpleName(), sourceMethod, msg, param1)
-			throw new CommonException(e.getClass().getSimpleName(), e)
+			throw new DAORuntimeException(e.getClass().getSimpleName(), e)
 					.addContextValue("jdbcDriver", jdbcDriver);
 		}
 

@@ -1,10 +1,10 @@
-package examples.i18n;
+package com.abreqadhabra.nflight.common.i18n.examples;
 
 import java.io.File;
 import java.io.IOException;
 
+import com.abreqadhabra.nflight.common.util.PropertyFileUtil;
 import com.abreqadhabra.nflight.commons.constant.Env;
-import com.abreqadhabra.nflight.commons.util.PropertyFileUtil;
 
 public class PropertiesToXMLFileConvertExample {
 

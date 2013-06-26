@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.commons.i18n;
+package com.abreqadhabra.nflight.common.i18n;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

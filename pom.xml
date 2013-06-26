@@ -4,7 +4,7 @@
 	<!-- The Basics -->
 	<groupId>com.abreqadhabra.nflight</groupId>
 	<artifactId>nflight</artifactId>
-	<version>0.0.1</version>
+		<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<!-- <parent /> -->
@@ -22,8 +22,8 @@
 	<modules>
 		<module>nflight-commons</module>
 		<module>nflight-dao</module>
-		<module>nflight-build-tools</module>
-	</modules>
+		<!-- <module>nflight-build-tools</module>
+ -->	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -117,21 +117,23 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>sonar-maven-plugin</artifactId>
-				<version>2.0</version>
+				<groupId>org.codehaus.sonar</groupId>
+				<artifactId>sonar-maven3-plugin</artifactId>
+				<version>3.5.1</version>
 			</plugin>
 
 
+
 		</plugins>
-		<extensions>
+	 <extensions>
 			<!-- For findbugs/checkstyle deployment -->
-			<extension>
+				<!--<extension>
 				<groupId>com.abreqadhabra.nflight</groupId>
 				<artifactId>nflight-build-tools</artifactId>
 				<version>0.0.1</version>
-			</extension>
-		</extensions>
+			</extension>		-->
+		</extensions> 
+
 
 	</build>
 

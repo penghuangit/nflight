@@ -1,0 +1,72 @@
+package com.abreqadhabra.nflight.common.exception.examples;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.abreqadhabra.nflight.common.exception.NFlightException;
+import com.abreqadhabra.nflight.common.exception.UnexpectedException;
+import com.abreqadhabra.nflight.common.logging.LoggingHelper;
+
+public class UnexpectedExceptionExample {
+
+    private static final Class<UnexpectedExceptionExample> THIS_CLAZZ = UnexpectedExceptionExample.class;
+    private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+
+    public static void main(String[] args) {
+	final String METHOD_NAME = "main(String[] args)";
+	try {
+	    // Log object entry
+	    LOGGER.entering(THIS_CLAZZ.getName(), METHOD_NAME);
+
+	    // Method body
+	    level1();
+
+	    // Log exiting
+	    LOGGER.exiting(THIS_CLAZZ.getName(), METHOD_NAME);
+	} catch (Exception e) {
+	    StackTraceElement[] current = e.getStackTrace();
+	    if (e instanceof NFlightException) {
+		NFlightException ce = (NFlightException) e;
+		LOGGER.logp(Level.SEVERE, current[0].getClassName(),
+			current[0].getMethodName(), "\n" + ce.getStackTrace(e));
+	    }
+	}
+    }
+
+    public static void level1() throws Exception {
+	String transactionId = "TX0001";
+	try {
+	    level2();
+	} catch (Exception e) {
+	    if (e instanceof UnexpectedException) {
+		throw new UnexpectedException("Error at level 1", e)
+			.addContextValue("Transaction Id", transactionId);
+	    }
+	}
+    }
+
+    public static void level2() throws Exception {
+
+	String empno = "1234";
+	String empName = "홍길동";
+
+	try {
+	    level3();
+	} catch (Exception e) {
+	    StackTraceElement[] current = e.getStackTrace();
+	    if (e instanceof NFlightException) {
+		throw new NFlightException("Error at level 2", e);
+	    } else {
+		UnexpectedException ure = new UnexpectedException(
+			"Error at level 2", e);
+		ure.setContextValue("empno", empno);
+		ure.setContextValue("empName", empName);
+		throw ure;
+	    }
+	}
+    }
+
+    public static void level3() throws Exception {
+	throw new Exception("Error at level 3");
+    }
+}

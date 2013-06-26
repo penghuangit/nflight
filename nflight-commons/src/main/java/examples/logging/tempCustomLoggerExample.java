@@ -3,15 +3,20 @@ package examples.logging;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Vector;
 import java.util.logging.FileHandler;
+import java.util.logging.Filter;
+import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.commons.constant.Env;
+import com.abreqadhabra.nflight.commons.logging.CustomFilter;
+import com.abreqadhabra.nflight.commons.logging.CustomFormatter;
+
 
 public class tempCustomLoggerExample {
-
 	public tempCustomLoggerExample() {
 		super();
 	}
@@ -45,8 +50,8 @@ public class tempCustomLoggerExample {
 		
 		System.out.println(loggingPath.getAbsolutePath()
 			+ "/" + resourceBundleName + ".%u.%g.log");
-
-		/*
+/*
+		/
 		 * // Set up a custom Filter (see MyCustomFilter example) Vector<Level>
 		 * acceptableLevels = new Vector<Level>();
 		 * acceptableLevels.add(Level.INFO); acceptableLevels.add(Level.SEVERE);

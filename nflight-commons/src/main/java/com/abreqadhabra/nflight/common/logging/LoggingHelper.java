@@ -14,6 +14,9 @@ import java.util.logging.Logger;
 
 public class LoggingHelper extends Logger {
     
+    private static final Class<LoggingHelper> THIS_CLAZZ = LoggingHelper.class;
+    /** Root Logger */
+    private static final Logger ROOT_LOGGER = Logger.getLogger("");
     
     private static final String DEFAULT_RESOURCE_BUNDLE_NAME = "com.abreqadhabra.nflight.commons.resources.logging.LoggingMessages";
 
@@ -26,11 +29,13 @@ public class LoggingHelper extends Logger {
 	if (resourceBundleName == null) {
 	    resourceBundleName = DEFAULT_RESOURCE_BUNDLE_NAME;
 	}
-	String loggerName = clazz.getPackage().getName();
+	String loggerName = getPackageName(clazz, 4);
+	
+	
 	Logger _logger = Logger.getLogger(loggerName, resourceBundleName);
 
 	LogManager logManager = LogManager.getLogManager();
-	InputStream inputStream = THIS_CLASS
+	InputStream inputStream = THIS_CLAZZ
 		.getResourceAsStream(LOGGING_CONFIG_FILE_NAME);
 
 	try {
@@ -57,6 +62,35 @@ public class LoggingHelper extends Logger {
     }
 
 
+    private static String getPackageName(Class<?> clazz, int depth) {
+	final String METHOD_NAME = "getLoggerName";
+
+	String packageName = clazz.getPackage().getName();
+	
+	StringBuffer sb = new StringBuffer(); 
+		
+	String [] strArray =  packageName.split("\\.");
+		 
+	System.out.println(strArray.length);
+	
+	if (strArray.length >= depth) {
+	    for (int i = 0; i < depth; i++) {
+		sb.append(strArray[i]);
+
+		if(i < depth -1){
+		    sb.append(".");
+		}
+	    }
+	}
+	//packageName.substring(0, endIndex)
+	
+	System.out.println(sb.toString());
+
+	
+	ROOT_LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME, sb.toString());
+	
+	return sb.toString();
+    }
 
 
 
@@ -66,15 +100,15 @@ public class LoggingHelper extends Logger {
 
 
 
-    private static final Class<LoggingHelper> THIS_CLASS = LoggingHelper.class;
+
+
 
     private static final String LOGGING_RESOURCE_BUNDLE_NAME = "com.abreqadhabra.nflight.commons.resources.logging.LoggingMessages";
     // private static final String LOGGING_CONFIG_FILE =
     // "/com/abreqadhabra/nflight/commons/resources/config/CustomLogger.xml";
     private static final String LOGGING_CONFIG_FILE_NAME = "/com/abreqadhabra/nflight/common/resources/conf/logging.properties";
 
-    /** Root Logger */
-    private static final Logger ROOT_LOGGER = Logger.getLogger("");
+
 
     protected LoggingHelper(String name, String resourceBundleName) {
 	super(name, resourceBundleName);
@@ -134,7 +168,7 @@ public class LoggingHelper extends Logger {
 	LogManager logManager = LogManager.getLogManager();
 
 	
-	final InputStream inputStream = THIS_CLASS.getResourceAsStream(LOGGING_CONFIG_FILE_NAME);
+	final InputStream inputStream = THIS_CLAZZ.getResourceAsStream(LOGGING_CONFIG_FILE_NAME);
 
 	
 	// System.out.println(inputStream);
@@ -186,24 +220,24 @@ public class LoggingHelper extends Logger {
 
     public static Logger CLASS_NAME(Class<?> clazz) {
 	final String LOGGING_METHOD_NAME = "getLogger(Class<?> clazz)";
-	final String componentName = THIS_CLASS.getPackage().getName();
+	final String componentName = THIS_CLAZZ.getPackage().getName();
 	// ROOT_LOGGER.setLevel(Level.ALL);
 
 	ROOT_LOGGER
-		.entering(THIS_CLASS.getCanonicalName(), LOGGING_METHOD_NAME);
+		.entering(THIS_CLAZZ.getCanonicalName(), LOGGING_METHOD_NAME);
 
 	Logger logger = Logger.getLogger(componentName,
 		LOGGING_RESOURCE_BUNDLE_NAME);
 
 	System.out.println("logger\t" + ROOT_LOGGER.getLevel());
-	ROOT_LOGGER.logp(Level.INFO, THIS_CLASS.getSimpleName(),
+	ROOT_LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
 		LOGGING_METHOD_NAME, "1-->ROOT_LOGGER.logp ");
 
-	ROOT_LOGGER.exiting(THIS_CLASS.getCanonicalName(), LOGGING_METHOD_NAME,
+	ROOT_LOGGER.exiting(THIS_CLAZZ.getCanonicalName(), LOGGING_METHOD_NAME,
 		logger);
 
 	/*
-	 * ROOT_LOGGER.logp(Level.INFO, THIS_CLASS.getName(),
+	 * ROOT_LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(),
 	 * LOGGING_METHOD_NAME, "1-->ROOT_LOGGER.logp " +
 	 * ROOT_LOGGER.getName());
 	 */
@@ -213,7 +247,7 @@ public class LoggingHelper extends Logger {
 	 */
 
 	LogManager logManager = LogManager.getLogManager();
-	InputStream inputStream = THIS_CLASS
+	InputStream inputStream = THIS_CLAZZ
 		.getResourceAsStream(LOGGING_CONFIG_FILE_NAME);
 
 	try {
@@ -227,19 +261,19 @@ public class LoggingHelper extends Logger {
 	/*
 	 * try { ROOT_LOGGER.info("2-->" + ROOT_LOGGER.getName()); if
 	 * (inputStream != null) { logManager.readConfiguration(inputStream); }
-	 * else { ROOT_LOGGER.logp(Level.SEVERE, THIS_CLASS.getCanonicalName(),
+	 * else { ROOT_LOGGER.logp(Level.SEVERE, THIS_CLAZZ.getCanonicalName(),
 	 * LOGGING_METHOD_NAME, "RE001: NullPointerException"); throw new
-	 * CommonException(THIS_CLASS.getCanonicalName(), "RE001",
+	 * CommonException(THIS_CLAZZ.getCanonicalName(), "RE001",
 	 * "NullPointerException"); }
 	 * 
 	 * } catch (SecurityException se) { throw new
-	 * CommonException(THIS_CLASS.getCanonicalName(), "RE001",
+	 * CommonException(THIS_CLAZZ.getCanonicalName(), "RE001",
 	 * "SecurityException", se.getCause()); } catch (IOException ioe) {
-	 * throw new CommonException(THIS_CLASS.getCanonicalName(), "RE001",
+	 * throw new CommonException(THIS_CLAZZ.getCanonicalName(), "RE001",
 	 * "IOException", ioe.getCause());
 	 * 
 	 * } catch (Exception e) { throw new
-	 * CommonException(THIS_CLASS.getCanonicalName(), "RE001", "Exception",
+	 * CommonException(THIS_CLAZZ.getCanonicalName(), "RE001", "Exception",
 	 * e.getCause()); }
 	 */
 

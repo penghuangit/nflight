@@ -4,7 +4,8 @@
 	<parent>
 		<artifactId>nflight</artifactId>
 		<groupId>com.abreqadhabra.nflight</groupId>
-		<version>0.0.1</version>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>nflight-build-tools</artifactId>
+	<packaging>jar</packaging>
 </project>

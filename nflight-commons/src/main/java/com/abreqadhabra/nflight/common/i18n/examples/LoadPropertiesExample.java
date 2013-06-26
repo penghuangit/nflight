@@ -1,4 +1,4 @@
-package examples.i18n;
+package com.abreqadhabra.nflight.common.i18n.examples;
 
 import java.io.FileInputStream;
 import java.io.IOException;

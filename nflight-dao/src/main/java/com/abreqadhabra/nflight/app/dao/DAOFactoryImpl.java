@@ -1,6 +1,6 @@
 package com.abreqadhabra.nflight.app.dao;
 
-import com.abreqadhabra.nflight.app.dao.exception.DAORuntimeException;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 
 public class DAOFactoryImpl extends DAOFactory {
 
@@ -11,7 +11,7 @@ public class DAOFactoryImpl extends DAOFactory {
 	}
 
 	@Override
-	public AirlineDAO getAirlineDAO() throws DAORuntimeException {
+	public AirlineDAO getAirlineDAO() throws NFlightException {
 		return new AirlineDAOImpl(this.databaseType);
 	}
 

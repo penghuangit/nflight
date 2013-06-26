@@ -1,9 +1,9 @@
-package com.abreqadhabra.nflight.examples.common.logging;
+package com.abreqadhabra.nflight.common.logging.examples;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.exception.CommonException;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class LoggingExample {
@@ -27,7 +27,7 @@ public class LoggingExample {
 	    // Method body
 	    int number1 = 8;
 	    int number2 = 7;
-	    String operator = "+";
+	    String operator = "*";
 	    int result = Calculate(number1, number2, operator);
 	    LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, number1
 		    + operator + number2);
@@ -40,8 +40,8 @@ public class LoggingExample {
 
 	} catch (Exception e) {
 	    StackTraceElement[] current = e.getStackTrace();
-	    if (e instanceof CommonException) {
-		CommonException ce = (CommonException) e;
+	    if (e instanceof NFlightException) {
+		NFlightException ce = (NFlightException) e;
 		LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 			current[0].getMethodName(), "\n" + ce.getStackTrace(e));
 
@@ -63,7 +63,7 @@ public class LoggingExample {
 	    return number1 -= number2; // minus
 	case "/":
 	    if (number2 == 0) {
-		throw new CommonException("Divide zero")
+		throw new NFlightException("Divide zero")
 			.addContextValue("number1", number1)
 			.addContextValue("number2", number2)
 			.addContextValue("operator", operator); // divide
@@ -72,7 +72,7 @@ public class LoggingExample {
 	    }
 	case "%":
 	    if (number2 == 0) {
-		throw new CommonException("Divide zero")
+		throw new NFlightException("Divide zero")
 			.addContextValue("number1", number1)
 			.addContextValue("number2", number2)
 			.addContextValue("operator", operator); // mod
@@ -80,7 +80,7 @@ public class LoggingExample {
 		return number1 %= number2;
 	    }
 	default:
-	    throw new RuntimeException("Unknown operator");
+	    throw new NFlightException("Unknown operator");
 	}
 
     }

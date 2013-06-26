@@ -21,7 +21,7 @@ package com.abreqadhabra.nflight.common.exception;
  * @since STEP1
  * @see ZCommonException
  */
-public class UnexpectedException extends CommonException {
+public class UnexpectedException extends NFlightException {
 
     /**
      * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정

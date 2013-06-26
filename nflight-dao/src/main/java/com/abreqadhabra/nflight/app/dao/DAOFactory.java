@@ -1,6 +1,6 @@
 package com.abreqadhabra.nflight.app.dao;
 
-import com.abreqadhabra.nflight.app.dao.exception.DAORuntimeException;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 
 public abstract class DAOFactory {
 
@@ -11,7 +11,7 @@ public abstract class DAOFactory {
 	public static final String DATABASE_TYPE_DERBY = "derby";
 	public static final String DATABASE_TYPE_ORACLE = "oracle";
 
-    public abstract AirlineDAO getAirlineDAO() throws DAORuntimeException;
+    public abstract AirlineDAO getAirlineDAO() throws NFlightException;
     
 	public static DAOFactory getDAOFactory(String whichFactory) {
 

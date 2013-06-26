@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.abreqadhabra.nflight.app.dao.dto.Airline;
 import com.abreqadhabra.nflight.app.dao.exception.DAORuntimeException;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 
 public class AirlineDAOImpl extends GenericDAO implements AirlineDAO {
 
@@ -15,7 +16,7 @@ public class AirlineDAOImpl extends GenericDAO implements AirlineDAO {
 	private static final String AIRLINE_DAO_MATCH_BY_AIRLINE_NAME = ".sql.AirlineDAOImpl.matchByAirlineName(String)";
 	private static final String AIRLINE_DAO_UPDATE_BY_PRIMARY_KEY = ".sql.AirlineDAOImpl.updateByPrimaryKey(Airline)";
 
-	public AirlineDAOImpl(String databaseType) throws DAORuntimeException {
+	public AirlineDAOImpl(String databaseType) throws NFlightException {
 
 		super(databaseType);
 

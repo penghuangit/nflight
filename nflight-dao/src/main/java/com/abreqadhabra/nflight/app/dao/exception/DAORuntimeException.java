@@ -1,6 +1,9 @@
 package com.abreqadhabra.nflight.app.dao.exception;
 
-import com.abreqadhabra.nflight.common.exception.CommonException;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
+
+
+
 
 /**
  * <p>
@@ -23,35 +26,40 @@ import com.abreqadhabra.nflight.common.exception.CommonException;
  * @since STEP1
  * @see ZCommonException
  */
-public class DAORuntimeException extends CommonException {
+public class DAORuntimeException extends NFlightException {
 
-    /**
+	public DAORuntimeException(String message) {
+		super(message);
+		// TODO Auto-generated constructor stub
+	}
+
+ /*   *//**
      * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정
-     */
+     *//*
     private static final long serialVersionUID = 1L;
 
-    /**
+    *//**
      * 에러ID
      * 
      * @since STEP1
-     */
+     *//*
     private static final String ERROR_ID = "NF000000";
 
-    /**
+    *//**
      * 메시지ID
      * 
      * @since STEP1
-     */
+     *//*
     private static final String MESSAGE_ID = "CE000000";
 
-    /**
+    *//**
      * 에러메시지
      * 
      * @since STEP1
-     */
+     *//*
     private static final String MESSAGE = "데이터베이스 접속중에 예기치 않은 오류가 발생했습니다.";
 
-    /**
+    *//**
      * <p>
      * [개 요] 설정된 상세 메시지를 가진 Exception 객체를 생성합니다.
      * </p>
@@ -65,7 +73,7 @@ public class DAORuntimeException extends CommonException {
      * @param message
      *            상세 메시지
      * @since STEP1
-     */
+     *//*
     public DAORuntimeException(String message) {
 	super(message);
 
@@ -77,7 +85,7 @@ public class DAORuntimeException extends CommonException {
 
     }
 
-    /**
+    *//**
      * <p>
      * [개 요] 설정된 상세 메시지를 가진 Exception 객체를 생성합니다.
      * </p>
@@ -93,7 +101,7 @@ public class DAORuntimeException extends CommonException {
      * @param cause
      *            자식 예외
      * @since STEP1
-     */
+     *//*
     public DAORuntimeException(String message, Throwable cause) {
 	super(message, cause);
 
@@ -104,7 +112,7 @@ public class DAORuntimeException extends CommonException {
 	setMessageId(MESSAGE_ID);
     }
 
-    /**
+    *//**
      * <p>
      * [개 요] 설정된 상세 메시지를 가진 Exception 객체를 생성합니다.
      * </p>
@@ -118,14 +126,13 @@ public class DAORuntimeException extends CommonException {
      * @param cause
      *            자식 예외
      * @since STEP1
-     */
-    public DAORuntimeException(Throwable cause) {
-	super(MESSAGE, cause);
+     *//*
+*/    public DAORuntimeException(Throwable cause) {
+	super( cause);
 
-	// NFlightException의 에러ID를 설정합니다.
-	setErrorId(ERROR_ID);
 
-	// NFlightException의 메시지ID를 설정합니다.
-	setMessageId(MESSAGE_ID);
     }
+
+	public DAORuntimeException(String simpleName, Exception e) {
+		super(  e);	}
 }
