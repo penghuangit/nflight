@@ -1,6 +1,7 @@
 package com.abreqadhabra.nflight.dao;
 
-import com.abreqadhabra.nflight.common.exception.CommonException;
+import org.dbunit.DatabaseTestCase;
+
 
 public class DAOFactoryImpl extends DAOFactory {
 
@@ -9,10 +10,17 @@ public class DAOFactoryImpl extends DAOFactory {
 	public DAOFactoryImpl(String databaseType) {
 		this.databaseType = databaseType;
 	}
+	
+	@Override
+	public CommonDAO getCommonDAO() throws Exception {
+		return new CommonDAO(this.databaseType);
+	}
 
 	@Override
 	public AirlineDAO getAirlineDAO() throws Exception {
 		return new AirlineDAOImpl(this.databaseType);
 	}
+
+
 
 }

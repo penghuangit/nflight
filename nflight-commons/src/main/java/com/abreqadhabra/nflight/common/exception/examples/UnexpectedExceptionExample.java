@@ -16,13 +16,17 @@ public class UnexpectedExceptionExample {
 	final String METHOD_NAME = "main(String[] args)";
 	try {
 	    // Log object entry
-	    LOGGER.entering(THIS_CLAZZ.getName(), METHOD_NAME);
+	    if (LOGGER.isLoggable(Level.FINER)) {
+		LOGGER.entering(THIS_CLAZZ.getName(), METHOD_NAME);
+	    }
 
 	    // Method body
 	    level1();
 
 	    // Log exiting
-	    LOGGER.exiting(THIS_CLAZZ.getName(), METHOD_NAME);
+	    if (LOGGER.isLoggable(Level.FINER)) {
+		LOGGER.exiting(THIS_CLAZZ.getName(), METHOD_NAME);
+	    }
 	} catch (Exception e) {
 	    StackTraceElement[] current = e.getStackTrace();
 	    if (e instanceof CommonException) {

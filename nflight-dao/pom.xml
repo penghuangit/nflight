@@ -10,16 +10,40 @@
 	<!--<groupId>com.abreqadhabra.nflight</groupId> -->
 	<artifactId>nflight-dao</artifactId>
 	<dependencies>
+		<!-- <dependency> <groupId>org.apache.derby</groupId> <artifactId>derbyclient</artifactId> 
+			<version>10.10.1.1</version> <type>jar</type> </dependency> -->
+		<dependency>
+			<groupId>com.abreqadhabra.nflight</groupId>
+			<artifactId>nflight-commons</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.dbunit</groupId>
+			<artifactId>dbunit</artifactId>
+			<version>2.4.9</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derbyclient</artifactId>
 			<version>10.10.1.1</version>
 			<type>jar</type>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.abreqadhabra.nflight</groupId>
-			<artifactId>nflight-commons</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.5</version>
+			<type>jar</type>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
@@ -48,7 +72,63 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>dbunit-maven-plugin</artifactId>
+				<version>1.0-beta-3</version>
+				<!--jar file that has the jdbc driver -->
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.derby</groupId>
+						<artifactId>derbyclient</artifactId>
+						<version>10.10.1.1</version>
+					</dependency>
+				</dependencies>
+
+				<!-- common configurations -->
+				<configuration>
+					<driver>${driver}</driver>
+					<url>${url}</url>
+					<username>${username}</username>
+					<password>${password}</password>
+				</configuration>
+
+				<executions>
+					<execution>
+						<id>export</id>
+						<phase>test</phase>
+						<goals>
+							<goal>export</goal>
+						</goals>
+						<!-- specific configurations -->
+						<configuration>
+							<format>xml</format>
+							<dest>${exportedDataSetFile}</dest>
+						</configuration>
+					</execution>
+					<execution>
+						<id>clean-insert-the-exported-dataset</id>
+						<phase>test</phase>
+						<goals>
+							<goal>operation</goal>
+						</goals>
+						<configuration>
+							<type>CLEAN_INSERT</type>
+							<src>${originalDataSetFile}</src>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
+	<properties>
+		<driver>org.apache.derby.jdbc.ClientDriver</driver>
+		<url>jdbc:derby://localhost:1527/JavaDB/nflightDB;</url>
+		<username>freelec</username>
+		<password>password1!</password>
+		<originalDataSetFile>src/test/resources/com/abreqadhabra/nflight/dao/resources/test/initial-sample-data.xml</originalDataSetFile>
+		<exportedDataSetFile>target/${project.artifactId}/${project.version}/dbunit/export.xml</exportedDataSetFile>
+	</properties>
+	
 </project>

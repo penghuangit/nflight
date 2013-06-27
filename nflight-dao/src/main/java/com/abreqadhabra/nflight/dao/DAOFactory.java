@@ -1,6 +1,6 @@
 package com.abreqadhabra.nflight.dao;
 
-import com.abreqadhabra.nflight.common.exception.CommonException;
+
 
 
 public abstract class DAOFactory {
@@ -11,6 +11,8 @@ public abstract class DAOFactory {
 
 	public static final String DATABASE_TYPE_DERBY = "derby";
 	public static final String DATABASE_TYPE_ORACLE = "oracle";
+
+	public abstract CommonDAO getCommonDAO()throws Exception;
 
     public abstract AirlineDAO getAirlineDAO() throws Exception;
     
@@ -26,5 +28,6 @@ public abstract class DAOFactory {
 			return null;
 		}
 	}
+
 
 }

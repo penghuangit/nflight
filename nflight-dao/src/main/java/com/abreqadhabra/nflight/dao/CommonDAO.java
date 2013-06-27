@@ -20,16 +20,16 @@ import com.abreqadhabra.nflight.common.util.PropertyFileUtil;
 import com.abreqadhabra.nflight.dao.exception.NFlightDAOException;
 import com.abreqadhabra.nflight.dao.util.ResultSetBeanUtil;
 
-public abstract class GenericDAO {
+public class CommonDAO {
 
-	private static final Class<GenericDAO> THIS_CLAZZ = GenericDAO.class;
+	private static final Class<CommonDAO> THIS_CLAZZ = CommonDAO.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private String databaseType;
 	private Properties dbProperties;
 	private Connection connection;
 
-	private static final String DB_PROPERTY_FILE_NAME = "com/abreqadhabra/nflight/app/dao/resources/config/db.properties";
+	private static final String DB_PROPERTY_FILE_NAME = "com/abreqadhabra/nflight/dao/resources/config/db.properties";
 	private static final String JDBC_DRIVER = ".jdbc.driver";
 	private static final String JDBC_URL = ".jdbc.url";
 	private static final String JDBC_USER = ".jdbc.user";
@@ -40,10 +40,10 @@ public abstract class GenericDAO {
 	 */
 	private int maxRows;
 
-	protected GenericDAO(String databaseType) throws Exception {
+	protected CommonDAO(String databaseType) throws Exception {
 		this.databaseType = databaseType;
 		this.dbProperties = PropertyFileUtil
-				.readTraditionalPropertyFile(GenericDAO.class
+				.readTraditionalPropertyFile(CommonDAO.class
 						.getProtectionDomain().getCodeSource().getLocation()
 						.getFile()
 						+ DB_PROPERTY_FILE_NAME);
@@ -51,7 +51,7 @@ public abstract class GenericDAO {
 
 	}
 
-	protected synchronized Connection getConnection() throws Exception {
+	public synchronized Connection getConnection() throws Exception {
 		String jdbcDriver = getPropertyByDatabaseType(JDBC_DRIVER);
 		String jdbcURL = getPropertyByDatabaseType(JDBC_URL);
 		String jdbcUser = getPropertyByDatabaseType(JDBC_USER);

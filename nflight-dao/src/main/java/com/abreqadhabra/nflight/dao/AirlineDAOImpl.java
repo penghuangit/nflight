@@ -1,11 +1,19 @@
 package com.abreqadhabra.nflight.dao;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.dao.dto.Airline;
 
-public class AirlineDAOImpl extends GenericDAO implements AirlineDAO {
 
+public class AirlineDAOImpl extends CommonDAO implements AirlineDAO {
+
+	private static final Class<AirlineDAOImpl> THIS_CLAZZ = AirlineDAOImpl.class;
+	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	
 	private static final String AIRLINE_DAO_INSERT = ".sql.AirlineDAOImpl.insert(Airline)";
 	private static final String AIRLINE_DAO_DELETE_ALL = ".sql.AirlineDAOImpl.deleteAll()";
 	private static final String AIRLINE_DAO_DELETE_BY_PRIMARY_KEY = ".sql.AirlineDAOImpl.deleteByPrimaryKey(String)";
@@ -41,12 +49,19 @@ public class AirlineDAOImpl extends GenericDAO implements AirlineDAO {
 
 	@Override
 	public Airline[] findAll() throws Exception {
+		final String METHOD_NAME = "findAll()";
+
 		String sql = super.getPropertyByDatabaseType(AIRLINE_DAO_FIND_ALL);
 		List<Airline> results = super.findByDynamicQuery(sql, null,
 				Airline.class);
 		Airline airlines[] = new Airline[results.size()];
 		results.toArray(airlines);
 
+	    if (LOGGER.isLoggable(Level.FINER)) {
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+					sql, airlines);
+	    }
+	    
 		return airlines[0] == null ? null : airlines;
 	}
 
@@ -104,5 +119,6 @@ public class AirlineDAOImpl extends GenericDAO implements AirlineDAO {
 				new String[] { airline.getAirlineCode(),
 						airline.getAirlineName(), airline.getAirlineCode() });
 	}
+
 
 }
