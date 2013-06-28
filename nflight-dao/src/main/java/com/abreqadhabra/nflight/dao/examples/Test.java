@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import com.abreqadhabra.nflight.common.util.FileUtil;
-
 public class Test {
 
 	public static String BASE_LOCATION = Test.class
@@ -25,7 +23,7 @@ public class Test {
 
 	protected void getDataSet() throws IOException  {
 		String filePath = BASE_LOCATION + ORIGINAL_DATASET_FILE;
-		String encoding = FileUtil.getEncoding(filePath);
+	//	String encoding = FileUtil.getEncoding(filePath);
 
 /*		InputStreamReader isr = new InputStreamReader(new FileInputStream(
 				filePath), encoding);

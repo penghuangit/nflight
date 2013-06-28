@@ -1,6 +1,5 @@
 package com.abreqadhabra.nflight.dao;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;

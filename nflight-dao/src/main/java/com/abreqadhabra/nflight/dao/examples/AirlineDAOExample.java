@@ -19,11 +19,10 @@ import com.abreqadhabra.nflight.dao.exception.NFlightDAOException;
  */
 
 public class AirlineDAOExample {
-
 	private static final Class<AirlineDAOExample> THIS_CLAZZ = AirlineDAOExample.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	String resourceBundleName = "com.abreqadhabra.nflight.commons.resources.logging.LoggingMessages";
+	String resourceBundleName = "com.abreqadhabra.nflight.common.resources.logging.LoggingMessages";
 
 	/*
 	 * String resourceBundleName = "com.ibm.websphere.componentX.Messages";

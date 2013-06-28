@@ -1,6 +1,5 @@
 package com.abreqadhabra.nflight.dao;
 
-import org.dbunit.DatabaseTestCase;
 
 
 public class DAOFactoryImpl extends DAOFactory {
