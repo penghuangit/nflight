@@ -43,8 +43,8 @@ public class TCPClient {
 				oos = new ObjectOutputStream(clientSocket.getOutputStream());
 				ois = new ObjectInputStream(clientSocket.getInputStream());
 			} catch (IOException e) {
-				System.out.println("ÇĞ»ç °ü¸® ½Ã½ºÅÛ ¼­¹ö(" + url + ":" + port
-						+ ") Á¢¼ÓÀÌ ½ÇÆĞÇÏ¿´½À´Ï´Ù.!!");
+				System.out.println("í•™ì‚¬ ê´€ë¦¬ ì‹œìŠ¤í…œ ì„œë²„(" + url + ":" + port
+						+ ") ì ‘ì†ì´ ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.!!");
 				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -64,11 +64,11 @@ public class TCPClient {
 						viewRecieveResult(cmd, obj);
 					}
 				} catch (UnknownHostException ukhe) {
-					System.out.println("Á¢¼ÓÇÏ·Á´Â ¼­¹ö ip¸¦ Á¤È®È÷ ÀÔ·ÂÇØÁÖ¼¼¿ä");
+					System.out.println("ì ‘ì†í•˜ë ¤ëŠ” ì„œë²„ ipë¥¼ ì •í™•íˆ ì…ë ¥í•´ì£¼ì„¸ìš”");
 				} catch (ConnectException ce) {
-					System.out.println("¼­¹ö¿ÍÀÇ Á¢¼Ó ¿¡·¯");
+					System.out.println("ì„œë²„ì™€ì˜ ì ‘ì† ì—ëŸ¬");
 				} catch (SocketException sockee) {
-					System.out.println("¼­¹ö¿ÍÀÇ Á¢¼Ó Á¾·á »óÅÂ");
+					System.out.println("ì„œë²„ì™€ì˜ ì ‘ì† ì¢…ë£Œ ìƒíƒœ");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -95,7 +95,7 @@ public class TCPClient {
 				clientSocket.close();
 			}
 		} catch (IOException e) {
-			System.out.println("¸ğµç ½ºÆ®¸²À» ´İ¾Ò½À´Ï´Ù.");
+			System.out.println("ëª¨ë“  ìŠ¤íŠ¸ë¦¼ì„ ë‹«ì•˜ìŠµë‹ˆë‹¤.");
 		}
 		clientSocket = null;
 	}
@@ -116,11 +116,11 @@ public class TCPClient {
 			}
 
 		} catch (UnknownHostException ukhe) {
-			System.out.println("Á¢¼ÓÇÏ·Á´Â ¼­¹öIP¸¦ Á¤È®È÷ ÀÔ·ÂÇÏ¼¼¿ä.");
+			System.out.println("ì ‘ì†í•˜ë ¤ëŠ” ì„œë²„IPë¥¼ ì •í™•íˆ ì…ë ¥í•˜ì„¸ìš”.");
 		} catch (ConnectException ce) {
-			System.out.println("¼­¹ö¿ÍÀÇ Á¢¼ÓÀÌ ÀÌ·ç¾îÁöÁö ¾Ê¾Ò½À´Ï´Ù.");
+			System.out.println("ì„œë²„ì™€ì˜ ì ‘ì†ì´ ì´ë£¨ì–´ì§€ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 		} catch (SocketException se) {
-			System.out.println("¼­¹ö¿ÍÀÇ ¿¬°áÀÌ ²÷°å½À´Ï´Ù!");
+			System.out.println("ì„œë²„ì™€ì˜ ì—°ê²°ì´ ëŠê²¼ìŠµë‹ˆë‹¤!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -130,12 +130,12 @@ public class TCPClient {
 		String value = null;
 		gui.logTextArea
 				.append("------------------------------------------------------------------------------------\n");
-		gui.logTextArea.append("¸í·É¾î:" + cmd + "¿¡ ´ëÇÏ¿© ¼­¹ö¿¡¼­ ¹ŞÀº °á°ú:\n");
+		gui.logTextArea.append("ëª…ë ¹ì–´:" + cmd + "ì— ëŒ€í•˜ì—¬ ì„œë²„ì—ì„œ ë°›ì€ ê²°ê³¼:\n");
 		if (obj instanceof String) {
 			value = (String) obj;
 			gui.logTextArea
 					.append("------------------------------------------------------------------------------------\n");
-			gui.logTextArea.append("¸Ş½ÃÁö: " + value + "\n");
+			gui.logTextArea.append("ë©”ì‹œì§€: " + value + "\n");
 		} else if (obj instanceof ArrayList) {
 			ArrayList valueArrayList = (ArrayList) obj;
 			for (int i = 0; i < valueArrayList.size(); i++) {
@@ -143,12 +143,12 @@ public class TCPClient {
 					String msg = (String) valueArrayList.get(i);
 					gui.logTextArea
 							.append("------------------------------------------------------------------------------------\n");
-					gui.logTextArea.append("¸Ş½ÃÁö:" + msg + "\n");
+					gui.logTextArea.append("ë©”ì‹œì§€:" + msg + "\n");
 					gui.logTextArea
 							.append("------------------------------------------------------------------------------------\n");
 				} else {
 					String[] temp = (String[]) valueArrayList.get(i);
-					gui.logTextArea.append("¹è¿­[" + i + "]      ");
+					gui.logTextArea.append("ë°°ì—´[" + i + "]      ");
 					for (int j = 0; j < temp.length; j++) {
 						gui.logTextArea.append(temp[j] + "      ");
 					}
@@ -162,43 +162,43 @@ public class TCPClient {
 
 	public Object createResultObject(String cmd, Object obj) {
 		if ("create".equals(cmd)) {
-			System.out.println("¼­¹ö·ÎºÎÅÍ ÀÔ·Â Á¤º¸¿¡ ´ëÇÑ ÀÔ·Â °á°ú¸¦ Àü¼Û ¹Ş¾Ò½À´Ï´Ù.");
+			System.out.println("ì„œë²„ë¡œë¶€í„° ì…ë ¥ ì •ë³´ì— ëŒ€í•œ ì…ë ¥ ê²°ê³¼ë¥¼ ì „ì†¡ ë°›ì•˜ìŠµë‹ˆë‹¤.");
 			String msg = (String) obj;
 			return msg;
 		} else if ("update".equals(cmd)) {
-			System.out.println("¼­¹ö·ÎºÎÅÍ ÀÔ·Â Á¤º¸¿¡ ´ëÇÑ ¼öÁ¤ °á°ú¸¦ Àü¼Û ¹Ş¾Ò½À´Ï´Ù.");
+			System.out.println("ì„œë²„ë¡œë¶€í„° ì…ë ¥ ì •ë³´ì— ëŒ€í•œ ìˆ˜ì • ê²°ê³¼ë¥¼ ì „ì†¡ ë°›ì•˜ìŠµë‹ˆë‹¤.");
 			String msg = (String) obj;
 			return msg;
 		} else if ("delete".equals(cmd)) {
-			System.out.println("¼­¹ö·ÎºÎÅÍ »èÁ¦ Á¤º¸¿¡ ´ëÇÑ »èÁ¦ °á°ú¸¦ Àü¼Û ¹Ş¾Ò½À´Ï´Ù.");
+			System.out.println("ì„œë²„ë¡œë¶€í„° ì‚­ì œ ì •ë³´ì— ëŒ€í•œ ì‚­ì œ ê²°ê³¼ë¥¼ ì „ì†¡ ë°›ì•˜ìŠµë‹ˆë‹¤.");
 			gui.resetOutPutData(true, true);
 			listUser("list");
 		} else if ("name".equals(cmd)) {
 			if (((ArrayList) obj).size() == 1) {
-				System.out.println("°Ë»ö¾î¿¡ ´ëÇÑ °Ë»ö°á°ú°¡ ¾ø½À´Ï´Ù.");
+				System.out.println("ê²€ìƒ‰ì–´ì— ëŒ€í•œ ê²€ìƒ‰ê²°ê³¼ê°€ ì—†ìŠµë‹ˆë‹¤.");
 				return gui.findUserTextField.getText();
 			} else {
-				System.out.println("¼­¹ö·ÎºÎÅÍ °Ë»ö¾î¿¡ ´ëÇÑ °Ë»ö°á°ú¸¦ Àü¼Û ¹Ş¾Ò½À´Ï´Ù.");
+				System.out.println("ì„œë²„ë¡œë¶€í„° ê²€ìƒ‰ì–´ì— ëŒ€í•œ ê²€ìƒ‰ê²°ê³¼ë¥¼ ì „ì†¡ ë°›ì•˜ìŠµë‹ˆë‹¤.");
 				ArrayList data = extractUserObject((ArrayList) obj);
 				gui.setResultTable(data);
 				return data.get(0);
 			}
 		} else if ("ssn".equals(cmd)) {
 			if (((ArrayList) obj).size() == 1) {
-				System.out.println("°Ë»ö¾î¿¡ ´ëÇÑ °Ë»ö°á°ú°¡ ¾ø½À´Ï´Ù.");
+				System.out.println("ê²€ìƒ‰ì–´ì— ëŒ€í•œ ê²€ìƒ‰ê²°ê³¼ê°€ ì—†ìŠµë‹ˆë‹¤.");
 				return obj;
 			} else {
-				System.out.println("¼­¹ö·ÎºÎÅÍ °Ë»ö °á°ú¿¡ ´ëÇÑ °á°ú¸¦ Àü¼Û ¹Ş¾Ò½À´Ï´Ù.");
+				System.out.println("ì„œë²„ë¡œë¶€í„° ê²€ìƒ‰ ê²°ê³¼ì— ëŒ€í•œ ê²°ê³¼ë¥¼ ì „ì†¡ ë°›ì•˜ìŠµë‹ˆë‹¤.");
 				ArrayList data = extractUserObject((ArrayList) obj);
 				gui.setResultTable(data);
 				return data.get(0);
 			}
 		} else if ("list".equals(cmd)) {
-			gui.logTextArea.append("¼­¹ö·ÎºÎÅÍ È¸¿ø µ¥ÀÌÅÍÀÇ ÀüÃ¼ ¸ñ·ÏÀ» Àü¼Û ¹Ş¾Ò½À´Ï´Ù.\n");
+			gui.logTextArea.append("ì„œë²„ë¡œë¶€í„° íšŒì› ë°ì´í„°ì˜ ì „ì²´ ëª©ë¡ì„ ì „ì†¡ ë°›ì•˜ìŠµë‹ˆë‹¤.\n");
 			gui.setUsersTable(extractUserObject((ArrayList) obj));
 			return new Boolean(true);
 		} else if ("seq".equals(cmd)) {
-			gui.logTextArea.append("¼­¹ö·ÎºÎÅÍ »õ·Î¿î ½ÃÄö½º¸¦ Àü¼Û ¹Ş¾Ò½À´Ï´Ù.\n");
+			gui.logTextArea.append("ì„œë²„ë¡œë¶€í„° ìƒˆë¡œìš´ ì‹œí€€ìŠ¤ë¥¼ ì „ì†¡ ë°›ì•˜ìŠµë‹ˆë‹¤.\n");
 			String seq = (String) obj;
 			gui.setSequence(seq);
 			return new Boolean(true);
@@ -254,7 +254,7 @@ public class TCPClient {
 			}
 			System.out.println(msg);
 			if (users.size() < 2) {
-				javax.swing.JOptionPane.showMessageDialog(gui, msg, "ÀüÃ¼¸ñ·Ï º¸±â ",
+				javax.swing.JOptionPane.showMessageDialog(gui, msg, "ì „ì²´ëª©ë¡ ë³´ê¸° ",
 						javax.swing.JOptionPane.WARNING_MESSAGE);
 			}
 		}
@@ -271,7 +271,7 @@ public class TCPClient {
 				oos.writeObject(object);
 				oos.flush();
 			} else {
-				System.out.println("Àü¼Û ½ÇÆĞ: ¿äÃ» ¸í·É¾î°¡ ¾ø½À´Ï´Ù.\n");
+				System.out.println("ì „ì†¡ ì‹¤íŒ¨: ìš”ì²­ ëª…ë ¹ì–´ê°€ ì—†ìŠµë‹ˆë‹¤.\n");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -281,32 +281,32 @@ public class TCPClient {
 	public void createUser(String cmd, String type, String[] insertData) {
 		if (cmd.equals("create")) {
 			sendUserObject(cmd, null, insertData);
-			gui.logTextArea.append("ÀÔ·Â¿äÃ»: ¿ø°İ¼­¹ö¿¡ Àü¼ÛµÇ¾ú½À´Ï´Ù.\n");
+			gui.logTextArea.append("ì…ë ¥ìš”ì²­: ì›ê²©ì„œë²„ì— ì „ì†¡ë˜ì—ˆìŠµë‹ˆë‹¤.\n");
 		} else if (cmd.equals("update")) {
 			sendUserObject(cmd, type, insertData);
-			gui.logTextArea.append("¼öÁ¤ ¿äÃ»: ¿ø°İ¼­¹ö¿¡ Àü¼ÛµÇ¾ú½À´Ï´Ù.\n");
+			gui.logTextArea.append("ìˆ˜ì • ìš”ì²­: ì›ê²©ì„œë²„ì— ì „ì†¡ë˜ì—ˆìŠµë‹ˆë‹¤.\n");
 		}
 	}
 
 	public void deleteUser(String cmd, String value) {
 		sendUserObject(cmd, value, null);
-		gui.logTextArea.append("»èÁ¦ ¿äÃ»: ¿ø°İ¼­¹ö¿¡ Àü¼ÛµÇ¾ú½À´Ï´Ù.");
+		gui.logTextArea.append("ì‚­ì œ ìš”ì²­: ì›ê²©ì„œë²„ì— ì „ì†¡ë˜ì—ˆìŠµë‹ˆë‹¤.");
 	}
 
 	public void listUser(String cmd) {
 		sendUserObject(cmd, null, null);
-		gui.logTextArea.append("ÀüÃ¼Ãâ·Â¿äÃ»: ¿ø°İ¼­¹ö¿¡ Àü¼ÛµÇ¾ú½À´Ï´Ù.\n");
+		gui.logTextArea.append("ì „ì²´ì¶œë ¥ìš”ì²­: ì›ê²©ì„œë²„ì— ì „ì†¡ë˜ì—ˆìŠµë‹ˆë‹¤.\n");
 	}
 
 	public void readUser(String cmd, String value) {
 		sendUserObject(cmd, value, null);
-		gui.logTextArea.append("°Ë»ö¿äÃ» [" + cmd + " / " + value
-				+ "] ¿ø°İ¼­¹ö¿¡ Àü¼ÛµÇ¾ú½À´Ï´Ù.\n");
+		gui.logTextArea.append("ê²€ìƒ‰ìš”ì²­ [" + cmd + " / " + value
+				+ "] ì›ê²©ì„œë²„ì— ì „ì†¡ë˜ì—ˆìŠµë‹ˆë‹¤.\n");
 	}
 
 	public void createSequence(String cmd, String value) {
 		sendUserObject(cmd, value, null);
-		gui.logTextArea.append("°Ë»ö¿äÃ» [" + cmd + " / " + value
-				+ "] ¿ø°İ¼­¹ö¿¡ Àü¼ÛµÇ¾ú½À´Ï´Ù.\n");
+		gui.logTextArea.append("ê²€ìƒ‰ìš”ì²­ [" + cmd + " / " + value
+				+ "] ì›ê²©ì„œë²„ì— ì „ì†¡ë˜ì—ˆìŠµë‹ˆë‹¤.\n");
 	}
 } // class TCPClient

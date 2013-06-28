@@ -19,7 +19,7 @@ import java.util.*;
 	
 	private boolean DEBUG = false;
 
-	private  String[] names = {"È¸¿ø¹øÈ£", "ÀÌ¸§ ","³ªÀÌ", "ÁÖ¹Îµî·Ï¹øÈ£","ÁÖ¼Ò", "ÇĞ¹ø","±³°ú¸ñ","ºÎ¼­", "±¸ºĞ"};
+	private  String[] names = {"íšŒì›ë²ˆí˜¸", "ì´ë¦„ ","ë‚˜ì´", "ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸","ì£¼ì†Œ", "í•™ë²ˆ","êµê³¼ëª©","ë¶€ì„œ", "êµ¬ë¶„"};
 	int rowLength;
 
    public ResultTableDataModel(ArrayList tdm) {
@@ -47,13 +47,13 @@ import java.util.*;
 				type[i] = temp.getType();	
 				if("lms_student".equals(type[i])){
 					studentNo[i] = ((Student) temp).getStudentNo();
-					type[i] = "ÇĞ»ı";	
+					type[i] = "í•™ìƒ";	
 				}else	if("lms_professor".equals(type[i])){
 					course[i] = ((Professor) temp).getCourse();
-					type[i]  = "±³¼ö";	
+					type[i]  = "êµìˆ˜";	
 				}else	if("lms_employee".equals(type[i])){
 					department[i] = ((Employee)  temp).getDepartment();
-					type[i]  = "±³Á÷¿ø";	
+					type[i]  = "êµì§ì›";	
 				}
 		}
 	}

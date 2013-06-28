@@ -3,7 +3,6 @@ package com.abreqadhabra.freelec.jbpf.examples.lms.bin.server.tcp;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLException;
 
 import com.abreqadhabra.freelec.jbpf.examples.lms.bin.server.db.EmbeddedJavaDB;
 import com.abreqadhabra.freelec.jbpf.examples.lms.dao.IUserDAO;
@@ -22,7 +21,7 @@ public class TCPServer{
 		try{
 			serverSocket = new ServerSocket(port);
 			dao = (UserDAOFactory.instance()).getUserDAO(1);
-			System.out.println("ÇÐ»ç °ü¸® ½Ã½ºÅÛ ¼­¹ö("+port +")°¡ ½ÃÀÛµÇ¾ú½À´Ï´Ù.");
+		//	System.out.println("ï¿½Ð»ï¿½ ï¿½ï¿½ ï¿½Ã½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½("+port +")ï¿½ï¿½ ï¿½ï¿½ï¿½ÛµÇ¾ï¿½ï¿½ï¿½Ï´ï¿½.");
 			socketListening();
 		} catch (IOException e) { 
 				e.printStackTrace();		
@@ -34,7 +33,7 @@ public class TCPServer{
 	public void socketListening(){
 		while (true) {
 			try {
-				System.out.println("Å¬¶óÀÌ¾ðÆ®ÀÇ ¿¬°áÀ» ±â´Ù¸³´Ï´Ù.");
+			//	System.out.println("Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½Ï´ï¿½.");
 				Socket socket = serverSocket.accept();		
 				ServerThread serverThread = new ServerThread(socket, dao);
 				serverThread.start();					

@@ -1,16 +1,16 @@
 package com.abreqadhabra.freelec.jbpf.examples.lms.dao;
 
 final public class UserConstants{
-	static public final String DUPLICATE_ERROR_MESSAGE = "ÀÔ·Â ¿¡·¯: ÀÌ¹Ì µî·ÏµÈ ÁÖ¹Îµî·Ï¹øÈ£¿Í Áßº¹µË´Ï´Ù.";
-	static public final String CREATE_USER_MESSAGE = "ÀÔ·Â ¼º°ø: µ¥ÀÌÅÍº£ÀÌ½º¿¡ ÀÔ·ÂµÇ¾ú½À´Ï´Ù.";
-	static public final String DROP_USER_MESSAGE = "»èÁ¦ ¼º°ø: µ¥ÀÌÅÍº£ÀÌ½º¿¡¼­ »èÁ¦µÇ¾ú½À´Ï´Ù.";
-	static public final String DROP_USER_ERROR_MESSAGE = "»èÁ¦ ¿¡·¯: »èÁ¦ÇÒ È¸¿ø¹øÈ£¿¡ ´ëÇÑ ·¹ÄÚµå¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.";
-	static public final String MODIFY_USER_MESSAGE = "¼öÁ¤ ¼º°ø: µ¥ÀÌÅÍº£ÀÌ½ºÀÇ ·¹ÄÚµå°¡ ¼öÁ¤µÇ¾ú½À´Ï´Ù.";
-	static public final String MODIFY_USER_ERROR_MESSAGE = "¼öÁ¤ ¿¡·¯: µ¥ÀÌÅÍº£ÀÌ½º ¿¡·¯°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù.";
-	static public final String FIND_USER_MESSAGE = "°Ë»ö ¼º°ø: µ¥ÀÌÅÍº£ÀÌ½º¿¡¼­ °Ë»öµÇ¾ú½À´Ï´Ù.";
-	static public final String FIND_USER_ERROR_MESSAGE = "°Ë»ö ¿¡·¯: ÇØ´ç È¸¿ø¿¡ ´ëÇÑ ·¹ÄÚµå¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.";
-	static public final String LIST_USER_MESSAGE = "Ãâ·Â ¼º°ø: µ¥ÀÌÅÍº£ÀÌ½º¿¡¼­ °Ë»öµÇ¾ú½À´Ï´Ù.";
-	static public final String LIST_USER_ERROR_MESSAGE = "Ãâ·Â ¿¡·¯: µî·ÏµÈ ·¹ÄÚµå°¡ ¾ø½À´Ï´Ù.";
+	static public final String DUPLICATE_ERROR_MESSAGE = "ì…ë ¥ ì—ëŸ¬: ì´ë¯¸ ë“±ë¡ëœ ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸ì™€ ì¤‘ë³µë©ë‹ˆë‹¤.";
+	static public final String CREATE_USER_MESSAGE = "ì…ë ¥ ì„±ê³µ: ë°ì´í„°ë² ì´ìŠ¤ì— ì…ë ¥ë˜ì—ˆìŠµë‹ˆë‹¤.";
+	static public final String DROP_USER_MESSAGE = "ì‚­ì œ ì„±ê³µ: ë°ì´í„°ë² ì´ìŠ¤ì—ì„œ ì‚­ì œë˜ì—ˆìŠµë‹ˆë‹¤.";
+	static public final String DROP_USER_ERROR_MESSAGE = "ì‚­ì œ ì—ëŸ¬: ì‚­ì œí•  íšŒì›ë²ˆí˜¸ì— ëŒ€í•œ ë ˆì½”ë“œë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.";
+	static public final String MODIFY_USER_MESSAGE = "ìˆ˜ì • ì„±ê³µ: ë°ì´í„°ë² ì´ìŠ¤ì˜ ë ˆì½”ë“œê°€ ìˆ˜ì •ë˜ì—ˆìŠµë‹ˆë‹¤.";
+	static public final String MODIFY_USER_ERROR_MESSAGE = "ìˆ˜ì • ì—ëŸ¬: ë°ì´í„°ë² ì´ìŠ¤ ì—ëŸ¬ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤.";
+	static public final String FIND_USER_MESSAGE = "ê²€ìƒ‰ ì„±ê³µ: ë°ì´í„°ë² ì´ìŠ¤ì—ì„œ ê²€ìƒ‰ë˜ì—ˆìŠµë‹ˆë‹¤.";
+	static public final String FIND_USER_ERROR_MESSAGE = "ê²€ìƒ‰ ì—ëŸ¬: í•´ë‹¹ íšŒì›ì— ëŒ€í•œ ë ˆì½”ë“œë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.";
+	static public final String LIST_USER_MESSAGE = "ì¶œë ¥ ì„±ê³µ: ë°ì´í„°ë² ì´ìŠ¤ì—ì„œ ê²€ìƒ‰ë˜ì—ˆìŠµë‹ˆë‹¤.";
+	static public final String LIST_USER_ERROR_MESSAGE = "ì¶œë ¥ ì—ëŸ¬: ë“±ë¡ëœ ë ˆì½”ë“œê°€ ì—†ìŠµë‹ˆë‹¤.";
 	private UserConstants()	{
 		// this constructor is intentionally private 
 	}//UserConstants()

@@ -29,11 +29,10 @@ class ServerThread extends Thread {
 		this.socket = soc;
 		this.dao = dao;
 		try {
-			client = (socket.getInetAddress()).getHostAddress();// Á¢¼ÓÇÑÅ¬¶óÀÌ¾ðÆ®ÀÇ IP°ª
+			client = (socket.getInetAddress()).getHostAddress();// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ IPï¿½ï¿½
 			port = socket.getPort();
 			hostName = socket.getInetAddress().getHostName();
-			System.out.println("Å¬¶óÀÌ¾ðÆ® Á¢¼ÓÁ¤º¸: " + hostName + "/" + client + ":"
-					+ port + "\n");
+			//System.out.println("Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: " + hostName + "/" + client + ":"					+ port + "\n");
 			dis = new DataInputStream(socket.getInputStream());
 			dos = new DataOutputStream(socket.getOutputStream());
 			ois = new ObjectInputStream(socket.getInputStream());
@@ -43,21 +42,20 @@ class ServerThread extends Thread {
 		}
 	}
 
-	// Å¬¶óÀÌ¾ðÆ®¿Í ¿¬°áÈÄ ¿¬°áÀÌ ²÷¾îÁú¶§±îÁö °è¼ÓÇØ¼­Å¬¶óÀÌ¾ðÆ®ÀÇ µ¥ÀÌÅÍ¸¦ ´ë±â
+	// Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½
 	public void run() {
 		Object obj = null;
 		ArrayList daoResult = null;
 		String cmd = null;
 		String value = null;
 		String msg = null;
-		System.out.println("Å¬¶óÀÌ¾ðÆ®: " + client + "¿Í ¿¬°áÀ» ¿Ï·áÇß½À´Ï´Ù.\n");
+	//	System.out.println("Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®: " + client + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.\n");
 		try {
 			while (true) {
 				cmd = (String) ois.readObject();
 				value = (String) ois.readObject();
 				obj = ois.readObject();
-				System.out.println("Å¬¶óÀÌ¾ðÆ® " + client + "·ÎºÎÅÍ \"¸í·É¾î: " + cmd
-						+ ",  °´Ã¼Á¤º¸: " + obj + "\"  ¸¦ Àü¼Û¹Þ¾Ò½À´Ï´Ù\n");
+		//		System.out.println("Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® " + client + "ï¿½Îºï¿½ï¿½ï¿½ \"ï¿½ï¿½É¾ï¿½: " + cmd 						+ ",  ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½: " + obj + "\"  ï¿½ï¿½ ï¿½ï¿½Û¹Þ¾Ò½ï¿½ï¿½Ï´ï¿½\n");
 				if ("create".equals(cmd)) {
 					String[] temp = (String[]) obj;
 					String[] defaultInfo = new String[4];
@@ -108,18 +106,17 @@ class ServerThread extends Thread {
 					sendMessage(cmd, daoResult);
 				} else if ("seq".equals(cmd)) {
 					String seq = dao.getSequence(value);
-					System.out.println("»õ·Î¿î ½ÃÄö½º´Â " + msg);
+					System.out.println("ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ " + msg);
 					sendMessage(cmd, seq);
 				}
-				System.out.println("Å¬¶óÀÌ¾ðÆ® " + client + "¿¡°Ô " + cmd
-						+ "¿¡ ´ëÇÑ °á°ú¸¦ Àü¼ÛÇÏ¿´½À´Ï´Ù.\n");
+			//	System.out.println("Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® " + client + "ï¿½ï¿½ï¿½ï¿½ " + cmd 						+ "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.\n");
 			}// while
 
 		} catch (EOFException eofe) {
 			close();
 		} catch (SocketException se) {
 			close();
-			System.out.println(client + "¿ÍÀÇ ¿¬°áÀÌ ²÷°å½À´Ï´Ù. ¼ÒÄÏÀ» ²÷½À´Ï´Ù.\n");
+			// System.out.println(client + "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.\n");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -147,12 +144,12 @@ class ServerThread extends Thread {
 				String msg = (String) valueArrayList.get(i);
 				System.out
 						.println("------------------------------------------------------------------------------------");
-				System.out.println("¸Þ½ÃÁö[" + i + "]\t" + msg);
+				System.out.println("ï¿½Þ½ï¿½ï¿½ï¿½[" + i + "]\t" + msg);
 			} else {
 				System.out
 						.println("------------------------------------------------------------------------------------");
 				String[] temp = (String[]) valueArrayList.get(i);
-				System.out.print("¹è¿­[" + i + "]\t");
+				System.out.print("ï¿½è¿­[" + i + "]\t");
 				for (int j = 0; j < temp.length; j++) {
 					System.out.print("\t" + temp[j]);
 				}
@@ -172,7 +169,7 @@ class ServerThread extends Thread {
 				ois.close();
 			if (oos != null)
 				oos.close();
-			System.out.println("Å¬¶óÀÌ¾ðÆ®: " + client + "´ÔÀÌ Á¢¼ÓÇØÁ¦Çß½À´Ï´Ù.\n");
+			//System.out.println("Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®: " + client + "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.\n");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

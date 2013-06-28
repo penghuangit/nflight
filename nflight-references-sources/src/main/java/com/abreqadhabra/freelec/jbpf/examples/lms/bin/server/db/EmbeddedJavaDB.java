@@ -64,11 +64,11 @@ public class EmbeddedJavaDB {
                         "insert into LMS_USER values (?, ?, ?, ?)");
 
             psInsert.setString(1, "1234567890123");
-            psInsert.setString(2, "(ÁÖ)ÇÁ¸®·º ");
+            psInsert.setString(2, "(ì£¼)í”„ë¦¬ë ‰ ");
             psInsert.setString(3, "29");
-            psInsert.setString(4, "°æ±âµµ ºÎÃµ½Ã ¿ø¹Ì±¸ »óµ¿ 532-12 ³ª·çºôµù 401È£ (420-030)");
+            psInsert.setString(4, "ê²½ê¸°ë„ ë¶€ì²œì‹œ ì›ë¯¸êµ¬ ìƒë™ 532-12 ë‚˜ë£¨ë¹Œë”© 401í˜¸ (420-030)");
             psInsert.executeUpdate();
-            System.out.println("Inserted (ÁÖ)ÇÁ¸®·º ");	
+            System.out.println("Inserted (ì£¼)í”„ë¦¬ë ‰ ");	
 			
 			System.out.println(strCreateStudentTable);
 			statement.execute(strCreateStudentTable);

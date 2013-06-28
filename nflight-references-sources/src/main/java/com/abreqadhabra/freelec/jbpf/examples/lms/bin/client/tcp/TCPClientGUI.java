@@ -33,10 +33,10 @@ public class TCPClientGUI extends JPanel implements ActionListener, ItemListener
 	protected static final String userStudentNoComboBoxString = "studentNo";
     protected static final String userCourseComboBoxString = "course";
     protected static final String userDepartmentComboBoxString = "department";
-    protected static final String dataCardString = "µ¥ÀÌÅÍÅ¸ÀÔ";
-	protected static final String studentDataCardString = "ÇĞ»ı";
-    protected static final String professorDataCardString = "±³¼ö";
-    protected static final String employeeDataCardString = "±³Á÷¿ø";
+    protected static final String dataCardString = "ë°ì´í„°íƒ€ì…";
+	protected static final String studentDataCardString = "í•™ìƒ";
+    protected static final String professorDataCardString = "êµìˆ˜";
+    protected static final String employeeDataCardString = "êµì§ì›";
 
 	private boolean DEBUG = false;	 //usersTable
 	private boolean displaySet;
@@ -59,8 +59,8 @@ public class TCPClientGUI extends JPanel implements ActionListener, ItemListener
 	protected JTextField[] defaultDataTextField   = { new JTextField(15), new JTextField(15), new JTextField(15), new JTextField(15), new JTextField(15)};
 	protected JTextField[] addtionalDataTextField =  {new JTextField(15), new JTextField(15), new JTextField(15)};
 	
-	protected String[] defaultDataLabels = {"È¸¿ø¹øÈ£", "ÀÌ¸§ ","³ªÀÌ", "ÁÖ¹Îµî·Ï¹øÈ£","ÁÖ¼Ò" };
-	protected String[] addtionalDataLabels = {"ÇĞ¹ø", "±³°ú¸ñ", "ºÎ¼­"};
+	protected String[] defaultDataLabels = {"íšŒì›ë²ˆí˜¸", "ì´ë¦„ ","ë‚˜ì´", "ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸","ì£¼ì†Œ" };
+	protected String[] addtionalDataLabels = {"í•™ë²ˆ", "êµê³¼ëª©", "ë¶€ì„œ"};
 	protected String comboBoxItems[] = {dataCardString, studentDataCardString, professorDataCardString, employeeDataCardString};
 	protected String selectedRowObjectType;
 	protected String selectedRowAddtionalData;
@@ -69,7 +69,7 @@ public class TCPClientGUI extends JPanel implements ActionListener, ItemListener
 	protected String originalSequence = null;
 
 //--------------------------------------------------------------------
-//  TCPClientGUI(TCPClient tcpc) »ı¼ºÀÚ
+//  TCPClientGUI(TCPClient tcpc) ìƒì„±ì
 //--------------------------------------------------------------------
 
 public TCPClientGUI(TCPClient tcpc) {
@@ -80,10 +80,10 @@ public TCPClientGUI(TCPClient tcpc) {
 
 	JDialog.setDefaultLookAndFeelDecorated(true);
 	String options[] = {"id", "pwd"};
-	options[0] = JOptionPane.showInputDialog("¾ÆÀÌµğ¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä."); 
-	options[1] = JOptionPane.showInputDialog("ÆĞ½º¿öµå¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä."); 
+	options[0] = JOptionPane.showInputDialog("ì•„ì´ë””ë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”."); 
+	options[1] = JOptionPane.showInputDialog("íŒ¨ìŠ¤ì›Œë“œë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”."); 
 	if(!"admin".equals(options[0]) && !"admin".equals(options[0])){
-			 JOptionPane.showMessageDialog(this, "·Î±×ÀÎÀÌ ½ÇÆĞÇÏ¿´½À´Ï´Ù.\n¾ÆÀÌµğ¿Í ÆĞ½º¿öµå¸¦ Á¤È®È÷\nÈ®ÀÎÈÄ Àç½ÇÇàÇÏ¿© ÁÖ¼¼¿ä", "·Î±×ÀÎ", JOptionPane.WARNING_MESSAGE); 
+			 JOptionPane.showMessageDialog(this, "ë¡œê·¸ì¸ì´ ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.\nì•„ì´ë””ì™€ íŒ¨ìŠ¤ì›Œë“œë¥¼ ì •í™•íˆ\ní™•ì¸í›„ ì¬ì‹¤í–‰í•˜ì—¬ ì£¼ì„¸ìš”", "ë¡œê·¸ì¸", JOptionPane.WARNING_MESSAGE); 
 			System.exit(0);
 	}
 	
@@ -91,14 +91,14 @@ public TCPClientGUI(TCPClient tcpc) {
 	GridBagLayout gridbag = (GridBagLayout)getLayout();
 	GridBagConstraints c = new GridBagConstraints();	
 
-//  User °´Ã¼ µ¥ÀÌÅÍ Å×ÀÌºí
+//  User ê°ì²´ ë°ì´í„° í…Œì´ë¸”
 	 usersTable  = createUserTable();	
 //	Create the scroll pane and add the table to it.
 	JScrollPane scrollPane = new JScrollPane(usersTable);
 	scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 	scrollPane.setBorder(
 		BorderFactory.createCompoundBorder(
-			BorderFactory.createTitledBorder("È¸¿ø ¸ñ·Ï"),
+			BorderFactory.createTitledBorder("íšŒì› ëª©ë¡"),
 			BorderFactory.createEmptyBorder(5,5,5,5)
 		));
 //	Add the scroll pane to this panel.
@@ -107,7 +107,7 @@ public TCPClientGUI(TCPClient tcpc) {
 	c.gridwidth = GridBagConstraints.REMAINDER; //end of row
 	gridbag.setConstraints(scrollPane, c);
 	this.add(scrollPane);
-// ÅÇµåÆäÀÎ ¼öÁ¤/ÀÔ·Â, ½Ã½ºÅÛ ·Î±×
+// íƒ­ë“œí˜ì¸ ìˆ˜ì •/ì…ë ¥, ì‹œìŠ¤í…œ ë¡œê·¸
 	JPanel editTabbedPanel = createTabbedPanel();
 	c.weighty = 1.0;  //Button area and message area have equal height.
 	c.fill = GridBagConstraints.BOTH; //Fill entire cell.
@@ -116,7 +116,7 @@ public TCPClientGUI(TCPClient tcpc) {
 //	Make sure we have nice window decorations.
 	JFrame.setDefaultLookAndFeelDecorated(true);
 //	Create and set up the window.
-	JFrame frame = new JFrame("LMS: Learning Management System Å¬¶óÀÌ¾ğÆ®");
+	JFrame frame = new JFrame("LMS: Learning Management System í´ë¼ì´ì–¸íŠ¸");
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	frame.setContentPane(this);
 	frame.setJMenuBar(createJMenuBar());
@@ -127,7 +127,7 @@ public TCPClientGUI(TCPClient tcpc) {
 	}
 
 //--------------------------------------------------------------------
-//  User °´Ã¼ µ¥ÀÌÅÍ Å×ÀÌºí
+//  User ê°ì²´ ë°ì´í„° í…Œì´ë¸”
 //--------------------------------------------------------------------
 
 private JTable createUserTable(){
@@ -137,9 +137,9 @@ private JTable createUserTable(){
 	table.setGridColor(Color.DARK_GRAY );
 	table.setPreferredScrollableViewportSize(new Dimension(600, 100));
 
-//	´ÜÀÏ ¼±ÅÃ ¸®½º³Ê	
+//	ë‹¨ì¼ ì„ íƒ ë¦¬ìŠ¤ë„ˆ	
 	table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//	·Î¿ì ¼¿·º¼Ç
+//	ë¡œìš° ì…€ë ‰ì…˜
 	if (ALLOW_ROW_SELECTION) { // true by default
 		ListSelectionModel rowSM = table.getSelectionModel();
 		rowSM.addListSelectionListener(new ListSelectionListener() {
@@ -154,7 +154,7 @@ private JTable createUserTable(){
 				} else {
 					int selectedRow = lsm.getMinSelectionIndex();
 					//System.out.println("Row " + selectedRow + " is now selected.");
-//	Å×ÀÌºí ¼±ÅÃ/ ÇØ´ç ·Î¿ìÀÇ ¼­¹ö Á¸Àç¿©ºÎ °Ë»ç
+//	í…Œì´ë¸” ì„ íƒ/ í•´ë‹¹ ë¡œìš°ì˜ ì„œë²„ ì¡´ì¬ì—¬ë¶€ ê²€ì‚¬
 					String selectedSsn = (String) table.getModel().getValueAt(selectedRow , 2);
 					findUser(findSsnRadioButtonString,  selectedSsn);
 					defaultDataTextField[3].setEditable(false);
@@ -164,7 +164,7 @@ private JTable createUserTable(){
 	} else {
 		table.setRowSelectionAllowed(false);
 	}
-//	 ÄÃ·³ ¼½·º¼Ç
+//	 ì»¬ëŸ¼ ì„¹ë ‰ì…˜
 	if (ALLOW_COLUMN_SELECTION) { // false by default
 		if (ALLOW_ROW_SELECTION) {
 			//We allow both row and column selection, which
@@ -190,7 +190,7 @@ private JTable createUserTable(){
 			}
 		});
 	}
-//Å×ÀÌºí ¸®½º³Ê µğ¹ö°Å
+//í…Œì´ë¸” ë¦¬ìŠ¤ë„ˆ ë””ë²„ê±°
 	if (DEBUG) {
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -202,7 +202,7 @@ private JTable createUserTable(){
 }
 
 //--------------------------------------------------------------------
-//  User °´Ã¼ µ¥ÀÌÅÍ Å×ÀÌºí µğ¹ö°Å À¯Æ¿ ¸Ş½îµå
+//  User ê°ì²´ ë°ì´í„° í…Œì´ë¸” ë””ë²„ê±° ìœ í‹¸ ë©”ì˜ë“œ
 //--------------------------------------------------------------------
 
 private void printDebugData(JTable table) {
@@ -221,7 +221,7 @@ private void printDebugData(JTable table) {
     }
 
 //--------------------------------------------------------------------
-// ÅÇµåÆäÀÎ »ı¼º (¸Ş´º¿Í ÀÔ·Â/¼öÁ¤Æû, ½Ã½ºÅÛ ·Î±×)
+// íƒ­ë“œí˜ì¸ ìƒì„± (ë©”ë‰´ì™€ ì…ë ¥/ìˆ˜ì •í¼, ì‹œìŠ¤í…œ ë¡œê·¸)
 //--------------------------------------------------------------------
 
 private  JPanel createTabbedPanel(){
@@ -229,50 +229,50 @@ private  JPanel createTabbedPanel(){
 	JTabbedPane tabbedPane = new JTabbedPane();     
 	JComponent editPanel = createEditPanel();
 	JComponent logPanel = createLogPanel();
-	tabbedPane.addTab("¸Ş´º", null, editPanel,  "ÀÔ·Â ¹× ¼öÁ¤") ;
-	tabbedPane.addTab("½Ã½ºÅÛ·Î±×", null, logPanel,  "ÀÔ·Â ¹× ¼öÁ¤") ;
+	tabbedPane.addTab("ë©”ë‰´", null, editPanel,  "ì…ë ¥ ë° ìˆ˜ì •") ;
+	tabbedPane.addTab("ì‹œìŠ¤í…œë¡œê·¸", null, logPanel,  "ì…ë ¥ ë° ìˆ˜ì •") ;
 	panel.add(tabbedPane);
 	return panel;
 }
 
 //--------------------------------------------------------------------
-// ¸Ş´º »ı¼º (°Ë»ö/¸ñ·Ï°»½Å)
+// ë©”ë‰´ ìƒì„± (ê²€ìƒ‰/ëª©ë¡ê°±ì‹ )
 //--------------------------------------------------------------------
 
 private JPanel createUserMenu(){
-//°Ë»ö ¶óµğ¿À ¹öÆ°	
+//ê²€ìƒ‰ ë¼ë””ì˜¤ ë²„íŠ¼	
 	final int numButtons = 2;
 	JRadioButton[] findUserRadioButtons = new JRadioButton[numButtons];
 	group = new ButtonGroup();
-	findUserRadioButtons[0] = new JRadioButton("ÁÖ¹Îµî·Ï¹øÈ£");
+	findUserRadioButtons[0] = new JRadioButton("ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸");
 	findUserRadioButtons[0].setActionCommand(findSsnRadioButtonString);
-	findUserRadioButtons[1] = new JRadioButton("ÀÌ¸§");
+	findUserRadioButtons[1] = new JRadioButton("ì´ë¦„");
 	findUserRadioButtons[1].setActionCommand(findNameRadioButtonString);
 	for (int i = 0; i < numButtons; i++) {
 		group.add(findUserRadioButtons[i]);
 	}
 	findUserRadioButtons[1].setSelected(true);
-// °Ë»ö ÅØ½ºÆ®ÇÊµå
+// ê²€ìƒ‰ í…ìŠ¤íŠ¸í•„ë“œ
 	findUserTextField = new JTextField(15); 
 //	findUserTextField.setPreferredSize(new Dimension(30, 10));
 	findUserTextField.setActionCommand(findUserTextFieldString);
 	findUserTextField.addActionListener(this);
-// °Ë»ö ¹öÆ°
-	JButton findUserButton = new  JButton("°Ë»ö");
+// ê²€ìƒ‰ ë²„íŠ¼
+	JButton findUserButton = new  JButton("ê²€ìƒ‰");
 //	findUserButton.setPreferredSize(new Dimension(40, 10));
 	findUserButton.setVerticalTextPosition(AbstractButton.CENTER);
-	//findUserButton.setMnemonic(KeyEvent.VK_P); //´ÜÃàÅ°
-	findUserButton.setToolTipText("°Ë»ö¾î¸¦ ÀÔ·ÂÇÏ°í °Ë»ö ¹öÆ°À» Å¬¸¯ÇÏ¼¼¿ä.");
+	//findUserButton.setMnemonic(KeyEvent.VK_P); //ë‹¨ì¶•í‚¤
+	findUserButton.setToolTipText("ê²€ìƒ‰ì–´ë¥¼ ì…ë ¥í•˜ê³  ê²€ìƒ‰ ë²„íŠ¼ì„ í´ë¦­í•˜ì„¸ìš”.");
 	findUserButton.setActionCommand(findUserButtonString);
 	findUserButton.addActionListener(this);
-//  ¸ñ·Ï °»½Å¹öÆ°
-	JButton listUserButton = new  JButton("¸ñ·Ï °»½Å");
+//  ëª©ë¡ ê°±ì‹ ë²„íŠ¼
+	JButton listUserButton = new  JButton("ëª©ë¡ ê°±ì‹ ");
 //    listUserButton.setPreferredSize(new Dimension(80, 20));
 	listUserButton.setVerticalTextPosition(AbstractButton.CENTER);
-	listUserButton.setToolTipText("È¸¿ø ¸ñ·ÏÀ» ÃÖ½Å µ¥ÀÌÅÍ·Î º¸±âÇÏ·Á¸é ¸ñ·Ï °»½Å ¹öÆ°À» Å¬¸¯ÇÏ¼¼¿ä.");
+	listUserButton.setToolTipText("íšŒì› ëª©ë¡ì„ ìµœì‹  ë°ì´í„°ë¡œ ë³´ê¸°í•˜ë ¤ë©´ ëª©ë¡ ê°±ì‹  ë²„íŠ¼ì„ í´ë¦­í•˜ì„¸ìš”.");
 	listUserButton.setActionCommand(listUserButtonString);
 	listUserButton.addActionListener(this);
-//  °Ë»ö ÆÇ³Ú(±×¸®µå ·¹ÀÌ¾Æ¿ô)
+//  ê²€ìƒ‰ íŒë„¬(ê·¸ë¦¬ë“œ ë ˆì´ì•„ì›ƒ)
 	JPanel panel = new JPanel(new GridLayout(3, 1));
 	JPanel radioButtonPanel = new JPanel(new SpringLayout());
 	for (int i = 0; i < numButtons; i++) {
@@ -300,41 +300,41 @@ private JPanel createUserMenu(){
 }
 
 //--------------------------------------------------------------------
-// ¸Ş´º »ı¼º (¼öÁ¤/»èÁ¦/ÀÔ·Â)
+// ë©”ë‰´ ìƒì„± (ìˆ˜ì •/ì‚­ì œ/ì…ë ¥)
 //--------------------------------------------------------------------
 
 private  JPanel createMenuPanel(){
-//	Àü¼Û ¹× ¸®¼Â¹öÆ°
+//	ì „ì†¡ ë° ë¦¬ì…‹ë²„íŠ¼
 	cb = new JComboBox(comboBoxItems);
 	cb.setEditable(false);
 	cb.setPreferredSize(new Dimension(60, 20));
 	cb.addItemListener(this);
 
-//	ÀÔ·Â
-	JButton createUserButton = new  JButton("ÀÔ·Â");
+//	ì…ë ¥
+	JButton createUserButton = new  JButton("ì…ë ¥");
 	createUserButton.setPreferredSize(new Dimension(60, 20));
 	createUserButton.setVerticalTextPosition(AbstractButton.CENTER);
-	createUserButton.setToolTipText("»õ·Î¿î µ¥ÀÌÅÍ¸¦ ÀÔ·ÂÇÏ·Á¸é ÀÔ·Â ¹öÆ°À» Å¬¸¯ÇÏ¼¼¿ä.");
+	createUserButton.setToolTipText("ìƒˆë¡œìš´ ë°ì´í„°ë¥¼ ì…ë ¥í•˜ë ¤ë©´ ì…ë ¥ ë²„íŠ¼ì„ í´ë¦­í•˜ì„¸ìš”.");
 	createUserButton.setActionCommand(createUserButtonString);
 	createUserButton.addActionListener(this);
 
-//	¼öÁ¤
-	JButton updateUserButton = new  JButton("¼öÁ¤");
+//	ìˆ˜ì •
+	JButton updateUserButton = new  JButton("ìˆ˜ì •");
 	updateUserButton.setPreferredSize(new Dimension(60, 20));
 	updateUserButton.setVerticalTextPosition(AbstractButton.CENTER);
-	updateUserButton.setToolTipText("±âÁ¸ µ¥ÀÌÅÍ¸¦ ¼öÁ¤ÇÏ·Á¸é ¼öÁ¤ ¹öÆ°À» Å¬¸¯ÇÏ¼¼¿ä.");
+	updateUserButton.setToolTipText("ê¸°ì¡´ ë°ì´í„°ë¥¼ ìˆ˜ì •í•˜ë ¤ë©´ ìˆ˜ì • ë²„íŠ¼ì„ í´ë¦­í•˜ì„¸ìš”.");
 	updateUserButton.setActionCommand(updateUserButtonString);
 	updateUserButton.addActionListener(this);
 
-	//»èÁ¦
-	JButton deleteUserButton = new  JButton("»èÁ¦");
+	//ì‚­ì œ
+	JButton deleteUserButton = new  JButton("ì‚­ì œ");
 	deleteUserButton.setPreferredSize(new Dimension(60, 20));
 	deleteUserButton.setVerticalTextPosition(AbstractButton.CENTER);
-	deleteUserButton.setToolTipText("±âÁ¸ µ¥ÀÌÅÍ¸¦ »èÁ¦ÇÏ·Á¸é »èÁ¦ ¹öÆ°À» Å¬¸¯ÇÏ¼¼¿ä.");
+	deleteUserButton.setToolTipText("ê¸°ì¡´ ë°ì´í„°ë¥¼ ì‚­ì œí•˜ë ¤ë©´ ì‚­ì œ ë²„íŠ¼ì„ í´ë¦­í•˜ì„¸ìš”.");
 	deleteUserButton.setActionCommand(deleteUserButtonString);
 	deleteUserButton.addActionListener(this);
 
-//	¸Ş´º ÆÇ³Ú(±×¸®µå ·¹ÀÌ¾Æ¿ô)
+//	ë©”ë‰´ íŒë„¬(ê·¸ë¦¬ë“œ ë ˆì´ì•„ì›ƒ)
 	JPanel panel = new JPanel(new SpringLayout());
 	 panel.add(cb);
 	 panel.add(createUserButton);
@@ -350,7 +350,7 @@ private  JPanel createMenuPanel(){
 }
 
 //--------------------------------------------------------------------
-// User µ¥ÀÌÅÍ ¼öÁ¤/ÀÔ·Â 
+// User ë°ì´í„° ìˆ˜ì •/ì…ë ¥ 
 //--------------------------------------------------------------------
 
 protected JComponent createEditPanel() {
@@ -358,7 +358,7 @@ protected JComponent createEditPanel() {
 //	Lay out the text controls and the labels.
 	editUserPanel.setBorder(
 								BorderFactory.createCompoundBorder(
-									BorderFactory.createTitledBorder("ÀÔ·Â/¼öÁ¤ ¿µ¿ª"),
+									BorderFactory.createTitledBorder("ì…ë ¥/ìˆ˜ì • ì˜ì—­"),
 									BorderFactory.createEmptyBorder(5,5,5,5)));	
 	JPanel defaultDataPanel = new JPanel(new SpringLayout());
 	String[] defaultDataActionCommand = {userNoString, userNameString, userSsnString, userAgeString, userAddressString};
@@ -376,7 +376,7 @@ protected JComponent createEditPanel() {
 		defaultDataPanel.add(panel);
 	}
 		defaultDataTextField[0].setEditable(false);
-//	 ÇĞ»ı/±³¼ö/±³Á÷¿ø µ¥ÀÌÅÍ ÀÔ·Â Ä«µå·¹ÀÌ¾Æ¿ô
+//	 í•™ìƒ/êµìˆ˜/êµì§ì› ë°ì´í„° ì…ë ¥ ì¹´ë“œë ˆì´ì•„ì›ƒ
 	addtionalDataCardPanel = new JPanel(new CardLayout());	
 	String[] addtionalDataActionCommand = {userStudentNoString , userCourseString, userDepartmentString};
 	String[] addtionalConstraint = {studentDataCardString, professorDataCardString, employeeDataCardString};
@@ -403,7 +403,7 @@ protected JComponent createEditPanel() {
    JPanel panel = new JPanel();     
    	panel.setBorder(
 									BorderFactory.createCompoundBorder(
-									BorderFactory.createTitledBorder("¸Ş´º"),
+									BorderFactory.createTitledBorder("ë©”ë‰´"),
 									BorderFactory.createEmptyBorder(5,5,5,5)));
 //	Create a User Ojbect Table
 	resultTDM = new ResultTableDataModel(new ArrayList());
@@ -415,20 +415,20 @@ protected JComponent createEditPanel() {
 	scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 	scrollPane.setBorder(
 		BorderFactory.createCompoundBorder(
-			BorderFactory.createTitledBorder("È¸¿ø¸ñ·Ï ¼±ÅÃ°á°ú"),
+			BorderFactory.createTitledBorder("íšŒì›ëª©ë¡ ì„ íƒê²°ê³¼"),
 			BorderFactory.createEmptyBorder(5,5,5,5)
 		));
 	JPanel editPanel = new JPanel(new BorderLayout());
 	editPanel.add(scrollPane,  BorderLayout.NORTH);
 	editPanel.add(editUserPanel, BorderLayout.CENTER);
-//	°Ë»ö ¸Ş´º(ÀÌ¸§/ÁÖ¹Îµî·Ï¹øÈ£)
+//	ê²€ìƒ‰ ë©”ë‰´(ì´ë¦„/ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸)
 	panel.add(createUserMenu());
 	editPanel.add(panel,  BorderLayout.EAST);
 	return editPanel;
 }
 
 //--------------------------------------------------------------------
-// Å¬¶óÀÌ¾ğÆ® ·ÎÅ© ÆÇ³Ú »ı¼º 
+// í´ë¼ì´ì–¸íŠ¸ ë¡œí¬ íŒë„¬ ìƒì„± 
 //--------------------------------------------------------------------
 
 protected JComponent createLogPanel() {
@@ -443,11 +443,11 @@ protected JComponent createLogPanel() {
 }
 
 //--------------------------------------------------------------------
-// ¸Ş´º¹Ù »ı¼º
+// ë©”ë‰´ë°” ìƒì„±
 //--------------------------------------------------------------------
 
 protected JMenuBar createJMenuBar(){
-	JMenuItem connect = new JMenuItem("Á¢¼ÓÇÏ±â(C)"); 
+	JMenuItem connect = new JMenuItem("ì ‘ì†í•˜ê¸°(C)"); 
 	connect.setMnemonic('c'); 
 	connect.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK)); 
 	connect.addActionListener( new ActionListener() {
@@ -455,16 +455,16 @@ protected JMenuBar createJMenuBar(){
 																			tcpc.connect(null, 0);
 																			tcpc.socketListening();
 																		}});
-	JMenuItem disconnect = new JMenuItem("Á¢¼Ó²÷±â(D)"); 
-	disconnect.setMnemonic('d'); // Å°º¸µå ´ÜÃàÅ° ÇÒ´ç
-	disconnect.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK)); // Å°º¸µå ¿¢¼¿·¹ÀÌÅÍ ¼³Á¤
+	JMenuItem disconnect = new JMenuItem("ì ‘ì†ëŠê¸°(D)"); 
+	disconnect.setMnemonic('d'); // í‚¤ë³´ë“œ ë‹¨ì¶•í‚¤ í• ë‹¹
+	disconnect.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK)); // í‚¤ë³´ë“œ ì—‘ì…€ë ˆì´í„° ì„¤ì •
 	disconnect.addActionListener(new ActionListener() {
 																		public void actionPerformed(ActionEvent e) {
 																			tcpc.close();
 																		}});
-	JMenuItem exit = new JMenuItem("Á¾·á(X)"); // ¸Ş´º ¾ÆÀÌÅÛ Ãß°¡
-	exit.setMnemonic('x'); // Å°º¸µå ´ÜÃàÅ° ÇÒ´ç
-	exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK)); // Å°º¸µå ¿¢¼¿·¹ÀÌÅÍ ¼³Á¤
+	JMenuItem exit = new JMenuItem("ì¢…ë£Œ(X)"); // ë©”ë‰´ ì•„ì´í…œ ì¶”ê°€
+	exit.setMnemonic('x'); // í‚¤ë³´ë“œ ë‹¨ì¶•í‚¤ í• ë‹¹
+	exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK)); // í‚¤ë³´ë“œ ì—‘ì…€ë ˆì´í„° ì„¤ì •
 	exit.addActionListener(new ActionListener() {
 																		public void actionPerformed(ActionEvent e) {
 																			System.exit(0);
@@ -474,20 +474,20 @@ protected JMenuBar createJMenuBar(){
 	mFile.setMnemonic('f');
 	mFile.add(connect);
 	mFile.add(disconnect);
-	mFile.addSeparator(); // ¸Ş´º ±¸ºĞ¼± ¼³Á¤
+	mFile.addSeparator(); // ë©”ë‰´ êµ¬ë¶„ì„  ì„¤ì •
 	mFile.add(exit);
 	menuBar.add(mFile);
 	return menuBar;
 }
 
 //--------------------------------------------------------------------
-// °Ë»ö ¸Ş½îµå(ÁÖ¹Îµî·Ï¹øÈ£, ÀÌ¸§)
+// ê²€ìƒ‰ ë©”ì˜ë“œ(ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸, ì´ë¦„)
 //--------------------------------------------------------------------
 
 public void findUser(String cmd, String value){
 	if (cmd.equals("name")){
 		if (value.length() ==0) {
-			JOptionPane.showMessageDialog(this, "ÀÌ¸§À» Á¤È®È÷ ÀÔ·ÂÇÏ¿© ÁÖ¼¼¿ä", "ÀÌ¸§À¸·Î °Ë»ö", JOptionPane.WARNING_MESSAGE); 
+			JOptionPane.showMessageDialog(this, "ì´ë¦„ì„ ì •í™•íˆ ì…ë ¥í•˜ì—¬ ì£¼ì„¸ìš”", "ì´ë¦„ìœ¼ë¡œ ê²€ìƒ‰", JOptionPane.WARNING_MESSAGE); 
 		}else{
 			tcpc.readUser(cmd, value);
 		}
@@ -499,24 +499,24 @@ public void findUser(String cmd, String value){
 }
 
 //--------------------------------------------------------------------
-// ³ªÀÌ Ã¼Å© À¯Æ¿ ¸Ş½îµå
+// ë‚˜ì´ ì²´í¬ ìœ í‹¸ ë©”ì˜ë“œ
 //--------------------------------------------------------------------
 
 public boolean checkAge(String a){
 		boolean validAge = false; 
 			try{
 				if((Integer.parseInt(a) <= 0) || (Integer.parseInt(a) >120) ){
-					 JOptionPane.showMessageDialog(this, "³ªÀÌ¸¦ Á¤È®È÷ ÀÔ·ÂÇÏ¿© ÁÖ¼¼¿ä(1~120¼¼ »çÀÌ)", "³ªÀÌ °Ë»ç", JOptionPane.WARNING_MESSAGE); 
+					 JOptionPane.showMessageDialog(this, "ë‚˜ì´ë¥¼ ì •í™•íˆ ì…ë ¥í•˜ì—¬ ì£¼ì„¸ìš”(1~120ì„¸ ì‚¬ì´)", "ë‚˜ì´ ê²€ì‚¬", JOptionPane.WARNING_MESSAGE); 
 				}else{
 					return true;
 				} // if
 			}catch(NumberFormatException nfe){
-				 JOptionPane.showMessageDialog(this, "³ªÀÌ¸¦ ¼ıÀÚ·Î Á¤È®È÷ ÀÔ·ÂÇÏ¿© ÁÖ¼¼¿ä(1~120¼¼ »çÀÌ)", "³ªÀÌ °Ë»ç", JOptionPane.WARNING_MESSAGE); 
+				 JOptionPane.showMessageDialog(this, "ë‚˜ì´ë¥¼ ìˆ«ìë¡œ ì •í™•íˆ ì…ë ¥í•˜ì—¬ ì£¼ì„¸ìš”(1~120ì„¸ ì‚¬ì´)", "ë‚˜ì´ ê²€ì‚¬", JOptionPane.WARNING_MESSAGE); 
 			}			return false;
 	} // checkAge(String a)
 
 //--------------------------------------------------------------------
-// ÁÖ¹Îµî·Ï¹øÈ£ µğÁöÆ® Ã¼Å© À¯Æ¿ ¸Ş½îµå
+// ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸ ë””ì§€íŠ¸ ì²´í¬ ìœ í‹¸ ë©”ì˜ë“œ
 //--------------------------------------------------------------------
 
 public boolean checkSsn(String ssn){
@@ -542,26 +542,26 @@ public boolean checkSsn(String ssn){
 		} //if
 
 		if(!check){
-			 JOptionPane.showMessageDialog(this, "ÁÖ¹Îµî·Ï¹øÈ£¸¦ Á¤È®È÷ ÀÔ·ÂÇÏ¿© ÁÖ¼¼¿ä", "ÁÖ¹Îµî·Ï¹øÈ£·Î °Ë»ö", JOptionPane.WARNING_MESSAGE); 
+			 JOptionPane.showMessageDialog(this, "ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸ë¥¼ ì •í™•íˆ ì…ë ¥í•˜ì—¬ ì£¼ì„¸ìš”", "ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸ë¡œ ê²€ìƒ‰", JOptionPane.WARNING_MESSAGE); 
 		}
 	}catch(NumberFormatException nfe){}
 	*/
 
-		//¾à½Ä Ã¼Å©
+		//ì•½ì‹ ì²´í¬
 
 		if(ssn.length() !=12){
 			check=true;
 		}
 
 		if(!check){
-			 JOptionPane.showMessageDialog(this, "ÁÖ¹Îµî·Ï¹øÈ£¸¦ Á¤È®È÷ ÀÔ·ÂÇÏ¿© ÁÖ¼¼¿ä", "ÁÖ¹Îµî·Ï¹øÈ£·Î °Ë»ö", JOptionPane.WARNING_MESSAGE); 
+			 JOptionPane.showMessageDialog(this, "ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸ë¥¼ ì •í™•íˆ ì…ë ¥í•˜ì—¬ ì£¼ì„¸ìš”", "ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸ë¡œ ê²€ìƒ‰", JOptionPane.WARNING_MESSAGE); 
 		}
 
 	return check;
 }
 
 //--------------------------------------------------------------------
-// ¼±ÅÃ Å×ÀÌºí µ¥ÀÌÅÍ ÀÔ·Â ¸Ş½îµå
+// ì„ íƒ í…Œì´ë¸” ë°ì´í„° ì…ë ¥ ë©”ì˜ë“œ
 //--------------------------------------------------------------------
 
 public void  setResultTable(ArrayList ar){
@@ -570,7 +570,7 @@ public void  setResultTable(ArrayList ar){
 }
 
 //--------------------------------------------------------------------
-// ÀüÃ¼ ¸ñ·Ï Å×ÀÌºí µ¥ÀÌÅÍ ÀÔ·Â ¸Ş½îµå
+// ì „ì²´ ëª©ë¡ í…Œì´ë¸” ë°ì´í„° ì…ë ¥ ë©”ì˜ë“œ
 //--------------------------------------------------------------------
 
 public void  setUsersTable(ArrayList ar){
@@ -579,7 +579,7 @@ public void  setUsersTable(ArrayList ar){
 }
 
 //--------------------------------------------------------------------
-// ¼­¹ö ¼ö½Å µ¥ÀÌÅÍ  ¼³Á¤ ¸Ş½îµå
+// ì„œë²„ ìˆ˜ì‹  ë°ì´í„°  ì„¤ì • ë©”ì˜ë“œ
 //--------------------------------------------------------------------
 
 public  void setResultObject(String cmd, Object resultObject){
@@ -587,23 +587,23 @@ public  void setResultObject(String cmd, Object resultObject){
 
 if( (cmd.equals("name")) |  (cmd.equals("ssn"))) {
 		if (!(resultObject instanceof  UserImpl) && (cmd.equals("name"))){
-			JOptionPane.showMessageDialog(this,"ÀÌ¸§¿¡ ´ëÇÑ °Ë»ö°á°ú°¡ ¾ø½À´Ï´Ù.", "ÀÌ¸§À¸·Î °Ë»ö",  JOptionPane.INFORMATION_MESSAGE); 
+			JOptionPane.showMessageDialog(this,"ì´ë¦„ì— ëŒ€í•œ ê²€ìƒ‰ê²°ê³¼ê°€ ì—†ìŠµë‹ˆë‹¤.", "ì´ë¦„ìœ¼ë¡œ ê²€ìƒ‰",  JOptionPane.INFORMATION_MESSAGE); 
 		}else if (!(resultObject instanceof  UserImpl) && (cmd.equals("ssn"))){
-			JOptionPane.showMessageDialog(this, "ÁÖ¹Îµî·Ï¹øÈ£¿¡ ´ëÇÑ °Ë»ö°á°ú°¡ ¾ø½À´Ï´Ù.", "ÁÖ¹Îµî·Ï¹øÈ£·Î °Ë»ö",  JOptionPane.INFORMATION_MESSAGE); 
+			JOptionPane.showMessageDialog(this, "ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸ì— ëŒ€í•œ ê²€ìƒ‰ê²°ê³¼ê°€ ì—†ìŠµë‹ˆë‹¤.", "ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸ë¡œ ê²€ìƒ‰",  JOptionPane.INFORMATION_MESSAGE); 
 		}else if((resultObject instanceof  UserImpl) && ((cmd.equals("ssn")) | (cmd.equals("name")))){
 			setInputForm(resultObject);
 		}
 	} else if ("create".equals(cmd)) {
-		JOptionPane.showMessageDialog(this, (String) resultObject, "ÀÔ·Â",  JOptionPane.INFORMATION_MESSAGE); 
+		JOptionPane.showMessageDialog(this, (String) resultObject, "ì…ë ¥",  JOptionPane.INFORMATION_MESSAGE); 
 		tcpc.listUser("list");		
 	} else if ("update".equals(cmd)) {
-		JOptionPane.showMessageDialog(this, (String) resultObject, "¼öÁ¤",  JOptionPane.INFORMATION_MESSAGE); 
+		JOptionPane.showMessageDialog(this, (String) resultObject, "ìˆ˜ì •",  JOptionPane.INFORMATION_MESSAGE); 
 		tcpc.listUser("list");		
 	} //if
 }
 
 //--------------------------------------------------------------------
-// Ãâ·ÂÆû ¸®¼Â ¸Ş½îµå
+// ì¶œë ¥í¼ ë¦¬ì…‹ ë©”ì˜ë“œ
 //--------------------------------------------------------------------
 
 public void resetOutPutData(boolean userTab, boolean resultTab){
@@ -630,7 +630,7 @@ public void resetOutPutData(boolean userTab, boolean resultTab){
 }
 
 //--------------------------------------------------------------------
-// µ¥ÀÌÅÍÅ¸ÀÔ ÄŞº¸¹Ú½º ¸®½º³Ê (Ä«µå ·¹ÀÌ¾Æ¿ô ÀÌº¥Æ®)
+// ë°ì´í„°íƒ€ì… ì½¤ë³´ë°•ìŠ¤ ë¦¬ìŠ¤ë„ˆ (ì¹´ë“œ ë ˆì´ì•„ì›ƒ ì´ë²¤íŠ¸)
 //--------------------------------------------------------------------
 
 public void itemStateChanged(ItemEvent evt) {
@@ -640,16 +640,16 @@ public void itemStateChanged(ItemEvent evt) {
 		originalCategory = (String) resultTable.getModel().getValueAt(0, 8);
 		originalSequence = (String) resultTable.getModel().getValueAt(0, 0);
 	}else{
-		originalCategory ="¸ğ¸§";
+		originalCategory ="ëª¨ë¦„";
 	}
 	if(evt.getStateChange()==1){ 
 		String option = (String)cb.getSelectedItem();
 		String typeName = null;	
-		if (option.equals("ÇĞ»ı")){
+		if (option.equals("í•™ìƒ")){
 			typeName = "lms_student";
-		} else if (option.equals("±³¼ö")){
+		} else if (option.equals("êµìˆ˜")){
 			typeName = "lms_professor";
-		} else if (option.equals("±³Á÷¿ø")){
+		} else if (option.equals("êµì§ì›")){
 			typeName = "lms_employee";
 		}
 		if(typeName != null){
@@ -665,42 +665,42 @@ public void itemStateChanged(ItemEvent evt) {
 }
 
 //--------------------------------------------------------------------
-// ÀÔ·ÂÆû Ã¼Å© ¸Ş½îµå
+// ì…ë ¥í¼ ì²´í¬ ë©”ì˜ë“œ
 //--------------------------------------------------------------------
 
 private boolean checkInpuForm(String option){
 		String empty="";		
 			if(empty.equals(defaultDataTextField[0].getText())){
-				JOptionPane.showMessageDialog(this,  "µ¥ÀÌÅÍÅ¸ÀÔÀ» ¼±ÅÃÇÏ¿© ÁÖ¼¼¿ä", "ÀÔ·Â", JOptionPane.WARNING_MESSAGE); 		
+				JOptionPane.showMessageDialog(this,  "ë°ì´í„°íƒ€ì…ì„ ì„ íƒí•˜ì—¬ ì£¼ì„¸ìš”", "ì…ë ¥", JOptionPane.WARNING_MESSAGE); 		
 				return false;
 			} 
 			if (empty.equals(defaultDataTextField[1].getText())){
-				JOptionPane.showMessageDialog(this,  defaultDataLabels [1] + "À» ÀÔ·ÂÇÏ¿© ÁÖ¼¼¿ä", "ÀÔ·Â", JOptionPane.WARNING_MESSAGE); 		
+				JOptionPane.showMessageDialog(this,  defaultDataLabels [1] + "ì„ ì…ë ¥í•˜ì—¬ ì£¼ì„¸ìš”", "ì…ë ¥", JOptionPane.WARNING_MESSAGE); 		
 				return false;
 			} 
 			if (empty.equals(defaultDataTextField[2].getText())){
-				JOptionPane.showMessageDialog(this,  defaultDataLabels [2] + "À» ÀÔ·ÂÇÏ¿© ÁÖ¼¼¿ä", "ÀÔ·Â", JOptionPane.WARNING_MESSAGE); 		
+				JOptionPane.showMessageDialog(this,  defaultDataLabels [2] + "ì„ ì…ë ¥í•˜ì—¬ ì£¼ì„¸ìš”", "ì…ë ¥", JOptionPane.WARNING_MESSAGE); 		
 				return false;
 			}
 			if (empty.equals(defaultDataTextField[3].getText())){
-				JOptionPane.showMessageDialog(this,  defaultDataLabels [3] + "À» ÀÔ·ÂÇÏ¿© ÁÖ¼¼¿ä", "ÀÔ·Â", JOptionPane.WARNING_MESSAGE); 		
+				JOptionPane.showMessageDialog(this,  defaultDataLabels [3] + "ì„ ì…ë ¥í•˜ì—¬ ì£¼ì„¸ìš”", "ì…ë ¥", JOptionPane.WARNING_MESSAGE); 		
 				return false;
 			}
 			if (empty.equals(defaultDataTextField[4].getText())){
-				JOptionPane.showMessageDialog(this,  defaultDataLabels [4] + "À» ÀÔ·ÂÇÏ¿© ÁÖ¼¼¿ä", "ÀÔ·Â", JOptionPane.WARNING_MESSAGE); 		
+				JOptionPane.showMessageDialog(this,  defaultDataLabels [4] + "ì„ ì…ë ¥í•˜ì—¬ ì£¼ì„¸ìš”", "ì…ë ¥", JOptionPane.WARNING_MESSAGE); 		
 				return false;
 			}
 		
 			if  (option.equals(studentDataCardString) & empty.equals(addtionalDataTextField[0].getText()) ) {
-				JOptionPane.showMessageDialog(this,  addtionalDataLabels [0] + "À» ÀÔ·ÂÇÏ¿© ÁÖ¼¼¿ä", "ÀÔ·Â", JOptionPane.WARNING_MESSAGE); 		
+				JOptionPane.showMessageDialog(this,  addtionalDataLabels [0] + "ì„ ì…ë ¥í•˜ì—¬ ì£¼ì„¸ìš”", "ì…ë ¥", JOptionPane.WARNING_MESSAGE); 		
 				return false;
 			} 
 			 if (option.equals(professorDataCardString) & empty.equals(addtionalDataTextField[1].getText()) ) {
-						JOptionPane.showMessageDialog(this,  addtionalDataLabels [1] + "À» ÀÔ·ÂÇÏ¿© ÁÖ¼¼¿ä", "ÀÔ·Â", JOptionPane.WARNING_MESSAGE); 		
+						JOptionPane.showMessageDialog(this,  addtionalDataLabels [1] + "ì„ ì…ë ¥í•˜ì—¬ ì£¼ì„¸ìš”", "ì…ë ¥", JOptionPane.WARNING_MESSAGE); 		
 				return false;
 			}
 			if (option.equals(employeeDataCardString) & empty.equals(addtionalDataTextField[2].getText())) {
-						JOptionPane.showMessageDialog(this,  addtionalDataLabels [2] + "À» ÀÔ·ÂÇÏ¿© ÁÖ¼¼¿ä", "ÀÔ·Â", JOptionPane.WARNING_MESSAGE); 		
+						JOptionPane.showMessageDialog(this,  addtionalDataLabels [2] + "ì„ ì…ë ¥í•˜ì—¬ ì£¼ì„¸ìš”", "ì…ë ¥", JOptionPane.WARNING_MESSAGE); 		
 				return false;
 			}
 
@@ -708,7 +708,7 @@ private boolean checkInpuForm(String option){
 }
 
 //--------------------------------------------------------------------
-// ÀÔ·ÂÆû ¼Â ¸Ş½îµå
+// ì…ë ¥í¼ ì…‹ ë©”ì˜ë“œ
 //--------------------------------------------------------------------
 
 public void  setInputForm(Object resultObject ){
@@ -746,7 +746,7 @@ public void  setInputForm(Object resultObject ){
 }
 
 //--------------------------------------------------------------------
-// ½ÃÄö½º ¼Â ¸Ş½îµå
+// ì‹œí€€ìŠ¤ ì…‹ ë©”ì˜ë“œ
 //--------------------------------------------------------------------
 
 	public void setSequence(String seq){
@@ -756,7 +756,7 @@ public void  setInputForm(Object resultObject ){
 // actionPerformed
 //--------------------------------------------------------------------
 
-public void actionPerformed(ActionEvent e){     // ¿À¹ö¶óÀÌµå
+public void actionPerformed(ActionEvent e){     // ì˜¤ë²„ë¼ì´ë“œ
 	if (findUserButtonString.equals(e.getActionCommand()) | findUserTextFieldString.equals(e.getActionCommand()) ) {
 		String cmd = group.getSelection().getActionCommand();
 		String value =  findUserTextField.getText();
@@ -768,7 +768,7 @@ public void actionPerformed(ActionEvent e){     // ¿À¹ö¶óÀÌµå
 	}else if(createUserButtonString.equals(e.getActionCommand())){
 		String option = (String)cb.getSelectedItem();
 		if  (option.equals(dataCardString)) {
-			JOptionPane.showMessageDialog(this, "µ¥ÀÌÅÍÅ¸ÀÔÀ» ¼±ÅÃÇÏ¿© ÁÖ¼¼¿ä", "ÀÔ·Â", JOptionPane.WARNING_MESSAGE); 
+			JOptionPane.showMessageDialog(this, "ë°ì´í„°íƒ€ì…ì„ ì„ íƒí•˜ì—¬ ì£¼ì„¸ìš”", "ì…ë ¥", JOptionPane.WARNING_MESSAGE); 
 		}else{
 			String type = (String)cb.getSelectedItem();		
 			String [] insertData =  new String [7];
@@ -777,13 +777,13 @@ public void actionPerformed(ActionEvent e){     // ¿À¹ö¶óÀÌµå
 			insertData[2] = defaultDataTextField[2].getText();		
 			insertData[3] = defaultDataTextField[3].getText();	
 			insertData[4] = defaultDataTextField[4].getText();		
-			if (type.equals("ÇĞ»ı")){
+			if (type.equals("í•™ìƒ")){
 				insertData[5] = addtionalDataTextField[0].getText();
 				insertData[6] = "lms_student";
-			} else if (type.equals("±³¼ö")){
+			} else if (type.equals("êµìˆ˜")){
 				insertData[5] = addtionalDataTextField[1].getText();
 				insertData[6] = "lms_professor";
-			} else if (type.equals("±³Á÷¿ø")){
+			} else if (type.equals("êµì§ì›")){
 				insertData[5] = addtionalDataTextField[2].getText();				
 				insertData[6] = "lms_employee";
 			}
@@ -795,40 +795,40 @@ public void actionPerformed(ActionEvent e){     // ¿À¹ö¶óÀÌµå
 	}else if(updateUserButtonString.equals(e.getActionCommand())){
 		String option = (String)cb.getSelectedItem();
 		if (isSelectedRow == false	){
-			JOptionPane.showMessageDialog(this, "È¸¿ø ¸ñ·Ï¿¡¼­ ¼öÁ¤ÇÒ µ¥ÀÌÅÍ¸¦ ¼±ÅÃÇÏ¿© ÁÖ¼¼¿ä", "¼öÁ¤", JOptionPane.WARNING_MESSAGE); 
+			JOptionPane.showMessageDialog(this, "íšŒì› ëª©ë¡ì—ì„œ ìˆ˜ì •í•  ë°ì´í„°ë¥¼ ì„ íƒí•˜ì—¬ ì£¼ì„¸ìš”", "ìˆ˜ì •", JOptionPane.WARNING_MESSAGE); 
 		}else{
 			String type = (String)cb.getSelectedItem();		
 			String [] insertData =  new String [9];
 			if (!dataCardString.equals(type)){
-				if (type.equals("ÇĞ»ı")){
+				if (type.equals("í•™ìƒ")){
 					insertData[5] = addtionalDataTextField[0].getText();
 					insertData[7] = "lms_student";
-				} else if (type.equals("±³¼ö")){
+				} else if (type.equals("êµìˆ˜")){
 					insertData[5] = addtionalDataTextField[1].getText();
 					insertData[7] = "lms_professor";
-				} else if (type.equals("±³Á÷¿ø")){
+				} else if (type.equals("êµì§ì›")){
 					insertData[5] = addtionalDataTextField[2].getText();				
 					insertData[7] = "lms_employee";
 				}
 			}else{
 				type = selectedRowObjectType;
-					if (type.equals("ÇĞ»ı")){
+					if (type.equals("í•™ìƒ")){
 						insertData[5] = addtionalDataTextField[0].getText();
 						insertData[7] = "lms_student";
-					} else if (type.equals("±³¼ö")){
+					} else if (type.equals("êµìˆ˜")){
 						insertData[5] = addtionalDataTextField[1].getText();
 						insertData[7] = "lms_professor";
-					} else if (type.equals("±³Á÷¿ø")){
+					} else if (type.equals("êµì§ì›")){
 						insertData[5] = addtionalDataTextField[2].getText();				
 						insertData[7] = "lms_employee";
 					}
 			}	
 			if (checkInpuForm(selectedRowObjectType) && checkSsn(selectedRowSsn) && checkAge(defaultDataTextField[2].getText())){		
-				String options[] = {"¿¹", "¾Æ´Ï¿À"};
-				int dialogValue = JOptionPane.showOptionDialog(this,  selectedRowSsn + " ¼öÁ¤ÇÏ½Ã°Ú½À´Ï±î?"," ¼öÁ¤", JOptionPane.YES_NO_OPTION, /* Need something  */  	JOptionPane.QUESTION_MESSAGE, null, /* Use default icon for message type*/ options,options[1]);
+				String options[] = {"ì˜ˆ", "ì•„ë‹ˆì˜¤"};
+				int dialogValue = JOptionPane.showOptionDialog(this,  selectedRowSsn + " ìˆ˜ì •í•˜ì‹œê² ìŠµë‹ˆê¹Œ?"," ìˆ˜ì •", JOptionPane.YES_NO_OPTION, /* Need something  */  	JOptionPane.QUESTION_MESSAGE, null, /* Use default icon for message type*/ options,options[1]);
 				if ( dialogValue == JOptionPane.CLOSED_OPTION) {
 					System.out.println("Closed window");
-				} else if(options[dialogValue].equals("¿¹")){
+				} else if(options[dialogValue].equals("ì˜ˆ")){
 					insertData[0] = defaultDataTextField[0].getText();	
 					insertData[1] = defaultDataTextField[1].getText();	
 					insertData[2] = defaultDataTextField[2].getText();		
@@ -837,11 +837,11 @@ public void actionPerformed(ActionEvent e){     // ¿À¹ö¶óÀÌµå
 					if(originalCategory == null){
 						originalCategory = type;
 					}
-					if (originalCategory.equals("ÇĞ»ı")){
+					if (originalCategory.equals("í•™ìƒ")){
 						originalCategory = "lms_student";
-					} else if (originalCategory.equals("±³¼ö")){
+					} else if (originalCategory.equals("êµìˆ˜")){
 						originalCategory = "lms_professor";
-					} else if (originalCategory.equals("±³Á÷¿ø")){
+					} else if (originalCategory.equals("êµì§ì›")){
 						originalCategory = "lms_employee";
 						insertData[8] = null;
 					}
@@ -860,17 +860,17 @@ public void actionPerformed(ActionEvent e){     // ¿À¹ö¶óÀÌµå
 		}
 	}else if(deleteUserButtonString.equals(e.getActionCommand())){
 		if (isSelectedRow == false	){
-			JOptionPane.showMessageDialog(this, "È¸¿ø ¸ñ·Ï¿¡¼­ ¼öÁ¤ÇÒ µ¥ÀÌÅÍ¸¦ ¼±ÅÃÇÏ¿© ÁÖ¼¼¿ä", "¼öÁ¤", JOptionPane.WARNING_MESSAGE); 
+			JOptionPane.showMessageDialog(this, "íšŒì› ëª©ë¡ì—ì„œ ìˆ˜ì •í•  ë°ì´í„°ë¥¼ ì„ íƒí•˜ì—¬ ì£¼ì„¸ìš”", "ìˆ˜ì •", JOptionPane.WARNING_MESSAGE); 
 		}else{
 			if ((isSelectedRow == true )){			
-				String options[] = {"¿¹", "¾Æ´Ï¿À"};
+				String options[] = {"ì˜ˆ", "ì•„ë‹ˆì˜¤"};
 				int dialogValue = JOptionPane.showOptionDialog(
-						this,  selectedRowSsn + " »èÁ¦ÇÏ½Ã°Ú½À´Ï±î?"," »èÁ¦", 
+						this,  selectedRowSsn + " ì‚­ì œí•˜ì‹œê² ìŠµë‹ˆê¹Œ?"," ì‚­ì œ", 
 						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
 						null, options,options[1]);
 				if ( dialogValue == JOptionPane.CLOSED_OPTION) {
 					System.out.println("Closed window");
-				} else if(options[dialogValue].equals("¿¹")){
+				} else if(options[dialogValue].equals("ì˜ˆ")){
 					this.resetOutPutData(true, true);
 					tcpc.deleteUser("delete", selectedRowSsn);
 				}

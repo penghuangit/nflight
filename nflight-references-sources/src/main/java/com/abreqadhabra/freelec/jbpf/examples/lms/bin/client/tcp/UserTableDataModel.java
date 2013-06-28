@@ -12,7 +12,7 @@ import java.util.*;
 	protected String[] ssn;
     private boolean DEBUG = false;
 
-	private  String[] names = {"ȸ����ȣ", "�̸�", "�ֹε�Ϲ�ȣ"};
+	private  String[] names = {"회원번호", "이름", "주민등록번호"};
 	int rowLength;
 
    public UserTableDataModel(ArrayList tdm) {
