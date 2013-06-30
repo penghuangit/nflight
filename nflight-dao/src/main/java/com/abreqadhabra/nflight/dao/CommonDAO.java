@@ -25,11 +25,11 @@ public class CommonDAO {
 	private static final Class<CommonDAO> THIS_CLAZZ = CommonDAO.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
+	private String databaseMode;
 	private String databaseType;
 	private Properties dbProperties;
 	private Connection connection;
 
-	private static final String DB_PROPERTY_FILE_NAME = "com/abreqadhabra/nflight/dao/resources/config/db.properties";
 	private static final String JDBC_DRIVER = ".jdbc.driver";
 	private static final String JDBC_URL = ".jdbc.url";
 	private static final String JDBC_USER = ".jdbc.user";
@@ -40,13 +40,11 @@ public class CommonDAO {
 	 */
 	private int maxRows;
 
-	protected CommonDAO(String databaseType) throws Exception {
+	protected CommonDAO(String databaseType, String databaseMode) throws Exception {
 		this.databaseType = databaseType;
-		this.dbProperties = PropertyFileUtil
-				.readTraditionalPropertyFile(CommonDAO.class
-						.getProtectionDomain().getCodeSource().getLocation()
-						.getFile()
-						+ DB_PROPERTY_FILE_NAME);
+		this.databaseMode = databaseMode;
+
+
 		this.connection = this.getConnection();
 
 	}
@@ -78,7 +76,7 @@ public class CommonDAO {
 	}
 
 	protected String getPropertyByDatabaseType(String key) {
-		return dbProperties.getProperty(databaseType + key);
+		return dbProperties.getProperty(databaseType +"." + databaseMode + key);
 	}
 
 	/**

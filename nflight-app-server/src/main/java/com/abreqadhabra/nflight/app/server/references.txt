@@ -1,0 +1,10 @@
+https://sites.google.com/site/sureshdevang/design-pattern-example
+
+
+클라이언트(LOCAL) - APP서버(LOCAL) - DB서버 (EMBEDED)
+클라이언트(LOCAL) - APP서버(LOCAL) - DB서버 (NETWORK)
+클라이언트(네트워크/SOCKET) - APP서버(네트워크/SOCKET) - DB서버 (EMBEDED)
+클라이언트(네트워크/SOCKET) - APP서버(네트워크/SOCKET) - DB서버 (NETWORK)
+클라이언트(네트워크/RMI) - APP서버(네트워크/RMI) - DB서버 (EMBEDED)
+클라이언트(네트워크/RMI) - APP서버(네트워크/RMI) - DB서버 (NETWORK) 
+

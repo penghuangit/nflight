@@ -21,9 +21,9 @@ public class AirlineDAOImpl extends CommonDAO implements AirlineDAO {
 	private static final String AIRLINE_DAO_MATCH_BY_AIRLINE_NAME = ".sql.AirlineDAOImpl.matchByAirlineName(String)";
 	private static final String AIRLINE_DAO_UPDATE_BY_PRIMARY_KEY = ".sql.AirlineDAOImpl.updateByPrimaryKey(Airline)";
 
-	public AirlineDAOImpl(String databaseType) throws Exception {
+	public AirlineDAOImpl(String databaseType, String databaseMode) throws Exception {
 
-		super(databaseType);
+		super(databaseType, databaseMode);
 
 	}
 
