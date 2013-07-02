@@ -1,7 +1,6 @@
 package com.abreqadhabra.nflight.server.ns.rmi.bin;
 
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
 import com.abreqadhabra.nflight.server.ns.rmi.INFlightRMIServer;
 import com.abreqadhabra.nflight.server.ns.rmi.ServerController;
