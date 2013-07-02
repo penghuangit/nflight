@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.common.exception.NFlightUnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
-import com.abreqadhabra.nflight.server.bin.StartAllServer;
+import com.abreqadhabra.nflight.server.bin.StartupAllServer;
 import com.abreqadhabra.nflight.server.exception.NFlightServerException;
 import com.abreqadhabra.nflight.server.ns.rmi.INFlightRMIServer;
 
@@ -42,9 +42,6 @@ public class NRSCommands {
 	private static final Class<NRSCommands> THIS_CLAZZ = NRSCommands.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-
-
-    
 	/**
 	 * <p>
 	 * [개 요] 데이터 서버에 기동/종료합니다.
@@ -55,7 +52,8 @@ public class NRSCommands {
 	 * <p>
 	 * [비 고]
 	 * </p>
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 * 
 	 * @since STEP1
 	 */
@@ -63,28 +61,32 @@ public class NRSCommands {
 	public static void main(String args[]) throws Exception {
 		final String METHOD_NAME = "void main(String[] args)";
 
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				"args[]:" + Arrays.toString(args));
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "args[]:"
+				+ Arrays.toString(args));
 
 		// コンフィグファイル（nflight.properties）をシステムプロパティーに反映させます。
-		boolean bl = PropertyLoader.load(StartAllServer.NFLIGHT_PROPERTY_NAME, StartAllServer.NFLIGHT_CONFIG_FILE_NAME);
-		
+		boolean bl = PropertyLoader.load(
+				StartupAllServer.NFLIGHT_PROPERTY_NAME,
+				StartupAllServer.NFLIGHT_CONFIG_FILE_NAME);
+
 		if (bl == false) {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Can't read property file("+StartAllServer.NFLIGHT_CONFIG_FILE_NAME+").");
+					"Can't read property file("
+							+ StartupAllServer.NFLIGHT_CONFIG_FILE_NAME + ").");
 			System.exit(1);
 		}
 		// コンフィグファイル（nflight_system.properties）をシステムプロパティーに反映させます。
-		bl = PropertyLoader.load("nflight.server.system.PropertyFileName",
-				"nflight_system.properties");
+		bl = PropertyLoader.load(StartupAllServer.NFLIGHT_SYSTEM_PROPERTY_NAME,
+				StartupAllServer.NFLIGHT_SYSTEM_CONFIG_FILE_NAME);
 		if (bl == false) {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Can't read property file(nflight_system.properties).");
+					"Can't read property file("
+							+ StartupAllServer.NFLIGHT_SYSTEM_CONFIG_FILE_NAME + ").");
 			return;
 		}
 
 		// ＲＭＩレジストリのポート番号を取得します。
-		String noturl = System.getProperty("nflight.server.dataserver.url")
+		String noturl = System.getProperty("nflight.server.nrs.rmi.url")
 				.trim();
 		String port = noturl.substring(noturl.indexOf(':') + 1,
 				noturl.lastIndexOf('/'));
@@ -130,23 +132,25 @@ public class NRSCommands {
 	 * @param port
 	 *            데이터서버의 포트번호
 	 * @return boolean 데이터서버가 기동 중이면 true, 정지 중이면 false
-	 * @throws Exception 
+	 * @throws Exception
 	 * @since STEP1
 	 */
-	public static boolean checkstatus(String host, String port) throws Exception {
+	public static boolean checkstatus(String host, String port)
+			throws Exception {
 		INFlightRMIServer nrs = connectNFlightRMIServer(host, port);
 		if (nrs == null) {
 			return false;
 		}
 		boolean isExist = false;
 
-			try {
-				isExist = nrs.checkStatus();
-			} catch (RemoteException e) {
-				throw new NFlightServerException("데이터서버의 상태를 확인할 수 없습니다.", e).addContextValue("isExist", isExist);
-			} catch (Exception e) {
-				throw new NFlightUnexpectedException(e);
-			}
+		try {
+			isExist = nrs.checkStatus();
+		} catch (RemoteException e) {
+			throw new NFlightServerException("데이터서버의 상태를 확인할 수 없습니다.", e)
+					.addContextValue("isExist", isExist);
+		} catch (Exception e) {
+			throw new NFlightUnexpectedException(e);
+		}
 
 		return isExist;
 	}
@@ -167,7 +171,7 @@ public class NRSCommands {
 	 * @param port
 	 *            데이터서버의 포트번호
 	 * @return INFlightRMIServer 데이터서버에 접속 불가의 경우에는 null
-	 * @throws Exception 
+	 * @throws Exception
 	 * @since STEP1
 	 */
 
@@ -177,7 +181,7 @@ public class NRSCommands {
 
 		INFlightRMIServer nrs = null;
 		NFlightServerException nse = null;
-		
+
 		LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME,
 				"Connecting NFlightRMIServer...");
 
@@ -186,58 +190,42 @@ public class NRSCommands {
 				"NFlightRMIServerURL: " + nrsURL);
 
 		try {
-			 nrs = (INFlightRMIServer) Naming.lookup(nrsURL);
+			nrs = (INFlightRMIServer) Naming.lookup(nrsURL);
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"Connected " + nrsURL);
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			StackTraceElement[] current = e.getStackTrace();
-			nse = new NFlightServerException("Exception occured during connecting NFlightRMIServer.", e);
+			// nse = new
+			// NFlightServerException("Exception occured during connecting NFlightRMIServer.",
+			// e);
 		} catch (Exception e) {
 			throw new NFlightUnexpectedException(e);
-		}finally {
-			StackTraceElement[] current = nse.getStackTrace();
+		} finally {
 			if (nse != null) {
-			LOGGER.logp(
-					Level.FINER,
-					current[0].getClassName(),
-					current[0].getMethodName(),
-					"Exception occured during connecting NFlightRMIServer."
-							+ nse.getStackTrace(nse));
-			nrs = null;
-			} 
+				StackTraceElement[] current = nse.getStackTrace();
+				LOGGER.logp(Level.FINER, current[0].getClassName(),
+						current[0].getMethodName(),
+						"Exception occured during connecting NFlightRMIServer."
+								+ nse.getStackTrace(nse));
+				nrs = null;
+			}
 		}
-		
+
 		return nrs;
 	}
-	
-	
-/*
-try {
-ds = (INFlightRMIServer) Naming.lookup(nrsURL);
-} catch (RemoteException e) {
-ex = e;
-} catch (NotBoundException e) {
-ex = e;
-} catch (MalformedURLException e) {
-ex = e;
-} finally {
-StackTraceElement[] current = ex.getStackTrace();
-if (ex != null) {
-LOGGER.logp(
-		Level.SEVERE,
-		current[0].getClassName(),
-		current[0].getMethodName(),
-		"Exception occured during connecting DataServer."
-				+ ex.getMessage());
-ds = null;
-} else if (ex == null) {
-LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-		"Connected DataServer" + ex.getMessage());
-}
-}
 
-*/
-	
+	/*
+	 * try { ds = (INFlightRMIServer) Naming.lookup(nrsURL); } catch
+	 * (RemoteException e) { ex = e; } catch (NotBoundException e) { ex = e; }
+	 * catch (MalformedURLException e) { ex = e; } finally { StackTraceElement[]
+	 * current = ex.getStackTrace(); if (ex != null) { LOGGER.logp(
+	 * Level.SEVERE, current[0].getClassName(), current[0].getMethodName(),
+	 * "Exception occured during connecting DataServer." + ex.getMessage()); ds
+	 * = null; } else if (ex == null) { LOGGER.logp(Level.FINER,
+	 * THIS_CLAZZ.getName(), METHOD_NAME, "Connected DataServer" +
+	 * ex.getMessage()); } }
+	 */
+
 	/**
 	 * <p>
 	 * [개 요] 데이터 서버를 시작하는 명령입니다.
@@ -288,7 +276,7 @@ LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 	 *            데이터서버의 호스트명
 	 * @param port
 	 *            데이터서버의 포트번호
-	 * @throws Exception 
+	 * @throws Exception
 	 * @since STEP1
 	 */
 

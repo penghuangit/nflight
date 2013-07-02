@@ -1,5 +1,6 @@
 package com.abreqadhabra.nflight.server.bin;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,11 +28,11 @@ import com.abreqadhabra.nflight.server.ns.rmi.bin.NRSCommands;
  * 
  * @author dongsup.kim@gmail.com
  * @since STEP1
- * @see StartAllServer
+ * @see StartupAllServer
  */
-public class StartAllServer {
+public class StartupAllServer {
 
-	private static final Class<StartAllServer> THIS_CLAZZ = StartAllServer.class;
+	private static final Class<StartupAllServer> THIS_CLAZZ = StartupAllServer.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	/*
@@ -98,7 +99,7 @@ public class StartAllServer {
 			os = NFLIGHT_DEFAULT_OS;
 		}
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				"nflight.server.system.os" + os);
+				"nflight.server.system.os: " + os);
 		// 각종 커맨드입니다.
 		String nsr = null;
 
@@ -129,9 +130,12 @@ public class StartAllServer {
 		} else {
 			try {
 
-				runtime.exec(nsr);
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-						"nsr:" + nsr);
+						os + ": " + nsr);
+				runtime.exec(nsr);
+				
+
+			//	LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,	"nsr:" + getJarFolder());
 
 				// Process proc = new ProcessBuilder(nsr).start();
 
@@ -154,5 +158,17 @@ public class StartAllServer {
 		}
 
 	}
+/*
+	private static String getJarFolder() {
 
+		String className = THIS_CLAZZ.getName().replace('.', '/');
+		String classJar = THIS_CLAZZ.getResource("/" + className + ".class")
+				.toString();
+		if (classJar.startsWith("jar:")) {
+			System.out.println("*** running from jar!");
+		}
+		System.out.println(classJar);
+		return classJar;
+	}
+	*/
 }
