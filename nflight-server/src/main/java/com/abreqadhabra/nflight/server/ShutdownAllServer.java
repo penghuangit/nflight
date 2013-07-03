@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.server.bin;
+package com.abreqadhabra.nflight.server;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -77,7 +77,7 @@ public class ShutdownAllServer {
 		// java -D<name>=<value> 시스템 속성
 		String os = System.getProperty("nflight.server.system.os").trim();
 		if (os == null) {
-			os = StartupAllServer.NFLIGHT_DEFAULT_OS;
+	//		os = StartupAllServer.NFLIGHT_SYSTEM_DEFAULT_OS;
 		}
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 				"nflight.server.system.os:" + os);

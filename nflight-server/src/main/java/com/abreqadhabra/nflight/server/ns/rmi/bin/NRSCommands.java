@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.common.exception.NFlightUnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
-import com.abreqadhabra.nflight.server.bin.StartupAllServer;
+import com.abreqadhabra.nflight.server.StartupAllServer;
 import com.abreqadhabra.nflight.server.exception.NFlightServerException;
 import com.abreqadhabra.nflight.server.ns.rmi.INFlightRMIServer;
 
@@ -64,26 +64,7 @@ public class NRSCommands {
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "args[]:"
 				+ Arrays.toString(args));
 
-		// コンフィグファイル（nflight.properties）をシステムプロパティーに反映させます。
-		boolean bl = PropertyLoader.load(
-				StartupAllServer.NFLIGHT_PROPERTY_NAME,
-				StartupAllServer.NFLIGHT_CONFIG_FILE_NAME);
-
-		if (bl == false) {
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Can't read property file("
-							+ StartupAllServer.NFLIGHT_CONFIG_FILE_NAME + ").");
-			System.exit(1);
-		}
-		// コンフィグファイル（nflight_system.properties）をシステムプロパティーに反映させます。
-		bl = PropertyLoader.load(StartupAllServer.NFLIGHT_SYSTEM_PROPERTY_NAME,
-				StartupAllServer.NFLIGHT_SYSTEM_CONFIG_FILE_NAME);
-		if (bl == false) {
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Can't read property file("
-							+ StartupAllServer.NFLIGHT_SYSTEM_CONFIG_FILE_NAME + ").");
-			return;
-		}
+		
 
 		// ＲＭＩレジストリのポート番号を取得します。
 		String noturl = System.getProperty("nflight.server.nrs.rmi.url")
@@ -256,7 +237,7 @@ public class NRSCommands {
 					Level.SEVERE,
 					current[0].getClassName(),
 					current[0].getMethodName(),
-					"Can't boot DataServer in background process:\n"
+					"Can't boot "+str1+" in background process:\n"
 							+ e.getMessage());
 		}
 	}
