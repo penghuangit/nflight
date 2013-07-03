@@ -34,7 +34,7 @@ public class ServerController {
 	/**
 	 * Service name to register this service in the registry
 	 */
-	public static final String SERVICENAME = "FlyByNightService";
+	public static final String SERVICENAME = "nflight";
 
 	private Logger _logger = Logger.getLogger(this.getClass().getName());
 

@@ -1,10 +1,10 @@
-package com.abreqadhabra.nflight.server;
+package com.abreqadhabra.nflight.server.bin;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.server.app.NFlightCommands;
+import com.abreqadhabra.nflight.server.NFlightServer;
 import com.abreqadhabra.nflight.server.rmi.RMIServerImpl;
 
 /**
@@ -28,7 +28,7 @@ import com.abreqadhabra.nflight.server.rmi.RMIServerImpl;
  * @since STEP1
  * @see StartupAllServer
  */
-public class StartupAllServer extends NFlightCommands {
+public class StartupAllServer{
 
 	private static final Class<StartupAllServer> THIS_CLAZZ = StartupAllServer.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
@@ -53,31 +53,9 @@ public class StartupAllServer extends NFlightCommands {
 	 * @since STEP1
 	 */
 	public static void main(String[] args) throws Exception {
-		final String METHOD_NAME = "void main(String[] args)";
-
-		StartupAllServer sas = new StartupAllServer();
-
-		// 각종 커맨드입니다.
-		String rmiserverCommand = sas.getStartupCommand("rmiserver");
-
 		// RMI Server Startup
-		sas.startupRMIServer(rmiserverCommand);
+		NFlightServer  rmiServer = new RMIServerImpl();
+		rmiServer.exec();
 	}
 
-	protected String getStartupCommand(String command) {
-		return super.getStartupCommand(command);
-	}
-
-	protected void startupRMIServer(String command) throws Exception {
-		final String METHOD_NAME = "void startupRMIServer(String command)";
-
-		if (RMIServerImpl.checkStatus()) {
-			LOGGER.logp(Level.WARNING, THIS_CLAZZ.getName(), METHOD_NAME,
-					"NFlight RMI Server is already running.");
-		} else {
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Startup background process.Command :" + command);
-			super.boot(command);
-		}
-	}
 }

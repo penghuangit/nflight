@@ -1,11 +1,10 @@
-package com.abreqadhabra.nflight.server;
+package com.abreqadhabra.nflight.server.bin;
 
-import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.common.util.PropertyLoader;
+import com.abreqadhabra.nflight.server.NFlightServer;
+import com.abreqadhabra.nflight.server.rmi.RMIServerImpl;
 
 /**
  * <p>
@@ -49,37 +48,14 @@ public class ShutdownAllServer {
 	 * @since STEP1
 	 */
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		final String METHOD_NAME = "void main(String[] args)";
 
-		// 설정파일(nflight_system.properties)을 시스템프로퍼티에 반영합니다.
-		boolean bl = PropertyLoader.load(
-				StartupAllServer.NFLIGHT_SYSTEM_PROPERTY_NAME,
-				StartupAllServer.NFLIGHT_SYSTEM_CONFIG_FILE_NAME);
-		if (bl == false) {
-			LOGGER.logp(Level.SEVERE, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Can't read property file("
-							+ StartupAllServer.NFLIGHT_SYSTEM_CONFIG_FILE_NAME
-							+ ")");
-			System.exit(1);
-		}
-
-		// 설정파일(nflight.properties)을 시스템프로퍼티에 반영합니다.
-		bl = PropertyLoader.load(StartupAllServer.NFLIGHT_PROPERTY_NAME,
-				StartupAllServer.NFLIGHT_CONFIG_FILE_NAME);
-		if (bl == false) {
-			LOGGER.logp(Level.SEVERE, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Can't read property file("
-							+ StartupAllServer.NFLIGHT_CONFIG_FILE_NAME + ")");
-			System.exit(1);
-		}
-
-		// java -D<name>=<value> 시스템 속성
-		String os = System.getProperty("nflight.server.system.os").trim();
-		if (os == null) {
-	//		os = StartupAllServer.NFLIGHT_SYSTEM_DEFAULT_OS;
-		}
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+		// RMI Server Shutdown
+		NFlightServer  rmiServer = new RMIServerImpl();
+		rmiServer.exit();
+	
+/*		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 				"nflight.server.system.os:" + os);
 		// 각종 커맨드입니다.
 		String nsr = null;
@@ -112,7 +88,7 @@ public class ShutdownAllServer {
 					current[0].getMethodName(),
 					"Can't shutdown background process.Command :" + nsr + "\n"
 							+ e.getMessage());
-		}
+		}*/
 
 	}
 }

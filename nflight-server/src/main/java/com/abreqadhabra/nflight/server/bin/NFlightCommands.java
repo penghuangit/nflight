@@ -1,9 +1,10 @@
-package com.abreqadhabra.nflight.server.app;
+package com.abreqadhabra.nflight.server.bin;
 
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.exception.CommonException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
 import com.abreqadhabra.nflight.server.exception.NFlightServerException;
@@ -41,36 +42,43 @@ public class NFlightCommands {
 	public static final String NFLIGHT_SYSTEM_PROPERTY_OS_KEY = NFLIGHT_SYSTEM_PROPERTY_KEY
 			+ ".os";
 
-	public static final String NFLIGHT_SYSTEM_STARTUP = "startup.command";
-	public static final String NFLIGHT_SYSTEM_SHUTDOWN = "shutdown.command";
+	public static final String NFLIGHT_SYSTEM_STARTUP = "startup";
+	public static final String NFLIGHT_SYSTEM_SHUTDOWN = "shutdown";
+	public static final String NFLIGHT_SYSTEM_STATUS = "status";
 
-	public NFlightCommands() throws Exception {
-		loadProperties();
-
-	}
-
-	protected void loadProperties() throws Exception {
-
+	static {
 		boolean isLoaded = false;
-		// コンフィグファイル（nflight.properties）をシステムプロパティーに反映させます。
-		isLoaded = PropertyLoader.load(NFLIGHT_PROPERTY_NAME,
-				NFLIGHT_CONFIG_FILE_NAME);
-		if (isLoaded == false) {
-			throw new NFlightServerException("Can't read property file")
-					.addContextValue("NFLIGHT_PROPERTY_NAME",
-							NFLIGHT_PROPERTY_NAME).addContextValue(
-							"NFLIGHT_CONFIG_FILE_NAME",
-							NFLIGHT_CONFIG_FILE_NAME);
-		} else {
-			// コンフィグファイル（nflight_system.properties）をシステムプロパティーに反映させます。
-			isLoaded = PropertyLoader.load(NFLIGHT_SYSTEM_PROPERTY_NAME,
-					NFLIGHT_SYSTEM_CONFIG_FILE_NAME);
+		try {
+			// コンフィグファイル（nflight.properties）をシステムプロパティーに反映させます。
+			isLoaded = PropertyLoader.load(NFLIGHT_PROPERTY_NAME,
+					NFLIGHT_CONFIG_FILE_NAME);
 			if (isLoaded == false) {
-				throw new NFlightServerException(
-						"Can't read system property file").addContextValue(
-						"NFLIGHT_PROPERTY_NAME", NFLIGHT_PROPERTY_NAME)
-						.addContextValue("NFLIGHT_CONFIG_FILE_NAME",
+				throw new NFlightServerException("Can't read property file")
+						.addContextValue("NFLIGHT_PROPERTY_NAME",
+								NFLIGHT_PROPERTY_NAME).addContextValue(
+								"NFLIGHT_CONFIG_FILE_NAME",
 								NFLIGHT_CONFIG_FILE_NAME);
+			} else {
+				// コンフィグファイル（nflight_system.properties）をシステムプロパティーに反映させます。
+				isLoaded = PropertyLoader.load(NFLIGHT_SYSTEM_PROPERTY_NAME,
+						NFLIGHT_SYSTEM_CONFIG_FILE_NAME);
+				if (isLoaded == false) {
+					throw new NFlightServerException(
+							"Can't read system property file").addContextValue(
+							"NFLIGHT_PROPERTY_NAME", NFLIGHT_PROPERTY_NAME)
+							.addContextValue("NFLIGHT_CONFIG_FILE_NAME",
+									NFLIGHT_CONFIG_FILE_NAME);
+				}
+			}
+		} catch (Exception e) {
+			StackTraceElement[] current = e.getStackTrace();
+			if (e instanceof CommonException) {
+				CommonException ce = (CommonException) e;
+				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
+						current[0].getMethodName(), "\n" + ce.getStackTrace(e));
+			} else {
+				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
+						current[0].getMethodName(), e.getMessage());
 			}
 		}
 	}
@@ -91,16 +99,14 @@ public class NFlightCommands {
 	 * @throws Exception
 	 * @since STEP1
 	 */
-	protected void boot(String command) throws Exception {
-		final String METHOD_NAME = "void boot(String command)";
-
+	protected static void exec(String command) throws Exception {
 		try {
-			Process proc = new ProcessBuilder(command).start();
+			Runtime rt = Runtime.getRuntime();		
+			Process proc = rt.exec(command);
 		} catch (IOException ioe) {
 			throw new NFlightServerException(
 					"Can't boot background process.Command :" + command, ioe);
 		}
-
 		try {
 			Thread.sleep(Integer.parseInt(System
 					.getProperty("nflight.server.system.sleeptime2")));
@@ -111,7 +117,7 @@ public class NFlightCommands {
 		}
 	}
 
-	protected String getStartupCommand(String command) {
+	protected static String getStartupCommand(String command) {
 		final String METHOD_NAME = "String getBootCommand(String commandName)";
 
 		// java -D<name>=<value> 시스템 속성
@@ -131,6 +137,40 @@ public class NFlightCommands {
 
 			keyName = NFLIGHT_SYSTEM_PROPERTY_KEY + "." + command + "."
 					+ NFLIGHT_SYSTEM_STARTUP + "." + NFLIGHT_SYSTEM_OS_LINUX;
+			command = System.getProperty(keyName);
+		} else {
+			LOGGER.logp(Level.SEVERE, THIS_CLAZZ.getName(), METHOD_NAME,
+					"Incorrect property(" + NFLIGHT_SYSTEM_PROPERTY_OS_KEY
+							+ "):" + os);
+			System.exit(1);
+		}
+
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, keyName
+				+ ": " + command);
+
+		return command;
+	}
+
+	public String getShutdownCommand(String command) {
+		final String METHOD_NAME = "String getBootCommand(String commandName)";
+
+		// java -D<name>=<value> 시스템 속성
+		String os = System.getProperty(NFLIGHT_SYSTEM_PROPERTY_OS_KEY).trim();
+		if (os == null) {
+			os = NFLIGHT_SYSTEM_OS_DEFAULT;
+		}
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				NFLIGHT_SYSTEM_PROPERTY_OS_KEY + ": " + os);
+
+		String keyName = null;
+		if (NFLIGHT_SYSTEM_OS_WINDOWS.equals(os)) {
+			keyName = NFLIGHT_SYSTEM_PROPERTY_KEY + "." + command + "."
+					+ NFLIGHT_SYSTEM_SHUTDOWN + "." + NFLIGHT_SYSTEM_OS_WINDOWS;
+			command = System.getProperty(keyName);
+		} else if (NFLIGHT_SYSTEM_OS_LINUX.equals(os)) {
+
+			keyName = NFLIGHT_SYSTEM_PROPERTY_KEY + "." + command + "."
+					+ NFLIGHT_SYSTEM_SHUTDOWN + "." + NFLIGHT_SYSTEM_OS_LINUX;
 			command = System.getProperty(keyName);
 		} else {
 			LOGGER.logp(Level.SEVERE, THIS_CLAZZ.getName(), METHOD_NAME,
