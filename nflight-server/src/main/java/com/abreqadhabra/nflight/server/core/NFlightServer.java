@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.server;
+package com.abreqadhabra.nflight.server.core;
 
 import java.rmi.Remote;
 

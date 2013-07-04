@@ -1,13 +1,13 @@
-package com.abreqadhabra.nflight.server.bin;
+package com.abreqadhabra.nflight.server.core;
 
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.exception.CommonException;
+import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
-import com.abreqadhabra.nflight.server.exception.NFlightServerException;
+import com.abreqadhabra.nflight.server.core.exception.NFlightServerException;
 
 public class NFlightCommands {
 
@@ -72,8 +72,8 @@ public class NFlightCommands {
 			}
 		} catch (Exception e) {
 			StackTraceElement[] current = e.getStackTrace();
-			if (e instanceof CommonException) {
-				CommonException ce = (CommonException) e;
+			if (e instanceof WrapperException) {
+				WrapperException ce = (WrapperException) e;
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(), "\n" + ce.getStackTrace(e));
 			} else {

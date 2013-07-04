@@ -7,8 +7,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommonException extends Exception implements
-	ICommonException {
+public abstract class WrapperException extends Exception implements
+	IWrapperException {
 
     /**
      * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정
@@ -47,7 +47,7 @@ public class CommonException extends Exception implements
      *            상세 메시지
      * @since STEP1
      */
-    public CommonException(String message) {
+    public WrapperException(String message) {
 	// 슈퍼 클래스의 동일 인수를 가진 생성자를 호출합니다.
 	super(message);
     }
@@ -69,7 +69,7 @@ public class CommonException extends Exception implements
      *            자식 예외
      * @since STEP1
      */
-    public CommonException(String message, Throwable childException) {
+    public WrapperException(String message, Throwable childException) {
 	// 부모 클래스의 동일 인수를 가진 생성자를 호출합니다.
 	super(message);
 	// 자식 예외
@@ -91,7 +91,7 @@ public class CommonException extends Exception implements
      *            자식 예외
      * @since STEP1
      */
-    public CommonException(Throwable childException) {
+    public WrapperException(Throwable childException) {
 	// 자식 예외
 	this.childException = childException;
     }
@@ -127,13 +127,13 @@ public class CommonException extends Exception implements
     }
 
     @Override
-    public CommonException addContextValue(String label, Object value) {
+    public WrapperException addContextValue(String label, Object value) {
 	contextEntries.add(new ExceptionContext(label, value));
 	return this;
     }
 
     @Override
-    public CommonException setContextValue(String label, Object value) {
+    public WrapperException setContextValue(String label, Object value) {
 	contextEntries.add(new ExceptionContext(label, value));
 	return this;
     }

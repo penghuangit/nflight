@@ -21,7 +21,7 @@ package com.abreqadhabra.nflight.common.exception;
  * @since STEP1
  * @see WrapperException
  */
-public class NFlightUnexpectedException extends WrapperException {
+public class NFlightSystemException extends WrapperException {
 
     /**
      * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정
@@ -64,7 +64,7 @@ public class NFlightUnexpectedException extends WrapperException {
      *            상세 메시지
      * @since STEP1
      */
-    public NFlightUnexpectedException(String message) {
+    public NFlightSystemException(String message) {
 	super(message);
 
 	// NFlightException의 에러ID를 설정합니다.
@@ -92,7 +92,7 @@ public class NFlightUnexpectedException extends WrapperException {
      *            자식 예외
      * @since STEP1
      */
-    public NFlightUnexpectedException(String message, Throwable cause) {
+    public NFlightSystemException(String message, Throwable cause) {
 	super(message, cause);
 
 	// NFlightException의 에러ID를 설정합니다.
@@ -117,7 +117,7 @@ public class NFlightUnexpectedException extends WrapperException {
      *            자식 예외
      * @since STEP1
      */
-    public NFlightUnexpectedException(Throwable cause) {
+    public NFlightSystemException(Throwable cause) {
 	super(MESSAGE, cause);
 
 	// NFlightException의 에러ID를 설정합니다.

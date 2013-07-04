@@ -3,7 +3,7 @@ package com.abreqadhabra.nflight.common.exception.examples;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.exception.CommonException;
+import com.abreqadhabra.nflight.common.exception.NFlightSystemException;
 import com.abreqadhabra.nflight.common.exception.NFlightUnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -29,8 +29,8 @@ public class UnexpectedExceptionExample {
 	    }
 	} catch (Exception e) {
 	    StackTraceElement[] current = e.getStackTrace();
-	    if (e instanceof CommonException) {
-		CommonException ce = (CommonException) e;
+	    if (e instanceof NFlightSystemException) {
+		NFlightSystemException ce = (NFlightSystemException) e;
 		LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 			current[0].getMethodName(), "\n" + ce.getStackTrace(e));
 	    }
@@ -58,8 +58,8 @@ public class UnexpectedExceptionExample {
 	    level3();
 	} catch (Exception e) {
 	    StackTraceElement[] current = e.getStackTrace();
-	    if (e instanceof CommonException) {
-		throw new CommonException("Error at level 2", e);
+	    if (e instanceof NFlightSystemException) {
+		throw new NFlightSystemException("Error at level 2", e);
 	    } else {
 		NFlightUnexpectedException ure = new NFlightUnexpectedException(
 			"Error at level 2", e);

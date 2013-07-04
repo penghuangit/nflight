@@ -2,7 +2,7 @@ package com.abreqadhabra.nflight.common.exception;
 
 import java.util.List;
 
-public interface ICommonException {
+public interface IWrapperException {
 
     /**
      * <p>
@@ -86,9 +86,9 @@ public interface ICommonException {
      */
     public String getMessageId();
 
-    public CommonException addContextValue(String label, Object value);
+    public WrapperException addContextValue(String label, Object value);
 
-    public CommonException setContextValue(String label, Object value);
+    public WrapperException setContextValue(String label, Object value);
 
     public List<ExceptionContext> getContextEntries();
     

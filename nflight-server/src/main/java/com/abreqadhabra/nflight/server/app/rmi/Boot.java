@@ -32,7 +32,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.server.app.BootProfile;
 
 /**
  * Boots the <B><em>NFlight</em></b> system, parsing command line arguments.
@@ -58,20 +57,20 @@ public class Boot {
 		
 		try {
 			// Create the Profile
-			BootProfile bootProfile = null;
+	//		BootProfile bootProfile = null;
 			if (args.length > 0) {
 				if (args[0].startsWith("-")) {
 					// Settings specified as command line arguments
 					Properties prop = parseCmdLineArgs(args);
 					if (prop != null) {
-						bootProfile = new RMIProfileImpl(prop);
+				//		bootProfile = new RMIProfileImpl(prop);
 					} else {
 						// One of the "exit-immediately" options was specified!
 						return;
 					}
 				} else {
 					// Settings specified in a property file
-					bootProfile = new RMIProfileImpl(args[0]);
+				//	bootProfile = new RMIProfileImpl(args[0]);
 				}
 			} else {
 				// Settings specified in the default property file

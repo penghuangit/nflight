@@ -10,10 +10,9 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.exception.NFlightUnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.server.NFlightServer;
-import com.abreqadhabra.nflight.server.bin.NFlightCommands;
-import com.abreqadhabra.nflight.server.exception.NFlightServerException;
-import com.abreqadhabra.nflight.server.ns.rmi.INFlightRMIServer;
+import com.abreqadhabra.nflight.server.core.NFlightCommands;
+import com.abreqadhabra.nflight.server.core.NFlightServer;
+import com.abreqadhabra.nflight.server.core.exception.NFlightServerException;
 import com.abreqadhabra.nflight.server.ns.rmi.ServerController;
 
 public class RMIServerImpl extends NFlightCommands implements NFlightServer {
