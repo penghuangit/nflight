@@ -1,6 +1,12 @@
 package com.abreqadhabra.nflight.server.core;
 
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.abreqadhabra.nflight.common.logging.LoggingHelper;
+import com.abreqadhabra.nflight.server.Bootstrap;
+import com.abreqadhabra.nflight.server.core.exception.NFlightProfileException;
 
 /**
  * This class allows the JADE core to retrieve configuration-dependent classes
@@ -13,7 +19,10 @@ import java.util.Properties;
  */
 public class ProfileImpl extends Profile {
 
-	private Properties props = null;
+	private static final Class<ProfileImpl> THIS_CLAZZ = ProfileImpl.class;
+	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	
+	private Properties props = new Properties();
 	protected Properties bootProps = null;
 
 	/**
@@ -32,25 +41,34 @@ public class ProfileImpl extends Profile {
 		// TODO Auto-generated constructor stub
 	}
 
-	private void init() {
-		// TODO Auto-generated method stub
-
+	public ProfileImpl() {
+		// TODO Auto-generated constructor stub
 	}
 
-	
-	
-	public boolean compareToProperty(String key, String option) {
+	private void init() {
+		String host = props.getProperty(MAIN_HOST);
+		if(host == null) {
+			host = getDefaultNetworkName();
+			props.setProperty(MAIN_HOST, host);
+		}
+	}
+
+	public boolean compareToProperty(String key, String option) throws Exception {
+		final String METHOD_NAME = "boolean compareToProperty(String key, String option)";
+		
 		String value = props.getProperty(key);
-		if (key == null) {
-			return false;
-		} else {
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, option+" :"+ key + "/" + value);
+		
+		if(value ==null){	
+				throw new NFlightProfileException(key+": property not found").addContextValue("key", key).addContextValue("value", value);
+		}else {
 			if (option.equalsIgnoreCase(value)) {
 				return true;
-			} else 
+			} else
 				return false;
-			}
+		}
 	}
-	
+
 	/**
 	 * Retrieve a boolean value for a configuration property. If no
 	 * corresponding property is found or if its string value cannot be

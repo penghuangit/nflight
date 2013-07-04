@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
+import com.abreqadhabra.nflight.server.ns.rmi.ServerController;
 
 public class CommandProcessor {
 
@@ -46,7 +47,9 @@ public class CommandProcessor {
 	}
 
 	public void createRMIContainer(ProfileImpl profile) {
-		// TODO Auto-generated method stub
+
+		int port = profile.g
+		new ServerController(9999);
 		
 	}
 }

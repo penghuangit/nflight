@@ -6,6 +6,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.server.core.CommandProcessor;
 import com.abreqadhabra.nflight.server.core.Profile;
@@ -26,9 +27,9 @@ public class Bootstrap {
 	public static void main(String[] args) {
 		final String METHOD_NAME = "void main(String[] args";
 
+		// Create the Profile
+		ProfileImpl profile = new ProfileImpl();
 		try {
-			// Create the Profile
-			ProfileImpl profile = null;
 			if (args.length > 0) {
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 						"args : " + Arrays.toString(args));
@@ -46,29 +47,46 @@ public class Bootstrap {
 				// Settings specified in the default property file
 				profile = new ProfileImpl(DEFAULT_FILENAME);
 			}
-			
 			// Start a new NFlight runtime system
 			CommandProcessor.instance().setCloseVM(true);
+
 			
 			if (profile.compareToProperty(Profile.SERVER, Profile.RMI_SERVER)) {
 				CommandProcessor.instance().createRMIContainer(profile);
-			} else if (profile.compareToProperty(Profile.SERVER, Profile.SOCKET_SERVER)) {
-		//		CommandProcessor.instance().createSocketContainer(profile);
-			}else if (profile.compareToProperty(Profile.SERVER, Profile.SOCKET_SERVER)) {
-		//		CommandProcessor.instance().createDataServerContainer(profile);
+			} else if (profile.compareToProperty(Profile.SERVER,
+					Profile.SOCKET_SERVER)) {
+				// CommandProcessor.instance().createSocketContainer(profile);
+			} else if (profile.compareToProperty(Profile.SERVER,
+					Profile.SOCKET_SERVER)) {
+				// CommandProcessor.instance().createDataServerContainer(profile);
 			}
-
-		} catch (IllegalArgumentException iae) {
-			System.err.println("Command line arguments format error. "
-					+ iae.getMessage());
-			iae.printStackTrace();
-			printUsage();
-			System.exit(-1);
+		} catch (Exception e) {
+			StackTraceElement[] current = e.getStackTrace();
+			if (e instanceof WrapperException) {
+				WrapperException we = (WrapperException) e;
+				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
+						current[0].getMethodName(), "\n" + we.getStackTrace(e));
+				printUsage();
+				System.exit(-1);
+			} else if (e instanceof IllegalArgumentException) {
+				LOGGER.logp(
+						Level.SEVERE,
+						current[0].getClassName(),
+						current[0].getMethodName(),
+						"\n" + "Command line arguments format error. "
+								+ e.getMessage());
+				printUsage();
+				System.exit(-1);
+			} else {
+				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
+						current[0].getMethodName(), e.getMessage());
+			}
 		}
 	}
 
 	private static void printUsage() {
-		System.err.println("Usage: java com.abreqadhabra.nflight.server.Boot <filename>");
+		System.err
+				.println("Usage: java com.abreqadhabra.nflight.server.Boot <filename>");
 	}
 
 	private static Properties parseCMDLineArgs(String[] args) {
