@@ -10,9 +10,9 @@ public class LoadPropertiesExample {
 
 	public static void main(String[] args) {
 
-		String propertyPath = "examples/resources/i18n/";
+		String propertyPath = "com/abreqadhabra/nflight/common/resources/config/";
 
-		String propertyFileName = "LoggingMessages_ko.properties";
+		String propertyFileName = "logging.properties";
 
 		Properties properties = new Properties();
 

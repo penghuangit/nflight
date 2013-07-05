@@ -17,9 +17,9 @@ import com.abreqadhabra.nflight.server.core.exception.NFlightProfileException;
  * 
  * 
  */
-public class ProfileImpl extends Profile {
+public class BootProfileImpl extends Profile {
 
-	private static final Class<ProfileImpl> THIS_CLAZZ = ProfileImpl.class;
+	private static final Class<BootProfileImpl> THIS_CLAZZ = BootProfileImpl.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 	
 	private Properties props = new Properties();
@@ -32,16 +32,16 @@ public class ProfileImpl extends Profile {
 	 * @param aProp
 	 *            The names and values of the configuration properties to use.
 	 */
-	public ProfileImpl(Properties props) {
+	public BootProfileImpl(Properties props) {
 		this.props = props;
 		init();
 	}
 
-	public ProfileImpl(String string) {
+	public BootProfileImpl(String string) {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ProfileImpl() {
+	public BootProfileImpl() {
 		// TODO Auto-generated constructor stub
 	}
 

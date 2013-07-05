@@ -1,4 +1,4 @@
-package com.abreqadhabra.freelec.java.workshop.addressbook.server.db.etc;
+package com.abreqadhabra.freelec.java.workshop.addressbook.etc;
 
 /*
 

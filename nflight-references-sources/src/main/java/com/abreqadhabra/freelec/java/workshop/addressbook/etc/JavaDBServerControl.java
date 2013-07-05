@@ -1,4 +1,4 @@
-package com.abreqadhabra.freelec.java.workshop.addressbook.server.db.etc;
+package com.abreqadhabra.freelec.java.workshop.addressbook.etc;
 
 import java.io.File;
 import java.sql.Connection;
@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.freelec.java.workshop.addressbook.common.constants.Constants;
 
-public class JavaDsBServerControl {
+public class JavaDBServerControl {
 
     Logger logger = Logger.getLogger(this.getClass().getCanonicalName()); 
 	private Connection dbConnection = null;

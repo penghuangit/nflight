@@ -7,10 +7,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Logger;
+
+import com.abreqadhabra.nflight.common.exception.NFlightSystemException;
+import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class PropertyFile {
-
-	public static void convertAllPropertiesToXML(File dir) {
+    private static final Class<PropertyFile> THIS_CLAZZ = PropertyFile.class;
+    private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+    
+	public static void convertAllPropertiesToXML(File dir) throws Exception {
 
 		System.out.println(dir.getAbsolutePath());
 
@@ -19,7 +25,7 @@ public class PropertyFile {
 			for (File child : dir.listFiles()) {
 				if (child.isFile() && child.getName().endsWith(".properties")) {
 					properties = PropertyFile
-							.readTraditionalPropertyFile(child
+							.readPropertyFile(child
 									.getAbsolutePath());
 					PropertyFile.writeXMLPropertyFile(properties,
 							child.getAbsolutePath());
@@ -31,7 +37,7 @@ public class PropertyFile {
 		}
 	}
 	
-	public static void convertAllPropertiesToXML(String propertyFilePath) {
+	public static void convertAllPropertiesToXML(String propertyFilePath) throws Exception {
 
 		System.out.println(propertyFilePath);
 
@@ -42,7 +48,7 @@ public class PropertyFile {
 			for (File child : dir.listFiles()) {
 				if (child.isFile() && child.getName().endsWith(".properties")) {
 					properties = PropertyFile
-							.readTraditionalPropertyFile(child
+							.readPropertyFile(child
 									.getAbsolutePath());
 					PropertyFile.writeXMLPropertyFile(properties,
 							child.getAbsolutePath());
@@ -80,17 +86,24 @@ public class PropertyFile {
 		return properties;
 	}
 
-	public static Properties readTraditionalPropertyFile(
-			String traditionalPropertyFileName) {
-		Properties properties = new Properties();
-		try {
-			properties.load(ClassLoader
-				    .getSystemResourceAsStream(traditionalPropertyFileName));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return properties;
+    public static Properties readPropertyFile(String fileName) throws Exception {
+	Properties properties = new Properties();
+	try {
+	    InputStream is = THIS_CLAZZ.getResourceAsStream(fileName);
+	    if (is != null) {
+		properties.load(is);
+	    } else {
+		throw new NFlightSystemException(
+			"WARNING: error loading properties from file")
+			.addContextValue("fileName", fileName);
+	    }
+	    // properties.load(ClassLoader.getSystemResourceAsStream(fileName));
+	} catch (IOException e) {
+	    throw new NFlightSystemException("Can't load properties: ", e)
+		    .addContextValue("fileName", fileName);
 	}
+	return properties;
+    }
 
 	public static void writeXMLPropertyFile(Properties properties,
 			String traditionalPropertyFileName) {

@@ -30,6 +30,7 @@
 		<module>nflight-app-client</module>
 		<module>nflight-references-sources</module>
 		<module>nflight-server</module>
+		<module>nflight-core</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -19,7 +19,7 @@
 
  */
 
-package com.abreqadhabra.freelec.java.workshop.addressbook.server.db.etc;
+package com.abreqadhabra.freelec.java.workshop.addressbook.etc;
 
 import java.util.Properties;
 import java.sql.SQLException;

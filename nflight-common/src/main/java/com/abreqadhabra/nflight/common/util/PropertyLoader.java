@@ -114,7 +114,7 @@ public class PropertyLoader
 	    propertiesInput.close();
 	    */
 	    
-	    Properties properties = PropertyFile.readTraditionalPropertyFile(propertyFileName);
+	    Properties properties = PropertyFile.readPropertyFile(propertyFileName);
 	    
 	    for (Iterator<Object> it = properties.keySet().iterator(); it
 		    .hasNext();) {

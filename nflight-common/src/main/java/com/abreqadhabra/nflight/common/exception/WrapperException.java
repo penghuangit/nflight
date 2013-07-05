@@ -266,7 +266,7 @@ public abstract class WrapperException extends Exception implements
 	}
     }
 
-    public String getStackTrace(Exception e) {
+    public static String getStackTrace(Exception e) {
 	StringBuffer sb = null;
 	try {
 	    StringWriter stringWriter = new StringWriter();

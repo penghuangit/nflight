@@ -46,10 +46,9 @@ public class CommandProcessor {
 		}
 	}
 
-	public void createRMIContainer(ProfileImpl profile) {
+	public void createRMIContainer() {
 
-		int port = profile.g
-		new ServerController(9999);
+	new ServerController(9999);
 		
 	}
 }

@@ -10,7 +10,7 @@ import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.server.core.CommandProcessor;
 import com.abreqadhabra.nflight.server.core.Profile;
-import com.abreqadhabra.nflight.server.core.ProfileImpl;
+import com.abreqadhabra.nflight.server.core.BootProfileImpl;
 
 public class Bootstrap {
 
@@ -28,7 +28,7 @@ public class Bootstrap {
 		final String METHOD_NAME = "void main(String[] args";
 
 		// Create the Profile
-		ProfileImpl profile = new ProfileImpl();
+		BootProfileImpl profile = new BootProfileImpl();
 		try {
 			if (args.length > 0) {
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
@@ -38,14 +38,14 @@ public class Bootstrap {
 					Properties props = parseCMDLineArgs(args);
 					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 							"props :" + props.toString());
-					profile = new ProfileImpl(props);
+					profile = new BootProfileImpl(props);
 				} else {
 					// Settings specified in a property file
-					profile = new ProfileImpl(args[0]);
+					profile = new BootProfileImpl(args[0]);
 				}
 			} else {
 				// Settings specified in the default property file
-				profile = new ProfileImpl(DEFAULT_FILENAME);
+				profile = new BootProfileImpl(DEFAULT_FILENAME);
 			}
 			// Start a new NFlight runtime system
 			CommandProcessor.instance().setCloseVM(true);
