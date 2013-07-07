@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.exception.NFlightPropertyException;
 import com.abreqadhabra.nflight.common.exception.NFlightSystemException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -93,7 +94,7 @@ public class PropertyFile {
 	    if (is != null) {
 		properties.load(is);
 	    } else {
-		throw new NFlightSystemException(
+		throw new NFlightPropertyException(
 			"WARNING: error loading properties from file")
 			.addContextValue("fileName", fileName);
 	    }

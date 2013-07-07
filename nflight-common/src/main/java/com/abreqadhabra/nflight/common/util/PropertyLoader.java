@@ -84,6 +84,7 @@ public class PropertyLoader
      * <p>
      * [비 고]
      * </p>
+     * @param nflightConfigFileName 
      * 
      * @param String propertyName 프로퍼티명
      * @param String
@@ -91,7 +92,7 @@ public class PropertyLoader
      * @return boolean 정상적으로 파일을 읽은 경우에는 true를 반환합니다.
      * @since STEP1
      */
-    public static boolean load(String propertyName, String propertyFileName) {
+    public static boolean load(String propertyFileName) {
 	final String METHOD_NAME = "boolean load(String propertyName, String fileName)";
 
 	try {

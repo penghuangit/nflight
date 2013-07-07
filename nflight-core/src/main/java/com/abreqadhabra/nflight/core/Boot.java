@@ -1,7 +1,6 @@
 package com.abreqadhabra.nflight.core;
 
 import java.io.PrintStream;
-import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
@@ -12,6 +11,7 @@ import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.core.exception.NFlightProfileException;
+import com.abreqadhabra.nflight.server.rmi.RMIServer;
 
 public class Boot {
 	private static final Class<Boot> THIS_CLAZZ = Boot.class;
@@ -24,7 +24,7 @@ public class Boot {
 	 * <em>NFlight</em></b> server platform.
 	 */
 	public static void main(String[] args) {
-		final String METHOD_NAME = "void main(String[] args";
+		final String METHOD_NAME = "void main(String[] args)";
 
 		try {
 			if (args.length > 0) {
@@ -33,8 +33,6 @@ public class Boot {
 				if (args[0].startsWith("--")) {
 					// Settings specified as command line arguments
 					Properties props = parseCMDLineArgs(args);
-					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-							"props :" + props.toString());
 					profile = new BootProfileImpl(props);
 				} else {
 					// Settings specified in a property file
@@ -45,47 +43,72 @@ public class Boot {
 				profile = new BootProfileImpl();
 			}
 
-			
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
-					METHOD_NAME,
-					"getHostAddress: " + InetAddress.getLocalHost().getHostAddress());
-			
+			if (profile.compareToProperty(BootProfile.OPTION_SERVICE_NAME_KEY,
+					BootProfileImpl.SERVICE_RMI_CLIENT)) {
+				
+
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+						BootProfile.OPTION_SERVICE_NAME_KEY + "="
+								+ BootProfileImpl.SERVICE_RMI_CLIENT);
+			} else if (profile.compareToProperty(
+					BootProfile.OPTION_SERVICE_NAME_KEY,
+					BootProfileImpl.SERVICE_RMI_SERVER)) {
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+						BootProfile.OPTION_SERVICE_NAME_KEY + "="						
+								+ BootProfileImpl.SERVICE_RMI_SERVER);
+				
+				new RMIServer(profile);
+
+			} else if (profile.compareToProperty(
+					BootProfile.OPTION_SERVICE_NAME_KEY,
+					BootProfileImpl.SERVICE_SOCKET_CLIENT)) {
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+						BootProfile.OPTION_SERVICE_NAME_KEY + "="
+								+ BootProfileImpl.SERVICE_SOCKET_CLIENT);
+			} else if (profile.compareToProperty(
+					BootProfile.OPTION_SERVICE_NAME_KEY,
+					BootProfileImpl.SERVICE_SOCKET_SERVER)) {
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+						BootProfile.OPTION_SERVICE_NAME_KEY + "="
+								+ BootProfileImpl.SERVICE_SOCKET_SERVER);
+			} else if (profile.compareToProperty(
+					BootProfile.OPTION_SERVICE_NAME_KEY,
+					BootProfileImpl.SERVICE_DATA_SERVER)) {
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+						BootProfile.OPTION_SERVICE_NAME_KEY + "="
+								+ BootProfileImpl.SERVICE_DATA_SERVER);
+			} else {
+				throw new NFlightProfileException(
+						"No value specified for Service").addContextValue("BootProfile.OPTION_SERVICE_NAME_KEY", BootProfile.OPTION_SERVICE_NAME_KEY);
+			}
+
 			/*
-		    properties = profile.getArgProperties();
-	        if (properties.getBooleanProperty(BootProfileImpl.DUMP_KEY, false)) {
-	            listProperties(System.out);
-	        }
+			 * properties = profile.getArgProperties(); if
+			 * (properties.getBooleanProperty(BootProfileImpl.DUMP_KEY, false))
+			 * { listProperties(System.out); }
+			 * 
+			 * if (properties.getBooleanProperty(BootProfileImpl.VERSION_KEY,
+			 * false)) { System.out.println(Runtime.getCopyrightNotice());
+			 * return; }
+			 * 
+			 * if (properties.getBooleanProperty(BootProfileImpl.HELP_KEY,
+			 * false)) { usage(System.out); return; }
+			 * 
+			 * if (properties.getProperty(Profile.MAIN_HOST) == null) { try {
+			 * properties.setProperty(Profile.MAIN_HOST,
+			 * InetAddress.getLocalHost().getHostName()); } catch
+			 * (UnknownHostException uhe) {
+			 * System.out.print("Unknown host exception in getLocalHost(): ");
+			 * System.out.println(
+			 * " please use '-host' and/or '-port' options to setup JADE host and port"
+			 * ); System.exit(1); } }
+			 * 
+			 * if (properties.getBooleanProperty(BootProfileImpl.CONF_KEY,
+			 * false)) { new BootGUI(this); if
+			 * (properties.getBooleanProperty(BootProfileImpl.DUMP_KEY, false))
+			 * { listProperties(System.out); } }
+			 */
 
-	        if (properties.getBooleanProperty(BootProfileImpl.VERSION_KEY, false)) {
-	            System.out.println(Runtime.getCopyrightNotice());
-	            return;
-	        }
-
-	        if (properties.getBooleanProperty(BootProfileImpl.HELP_KEY, false)) {
-	            usage(System.out);
-	            return;
-	        }
-
-	        if (properties.getProperty(Profile.MAIN_HOST) == null) {
-	            try {
-	                properties.setProperty(Profile.MAIN_HOST, InetAddress.getLocalHost().getHostName());
-	            } catch (UnknownHostException uhe) {
-	                System.out.print("Unknown host exception in getLocalHost(): ");
-	                System.out.println(" please use '-host' and/or '-port' options to setup JADE host and port");
-	                System.exit(1);
-	            }
-	        }
-
-	        if (properties.getBooleanProperty(BootProfileImpl.CONF_KEY, false)) {
-	            new BootGUI(this);
-	            if (properties.getBooleanProperty(BootProfileImpl.DUMP_KEY, false)) {
-	                listProperties(System.out);
-	            }
-	        }
-	        
-	        */
-			
-			
 		} catch (Exception e) {
 			StackTraceElement[] current = e.getStackTrace();
 			if (e instanceof WrapperException) {
@@ -103,6 +126,7 @@ public class Boot {
 			}
 		}
 	}
+
 
 	public static Properties parseCMDLineArgs(String[] args) throws Exception {
 		final String METHOD_NAME = "Properties parseCMDLineArgs(String[] args)";
@@ -122,7 +146,11 @@ public class Boot {
 					key = stripLeadingHyphens(key);
 					if (key.equalsIgnoreCase(BootProfile.OPTION_GUI_KEY)) {
 						argsProps.setProperty(key, value);
-					} else if (key
+					}else{
+						argsProps.setProperty(BootProfile.OPTION_GUI_KEY, "false");
+					}
+					
+					if (key
 							.equalsIgnoreCase(BootProfile.OPTION_SERVICE_KEY)) {
 						value = (String) options.next();
 						if (checkNotLeadingHyphens(key, value)) {
@@ -204,31 +232,33 @@ public class Boot {
 		return str;
 	}
 
-    /**
-     * Show usage information.
-     * @param out The print stream to output to.
-     */
-    public static void printUsage(PrintStream out) {
-        out.println("Usage: java -cp <classpath> com.abreqadhabra.nflight.core.Boot [--options]");
-        out.println("");
-        out.println("where options are:");
-        out.println("  -host <host name>\tHost where RMI registry for the platform is located");
-        out.println("  -port <port number>\tThe port where RMI registry for the platform resides");
-        out.println("  -gui\t\t\tIf specified, a new Remote Management Agent is created.");
-        out.println("  -conf <file name>\tStarts NFlight using the configuration properties read in the specified file.");
-        out.println("  -version\t\tIf specified, current JADE version number and build date is printed.");
-        out.println("  -service <service name>\tThe symbolic platform name specified only for the main container.");
-        out.println("  -help\t\t\tPrints out usage informations.");
-        out.println("");
-        out.println("Examples:");
-        out.println("  Connect to RMI Server, starting an service named 'rmiclient'");
-        out.println("  \tjava com.abreqadhabra.nflight.core.Boot --service rmiclient --host 192.168.0.1 -- port 9999");
-        out.println("");
-        out.println("  Connect to Socket Server, starting an service named 'socketclient'");
-        out.println("  \tjava com.abreqadhabra.nflight.core.Boot --service socketclient --host 192.168.0.1 -- port 9999");
-        out.println("");
-        out.println("  Visit at the https://github.com/abreqadhabra for more details.");
-        out.println("");
-        System.exit(0);
-    }
+	/**
+	 * Show usage information.
+	 * 
+	 * @param out
+	 *            The print stream to output to.
+	 */
+	public static void printUsage(PrintStream out) {
+		out.println("Usage: java -cp <classpath> com.abreqadhabra.nflight.core.Boot [--options]");
+		out.println("");
+		out.println("where options are:");
+		out.println("  -host <host name>\tHost where RMI registry for the platform is located");
+		out.println("  -port <port number>\tThe port where RMI registry for the platform resides");
+		out.println("  -gui\t\t\tIf specified, a new Remote Management Agent is created.");
+		out.println("  -conf <file name>\tStarts NFlight using the configuration properties read in the specified file.");
+		out.println("  -version\t\tIf specified, current JADE version number and build date is printed.");
+		out.println("  -service <service name>\tThe symbolic platform name specified only for the main container.");
+		out.println("  -help\t\t\tPrints out usage informations.");
+		out.println("");
+		out.println("Examples:");
+		out.println("  Connect to RMI Server, starting an service named 'rmiclient'");
+		out.println("  \tjava com.abreqadhabra.nflight.core.Boot --service rmiclient --host 192.168.0.1 -- port 9999");
+		out.println("");
+		out.println("  Connect to Socket Server, starting an service named 'socketclient'");
+		out.println("  \tjava com.abreqadhabra.nflight.core.Boot --service socketclient --host 192.168.0.1 -- port 9999");
+		out.println("");
+		out.println("  Visit at the https://github.com/abreqadhabra for more details.");
+		out.println("");
+		System.exit(0);
+	}
 }
