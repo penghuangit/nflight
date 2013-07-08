@@ -93,6 +93,7 @@ public class PropertyFile {
 	    InputStream is = THIS_CLAZZ.getResourceAsStream(fileName);
 	    if (is != null) {
 		properties.load(is);
+		is.close();
 	    } else {
 		throw new NFlightPropertyException(
 			"WARNING: error loading properties from file")

@@ -18,7 +18,7 @@ import com.abreqadhabra.nflight.core.BootProfileImpl;
 import com.abreqadhabra.nflight.server.NFlightServer;
 import com.abreqadhabra.nflight.server.exception.NFlightServerException;
 
-public class RMIServer extends UnicastRemoteObject implements NFlightServer{
+public class RMIServer extends UnicastRemoteObject implements NFlightServer {
 
 	private static final long serialVersionUID = 1L;
 
@@ -27,25 +27,23 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer{
 
 	BootProfileImpl profile;
 	private static String registryName;
-	
-	
+
 	public RMIServer(BootProfileImpl profile) throws Exception {
 		final String METHOD_NAME = "RMIServer(BootProfileImpl profile)";
 
-		this.profile =profile;
-		
-		String registryID = "rmi://" + profile.getHost() /* InetAddress.getLocalHost().getHostName();*/ + ":" +  profile.getPort();
-		RMIServer.registryName = registryID + "/" + BootProfileImpl.SERVICE_RMI_REGISTRY;
-		
-		
+		this.profile = profile;
+
+		String registryID = "rmi://" + profile.getHost() /*
+														 * InetAddress.getLocalHost
+														 * ().getHostName();
+														 */+ ":"
+				+ profile.getPort();
+		RMIServer.registryName = registryID + "/"
+				+ BootProfileImpl.SERVICE_RMI_REGISTRY;
+
 		if (profile.compareToProperty(BootProfile.OPTION_SERVICE_COMMAND_KEY,
 				BootProfileImpl.SERVICE_COMMAND_STARTUP)) {
-						LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-						BootProfile.OPTION_SERVICE_COMMAND_KEY + "="
-								+ BootProfileImpl.SERVICE_COMMAND_STARTUP);
-			
 			this.startup();
-
 		} else if (profile.compareToProperty(
 				BootProfile.OPTION_SERVICE_COMMAND_KEY,
 				BootProfileImpl.SERVICE_COMMAND_SHUTDOWN)) {
@@ -81,34 +79,42 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer{
 	@Override
 	public void startup() throws Exception {
 		final String METHOD_NAME = "startup()";
-/*		
-		if (System.getSecurityManager() == null) {
-			System.setSecurityManager(new RMISecurityManager());
-		}
-*/
+		/*
+		 * if (System.getSecurityManager() == null) {
+		 * System.setSecurityManager(new RMISecurityManager()); }
+		 */
 
 		try {
-		
+
+			if(checkStatus()){
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+						"RMI 서버가 이미 시작 중입니다.");
+				System.exit(1);
+			}else{
 			// Create an RMI registry on the local host and DAEMON port
 			// (if one is already running just get it)
-			Registry theRegistry = getRmiRegistry(profile.getHost(), profile.getPort());
+			Registry theRegistry = getRmiRegistry(profile.getHost(),
+					profile.getPort());
 			// rebind to the registry
 			Naming.rebind(registryName, this);
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+					"RMI 서버를 시작하였습니다.");
+			}
 		} catch (Exception e) {
 			System.out.println("ERROR starting RMI Server");
 			e.printStackTrace();
 			System.exit(1);
 		}
 
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				"RMI 서버를 시작하였습니다.");
+
 	}
-	
+
 	@Override
 	public void shutdown() throws Exception {
 		final String METHOD_NAME = "shutdown()";
 
-		NFlightServer server = getRemoteServerObject(this.registryName, profile.getPort());
+		NFlightServer server = getRemoteServerObject(this.registryName,
+				profile.getPort());
 
 		if (server == null) {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
@@ -131,10 +137,10 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer{
 	@Override
 	public boolean checkStatus() throws Exception {
 		final String METHOD_NAME = "checkStatus()";
-		
 		// 데이터서버의 RMI 레지스트리의 포트 번호를 가져옵니다. - java -D<name>=<value> 시스템 속성
 
-		NFlightServer ns = getRemoteServerObject(profile.getHost(), profile.getPort());
+		NFlightServer ns = getRemoteServerObject(profile.getHost(),
+				profile.getPort());
 		if (ns == null) {
 			return false;
 		}
@@ -150,7 +156,7 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer{
 
 		return isRunning;
 	}
-	
+
 	/**
 	 * <p>
 	 * [機　能] データサーバの生死を確認する。
@@ -169,7 +175,7 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer{
 	public boolean checkHealth() throws RemoteException {
 		return true;
 	}
-	
+
 	/**
 	 * <p>
 	 * [개 요] 데이터 서버에 접속합니다.
@@ -198,7 +204,8 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer{
 		NFlightServerException nse = null;
 
 		LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME,
-				"Connecting NFlight RMI Server..."+ registryName);;
+				"Connecting NFlight RMI Server..." + registryName);
+		;
 
 		try {
 			ns = (NFlightServer) Naming.lookup(registryName);
@@ -227,13 +234,16 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer{
 
 		return ns;
 	}
-	
+
 	/**
-	 * Get the RMIRegistry. If a registry is already active on this host
-	 * and the given portNumber, then that registry is returned, 
-	 * otherwise a new registry is created and returned.
-	 * @param portNumber is the port on which the registry accepts requests
-	 * @param host host for the remote registry, if null the local host is used
+	 * Get the RMIRegistry. If a registry is already active on this host and the
+	 * given portNumber, then that registry is returned, otherwise a new
+	 * registry is created and returned.
+	 * 
+	 * @param portNumber
+	 *            is the port on which the registry accepts requests
+	 * @param host
+	 *            host for the remote registry, if null the local host is used
 	 **/
 	private Registry getRmiRegistry(String host, int portNumber)
 			throws RemoteException {

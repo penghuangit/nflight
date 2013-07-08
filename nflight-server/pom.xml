@@ -36,15 +36,16 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.abreqadhabra.nflight</groupId>
-			<artifactId>nflight-common</artifactId>
+			<artifactId>nflight-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.abreqadhabra.nflight</groupId>
-			<artifactId>nflight-core</artifactId>
+			<artifactId>nflight-common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 	

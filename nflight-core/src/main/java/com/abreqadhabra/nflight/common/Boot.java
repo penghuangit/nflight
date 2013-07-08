@@ -1,23 +1,66 @@
-package com.abreqadhabra.nflight.core;
+package com.abreqadhabra.nflight.common;
 
 import java.io.PrintStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.boot.BootConstants;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
+import com.abreqadhabra.nflight.core.BootProfileImpl;
 import com.abreqadhabra.nflight.core.exception.NFlightProfileException;
-import com.abreqadhabra.nflight.server.rmi.RMIServer;
 
 public class Boot {
 	private static final Class<Boot> THIS_CLAZZ = Boot.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
-	private static BootProfileImpl profile;
+	
+	private static BootProfileImpl profile;	
+		
+	private static void setSystemProperties(Properties props) {
 
+		Properties bootProps = parseServiceSpecifiers(props);
+		
+		for (Iterator<Object> it = bootProps.keySet().iterator(); it.hasNext(); ) {
+			String key = (String)it.next();
+			if (System.getProperty(key) == null) {
+				String value = bootProps.getProperty(key);
+				System.setProperty(key, value);
+			}	
+		}
+		if (LOGGER.isLoggable(Level.FINER)) {
+			System.getProperties().list(System.out);
+		}
+
+	}
+	
+	public static Properties parseServiceSpecifiers(Properties props){
+
+		String service = props.getProperty(BootConstants.Options.STR_BOOT_OPTION_SERVICE);
+		
+		int       index1 = service.indexOf(':');
+		int       index2 = service.indexOf(';');
+		
+		// Cursor on the given string: marks the parser
+		// position
+		int cursor = 0;
+		String serviceName = service.substring(cursor, index1);
+		String serviceClass = service.substring(index1 + 1, index2);
+		String serviceCommand = service.substring(index2 + 1, service.length());
+
+		props.setProperty(BootConstants.Options.STR_BOOT_OPTION_SERVICE_NAME, serviceName);
+		props.setProperty(BootConstants.Options.STR_BOOT_OPTION_SERVICE_CLASS, serviceClass);
+		props.setProperty(BootConstants.Options.STR_BOOT_OPTION_SERVICE_COMMAND, serviceCommand);	
+		props.remove(BootConstants.Options.STR_BOOT_OPTION_SERVICE);
+		
+		return props;
+	}
+	
 	/**
 	 * Fires up the <b><em>NFlight</em></b> system. This method initializes the
 	 * Profile Manager and then starts the bootstrap process for the <B>
@@ -25,6 +68,8 @@ public class Boot {
 	 */
 	public static void main(String[] args) {
 		final String METHOD_NAME = "void main(String[] args)";
+		
+		Properties props = null;
 
 		try {
 			if (args.length > 0) {
@@ -32,82 +77,91 @@ public class Boot {
 						"args : " + Arrays.toString(args));
 				if (args[0].startsWith("--")) {
 					// Settings specified as command line arguments
-					Properties props = parseCMDLineArgs(args);
-					profile = new BootProfileImpl(props);
+					props = parseCMDLineArgs(args);
 				} else {
 					// Settings specified in a property file
-					profile = new BootProfileImpl(args[0]);
+					props = PropertyFile.readPropertyFile(args[0]);
 				}
 			} else {
 				// Settings specified in the default property file
-				profile = new BootProfileImpl();
+				props = PropertyFile
+						.readPropertyFile(BootConstants.DEFAULT_PROPERTIES_FILE_NAME);
 			}
 
-			if (profile.compareToProperty(BootProfile.OPTION_SERVICE_NAME_KEY,
-					BootProfileImpl.SERVICE_RMI_CLIENT)) {
-				
+			setSystemProperties(props);
 
-				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-						BootProfile.OPTION_SERVICE_NAME_KEY + "="
-								+ BootProfileImpl.SERVICE_RMI_CLIENT);
-			} else if (profile.compareToProperty(
-					BootProfile.OPTION_SERVICE_NAME_KEY,
-					BootProfileImpl.SERVICE_RMI_SERVER)) {
-				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-						BootProfile.OPTION_SERVICE_NAME_KEY + "="						
-								+ BootProfileImpl.SERVICE_RMI_SERVER);
-				
-				new RMIServer(profile);
+			
+			if (profile
+					.compareToProperty(
+							BootConstants.Options.STR_BOOT_OPTION_SERVICE_NAME,
+							BootConstants.Options.STR_SERVICE_NAME_RMI_CLIENT)) {
 
-			} else if (profile.compareToProperty(
-					BootProfile.OPTION_SERVICE_NAME_KEY,
-					BootProfileImpl.SERVICE_SOCKET_CLIENT)) {
-				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-						BootProfile.OPTION_SERVICE_NAME_KEY + "="
-								+ BootProfileImpl.SERVICE_SOCKET_CLIENT);
-			} else if (profile.compareToProperty(
-					BootProfile.OPTION_SERVICE_NAME_KEY,
-					BootProfileImpl.SERVICE_SOCKET_SERVER)) {
-				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-						BootProfile.OPTION_SERVICE_NAME_KEY + "="
-								+ BootProfileImpl.SERVICE_SOCKET_SERVER);
-			} else if (profile.compareToProperty(
-					BootProfile.OPTION_SERVICE_NAME_KEY,
-					BootProfileImpl.SERVICE_DATA_SERVER)) {
-				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-						BootProfile.OPTION_SERVICE_NAME_KEY + "="
-								+ BootProfileImpl.SERVICE_DATA_SERVER);
+			} else if (profile
+					.compareToProperty(
+							BootConstants.Options.STR_BOOT_OPTION_SERVICE_NAME,
+							BootConstants.Options.STR_SERVICE_NAME_RMI_SERVER)) {
+
+				execute(profile.getServiceClass(),
+						new Class<?>[] { BootProfileImpl.class },
+						new Object[] { profile });
+				
+			} else if (profile
+					.compareToProperty(
+							BootConstants.Options.STR_BOOT_OPTION_SERVICE_NAME,
+							BootConstants.Options.STR_SERVICE_NAME_SOCKET_CLIENT)) {
+
+			} else if (profile
+					.compareToProperty(
+							BootConstants.Options.STR_BOOT_OPTION_SERVICE_NAME,
+							BootConstants.Options.STR_SERVICE_NAME_SOCKET_SERVER)) {
+
+			} else if (profile
+					.compareToProperty(
+							BootConstants.Options.STR_BOOT_OPTION_SERVICE_NAME,
+							BootConstants.Options.STR_SERVICE_NAME_DATA_SERVER)) {
+
 			} else {
 				throw new NFlightProfileException(
-						"No value specified for Service").addContextValue("BootProfile.OPTION_SERVICE_NAME_KEY", BootProfile.OPTION_SERVICE_NAME_KEY);
+						"No value specified for Service Name");
 			}
 
-			/*
-			 * properties = profile.getArgProperties(); if
-			 * (properties.getBooleanProperty(BootProfileImpl.DUMP_KEY, false))
-			 * { listProperties(System.out); }
-			 * 
-			 * if (properties.getBooleanProperty(BootProfileImpl.VERSION_KEY,
-			 * false)) { System.out.println(Runtime.getCopyrightNotice());
-			 * return; }
-			 * 
-			 * if (properties.getBooleanProperty(BootProfileImpl.HELP_KEY,
-			 * false)) { usage(System.out); return; }
-			 * 
-			 * if (properties.getProperty(Profile.MAIN_HOST) == null) { try {
-			 * properties.setProperty(Profile.MAIN_HOST,
-			 * InetAddress.getLocalHost().getHostName()); } catch
-			 * (UnknownHostException uhe) {
-			 * System.out.print("Unknown host exception in getLocalHost(): ");
-			 * System.out.println(
-			 * " please use '-host' and/or '-port' options to setup JADE host and port"
-			 * ); System.exit(1); } }
-			 * 
-			 * if (properties.getBooleanProperty(BootProfileImpl.CONF_KEY,
-			 * false)) { new BootGUI(this); if
-			 * (properties.getBooleanProperty(BootProfileImpl.DUMP_KEY, false))
-			 * { listProperties(System.out); } }
-			 */
+	
+/*			properties = profile.getArgProperties();
+			if (properties.getBooleanProperty(BootProfileImpl.DUMP_KEY, false)) {
+				listProperties(System.out);
+			}
+
+			if (properties.getBooleanProperty(BootProfileImpl.VERSION_KEY,
+					false)) {
+				System.out.println(Runtime.getCopyrightNotice());
+				return;
+			}
+
+			if (properties.getBooleanProperty(BootProfileImpl.HELP_KEY, false)) {
+				usage(System.out);
+				return;
+			}
+
+			if (properties.getProperty(Profile.MAIN_HOST) == null) {
+				try {
+					properties.setProperty(Profile.MAIN_HOST, InetAddress
+							.getLocalHost().getHostName());
+				} catch (UnknownHostException uhe) {
+					System.out
+							.print("Unknown host exception in getLocalHost(): ");
+					System.out
+							.println(" please use '-host' and/or '-port' options to setup JADE host and port");
+					System.exit(1);
+				}
+			}
+
+			if (properties.getBooleanProperty(BootProfileImpl.CONF_KEY, false)) {
+				new BootGUI(this);
+				if (properties.getBooleanProperty(BootProfileImpl.DUMP_KEY,
+						false)) {
+					listProperties(System.out);
+				}
+			}*/
 
 		} catch (Exception e) {
 			StackTraceElement[] current = e.getStackTrace();
@@ -128,6 +182,21 @@ public class Boot {
 	}
 
 
+	private static void execute(String name, Class<?> [] parameterTypes, Object[] initArgs) throws Exception {
+		ClassLoader classLoader = THIS_CLAZZ.getClassLoader();
+		try {
+			Class<?> clazz = classLoader.loadClass(name);
+			Constructor<?> constructor = clazz
+					.getDeclaredConstructor(parameterTypes);
+			constructor.newInstance(initArgs);
+		} catch (ClassNotFoundException | NoSuchMethodException
+				| SecurityException | InstantiationException
+				| IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			throw new NFlightProfileException("Class loading error. ", e);
+		}
+	}
+
 	public static Properties parseCMDLineArgs(String[] args) throws Exception {
 		final String METHOD_NAME = "Properties parseCMDLineArgs(String[] args)";
 
@@ -144,32 +213,33 @@ public class Boot {
 				// handle long option --foo or --foo bar
 				if (key.startsWith("--")) {
 					key = stripLeadingHyphens(key);
-					if (key.equalsIgnoreCase(BootProfile.OPTION_GUI_KEY)) {
+					if (key.equalsIgnoreCase(BootConstants.Options.STR_BOOT_OPTION_GUI)) {
 						argsProps.setProperty(key, value);
-					}else{
-						argsProps.setProperty(BootProfile.OPTION_GUI_KEY, "false");
+					} else {
+						argsProps.setProperty(BootConstants.Options.STR_BOOT_OPTION_GUI,
+								"false");
 					}
 					
 					if (key
-							.equalsIgnoreCase(BootProfile.OPTION_SERVICE_KEY)) {
+							.equalsIgnoreCase(BootConstants.Options.STR_BOOT_OPTION_SERVICE)) {
 						value = (String) options.next();
 						if (checkNotLeadingHyphens(key, value)) {
 							argsProps.setProperty(key, value);
 						}
 					} else if (key
-							.equalsIgnoreCase(BootProfile.OPTION_HOST_KEY)) {
+							.equalsIgnoreCase(BootConstants.Options.STR_BOOT_OPTION_HOST)) {
 						value = (String) options.next();
 						if (checkNotLeadingHyphens(key, value)) {
 							argsProps.setProperty(key, value);
 						}
 					} else if (key
-							.equalsIgnoreCase(BootProfile.OPTION_PORT_KEY)) {
+							.equalsIgnoreCase(BootConstants.Options.STR_BOOT_OPTION_PORT)) {
 						value = (String) options.next();
 						if (checkNotLeadingHyphens(key, value)) {
 							argsProps.setProperty(key, value);
 						}
 					} else if (key
-							.equalsIgnoreCase(BootProfile.OPTION_CONF_KEY)) {
+							.equalsIgnoreCase(BootConstants.Options.STR_BOOT_OPTION_CONF)) {
 						value = (String) options.next();
 						if (checkNotLeadingHyphens(key, value)) {
 							argsProps.clear();

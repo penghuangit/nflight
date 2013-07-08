@@ -1,10 +1,10 @@
 package com.abreqadhabra.nflight.core;
 
-import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.boot.BootConstants;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.core.exception.NFlightProfileException;
@@ -13,7 +13,6 @@ public class BootProfileImpl implements BootProfile {
 	private static final Class<BootProfileImpl> THIS_CLAZZ = BootProfileImpl.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public static final String DEFAULT_BOOT_PROPERTIES_FILE_NAME = "/com/abreqadhabra/nflight/core/config/boot.properties";
 	public static final String SERVICE_RMI_CLIENT = "rmiclient";
 	public static final String SERVICE_RMI_SERVER = "rmiserver";
 	public static final String SERVICE_SOCKET_CLIENT = "socketclient";
@@ -25,10 +24,10 @@ public class BootProfileImpl implements BootProfile {
 	public static String SERVICE_COMMAND_SHUTDOWN = "shutdown";
 	public static final String  SERVICE_RMI_REGISTRY = "NFlight";
 	
-	Properties bootProps = null;
+	static Properties bootProps = null;
 
 	public BootProfileImpl() throws Exception {
-		this(DEFAULT_BOOT_PROPERTIES_FILE_NAME);
+		this(BootConstants.DEFAULT_PROPERTIES_FILE_NAME);
 	}
 
 	public BootProfileImpl(Properties props) {
@@ -44,7 +43,10 @@ public class BootProfileImpl implements BootProfile {
 	private void init() {
 		final String METHOD_NAME = "init()";
 
-		String service = bootProps.getProperty(OPTION_SERVICE_KEY);
+		String service = bootProps.getProperty(BootConstants.Options.STR_BOOT_OPTION_SERVICE);
+		
+		
+//		parseSpecifiers(service);
 		// Cursor on the given string: marks the parser
 		// position
 		int cursor = 0;
@@ -52,12 +54,7 @@ public class BootProfileImpl implements BootProfile {
 		String serviceName = service.substring(cursor, separatorPos);
 		String serviceCommand = service.substring(separatorPos + 1,
 				service.length());
-		bootProps.setProperty(OPTION_SERVICE_NAME_KEY, serviceName);
-		bootProps.setProperty(OPTION_SERVICE_COMMAND_KEY, serviceCommand);
-		bootProps.remove(OPTION_SERVICE_KEY);
 
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "args : "
-				+ bootProps.toString());
 
 	}
 
@@ -84,6 +81,7 @@ public class BootProfileImpl implements BootProfile {
 		}
 	}
 
+	/*	
 	public String getHost() {
 		return bootProps.getProperty(OPTION_HOST_KEY);
 	}
@@ -95,6 +93,32 @@ public class BootProfileImpl implements BootProfile {
 	public boolean isGui() {
 		return new Boolean(bootProps.getProperty(OPTION_GUI_KEY)).booleanValue();
 	}
+	
+	public String getServiceClass() {
+		return bootProps.getProperty(OPTION_SERVICE_CLASS_KEY);
+	}
 
+public static void parseSpecifiers(String str){
+		final String METHOD_NAME = "void parseSpecifiers(String str)";
 
+		int       index1 = str.indexOf(':');
+		int       index2 = str.indexOf(';');
+		
+		// Cursor on the given string: marks the parser
+		// position
+		int cursor = 0;
+		String serviceName = str.substring(cursor, index1);
+		String serviceClass = str.substring(index1 + 1, index2);
+		String serviceCommand = str.substring(index2 + 1, str.length());
+
+		
+		bootProps.setProperty(OPTION_SERVICE_NAME_KEY, serviceName);
+		bootProps.setProperty(OPTION_SERVICE_CLASS_KEY, serviceClass);
+		bootProps.setProperty(OPTION_SERVICE_COMMAND_KEY, serviceCommand);
+		
+		bootProps.remove(OPTION_SERVICE_KEY);
+
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "args : "
+				+ bootProps.toString());
+	}*/
 }
