@@ -1,14 +1,16 @@
-package com.abreqadhabra.nflight.core;
+package com.abreqadhabra.nflight;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.exception.NFlightPropertyException;
+import com.abreqadhabra.nflight.common.Constants;
 import com.abreqadhabra.nflight.common.exception.NFlightSystemException;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
+import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
 
 public class BootCommand {
@@ -16,37 +18,17 @@ public class BootCommand {
 	private static final Class<BootCommand> THIS_CLAZZ = BootCommand.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	/**
-	 * nflight.propertiesコンフィグファイル名です。ここでは、nflight.propertiesファイルを指しています。
-	 */
-	public static final String BOOT_COMMAND_CONFIG_FILE_NAME = "/com/abreqadhabra/nflight/core/config/command.properties";
-
-	public static final String BOOT_COMMAND_OS_WINDOWS = "windows";
-	public static final String BOOT_COMMAND_OS_LINUX = "linux";
-
-	public static final String BOOT_COMMAND_OS_DEFAULT = BOOT_COMMAND_OS_WINDOWS;
-
-	public static final String BOOT_COMMAND_PROPERTY_KEY = "boot.command";
-
-	public static final String BOOT_COMMAND_PROPERTY_OS_KEY = BOOT_COMMAND_PROPERTY_KEY
-			+ ".os";
-
 	static {
-		boolean isLoaded = false;
 		try {
-			// コンフィグファイル（nflight.properties）をシステムプロパティーに反映させます。
-			isLoaded = PropertyLoader.load(BOOT_COMMAND_CONFIG_FILE_NAME);
-			if (isLoaded == false) {
-				throw new NFlightPropertyException("Can't read property file")
-						.addContextValue("NFLIGHT_CONFIG_FILE_NAME",
-								BOOT_COMMAND_CONFIG_FILE_NAME);
-			}
+			Properties props = PropertyFile
+					.readPropertyFile(Constants.BootCommand.DEFAULT_CONFIG_FILE_NAME);
+			PropertyLoader.setSystemProperties(props);
 		} catch (Exception e) {
 			StackTraceElement[] current = e.getStackTrace();
 			if (e instanceof WrapperException) {
-				WrapperException ce = (WrapperException) e;
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
-						current[0].getMethodName(), "\n" + ce.getStackTrace(e));
+						current[0].getMethodName(),
+						"\n" + WrapperException.getStackTrace(e));
 			} else {
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(), e.getMessage());
@@ -67,19 +49,27 @@ public class BootCommand {
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "args: "
 				+ Arrays.toString(args));
-
 		String command = getCommand();
-
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "command: "
 				+ command);
-
 		try {
-			exec(command);
+			execute(command);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			StackTraceElement[] current = e.getStackTrace();
+			if (e instanceof WrapperException) {
+				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
+						current[0].getMethodName(),
+						"\n" + WrapperException.getStackTrace(e));
+				Boot.printUsage(System.out);
+				System.exit(-1);
+			} else {
+				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
+						current[0].getMethodName(),
+						"\n" + WrapperException.getStackTrace(e));
+				Boot.printUsage(System.out);
+				System.exit(-1);
+			}
 		}
-
 	}
 
 	/**
@@ -98,50 +88,50 @@ public class BootCommand {
 	 * @throws Exception
 	 * @since STEP1
 	 */
-	protected static void exec(String command) throws Exception {
+	protected static void execute(String command) throws Exception {
+		final String METHOD_NAME = "void execute(String command";
+
 		try {
 			Runtime rt = Runtime.getRuntime();
 			Process proc = rt.exec(command);
-		} catch (IOException ioe) {
-			throw new NFlightSystemException(
-					"Can't boot background process.Command :" + command, ioe);
-		}
-		try {
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "proc : " + proc.toString());
 			Thread.sleep(Integer.parseInt(System
-					.getProperty("boot.command.sleeptime2")));
+					.getProperty(Constants.BootCommand.KEY_COMMAND_SLEEP_TIME_2)));
 		} catch (InterruptedException e) {
 			StackTraceElement[] current = e.getStackTrace();
 			LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 					current[0].getMethodName(), "이 오류는 발생하지 않습니다.");
+		} catch (IOException ioe) {
+			throw new NFlightSystemException(
+					"Can't boot background process.Command :" + command, ioe);
 		}
 	}
 
 	protected static String getCommand() {
 		final String METHOD_NAME = "String getCommand()";
 
-		String value = null;
 		// java -D<name>=<value> 시스템 속성
-		String os = System.getProperty(BOOT_COMMAND_PROPERTY_OS_KEY).trim();
-		if (os == null) {
-			os = BOOT_COMMAND_OS_DEFAULT;
+		String osName = System.getProperty(Constants.BootCommand.KEY_COMMAND_OS);
+		if (osName == null) {
+			osName = System.getProperty(Constants.BootCommand.KEY_COMMAND_OS);
 		}
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				BOOT_COMMAND_PROPERTY_OS_KEY + ": " + os);
+				Constants.BootCommand.KEY_COMMAND_OS + ": " + osName);
+		
 		String key = null;
-		if (BOOT_COMMAND_OS_WINDOWS.equals(os)) {
-			key = BOOT_COMMAND_PROPERTY_KEY + "." + BOOT_COMMAND_OS_WINDOWS;
+		String value = null;
+		if (osName.equals(Constants.BootCommand.STR_COMMAND_OS_WINDOWS)) {
+			key = Constants.BootCommand.KEY_COMMAND_OS_WINDOWS;
 			value = System.getProperty(key);
-		} else if (BOOT_COMMAND_OS_LINUX.equals(os)) {
-			key = BOOT_COMMAND_PROPERTY_KEY + "." + BOOT_COMMAND_OS_LINUX;
+		} else if (osName.equals(Constants.BootCommand.STR_COMMAND_OS_LINUX)) {
+			key = Constants.BootCommand.KEY_COMMAND_OS_LINUX;
 			value = System.getProperty(key);
 		} else {
 			LOGGER.logp(Level.SEVERE, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Incorrect property(" + BOOT_COMMAND_PROPERTY_OS_KEY + "):"
-							+ os);
+					"Incorrect property(" + Constants.BootCommand.KEY_COMMAND_OS + "):"
+							+ osName);
 			System.exit(1);
 		}
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, key + ": "
-				+ value);
 
 		return value;
 	}

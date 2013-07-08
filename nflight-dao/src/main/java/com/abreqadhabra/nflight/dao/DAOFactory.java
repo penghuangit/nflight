@@ -13,6 +13,8 @@ public abstract class DAOFactory {
 
 	public static final String DATABASE_MODE_LOCAL = "local";
 	public static final String DATABASE_MODE_REMOTE = "remote";
+	public static final String DATABASE_TYPE_DERBY ="derby";
+	public static final String DATABASE_TYPE_ORACLE ="oracle";
 	
 	public abstract CommonDAO getCommonDAO()throws Exception;
 

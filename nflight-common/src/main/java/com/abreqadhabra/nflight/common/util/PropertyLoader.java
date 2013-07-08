@@ -1,5 +1,6 @@
 package com.abreqadhabra.nflight.common.util;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -33,6 +34,31 @@ public class PropertyLoader
 
 	private static final Class<PropertyLoader> THIS_CLAZZ = PropertyLoader.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	
+	public static void setSystemProperties(final Properties props) {
+		final String METHOD_NAME = "setSystemProperties(Properties props)";
+
+		for (Iterator<Object> it = props.keySet().iterator(); it.hasNext(); ) {
+			String key = (String)it.next();
+			if (System.getProperty(key) == null) {
+				String value = props.getProperty(key);
+				System.setProperty(key, value);
+			}	
+		}
+		if (LOGGER.isLoggable(Level.CONFIG)) {	
+			Properties systemProps = System.getProperties();
+			String[] keys = (String[]) systemProps.keySet().toArray(new String[0]);  
+	        Arrays.sort(keys);
+	        StringBuffer sb = new StringBuffer();
+	        for(String key : keys) {          	
+	        	if(key.startsWith("nflight.system.")){
+	            sb.append("\n" +key + " : " + systemProps.get(key)  );
+	        	}
+	        } 
+			LOGGER.logp(Level.CONFIG, THIS_CLAZZ.getName(),
+					METHOD_NAME, "System Properties:" + sb);
+		}
+	}
 	
 	    /**
 	     * <p>

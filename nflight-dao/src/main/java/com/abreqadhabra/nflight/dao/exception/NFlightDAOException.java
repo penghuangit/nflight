@@ -1,13 +1,13 @@
 package com.abreqadhabra.nflight.dao.exception;
 
-import com.abreqadhabra.nflight.common.exception.CommonException;
+import com.abreqadhabra.nflight.common.exception.WrapperException;
 
 /**
  * <p>
  * [개 요] DAO 공통 기본 예외클래스
  * </p>
  * <p>
- * [상 세] CommonException을 상속받은 DAO 공통  예외클래스
+ * [상 세] WrapperException을 상속받은 DAO 공통  예외클래스
  * </p>
  * <p>
  * [비 고]
@@ -21,9 +21,9 @@ import com.abreqadhabra.nflight.common.exception.CommonException;
  * 
  * @author dongsup.kim@gmail.com
  * @since STEP1
- * @see CommonException
+ * @see WrapperException
  */
-public class NFlightDAOException extends CommonException {
+public class NFlightDAOException extends WrapperException {
 
     /**
      * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정

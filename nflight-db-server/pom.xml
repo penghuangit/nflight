@@ -16,7 +16,7 @@
   	</dependency>
   	<dependency>
   		<groupId>com.abreqadhabra.nflight</groupId>
-  		<artifactId>nflight-commons</artifactId>
+  		<artifactId>nflight-common</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   		<type>jar</type>
   		<scope>compile</scope>

@@ -95,9 +95,7 @@ public class PropertyFile {
 		properties.load(is);
 		is.close();
 	    } else {
-		throw new NFlightPropertyException(
-			"WARNING: error loading properties from file")
-			.addContextValue("fileName", fileName);
+		throw new NFlightPropertyException("Can't read property file")	.addContextValue("fileName", fileName);
 	    }
 	    // properties.load(ClassLoader.getSystemResourceAsStream(fileName));
 	} catch (IOException e) {

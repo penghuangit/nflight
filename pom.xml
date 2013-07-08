@@ -17,6 +17,11 @@
 				<type>jar</type>
 				<scope>test</scope>
 			</dependency>
+			<dependency>
+				<groupId>com.abreqadhabra.nflight</groupId>
+				<artifactId>nflight-server</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<modules>
@@ -30,7 +35,6 @@
 		<module>nflight-app-client</module>
 		<module>nflight-references-sources</module>
 		<module>nflight-server</module>
-		<module>nflight-core</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
