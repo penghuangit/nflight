@@ -3,6 +3,7 @@
   <name>nflight-db-server</name>
   <comment>NightFlight Application Prototyping Development. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
   <projects>
+    <project>nflight-common</project>
     <project>nflight-dao</project>
   </projects>
   <buildSpec>

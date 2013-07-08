@@ -5,7 +5,7 @@
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/derby/derbynet/10.10.1.1/derbynet-10.10.1.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/derby/derby/10.10.1.1/derby-10.10.1.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/abreqadhabra/nflight/nflight-common/0.0.1-SNAPSHOT/nflight-common-0.0.1-SNAPSHOT.jar"/>
+  <classpathentry kind="src" path="/nflight-common"/>
   <classpathentry kind="src" path="/nflight-dao"/>
   <classpathentry kind="var" path="M2_REPO/org/dbunit/dbunit/2.4.9/dbunit-2.4.9.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.5/slf4j-api-1.7.5.jar"/>
