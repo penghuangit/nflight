@@ -206,9 +206,9 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 		
 		try {
 			registry = getRMIRegistry(this.host, this.port);
-			if (Arrays.asList(registry.list()).contains(registryName)) {
+			if (isArraysContains(this.registry.list(), this.registryName)) {
 				// Remove the RMI remote object from the RMI registry
-				registry.unbind(this.registryName);
+				this.registry.unbind(this.registryName);
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 						"Remove the RMI remote object from the RMI registry");
 			} else {
@@ -224,6 +224,10 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 			throw new NFlightUnexpectedException("ignored, should not occur: "
 					+ this.registryName, nbe);
 		}
+	}
+
+	private boolean isArraysContains(Object[] arrays, String value) {
+		return Arrays.asList(arrays).contains(value);		
 	}
 
 	/**
