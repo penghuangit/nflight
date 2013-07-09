@@ -3,6 +3,7 @@ package com.abreqadhabra.nflight;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.rmi.RMISecurityManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -21,7 +22,10 @@ import com.abreqadhabra.nflight.common.util.PropertyLoader;
 public class Boot {
 	private static final Class<Boot> THIS_CLAZZ = Boot.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
-	
+
+	private static final String BASE_LOCATION = THIS_CLAZZ
+			.getProtectionDomain().getCodeSource().getLocation().getFile();
+
 	public static Properties parseServiceSpecifiers(Properties props) {
 
 		String service = props
@@ -57,19 +61,20 @@ public class Boot {
 	public static void main(String[] args) {
 		final String METHOD_NAME = "void main(String[] args)";
 
-	Properties props = null;
+		setSecurityManager();
+		Properties props = null;
 
-	try {
-	    if (args.length > 0) {
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-			"args : " + Arrays.toString(args));
-		if (args[0].startsWith("--")) {
-		    // Settings specified as command line arguments
-		    props = parseCMDLineArgs(args);
-		} else {
-		    // Settings specified in a property file
-		    props = PropertyFile.readPropertyFile(args[0]);
-		}
+		try {
+			if (args.length > 0) {
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+						"args : " + Arrays.toString(args));
+				if (args[0].startsWith("--")) {
+					// Settings specified as command line arguments
+					props = parseCMDLineArgs(args);
+				} else {
+					// Settings specified in a property file
+					props = PropertyFile.readPropertyFile(args[0]);
+				}
 	    } else {
 		// Settings specified in the default property file
 		props = PropertyFile
@@ -171,22 +176,47 @@ public class Boot {
 	}
     }
 
-    private static void execute(final String name,
-	    final Class<?>[] parameterTypes, final Object[] initArgs)
-	    throws Exception {
-	ClassLoader classLoader = THIS_CLAZZ.getClassLoader();
-	try {
-	    Class<?> clazz = classLoader.loadClass(name);
-	    Constructor<?> constructor = clazz
-		    .getDeclaredConstructor(parameterTypes);
-	    constructor.newInstance(initArgs);
-	} catch (ClassNotFoundException | NoSuchMethodException
-		| SecurityException | InstantiationException
-		| IllegalAccessException | IllegalArgumentException
-		| InvocationTargetException e) {
-	    throw new NFlightBootException("Class loading error. ", e);
+	private static void setSecurityManager() {
+		final String METHOD_NAME = "void setSecurityManager()";
+
+		System.setProperty(Constants.RMIServer.KEY_JAVA_SECURITY_POLICY,
+				BASE_LOCATION + Constants.RMIServer.DEFAULT_POLICY_FILE_NAME);
+		LOGGER.logp(
+				Level.CONFIG,
+				THIS_CLAZZ.getName(),
+				METHOD_NAME,
+				Constants.RMIServer.KEY_JAVA_SECURITY_POLICY
+						+ "="
+						+ System.getProperty(Constants.RMIServer.KEY_JAVA_SECURITY_POLICY));
+		if (System.getSecurityManager() == null) {
+			System.setSecurityManager(new RMISecurityManager());
+		}
 	}
-    }
+	
+	private static void execute(final String name,
+			final Class<?>[] parameterTypes, final Object[] initArgs)
+			throws Exception {
+		ClassLoader classLoader = THIS_CLAZZ.getClassLoader();
+		try {
+			Class<?> clazz = classLoader.loadClass(name);
+			Constructor<?> constructor = null;
+			if (parameterTypes.length != 0) {
+				constructor = clazz.getDeclaredConstructor(parameterTypes);
+			} else {
+				constructor = clazz.getDeclaredConstructor();
+			}
+			if (initArgs.length != 0) {
+				constructor.newInstance(initArgs);
+			} else {
+				constructor.newInstance();
+			}
+		} catch (ClassNotFoundException | NoSuchMethodException
+				| SecurityException | InstantiationException
+				| IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			throw new NFlightBootException("Class loading error. ", e);
+		}
+	}
 
     public static Properties parseCMDLineArgs(String[] args) throws Exception {
 	final String METHOD_NAME = "Properties parseCMDLineArgs(String[] args)";

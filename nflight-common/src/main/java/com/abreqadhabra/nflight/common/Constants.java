@@ -33,7 +33,7 @@ public class Constants {
 
 		// SERVICE-COMMAND OPTIONS CONFIGURATION
 		public static final String STR_SERVICE_COMMAND_STARTUP = "startup";
-		public static final String STR_SERVICE_COMMAND_SHUTDOWN = "shutdow";
+		public static final String STR_SERVICE_COMMAND_SHUTDOWN = "shutdown";
 		public static final String STR_SERVICE_COMMAND_STATUS = "status";
 
 	}
@@ -54,10 +54,14 @@ public class Constants {
 		public static final String STR_COMMAND_OS_DEFAULT = STR_COMMAND_OS_WINDOWS;
 	}
 
-	public class RMIServer{
+	public static class RMIServer{
 	    
 	    public static final String STR_SERVICE_REGISTRY ="NFlight/RMIServer";
 	    
+	    public static final String KEY_JAVA_SECURITY_POLICY ="java.security.policy";
+	    public static final String DEFAULT_POLICY_FILE_NAME = "com/abreqadhabra/nflight/common/boot/config/default.policy";
+	   
+
 	}
 
 

@@ -3,6 +3,7 @@ package com.abreqadhabra.nflight.server.rmi;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -15,7 +16,7 @@ import com.abreqadhabra.nflight.common.exception.NFlightUnexpectedException;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.server.NFlightServer;
-import com.abreqadhabra.nflight.server.exception.NFlightServerException;
+import com.abreqadhabra.nflight.server.rmi.exception.NFlightRMIServerException;
 
 public class RMIServer extends UnicastRemoteObject implements NFlightServer {
 
@@ -71,17 +72,15 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer {
 						"RMI 서버가 정지 중에 있습니다.");
 			}
 		} else {
-			throw new NFlightServerException("서버기동이 실패하였습니다.");
+			throw new NFlightRMIServerException("서버 기동이 실패하였습니다.").addContextValue("serviceCommand", serviceCommand);
 		}
 	}
 
 	@Override
 	public void startup() throws Exception {
 		final String METHOD_NAME = "startup()";
-		/*
-		 * if (System.getSecurityManager() == null) {
-		 * System.setSecurityManager(new RMISecurityManager()); }
-		 */
+		
+
 
 		try {
 
@@ -120,6 +119,7 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer {
 			System.exit(1);
 		}
 		try {
+			//UnicastRemoteObject.unexportObject
 			server.shutdown();
 		} catch (RemoteException e) {
 			StackTraceElement[] current = e.getStackTrace();
@@ -145,7 +145,7 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer {
 		try {
 			isRunning = ns.checkHealth();
 		} catch (RemoteException e) {
-			throw new NFlightServerException("데이터서버의 상태를 확인할 수 없습니다.", e)
+			throw new NFlightRMIServerException("데이터서버의 상태를 확인할 수 없습니다.", e)
 					.addContextValue("isRunning", isRunning);
 		} catch (Exception e) {
 			throw new NFlightUnexpectedException(e);
@@ -198,7 +198,7 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer {
 		final String METHOD_NAME = "NFlightServer getRemoteServerObject(String host, String port)";
 
 		NFlightServer ns = null;
-		NFlightServerException nse = null;
+		NFlightRMIServerException nse = null;
 
 		LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME,
 				"Connecting NFlight RMI Server..." + registryName);
@@ -214,7 +214,7 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer {
 					current[0].getMethodName(),
 					"Exception occured during connecting NFlightRMIServer."
 							+ e.getMessage());
-			nse = new NFlightServerException(
+			nse = new NFlightRMIServerException(
 					"Exception occured during connecting RServer.", e);
 		} catch (Exception e) {
 			throw new NFlightUnexpectedException(e);

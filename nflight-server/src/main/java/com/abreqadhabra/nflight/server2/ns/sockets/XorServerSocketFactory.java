@@ -38,9 +38,9 @@
 
 package com.abreqadhabra.nflight.server2.ns.sockets;
 
-import java.io.*;
-import java.net.*;
-import java.rmi.server.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.rmi.server.RMIServerSocketFactory;
 
 public class XorServerSocketFactory
     implements RMIServerSocketFactory {
