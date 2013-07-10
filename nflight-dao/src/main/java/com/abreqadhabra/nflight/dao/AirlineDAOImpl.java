@@ -48,7 +48,7 @@ public class AirlineDAOImpl extends CommonDAO implements AirlineDAO {
 
 	@Override
 	public Airline[] findAll() throws Exception {
-		final String METHOD_NAME = "findAll()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		String sql = super.getPropertyByDatabaseType(AIRLINE_DAO_FIND_ALL);
 		List<Airline> results = super.findByDynamicQuery(sql, null,

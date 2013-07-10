@@ -36,7 +36,7 @@ public class PropertyLoader
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 	
 	public static void setSystemProperties(final Properties props) {
-		final String METHOD_NAME = "setSystemProperties(Properties props)";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		for (Iterator<Object> it = props.keySet().iterator(); it.hasNext(); ) {
 			String key = (String)it.next();
@@ -80,7 +80,7 @@ public class PropertyLoader
 	     */
 	
 /*	public static boolean load(String propertyName) throws IOException {
-		final String METHOD_NAME = "boolean load(String propertyName)";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	    LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,"load");
 		Properties prop = new Properties();
@@ -119,7 +119,7 @@ public class PropertyLoader
      * @since STEP1
      */
     public static boolean load(String propertyFileName) {
-	final String METHOD_NAME = "boolean load(String propertyName, String fileName)";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	try {
 	    LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,

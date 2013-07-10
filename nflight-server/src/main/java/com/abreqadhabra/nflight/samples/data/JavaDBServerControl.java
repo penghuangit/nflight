@@ -83,7 +83,7 @@ public class JavaDBServerControl {
 	}
 
 	public JavaDBServerControl(int port) {
-		final String METHOD_NAME = "JavaDBServerControl()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		try {
 			networkServerControl = new NetworkServerControl(
@@ -108,7 +108,7 @@ public class JavaDBServerControl {
 	 * 
 	 */
 	public void start() throws Exception {
-		final String METHOD_NAME = "start()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		networkServerControl.start(pw);
 
@@ -174,7 +174,7 @@ public class JavaDBServerControl {
 	}
 
 	private boolean isDatabaseExists() {
-		final String METHOD_NAME = "isDatabaseExists()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		boolean isExists = false;
 		String dbLocation = getDatabaseLocation();
@@ -192,7 +192,7 @@ public class JavaDBServerControl {
 	}
 
 	private String getDatabaseLocation() {
-		final String METHOD_NAME = "getDatabaseLocation()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		String dbLocation = System.getProperty("derby.system.home") + "/"
 				+ STRING_DATABASE_NAME;

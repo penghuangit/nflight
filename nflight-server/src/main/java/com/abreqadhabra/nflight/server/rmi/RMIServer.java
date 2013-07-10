@@ -30,7 +30,7 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer {
 	private String registryName;
 
 	public RMIServer() throws Exception {
-		final String METHOD_NAME = "RMIServer()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		this.host = System.getProperty(Constants.Boot.KEY_BOOT_OPTION_HOST);
 		this.port = Integer.parseInt(System
@@ -46,7 +46,7 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer {
 	}
 
 	private void excute() throws Exception {
-		final String METHOD_NAME = "excute()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		String serviceCommand = System
 				.getProperty(Constants.Boot.KEY_BOOT_OPTION_SERVICE_COMMAND);
@@ -78,7 +78,7 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer {
 
 	@Override
 	public void startup() throws Exception {
-		final String METHOD_NAME = "startup()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 		
 
 
@@ -108,7 +108,7 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer {
 
 	@Override
 	public void shutdown() throws Exception {
-		final String METHOD_NAME = "shutdown()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		NFlightServer server = getRemoteServerObject(this.registryName,
 				this.port);
@@ -134,7 +134,7 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer {
 
 	@Override
 	public boolean checkStatus() throws Exception {
-		final String METHOD_NAME = "checkStatus()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 		// 데이터서버의 RMI 레지스트리의 포트 번호를 가져옵니다. - java -D<name>=<value> 시스템 속성
 
 		NFlightServer ns = getRemoteServerObject(this.host, this.port);
@@ -195,7 +195,7 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer {
 
 	private NFlightServer getRemoteServerObject(String host, int port)
 			throws Exception {
-		final String METHOD_NAME = "NFlightServer getRemoteServerObject(String host, String port)";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		NFlightServer ns = null;
 		NFlightRMIServerException nse = null;
@@ -244,7 +244,7 @@ public class RMIServer extends UnicastRemoteObject implements NFlightServer {
 	 **/
 	private Registry getRmiRegistry(String host, int portNumber)
 			throws RemoteException {
-		final String METHOD_NAME = "Registry getRmiRegistry(String host, int portNumber)";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		Registry rmiRegistry = null;
 		try {

@@ -13,7 +13,7 @@ public class UnexpectedExceptionExample {
     private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
     public static void main(String[] args) {
-	final String METHOD_NAME = "main(String[] args)";
+	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 	try {
 	    // Log object entry
 	    if (LOGGER.isLoggable(Level.FINER)) {

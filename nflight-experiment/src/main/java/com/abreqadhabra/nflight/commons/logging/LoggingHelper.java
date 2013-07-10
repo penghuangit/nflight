@@ -21,8 +21,9 @@ public class LoggingHelper extends Logger {
     }
 
     public static Logger getLogger(Class<?> clazz) {       
-	final String LOGGING_METHOD_NAME = "getLogger(Class<?> clazz)";
-	final String componentName = THIS_CLASS.getPackage().getName();
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+
+		final String componentName = THIS_CLASS.getPackage().getName();
 	LOGGER.setLevel(Level.ALL);
 	
 	LOGGER.entering(THIS_CLASS.getCanonicalName(), LOGGING_METHOD_NAME);

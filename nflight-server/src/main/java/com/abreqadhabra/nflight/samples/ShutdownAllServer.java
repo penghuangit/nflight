@@ -49,7 +49,7 @@ public class ShutdownAllServer {
 	 */
 
 	public static void main(String[] args) throws Exception {
-		final String METHOD_NAME = "void main(String[] args)";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		// RMI Server Shutdown
 		NFlightServer  rmiServer = new RMIServer();

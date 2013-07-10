@@ -15,8 +15,6 @@ import com.abreqadhabra.nflight.server.rmi.scoket.SecureSocketFactory;
 public class RMIManager {
 	
 	private static final Class<RMIManager> THIS_CLAZZ = RMIManager.class;
-	private static final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
-	
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 	
 	private static final String READY = "Ready";
@@ -58,7 +56,7 @@ public class RMIManager {
 	 * @throws Exception
 	 **/
 	public Registry getLocalRegistry(String host, int port) throws Exception {
-		final String METHOD_NAME = "--2-----" + Thread.currentThread().getStackTrace()[1].getMethodName();
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 		
 		Registry _localRegistry = null;
 		SecureSocketFactory socketFactory = new SecureSocketFactory();
@@ -88,9 +86,8 @@ public class RMIManager {
 		return _localRegistry;
 	}
 	
-	
 	public List<String> getRegistryList(String host, int port) throws Exception {
-		final String METHOD_NAME = "--1-----"+ new Throwable().getStackTrace()[0].getMethodName();
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		List<String> _registryList = null;
 		try {
@@ -109,10 +106,5 @@ public class RMIManager {
 
 		return _registryList;
 	}
-
-
-
-
-	
 
 }

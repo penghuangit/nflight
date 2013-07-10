@@ -13,7 +13,7 @@ public class LoggingExample {
     private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
     public static void main(String[] args) throws NFlightUnexpectedException {
-	final String METHOD_NAME = "main";
+	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	try {
 	    // Log object entry

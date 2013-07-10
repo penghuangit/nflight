@@ -59,7 +59,7 @@ public class Boot {
 	 * <em>NFlight</em></b> server platform.
 	 */
 	public static void main(String[] args) {
-		final String METHOD_NAME = "void main(String[] args)";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		setSecurityManager();
 		Properties props = null;
@@ -177,7 +177,7 @@ public class Boot {
     }
 
 	private static void setSecurityManager() {
-		final String METHOD_NAME = "void setSecurityManager()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		System.setProperty(Constants.RMIServer.KEY_JAVA_SECURITY_POLICY,
 				BASE_LOCATION + Constants.RMIServer.DEFAULT_POLICY_FILE_NAME);
@@ -219,7 +219,7 @@ public class Boot {
 	}
 
     public static Properties parseCMDLineArgs(String[] args) throws Exception {
-	final String METHOD_NAME = "Properties parseCMDLineArgs(String[] args)";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	Properties argsProps = new Properties();
 	try {

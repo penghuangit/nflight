@@ -58,7 +58,7 @@ public class LoggingHelper {
     }
 
     private static String getPackageName(Class<?> clazz, int depth) {
-	final String METHOD_NAME = "getLoggerName";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	String packageName = clazz.getPackage().getName();
 	StringBuffer sb = new StringBuffer();

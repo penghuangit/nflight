@@ -45,7 +45,7 @@ public class BootCommand {
 	 *            The port of naming service like rmi registry.
 	 */
 	public static void main(String[] args) {
-		final String METHOD_NAME = "void main(String[] args)";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "args: "
 				+ Arrays.toString(args));
@@ -89,7 +89,7 @@ public class BootCommand {
 	 * @since STEP1
 	 */
 	protected static void execute(String command) throws Exception {
-		final String METHOD_NAME = "void execute(String command";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		try {
 			Runtime rt = Runtime.getRuntime();
@@ -108,7 +108,7 @@ public class BootCommand {
 	}
 
 	protected static String getCommand() {
-		final String METHOD_NAME = "String getCommand()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		// java -D<name>=<value> 시스템 속성
 		String osName = System.getProperty(Constants.BootCommand.KEY_COMMAND_OS);

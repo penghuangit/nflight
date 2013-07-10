@@ -4,7 +4,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
@@ -32,12 +31,12 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 	private String host;
 	private int port;
 	private String registryName;
-	private boolean isRunning;
-
+	RMIManager rman;
+	private boolean existLocalRegustry;
 	private static final long serialVersionUID = 1L;
 
 	public RMIServerImpl() throws Exception  {
-		final String METHOD_NAME = "public RMIServerImpl()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		try {
 			this.host = InetAddress.getLocalHost().getHostAddress();// System.getProperty(Constants.Boot.KEY_BOOT_OPTION_HOST);
@@ -46,18 +45,17 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 			this.registryName = registryID + "/"
 					+ Constants.RMIServer.STR_SERVICE_REGISTRY;
 			
-			RMIManager rman = new RMIManager(host, port);
+			this.rman = new RMIManager(host, port);
 			
-			this.registry = rman.getLocalRegistry();
+			this.registry = this.rman.getLocalRegistry();
 			
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					rman.getRegistryList().toString());
-			
-			
-			if (isArraysContains(this.registry.list(), this.registryName)) {
-				this.isRunning = true;
+						
+			if(this.rman.getRegistryList().contains(this.registryName)) {
+				this.existLocalRegustry = true;
 			} else {
-				this.isRunning = false;
+				this.existLocalRegustry = false;
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 						this.registryName + ": not found in registry");
 			}
@@ -73,7 +71,7 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 	}
 
 	private void execute() {
-		final String METHOD_NAME = "void execute()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		String serviceCommand = System
 				.getProperty(Constants.Boot.KEY_BOOT_OPTION_SERVICE_COMMAND);	
@@ -83,34 +81,28 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 		
 		try {
 			if (serviceCommand
-					.equals(Constants.Boot.STR_SERVICE_COMMAND_STARTUP)) {
-				if (this.isRunning) {
+					.equalsIgnoreCase(Constants.Boot.STR_SERVICE_COMMAND_STARTUP)) {
+				if (this.existLocalRegustry) {
 					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-							"RMI 서버가 기동 중에 있습니다.");
+							this.registryName + "이 Registry에 등록되어 있습니다.");
 					this.exit();
 				} else {
 					this.startup();
 				}
 			} else if (serviceCommand
-					.equals(Constants.Boot.STR_SERVICE_COMMAND_SHUTDOWN)) {
-				if (this.checkStatus()) {
-					if (this.isRunning) {
+					.equalsIgnoreCase(Constants.Boot.STR_SERVICE_COMMAND_SHUTDOWN)) {
+					if (this.existLocalRegustry) {
 						this.shutdown();
 					} else {
 						LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
-								METHOD_NAME, "RMI 서버가 정지 중에 있습니다.");
+								METHOD_NAME, this.registryName + "이 Registry에 등록되어 있지 않습니다.");
 						this.exit();
 					}
-				} else {
-					LOGGER.logp(Level.WARNING, THIS_CLAZZ.getName(),
-							METHOD_NAME,
-							"NFlight RMI Server has already been shutdown.");
-				}
 			} else if (serviceCommand
-					.equals(Constants.Boot.STR_SERVICE_COMMAND_STATUS)) {
+					.equalsIgnoreCase(Constants.Boot.STR_SERVICE_COMMAND_STATUS)) {
 				boolean status = checkStatus();
 			} else {
-				throw new NFlightRMIServerException("서버 기동이 실패하였습니다.")
+				throw new NFlightRMIServerException("Service Command 실행이 실패하였습니다.")
 						.addContextValue("serviceCommand", serviceCommand);
 			}
 		} catch (Exception e) {
@@ -131,7 +123,7 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 
 	@Override
 	public void startup() throws Exception {
-		final String METHOD_NAME = "startup()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		try {
 			/*
@@ -171,18 +163,15 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 		}
 	}
 
-
-
 	@Override
 	public void shutdown() throws Exception {
-		final String METHOD_NAME = "shutdown()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		try {
 			// Remove the RMI remote object from the RMI registry
 			this.registry.unbind(this.registryName);
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"Remove the RMI remote object from the RMI registry");
-
 			this.exit();
 		} catch (RemoteException re) {
 			throw new NFlightRMIServerException("RMI does not exist on host "
@@ -194,10 +183,6 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 		}
 	}
 
-	private boolean isArraysContains(Object[] arrays, String value) {
-		return Arrays.asList(arrays).contains(value);		
-	}
-
 	/**
 	 * <p>[機　能] データサーバを終了する。</p>
 	 * <p>[説　明] データサーバを終了する。</p>
@@ -206,7 +191,7 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 	 */
 	
 	public void exit() {
-		final String METHOD_NAME = "exit()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		// 3초간 대기후 어플리케이션을 종료합니다.
 		new Thread(new Runnable() {
@@ -233,9 +218,7 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 
 	@Override
 	public boolean checkStatus() throws Exception {
-		
 		//https://code.google.com/p/rmiregistrymonitor/source/browse/trunk/src/jj/rmirm/monitor/RMIMonitor.java?r=5
-		
 		return true;
 	}
 

@@ -25,7 +25,7 @@ public class JavaDBServerThread extends Thread {
 	Connection dbConnection = null;
 
 	public void run() {
-		final String METHOD_NAME = "run()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		serverControl = new JavaDBServerControl(1527);
 		try {
@@ -56,7 +56,7 @@ public class JavaDBServerThread extends Thread {
 
 	// 네트워크서버 환경 초기화
 	private void initNetworkServerEnviroments() {
-		final String METHOD_NAME = "initNetworkServerEnviroments()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		if (LOGGER.isLoggable(Level.FINER)) {
 			LOGGER.logp(
@@ -115,7 +115,7 @@ public class JavaDBServerThread extends Thread {
 	}
 
 	private Properties getDBProperties() {
-		final String METHOD_NAME = "getDBProperties()";
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		Properties properties = new Properties();
 		// 데이터베이스 FREELEC에서 사용되는 사용자와 패스워드 설정
