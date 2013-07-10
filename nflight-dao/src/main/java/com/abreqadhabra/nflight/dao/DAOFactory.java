@@ -34,5 +34,10 @@ public abstract class DAOFactory {
 	}
 	}
 
+	public static DAOFactory getDAOFactory(String databaseTypeDerby) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 
 public class LoggingHelper {
     private static final Class<LoggingHelper> THIS_CLAZZ = LoggingHelper.class;
-    private static final String DEFAULT_RESOURCE_BUNDLE_NAME = "com.abreqadhabra.nflight.common.resources.logging.LoggingMessages";
-    private static final String LOGGING_CONFIG_FILE_NAME = "/com/abreqadhabra/nflight/common/resources/config/logging.properties";
+    private static final String DEFAULT_RESOURCE_BUNDLE_NAME = "com.abreqadhabra.nflight.common.conf.logging.LoggingMessages";
+    private static final String LOGGING_CONFIG_FILE_NAME = "/com/abreqadhabra/nflight/common/conf/logging/logging.properties";
 
     /** Root Logger */
     private static final Logger ROOT_LOGGER = Logger.getLogger("");
@@ -53,7 +53,7 @@ public class LoggingHelper {
 			    e);
 	}
 	logManager.addLogger(_logger);
-
+	
 	return logManager.getLogger(loggerName);
     }
 

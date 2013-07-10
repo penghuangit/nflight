@@ -2,7 +2,6 @@ package com.abreqadhabra.nflight.server.rmi;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -11,8 +10,6 @@ import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,39 +32,75 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 	private String host;
 	private int port;
 	private String registryName;
+	private boolean isRunning;
 
 	private static final long serialVersionUID = 1L;
 
-	public RMIServerImpl() throws Exception {
+	public RMIServerImpl() throws Exception  {
+		final String METHOD_NAME = "public RMIServerImpl()";
+
 		try {
 			this.host = InetAddress.getLocalHost().getHostAddress();// System.getProperty(Constants.Boot.KEY_BOOT_OPTION_HOST);
 			this.port = 8888; // Integer.parseInt(System.getProperty(Constants.Boot.KEY_BOOT_OPTION_PORT));
 			String registryID = "rmi://" + this.host + ":" + this.port;
 			this.registryName = registryID + "/"
 					+ Constants.RMIServer.STR_SERVICE_REGISTRY;
-		} catch (UnknownHostException e) {
-			throw new NFlightRMIServerException(e)
+			
+			RMIManager rman = new RMIManager(host, port);
+			
+			this.registry = rman.getLocalRegistry();
+			
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+					rman.getRegistryList().toString());
+			
+			
+			if (isArraysContains(this.registry.list(), this.registryName)) {
+				this.isRunning = true;
+			} else {
+				this.isRunning = false;
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+						this.registryName + ": not found in registry");
+			}
+			execute();
+		} catch (UnknownHostException | RemoteException e1) {
+			throw new NFlightRMIServerException(e1)
 					.addContextValue("host", this.host)
 					.addContextValue("port", this.port)
 					.addContextValue("registryName", this.registryName);
+		}catch(Exception e2){
+			throw e2;
 		}
-		execute();
 	}
 
 	private void execute() {
 		final String METHOD_NAME = "void execute()";
 
 		String serviceCommand = System
-				.getProperty(Constants.Boot.KEY_BOOT_OPTION_SERVICE_COMMAND);
-
+				.getProperty(Constants.Boot.KEY_BOOT_OPTION_SERVICE_COMMAND);	
+		
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				"Execute Service Command: " + serviceCommand);
+		
 		try {
 			if (serviceCommand
 					.equals(Constants.Boot.STR_SERVICE_COMMAND_STARTUP)) {
-				this.startup();
+				if (this.isRunning) {
+					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+							"RMI 서버가 기동 중에 있습니다.");
+					this.exit();
+				} else {
+					this.startup();
+				}
 			} else if (serviceCommand
 					.equals(Constants.Boot.STR_SERVICE_COMMAND_SHUTDOWN)) {
 				if (this.checkStatus()) {
-					this.shutdown();
+					if (this.isRunning) {
+						this.shutdown();
+					} else {
+						LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
+								METHOD_NAME, "RMI 서버가 정지 중에 있습니다.");
+						this.exit();
+					}
 				} else {
 					LOGGER.logp(Level.WARNING, THIS_CLAZZ.getName(),
 							METHOD_NAME,
@@ -76,13 +109,6 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 			} else if (serviceCommand
 					.equals(Constants.Boot.STR_SERVICE_COMMAND_STATUS)) {
 				boolean status = checkStatus();
-				if (status == true) {
-					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-							"RMI 서버가 기동 중에 있습니다.");
-				} else if (status == false) {
-					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-							"RMI 서버가 정지 중에 있습니다.");
-				}
 			} else {
 				throw new NFlightRMIServerException("서버 기동이 실패하였습니다.")
 						.addContextValue("serviceCommand", serviceCommand);
@@ -120,8 +146,8 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 			/*
 			 * Create a registry and bind stub in registry.
 			 */
-			registry = getRMIRegistry(this.host, this.port);
-			registry.rebind(registryName, stub);		
+/*			registry = getRMIRegistry(this.host, this.port);*/	
+			registry.rebind(registryName, stub);	
 
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"RMIServerImpl bound in registry");
@@ -145,76 +171,18 @@ public class RMIServerImpl /* extends UnicastRemoteObject */implements
 		}
 	}
 
-	/**
-	 * If an RMI registry is already active on this host at the given
-	 * portNumber, then that registry is returned, otherwise a new registry is
-	 * created and returned.
-	 */
-	/**
-	 * Get the RMIRegistry. If a registry is already active on this host and the
-	 * given portNumber, then that registry is returned, otherwise a new
-	 * registry is created and returned.
-	 * 
-	 * @param portNumber
-	 *            is the port on which the registry accepts requests
-	 * @param host
-	 *            host for the remote registry, if null the local host is used
-	 * @throws Exception
-	 **/
-	private Registry getRMIRegistry(String host, int portNumber)
-			throws Exception {
-		final String METHOD_NAME = "Registry getRmiRegistry(String host, int portNumber)";
 
-		Registry rmiRegistry = null;
-		try {
-			// See if a registry already exists and
-			// make sure we can really talk to it.
-			rmiRegistry = LocateRegistry.getRegistry(host, portNumber);
-
-			if (LOGGER.isLoggable(Level.CONFIG)) {
-				StringBuffer sb = new StringBuffer(
-						"Local RMI Registry bindings:");
-				String[] names = rmiRegistry.list();
-				for (int i = 0; i < names.length; i++) {
-					sb.append("\n[" + i + "] " + names[i] + "\n"
-							+ rmiRegistry.lookup(names[i]));
-				}
-				LOGGER.logp(Level.CONFIG, THIS_CLAZZ.getName(), METHOD_NAME,
-						"Local RMI Registry on port " + portNumber
-								+ " already exists. Use it\n" + sb.toString());
-			}
-		} catch (RemoteException re1) {
-			try {
-				rmiRegistry = LocateRegistry.createRegistry(portNumber);
-				LOGGER.logp(Level.CONFIG, THIS_CLAZZ.getName(), METHOD_NAME,
-						"Local RMI Registry successfully created on port "
-								+ portNumber);
-			} catch (RemoteException re2) {
-				throw new NFlightRMIServerException(
-						"Local RMI Registry creation failure", re2)
-						.addContextValue("host", host).addContextValue(
-								"portNumber", portNumber);
-			}
-		}
-
-		return rmiRegistry;
-	} // END getRmiRegistry()
 
 	@Override
 	public void shutdown() throws Exception {
 		final String METHOD_NAME = "shutdown()";
-		
+
 		try {
-			registry = getRMIRegistry(this.host, this.port);
-			if (isArraysContains(this.registry.list(), this.registryName)) {
-				// Remove the RMI remote object from the RMI registry
-				this.registry.unbind(this.registryName);
-				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-						"Remove the RMI remote object from the RMI registry");
-			} else {
-				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-						 this.registryName + ": not found in registry");
-			}
+			// Remove the RMI remote object from the RMI registry
+			this.registry.unbind(this.registryName);
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+					"Remove the RMI remote object from the RMI registry");
+
 			this.exit();
 		} catch (RemoteException re) {
 			throw new NFlightRMIServerException("RMI does not exist on host "

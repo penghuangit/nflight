@@ -10,7 +10,7 @@ public class LoadPropertiesExample {
 
 	public static void main(String[] args) {
 
-		String propertyPath = "com/abreqadhabra/nflight/common/resources/config/";
+		String propertyPath = "com/abreqadhabra/nflight/common/conf/logging/";
 
 		String propertyFileName = "logging.properties";
 

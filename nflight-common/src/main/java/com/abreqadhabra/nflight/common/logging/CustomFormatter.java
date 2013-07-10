@@ -1,8 +1,9 @@
 package com.abreqadhabra.nflight.common.logging;
 
-import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
+
+import com.abreqadhabra.nflight.common.util.Misc;
 
 /**
  * MyCustomFormatter formats the LogRecord as follows: date level localized
@@ -20,14 +21,20 @@ public class CustomFormatter extends Formatter {
 		// start with the date.
 		StringBuffer sb = new StringBuffer();
 
+		
+		sb.append("\n");
 		// Get the date from the LogRecord and add it to the buffer
-		Date date = new Date(record.getMillis());
-		sb.append(date.toString());
+		String dateTime = Misc.getDateTime();
+		sb.append(dateTime);
+		sb.append(": ");
+		
+		// Get the level name and add it to the buffer
+		String leveName = String.format("%9s", "["+record.getLevel().getName()+"]");
+		// System.out.printf("%-30s : %50s%n", prop.getKey(), prop.getValue());
+		sb.append(leveName);
 		sb.append(" ");
 
-		// Get the level name and add it to the buffer
-		sb.append(record.getLevel().getName());
-		sb.append(" ");
+
 
 		// Get the formatted message (includes localization
 		// and substitution of paramters) and add it to the buffer

@@ -13,10 +13,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.exception.CommonException;
 import com.abreqadhabra.nflight.common.exception.NFlightUnexpectedException;
+import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.common.util.PropertyFileUtil;
 import com.abreqadhabra.nflight.dao.exception.NFlightDAOException;
 import com.abreqadhabra.nflight.dao.util.ResultSetBeanUtil;
 
@@ -85,7 +84,7 @@ public class CommonDAO {
 	 * 
 	 * @throws SQLException
 	 * @throws Exception
-	 * @throws CommonException
+	 * @throws WrapperException
 	 */
 
 	protected void executeUpdateByDynamicQuery(String sql, String[] sqlParams)

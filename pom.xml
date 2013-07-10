@@ -27,14 +27,14 @@
 	<modules>
 		<module>nflight-common</module>
 		<module>nflight-dao</module>
-		<!-- <module>nflight-build-tools</module>
- -->
-		<module>nflight-experiment</module>
-		<module>nflight-db-server</module>
-		<module>nflight-app-server</module>
-		<module>nflight-app-client</module>
-		<module>nflight-references-sources</module>
 		<module>nflight-server</module>
+		<module>nflight-client</module>
+		<!-- <module>nflight-build-tools</module>
+
+		<module>nflight-experiment</module>
+		
+		<module>nflight-references-sources</module>
+		 -->
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

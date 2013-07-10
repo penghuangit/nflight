@@ -3,7 +3,7 @@ package com.abreqadhabra.nflight.common;
 public class Constants {
 
 	public class Boot {
-		public static final String DEFAULT_PROPERTIES_FILE_NAME = "/com/abreqadhabra/nflight/common/boot/config/boot.properties";
+		public static final String DEFAULT_PROPERTIES_FILE_NAME = "/com/abreqadhabra/nflight/common/conf/boot/boot.properties";
 
 		// BOOT OPTIONS CONFIGURATION
 		public static final String KEY_BOOT_OPTION_SERVICE = "nflight.system.boot.option.service";
@@ -39,7 +39,7 @@ public class Constants {
 	}
 	
 	public class BootCommand{
-		public static final String DEFAULT_CONFIG_FILE_NAME = "/com/abreqadhabra/nflight/common/boot/config/command.properties";
+		public static final String DEFAULT_CONFIG_FILE_NAME = "/com/abreqadhabra/nflight/common/conf/boot/command.properties";
 
 		
 		public static final String KEY_COMMAND_SLEEP_TIME_1 ="nflight.system.command.sleeptime.1"; 
@@ -59,7 +59,7 @@ public class Constants {
 	    public static final String STR_SERVICE_REGISTRY ="NFlight/RMIServer";
 	    
 	    public static final String KEY_JAVA_SECURITY_POLICY ="java.security.policy";
-	    public static final String DEFAULT_POLICY_FILE_NAME = "com/abreqadhabra/nflight/common/boot/config/default.policy";
+	    public static final String DEFAULT_POLICY_FILE_NAME = "com/abreqadhabra/nflight/common/conf/boot/default.policy";
 	   
 
 	}
