@@ -35,7 +35,7 @@
  * intended for use in the design, construction, operation or 
  * maintenance of any nuclear facility.
  */
-package com.abreqadhabra.nflight.sample.rmi.tutorial;
+package com.abreqadhabra.nflight.samples.rmi.tutorial;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

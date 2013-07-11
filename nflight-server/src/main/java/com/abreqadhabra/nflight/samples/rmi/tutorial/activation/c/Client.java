@@ -35,7 +35,7 @@
  * intended for use in the design, construction, operation or 
  * maintenance of any nuclear facility.
  */
-package com.abreqadhabra.nflight.sample.rmi.tutorial.activation.c; 
+package com.abreqadhabra.nflight.samples.rmi.tutorial.activation.c; 
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;

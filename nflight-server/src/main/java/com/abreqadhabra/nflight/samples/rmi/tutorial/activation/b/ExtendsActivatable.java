@@ -36,7 +36,7 @@
  * maintenance of any nuclear facility. 
  */
 
-package com.abreqadhabra.nflight.sample.rmi.tutorial.activation.b; 
+package com.abreqadhabra.nflight.samples.rmi.tutorial.activation.b; 
 
 import java.rmi.MarshalledObject;
 import java.rmi.RemoteException;

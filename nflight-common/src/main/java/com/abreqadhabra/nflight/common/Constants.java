@@ -56,7 +56,7 @@ public class Constants {
 
 	public static class RMIServer{
 	    
-	    public static final String STR_SERVICE_REGISTRY ="NFlight/RMIServer";
+	    public static final String STR_BOUND_NAME_SUFFIX ="NFlight/";
 	    
 	    public static final String KEY_JAVA_SECURITY_POLICY ="java.security.policy";
 	    public static final String DEFAULT_POLICY_FILE_NAME = "com/abreqadhabra/nflight/common/conf/boot/default.policy";

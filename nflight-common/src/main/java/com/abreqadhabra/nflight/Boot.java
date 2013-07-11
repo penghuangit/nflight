@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RMISecurityManager;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -165,14 +166,13 @@ public class Boot {
 			current[0].getMethodName(),
 			"\n" + WrapperException.getStackTrace(e));
 		printUsage(System.out);
-		System.exit(-1);
 	    } else {
 		LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 			current[0].getMethodName(),
 			"\n" + WrapperException.getStackTrace(e));
 		printUsage(System.out);
-		System.exit(-1);
 	    }
+		exit();
 	}
     }
 
@@ -366,4 +366,45 @@ public class Boot {
 	out.println("");
 	System.exit(0);
     }
+    
+	/**
+	 * <p>
+	 * [機　能] データサーバを終了する。
+	 * </p>
+	 * <p>
+	 * [説　明] データサーバを終了する。
+	 * </p>
+	 * <p>
+	 * [備　考] なし
+	 * </p>
+	 * 
+	 * @throws RemoteException
+	 */
+
+	public static void exit() {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		// 3초간 대기후 어플리케이션을 종료합니다.
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException ie) {
+					// 이 예외는 발생하지 않습니다.
+					LOGGER.logp(
+							Level.FINER,
+							THIS_CLAZZ.getName(),
+							METHOD_NAME,
+							"Thread was interrupted\n"
+									+ WrapperException.getStackTrace(ie));
+				}
+				System.gc();
+				System.runFinalization();
+				LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME,
+						"system exit");
+				System.exit(0);
+			}
+		}).start();
+	}
 }

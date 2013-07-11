@@ -36,7 +36,7 @@
  * maintenance of any nuclear facility. 
  */
 
-package com.abreqadhabra.nflight.sample.rmi.tutorial.socket;
+package com.abreqadhabra.nflight.samples.rmi.tutorial.socket;
 
 import java.io.FilterInputStream;
 import java.io.IOException;

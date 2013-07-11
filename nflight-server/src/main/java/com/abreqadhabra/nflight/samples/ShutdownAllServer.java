@@ -2,9 +2,9 @@ package com.abreqadhabra.nflight.samples;
 
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.Constants.RMIServer;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.server.NFlightServer;
-import com.abreqadhabra.nflight.server.rmi.RMIServer;
 
 /**
  * <p>
@@ -52,7 +52,7 @@ public class ShutdownAllServer {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		// RMI Server Shutdown
-		NFlightServer  rmiServer = new RMIServer();
+	//	NFlightServer  rmiServer = new RMIServer();
 	//	rmiServer.exit();
 	
 	}

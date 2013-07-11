@@ -72,8 +72,6 @@ public class LoggingHelper {
 		}
 	    }
 	}
-	ROOT_LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME,
-		sb.toString());
 
 	return sb.toString();
     }

@@ -35,7 +35,7 @@
  * intended for use in the design, construction, operation or 
  * maintenance of any nuclear facility.
  */
-package com.abreqadhabra.nflight.sample.rmi.tutorial.inetd;
+package com.abreqadhabra.nflight.samples.rmi.tutorial.inetd;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;

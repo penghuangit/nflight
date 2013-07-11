@@ -36,7 +36,7 @@
  * maintenance of any nuclear facility. 
  */
 
-package com.abreqadhabra.nflight.sample.rmi.tutorial.activation.d; 
+package com.abreqadhabra.nflight.samples.rmi.tutorial.activation.d; 
 
 import java.io.File;
 import java.io.IOException;
