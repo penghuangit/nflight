@@ -6,7 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.exception.NFlightPropertyException;
@@ -87,22 +89,27 @@ public class PropertyFile {
 		return properties;
 	}
 
-    public static Properties readPropertyFile(String fileName) throws Exception {
-	Properties properties = new Properties();
-	try {
-	    InputStream is = THIS_CLAZZ.getResourceAsStream(fileName);
-	    if (is != null) {
-		properties.load(is);
-		is.close();
-	    } else {
-		throw new NFlightPropertyException("Can't read property file")	.addContextValue("fileName", fileName);
-	    }
-	    // properties.load(ClassLoader.getSystemResourceAsStream(fileName));
-	} catch (IOException e) {
-	    throw new NFlightSystemException("Can't load properties: ", e)
-		    .addContextValue("fileName", fileName);
-	}
-	return properties;
+	public static Properties readPropertyFile(String fileName) throws Exception {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+
+		Properties properties = new Properties();
+		try {
+			InputStream is = THIS_CLAZZ.getResourceAsStream(fileName);
+			if (is != null) {
+				properties.load(is);
+				is.close();
+			} else {
+				throw new NFlightPropertyException("Can't read property file")
+						.addContextValue("fileName", fileName);
+			}
+			// properties.load(ClassLoader.getSystemResourceAsStream(fileName));
+		} catch (IOException e) {
+			throw new NFlightSystemException("Can't load properties: ", e)
+					.addContextValue("fileName", fileName);
+		}
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				fileName+" : " +properties);
+		return properties;
     }
 
 	public static void writeXMLPropertyFile(Properties properties,

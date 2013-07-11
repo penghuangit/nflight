@@ -3,7 +3,7 @@ package com.abreqadhabra.nflight.common;
 public class Constants {
 
 	public class Boot {
-		public static final String DEFAULT_PROPERTIES_FILE_NAME = "/com/abreqadhabra/nflight/common/conf/boot/boot.properties";
+		public static final String DEFAULT_CONFIG_FILE_NAME = "/com/abreqadhabra/nflight/common/conf/boot/boot.properties";
 
 		// BOOT OPTIONS CONFIGURATION
 		public static final String KEY_BOOT_OPTION_SERVICE = "nflight.system.boot.option.service";
@@ -23,7 +23,7 @@ public class Constants {
 		public static final String STR_BOOT_OPTION_PORT = "port";
 		public static final String STR_BOOT_OPTION_GUI = "gui";
 		public static final String STR_BOOT_OPTION_CONF = "conf";
-		
+
 		// SERVICE-NAME OPTIONS CONFIGURATION
 		public static final String STR_SERVICE_NAME_RMI_CLIENT = "rmiclient";
 		public static final String STR_SERVICE_NAME_RMI_SERVER = "rmiserver";
@@ -37,32 +37,35 @@ public class Constants {
 		public static final String STR_SERVICE_COMMAND_STATUS = "status";
 
 	}
-	
-	public class BootCommand{
+
+	public class BootCommand {
 		public static final String DEFAULT_CONFIG_FILE_NAME = "/com/abreqadhabra/nflight/common/conf/boot/command.properties";
 
-		
-		public static final String KEY_COMMAND_SLEEP_TIME_1 ="nflight.system.command.sleeptime.1"; 
-		public static final String KEY_COMMAND_SLEEP_TIME_2 ="nflight.system.command.sleeptime.2";
-		
-		public static final String KEY_COMMAND_OS ="nflight.system.command.os";
-		public static final String KEY_COMMAND_OS_WINDOWS ="nflight.system.command.windows";
-		public static final String KEY_COMMAND_OS_LINUX ="nflight.system.command.linux";
+		public static final String KEY_COMMAND_SLEEP_TIME_1 = "nflight.system.command.sleeptime.1";
+		public static final String KEY_COMMAND_SLEEP_TIME_2 = "nflight.system.command.sleeptime.2";
+
+		public static final String KEY_COMMAND_OS = "nflight.system.command.os";
+		public static final String KEY_COMMAND_OS_WINDOWS = "nflight.system.command.windows";
+		public static final String KEY_COMMAND_OS_LINUX = "nflight.system.command.linux";
 
 		public static final String STR_COMMAND_OS_WINDOWS = "windows";
 		public static final String STR_COMMAND_OS_LINUX = "linux";
 		public static final String STR_COMMAND_OS_DEFAULT = STR_COMMAND_OS_WINDOWS;
 	}
 
-	public static class RMIServer{
-	    
-	    public static final String STR_BOUND_NAME_SUFFIX ="NFlight/";
-	    
-	    public static final String KEY_JAVA_SECURITY_POLICY ="java.security.policy";
-	    public static final String DEFAULT_POLICY_FILE_NAME = "com/abreqadhabra/nflight/common/conf/boot/default.policy";
-	   
+	public class RMI {
+		public static final String DEFAULT_POLICY_FILE_NAME = "com/abreqadhabra/nflight/common/conf/boot/default.policy";
+		public static final String DEFAULT_CONFIG_FILE_NAME = "/com/abreqadhabra/nflight/server/rmi/activation/conf/activation.properties";
+
+		public static final String KEY_JAVA_SECURITY_POLICY = "java_security_policy";
+		public static final String KEY_JAVA_RMI_SERVER_CODEBASE = "java_rmi_server_codebase";
+		public static final String KEY_RMI_ACTIVATION_SETUP_CODEBASE = "nflight_system_rmi_activation_setup_codebase";
+		public static final String KEY_RMI_ACTIVATION_IMPL_CODEBASE = "nflight_system_rmi_activation_impl_codebase";
+		public static final String KEY_RMI_ACTIVATION_NAME = "nflight_system_rmi_activation_name";
+		public static final String KEY_RMI_ACTIVATION_FILE = "nflight_system_rmi_activation_file";
+		public static final String KEY_RMI_ACTIVATION_POLICY = "nflight_system_rmi_activation_policy";
+		public static final String STR_BOUND_NAME_SUFFIX = "NFlight/";
 
 	}
-
 
 }

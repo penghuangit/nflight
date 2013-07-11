@@ -4,24 +4,35 @@ import java.rmi.MarshalledObject;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.activation.Activatable;
-import java.rmi.activation.ActivationException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
+import java.rmi.activation.ActivationID;
 
 import com.abreqadhabra.nflight.server.NFlightService;
 
 public class ActivatableNFlightServiceImpl extends Activatable implements Remote, NFlightService {
 	
-	protected ActivatableNFlightServiceImpl(String location, MarshalledObject<?> data,
-			boolean restart, int port, RMIClientSocketFactory csf,
-			RMIServerSocketFactory ssf) throws ActivationException,
-			RemoteException {
-		super(location, data, restart, port, csf, ssf);
+    /**
+     * Constructs an <code>ExtendsActivatable</code> instance with
+     * the specified activation ID and data.  This constructor is
+     * called during activation to construct the object.
+     **/
+    public ActivatableNFlightServiceImpl(ActivationID id, MarshalledObject<?> data) 
+	throws RemoteException
+    {
+	/*
+	 * Export the activatable object on an anonymous port.
+	 */
+	super(id, 0);
+    }
+	
 
-	}
 
 	private static final long serialVersionUID = 1L;
 
+	@Override
+	public String sayHello() {
+		return "Hello, world!";
+	}
+	
 	/**
 	 * <p>
 	 * [機　能] データサーバの生死を確認する。

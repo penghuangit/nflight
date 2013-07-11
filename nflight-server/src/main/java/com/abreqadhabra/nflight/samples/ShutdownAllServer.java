@@ -2,7 +2,7 @@ package com.abreqadhabra.nflight.samples;
 
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.Constants.RMIServer;
+import com.abreqadhabra.nflight.common.Constants.RMI;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.server.NFlightServer;
 

@@ -3,7 +3,6 @@ package com.abreqadhabra.nflight;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,7 +61,7 @@ public class Boot {
 	public static void main(String[] args) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
-		setSecurityManager();
+		//setSecurityManager();
 		Properties props = null;
 
 		try {
@@ -79,7 +78,7 @@ public class Boot {
 	    } else {
 		// Settings specified in the default property file
 		props = PropertyFile
-			.readPropertyFile(Constants.Boot.DEFAULT_PROPERTIES_FILE_NAME);
+			.readPropertyFile(Constants.Boot.DEFAULT_CONFIG_FILE_NAME);
 	    }
 
 	    props = parseServiceSpecifiers(props);
@@ -159,37 +158,38 @@ public class Boot {
 				}
 			}*/
 
-	} catch (Exception e) {
-	    StackTraceElement[] current = e.getStackTrace();
-	    if (e instanceof WrapperException) {
-		LOGGER.logp(Level.SEVERE, current[0].getClassName(),
-			current[0].getMethodName(),
-			"\n" + WrapperException.getStackTrace(e));
-		printUsage(System.out);
-	    } else {
-		LOGGER.logp(Level.SEVERE, current[0].getClassName(),
-			current[0].getMethodName(),
-			"\n" + WrapperException.getStackTrace(e));
-		printUsage(System.out);
-	    }
-		exit();
+		} catch (Exception e) {
+			StackTraceElement[] current = e.getStackTrace();
+			if (e instanceof WrapperException) {
+				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
+						current[0].getMethodName(),
+						"\n" + WrapperException.getStackTrace(e));
+				printUsage(System.out);
+			} else {
+				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
+						current[0].getMethodName(),
+						"\n" + WrapperException.getStackTrace(e));
+				printUsage(System.out);
+			}
+			exit();
+		}
 	}
-    }
 
 	private static void setSecurityManager() {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
-		System.setProperty(Constants.RMIServer.KEY_JAVA_SECURITY_POLICY,
-				BASE_LOCATION + Constants.RMIServer.DEFAULT_POLICY_FILE_NAME);
+		System.setProperty(Constants.RMI.KEY_JAVA_SECURITY_POLICY,
+				BASE_LOCATION + Constants.RMI.DEFAULT_POLICY_FILE_NAME);
 		LOGGER.logp(
 				Level.CONFIG,
 				THIS_CLAZZ.getName(),
 				METHOD_NAME,
-				Constants.RMIServer.KEY_JAVA_SECURITY_POLICY
+				Constants.RMI.KEY_JAVA_SECURITY_POLICY
 						+ "="
-						+ System.getProperty(Constants.RMIServer.KEY_JAVA_SECURITY_POLICY));
+						+ System.getProperty(Constants.RMI.KEY_JAVA_SECURITY_POLICY));
 		if (System.getSecurityManager() == null) {
-			System.setSecurityManager(new RMISecurityManager());
+			//System.setSecurityManager(new RMISecurityManager());
+			System.setSecurityManager(new SecurityManager());
 		}
 	}
 	

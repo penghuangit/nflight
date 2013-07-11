@@ -36,7 +36,7 @@ public class RMIManager {
 
 	private Registry registry;
 	private List<String> boundNameList;
-	private SecureSocketFactory socketFactory;
+	private static SecureSocketFactory socketFactory =  new SecureSocketFactory();
 	private String host;
 	private int port;
 
@@ -60,7 +60,7 @@ public class RMIManager {
 	 *            is the port on which the registry accepts requests
 	 * @throws Exception
 	 **/
-	public Registry getRegistry(String host, int port) throws Exception {
+	public static Registry getRegistry(String host, int port) throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
@@ -197,16 +197,17 @@ public class RMIManager {
 
 	public String getBoundName(String objName) {
 		return "rmi://" + this.host + ":" + this.port + "/"
-				+ Constants.RMIServer.STR_BOUND_NAME_SUFFIX + objName;
+				+ Constants.RMI.STR_BOUND_NAME_SUFFIX + objName;
 	}
 
 	public Remote getUnicastRemoteObjectNFlightServiceImpl() throws Exception {
 		//Remote _obj = new UnicastRemoteObjectNFlightServiceImpl(0,socketFactory, socketFactory);
-		Remote _obj = new UnicastRemoteObjectNFlightServiceImpl();
+		Remote _obj = (Remote) new UnicastRemoteObjectNFlightServiceImpl();
 		try {
 			// Create remote object and export it to
 			// use custom secure socket
-			_obj = UnicastRemoteObject.exportObject(_obj, 0, socketFactory, socketFactory);
+			//_obj = UnicastRemoteObject.exportObject(_obj, 0, socketFactory, socketFactory);
+			_obj = UnicastRemoteObject.toStub(_obj);
 		} catch (RemoteException e) {
 			throw new NFlightRemoteException("Cannot export to Remote Object: "
 					+ _obj.getClass().getName(), e);

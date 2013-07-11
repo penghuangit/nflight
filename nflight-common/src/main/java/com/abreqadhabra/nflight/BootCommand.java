@@ -133,6 +133,8 @@ public class BootCommand {
 			System.exit(1);
 		}
 
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				Constants.BootCommand.STR_COMMAND_OS_WINDOWS + ": " + value);
 		return value;
 	}
 }

@@ -86,7 +86,6 @@ public class NFlightServerImpl implements
 	@Override
 	public void startup() throws Exception {
 		try {
-
 			// NFlightService uniServant = new
 			// UnicastRemoteObjectNFlightServiceImpl();
 			// NFlightService actServant = new ActivatableNFlightServiceImpl();
@@ -96,7 +95,7 @@ public class NFlightServerImpl implements
 			String boundName = this.rman
 					.getBoundName(UnicastRemoteObjectNFlightServiceImpl
 							.getObjName());
-			rman.rebind(boundName, obj);
+			this.rman.rebind(boundName, obj);			
 		} catch (Exception e) {
 			throw e;
 		}
