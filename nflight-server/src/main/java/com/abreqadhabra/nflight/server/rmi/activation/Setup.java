@@ -45,12 +45,12 @@ public class Setup {
 		 * properties in the activation group VM. Add a value for the
 		 * "java.security.policy" system property to the properties map. The
 		 * value for the security policy file is specified by the
-		 * "examples.activation.policy" system property which defaults to the
+		 * "nflight.system.rmi.activation.policy" system property which defaults to the
 		 * file named "group.policy" in the working directory.
 		 * 
-		 * Also add the value for the "examples.activation.impl.codebase" system
+		 * Also add the value for the "nflight.system.rmi.activation.impl.codebase" system
 		 * property to the map, which is specified by the
-		 * "examples.activation.impl.codebase" system property. This property is
+		 * "nflight.system.rmi.activation.impl.codebase" system property. This property is
 		 * used in the group's policy file.
 		 */
 
@@ -78,7 +78,7 @@ public class Setup {
 				.getProperty(Constants.RMI.KEY_RMI_ACTIVATION_IMPL_CODEBASE);
 		String filename = System.getProperty(
 				Constants.RMI.KEY_RMI_ACTIVATION_FILE, "");
-		String name = System.getProperty("examples.activation.name");
+		String name = System.getProperty("nflight.system.rmi.activation.name");
 
 		ActivationGroupID groupID = registerActivationGroup(_props);
 
@@ -95,7 +95,7 @@ public class Setup {
 		/*
 		 * Bind the activatable object's stub to a name in the registry running
 		 * on port 1099. The name is specified by the system property
-		 * "examples.activation.name".
+		 * "nflight.system.rmi.activation.name".
 		 */
 
 		try {
@@ -117,12 +117,12 @@ public class Setup {
 		 * 
 		 * The location specifies a URL from where the implementation class can
 		 * be loaded when this object is activated. The value of the URL is
-		 * specified by the "examples.activation.impl.codebase" system property.
+		 * specified by the "nflight.system.rmi.activation.impl.codebase" system property.
 		 * 
 		 * The data (optional) specifies initialization data passed to the
 		 * remote object when being constructed as part of the activation
 		 * process. Here, the value of "data" is specified by the
-		 * "examples.activation.filename" system property and represents the
+		 * "nflight.system.rmi.activation.filename" system property and represents the
 		 * name of a file containing the object's persistent state (to be read
 		 * in when the object is activated).
 		 */
@@ -163,9 +163,9 @@ public class Setup {
 		 * Properties props = new Properties();
 		 * props.put("java.security.policy", policy);
 		 * props.put("java.class.path", "no_classpath");
-		 * props.put("examples.activation.impl.codebase", implCodebase); if
+		 * props.put("nflight.system.rmi.activation.impl.codebase", implCodebase); if
 		 * (filename != null && !filename.equals("")) {
-		 * props.put("examples.activation.file", filename); }
+		 * props.put("nflight.system.rmi.activation.file", filename); }
 		 */
 
 		try {

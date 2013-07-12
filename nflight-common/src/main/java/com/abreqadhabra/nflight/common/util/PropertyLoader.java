@@ -51,7 +51,7 @@ public class PropertyLoader
 	        Arrays.sort(keys);
 	        StringBuffer sb = new StringBuffer();
 	        for(String key : keys) {          	
-	        	if(key.startsWith("nflight.system.")){
+	        	if(key.startsWith("nflight.system.") | key.startsWith("java.")  ){
 	            sb.append("\n" +key + " : " + systemProps.get(key)  );
 	        	}
 	        } 
