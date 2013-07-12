@@ -178,15 +178,15 @@ public class Boot {
 	public static void setSecurityManager() {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
-		System.setProperty(Env.RMI.KEY_JAVA_SECURITY_POLICY,
+		System.setProperty(Env.Boot.KEY_JAVA_SECURITY_POLICY,
 				BASE_LOCATION + Env.Boot.FILE_BOOT_POLICY_DEFAULT);
 		LOGGER.logp(
 				Level.CONFIG,
 				THIS_CLAZZ.getName(),
 				METHOD_NAME,
-				Env.RMI.KEY_JAVA_SECURITY_POLICY
+				Env.Boot.KEY_JAVA_SECURITY_POLICY
 						+ "="
-						+ System.getProperty(Env.RMI.KEY_JAVA_SECURITY_POLICY));
+						+ System.getProperty(Env.Boot.KEY_JAVA_SECURITY_POLICY));
 		if (System.getSecurityManager() == null) {
 			//System.setSecurityManager(new RMISecurityManager());
 			System.setSecurityManager(new SecurityManager());
@@ -366,6 +366,26 @@ public class Boot {
 	out.println("");
 	System.exit(0);
     }
+    
+//    Usage: java -jar nflight-<service-name>.jar [optional parameters]
+//
+//    		where options are:
+//    		  --conf <file name>	Starts NFlight Service using the configuration properties read in the specified file.
+//    		  --version		If specified, current NFlight Application version number and build date is printed.
+//    		  
+//    		  --service <service-specifier>
+//    			where service-specifier = <service-name>:<service-type>:<service-type>:<service-command>[(semicolon-separated <property-name>=<property-value>)]
+//    				where properties are:
+//    					-local-host	 <host(or host address) where to bind the local server socket on>
+//    					-local-port	 <port where to bind the local server socket on>
+//    					-remote-host	 <host(or host address) where to bind the remote server socket on>
+//    					-remote-port	 <port where to bind the remote server socket on>
+//    					-gui		 If specified, GUI created.
+//    					
+//   
+//    -service-mode	tcp/udp or unicast/activatable
+    
+    
     
 	/**
 	 * <p>

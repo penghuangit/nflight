@@ -1,30 +1,133 @@
 package com.abreqadhabra.nflight.service.rmi.server.servant.activation.setup;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.MarshalledObject;
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.rmi.activation.Activatable;
 import java.rmi.activation.ActivationDesc;
+import java.rmi.activation.ActivationException;
 import java.rmi.activation.ActivationGroup;
 import java.rmi.activation.ActivationGroupDesc;
 import java.rmi.activation.ActivationGroupID;
+import java.rmi.registry.Registry;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
+import com.abreqadhabra.nflight.common.util.PropertyLoader;
 import com.abreqadhabra.nflight.service.core.Env;
+import com.abreqadhabra.nflight.service.core.boot.Boot;
+import com.abreqadhabra.nflight.service.rmi.server.RMIManager;
 
 public class Setup {
+	private static final Class<Setup> THIS_CLAZZ = Setup.class;
+	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static final String BASE_LOCATION = THIS_CLAZZ
+			.getProtectionDomain().getCodeSource().getLocation().getFile();
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+		
+		Boot.setSecurityManager();
+	
+		setSystemProperties();
+		
+		//rmid -J-Djava.security.policy=policy
+		
+		String host = null;
+		try {
+			host = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int port = 9999;
+		try {
+			Registry registry =RMIManager.getRegistry(host, port);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String policy = BASE_LOCATION + System.getProperty(Env.RMI.KEY_RMI_ACTIVATION_POLICY);
+	 	Properties props = new Properties();
+        props.put("java.security.policy", policy);
+
+     // Create a new activation group descriptor
+		ActivationGroupDesc.CommandEnvironment ace = null;
+		ActivationGroupDesc groupDesc = new ActivationGroupDesc(props, ace);
+		
+		ActivationGroupID groupID = registerGroup(groupDesc);
+		
 
 		
-		Properties _props = getActivationProperties();
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				"groupID : " + groupID);
+		
+		String filename =System.getProperty(Env.RMI.KEY_RMI_ACTIVATION_FILE);
+
+		MarshalledObject data = null;
+		if (filename != null && !filename.equals("")) {
+		    try {
+				data = new MarshalledObject(filename);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				"data : " + data.toString());
+
+		String implCodebase =
+			    System.getProperty(Env.RMI.KEY_RMI_ACTIVATION_IMPL_CODEBASE);
+		
+		String implClass =
+			    System.getProperty(Env.RMI.KEY_RMI_ACTIVATION_IMPL_CLASSES);
+		
+
+
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				implClass+","+implCodebase+","+policy+","+data);
+		
+		
+		Remote obj = install(implClass, implCodebase, policy, data);
+		
 	}
 	
-	
-	private static Properties getActivationProperties() {
+	private static ActivationGroupID registerGroup(ActivationGroupDesc groupDesc) {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				"groupDesc.toString() : " + groupDesc.toString());
+		/*
+		 * Register the activation group descriptor with the activation system
+		 * to obtain a group ID.
+		 */
+		ActivationGroupID groupID = null;
+		try {
+			ActivationGroupID gid = ActivationGroup.getSystem().registerGroup(
+					groupDesc);
+		} catch (RemoteException | ActivationException e) {
+			e.printStackTrace();
+		}
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				"Activation group descriptor registered.");
+
+		return groupID;
+	}
+
+	private static void setSystemProperties() {
 		Properties _props = null;
 
 		try {
@@ -34,7 +137,7 @@ public class Setup {
 			e.printStackTrace();
 		}
 
-		return _props;
+		PropertyLoader.setSystemProperties(_props);
 	}
 
 	// @param classname

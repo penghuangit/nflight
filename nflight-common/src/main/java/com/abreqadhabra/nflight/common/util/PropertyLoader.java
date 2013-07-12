@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
+
 /**
  * <p>
  * [개 요] 프로퍼티파일의 내용을 시스템 프로퍼티에 반영합니다.
@@ -51,7 +52,7 @@ public class PropertyLoader
 	        Arrays.sort(keys);
 	        StringBuffer sb = new StringBuffer();
 	        for(String key : keys) {          	
-	        	if(key.startsWith("nflight.system.") | key.startsWith("java.")  ){
+	        	if(key.startsWith("nflight.") | key.startsWith("java.")  ){
 	            sb.append("\n" +key + " : " + systemProps.get(key)  );
 	        	}
 	        } 

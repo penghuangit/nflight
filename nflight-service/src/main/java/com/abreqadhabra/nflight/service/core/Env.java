@@ -6,6 +6,8 @@ public class Env {
 		public static final String FILE_BOOT_CONFIG_DEFAULT = "/com/abreqadhabra/nflight/service/core/boot/conf/boot.properties";
 		public static final String FILE_BOOT_POLICY_DEFAULT = "com/abreqadhabra/nflight/service/core/boot/conf/default.policy";
 
+		public static final String KEY_JAVA_SECURITY_POLICY = "java.security.policy";
+
 		// BOOT OPTIONS CONFIGURATION
 		public static final String KEY_BOOT_OPTION_SERVICE = "nflight.service.core.boot.option.service";
 		public static final String KEY_BOOT_OPTION_SERVICE_NAME = "nflight.service.core.boot.option.service.name";
@@ -57,12 +59,13 @@ public class Env {
 
 		public static final String FILE_ACTIVATION_SETUP_DEFAULT = "/com/abreqadhabra/nflight/service/rmi/server/servant/activation/conf/setup.properties";
 
-		public static final String KEY_JAVA_SECURITY_POLICY = "java.security.policy";
 		public static final String KEY_JAVA_RMI_SERVER_CODEBASE = "java.rmi.server.codebase";
 		public static final String KEY_RMI_ACTIVATION_SETUP_CODEBASE = "nflight.service.rmi.server.servant.activation.setup.codebase";
 		public static final String KEY_RMI_ACTIVATION_IMPL_CODEBASE = "nflight.service.rmi.server.servant.activation.impl.codebase";
 		public static final String KEY_RMI_ACTIVATION_NAME = "nflight.service.rmi.server.servant.activation.name";
 		public static final String KEY_RMI_ACTIVATION_POLICY = "nflight.service.rmi.server.servant.activation.policy";
+		public static final String KEY_RMI_ACTIVATION_FILE = "nflight.service.rmi.server.servant.activation.file";
+		public static final String KEY_RMI_ACTIVATION_IMPL_CLASSES = "nflight.service.rmi.server.servant.activation.impl.class";
 
 		public static final String STR_BOUND_NAME_SUFFIX = "NFlight/";
 
