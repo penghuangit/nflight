@@ -6,7 +6,7 @@ import java.rmi.RemoteException;
 import java.rmi.activation.Activatable;
 import java.rmi.activation.ActivationID;
 
-import com.abreqadhabra.nflight.service.NFlightService;
+import com.abreqadhabra.nflight.service.core.NFlightService;
 
 public class ActivatableNFlightServiceImpl extends Activatable implements Remote, NFlightService {
 	

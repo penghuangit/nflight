@@ -5,7 +5,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.service.NFlightService;
+import com.abreqadhabra.nflight.service.core.NFlightService;
 
 public class UnicastRemoteObjectNFlightServiceImpl extends UnicastRemoteObject implements NFlightService {
 

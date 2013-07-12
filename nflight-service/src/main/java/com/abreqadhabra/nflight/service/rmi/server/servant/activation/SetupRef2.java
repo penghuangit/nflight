@@ -15,10 +15,10 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.Constants;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
+import com.abreqadhabra.nflight.service.core.Env;
 
 public class SetupRef2 {
 	private static final Class<SetupRef2> THIS_CLAZZ = SetupRef2.class;
@@ -72,22 +72,22 @@ public class SetupRef2 {
 	//	String classpath = System.getProperty("java.class.path");
 	//	_props.put("java.class.path", classpath);
 
-	/*	System.setProperty(Constants.RMI.KEY_JAVA_SECURITY_POLICY,
-				BASE_LOCATION + Constants.RMI.DEFAULT_POLICY_FILE_NAME);*/
+	/*	System.setProperty(Env.RMI.KEY_JAVA_SECURITY_POLICY,
+				BASE_LOCATION + Env.RMI.DEFAULT_POLICY_FILE_NAME);*/
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				Constants.RMI.KEY_JAVA_SECURITY_POLICY + ":" + BASE_LOCATION + Constants.RMI.DEFAULT_POLICY_FILE_NAME);
+				Env.RMI.KEY_JAVA_SECURITY_POLICY + ":" + BASE_LOCATION + Env.RMI.FILE_ACTIVATION_CONFIG_DEFAULT);
 		
 		PropertyLoader.setSystemProperties(_props);
 
 		String implClass = "com.abreqadhabra.nflight.service.rmi.server.remote.ActivatableNFlightServiceImpl";
 		
 		String policy = System.getProperty(
-				Constants.RMI.KEY_RMI_ACTIVATION_POLICY, "group.policy");
+				Env.RMI.KEY_RMI_ACTIVATION_POLICY, "group.policy");
 		String implCodebase = System
-				.getProperty(Constants.RMI.KEY_RMI_ACTIVATION_IMPL_CODEBASE);
+				.getProperty(Env.RMI.KEY_RMI_ACTIVATION_IMPL_CODEBASE);
 		String filename = System.getProperty(
-				Constants.RMI.KEY_RMI_ACTIVATION_FILE, "");
+				Env.RMI.FILE_ACTIVATION_CONFIG_DEFAULT, "");
 		String name = System.getProperty("nflight.system.rmi.activation.name");
 
 		ActivationGroupID groupID = registerActivationGroup(_props);
@@ -180,7 +180,7 @@ public class SetupRef2 {
 
 		try {
 			_props = PropertyFile
-					.readPropertyFile(Constants.RMI.DEFAULT_CONFIG_FILE_NAME);
+					.readPropertyFile(Env.RMI.FILE_ACTIVATION_CONFIG_DEFAULT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

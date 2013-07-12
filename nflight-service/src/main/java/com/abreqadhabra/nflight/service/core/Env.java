@@ -3,8 +3,8 @@ package com.abreqadhabra.nflight.service.core;
 public class Env {
 
 	public class Boot {
-		public static final String FILE_DEFAULT_CONFIG = "/com/abreqadhabra/nflight/service/core/boot/conf/boot.properties";
-		public static final String FILE_DEFAULT_POLICY = "com/abreqadhabra/nflight/service/core/boot/conf/default.policy";
+		public static final String FILE_BOOT_CONFIG_DEFAULT = "/com/abreqadhabra/nflight/service/core/boot/conf/boot.properties";
+		public static final String FILE_BOOT_POLICY_DEFAULT = "com/abreqadhabra/nflight/service/core/boot/conf/default.policy";
 
 		// BOOT OPTIONS CONFIGURATION
 		public static final String KEY_BOOT_OPTION_SERVICE = "nflight.service.core.boot.option.service";
@@ -40,13 +40,13 @@ public class Env {
 	}
 
 	public class BootCommand {
-		public static final String DEFAULT_CONFIG_FILE_NAME = "/com/abreqadhabra/nflight/service/boot/conf/command.properties";
+		public static final String FILE_COMMAND_CONFIG_DEFAULT = "/com/abreqadhabra/nflight/service/boot/conf/command.properties";
 
 		public static final String KEY_COMMAND_SLEEP_TIME_1 = "nflight.service.core.boot.command.sleeptime.1";
 		public static final String KEY_COMMAND_SLEEP_TIME_2 = "nflight.service.core.boot.command.sleeptime.2";
 
 		public static final String KEY_COMMAND_OS = "nflight.service.core.command.os";
-		public static final String KEY_COMMAND_OS_DEFAULT ="nflight.service.core.boot.command.os.default";
+		public static final String KEY_COMMAND_OS_DEFAULT = "nflight.service.core.boot.command.os.default";
 		public static final String KEY_COMMAND_OS_WINDOWS = "nflight.service.core.boot.command.os.windows";
 		public static final String KEY_COMMAND_OS_LINUX = "nflight.service.core.boot.command.os.linux";
 
@@ -55,14 +55,15 @@ public class Env {
 
 	public class RMI {
 
+		public static final String FILE_ACTIVATION_CONFIG_DEFAULT = "/com/abreqadhabra/nflight/rmi/server/servent/activation/conf/activation.properties";
+
 		public static final String KEY_JAVA_SECURITY_POLICY = "java.security.policy";
 		public static final String KEY_JAVA_RMI_SERVER_CODEBASE = "java.rmi.server.codebase";
 		public static final String KEY_RMI_ACTIVATION_SETUP_CODEBASE = "nflight.service.rmi.server.servant.activation.setup.codebase";
 		public static final String KEY_RMI_ACTIVATION_IMPL_CODEBASE = "nflight.service.rmi.server.servant.activation.impl.codebase";
 		public static final String KEY_RMI_ACTIVATION_NAME = "nflight.service.rmi.server.servant.activation.name";
-		public static final String KEY_RMI_ACTIVATION_FILE = "nflight.service.rmi.server.servant.activation.file";
 		public static final String KEY_RMI_ACTIVATION_POLICY = "nflight.service.rmi.server.servant.activation.policy";
-		
+
 		public static final String STR_BOUND_NAME_SUFFIX = "NFlight/";
 
 	}

@@ -78,7 +78,7 @@ public class Boot {
 	    } else {
 		// Settings specified in the default property file
 		props = PropertyFile
-			.readPropertyFile(Env.Boot.FILE_DEFAULT_CONFIG);
+			.readPropertyFile(Env.Boot.FILE_BOOT_CONFIG_DEFAULT);
 	    }
 
 	    props = parseServiceSpecifiers(props);
@@ -179,7 +179,7 @@ public class Boot {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		System.setProperty(Env.RMI.KEY_JAVA_SECURITY_POLICY,
-				BASE_LOCATION + Env.Boot.FILE_DEFAULT_POLICY);
+				BASE_LOCATION + Env.Boot.FILE_BOOT_POLICY_DEFAULT);
 		LOGGER.logp(
 				Level.CONFIG,
 				THIS_CLAZZ.getName(),

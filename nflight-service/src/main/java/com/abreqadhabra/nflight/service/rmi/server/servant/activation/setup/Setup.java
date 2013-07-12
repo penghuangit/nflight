@@ -9,9 +9,8 @@ import java.rmi.activation.ActivationGroupDesc;
 import java.rmi.activation.ActivationGroupID;
 import java.util.Properties;
 
-import com.abreqadhabra.nflight.common.Constants;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
-import com.abreqadhabra.nflight.common.util.PropertyLoader;
+import com.abreqadhabra.nflight.service.core.Env;
 
 public class Setup {
 
@@ -33,7 +32,7 @@ public class Setup {
 
 		try {
 			_props = PropertyFile
-					.readPropertyFile(Constants.RMI.DEFAULT_CONFIG_FILE_NAME);
+					.readPropertyFile(Env.RMI.FILE_ACTIVATION_CONFIG_DEFAULT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

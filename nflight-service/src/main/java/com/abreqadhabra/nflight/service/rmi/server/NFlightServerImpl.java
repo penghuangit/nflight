@@ -1,14 +1,14 @@
-package com.abreqadhabra.nflight.service.rmi;
+package com.abreqadhabra.nflight.service.rmi.server;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.Constants;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.service.NFlightServer;
-import com.abreqadhabra.nflight.service.NFlightService;
+import com.abreqadhabra.nflight.service.core.Env;
+import com.abreqadhabra.nflight.service.core.NFlightService;
+import com.abreqadhabra.nflight.service.core.server.NFlightServer;
 import com.abreqadhabra.nflight.service.rmi.server.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.service.rmi.server.servant.UnicastRemoteObjectNFlightServiceImpl;
 
@@ -18,7 +18,7 @@ public class NFlightServerImpl implements
 	private static final Class<NFlightServerImpl> THIS_CLAZZ = NFlightServerImpl.class;
 	private Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 	public final String SERVICE_COMMAND = System
-			.getProperty(Constants.Boot.KEY_BOOT_OPTION_SERVICE_COMMAND);
+			.getProperty(Env.Boot.KEY_BOOT_OPTION_SERVICE_COMMAND);
 
 	private RMIManager rman;
 	private static final long serialVersionUID = 1L;
@@ -46,7 +46,7 @@ public class NFlightServerImpl implements
 				"SERVICE_COMMAND:" + SERVICE_COMMAND);
 
 		switch (this.SERVICE_COMMAND) {
-		case Constants.Boot.STR_SERVICE_COMMAND_STARTUP:
+		case Env.Boot.STR_SERVICE_COMMAND_STARTUP:
 			if (_isActivated) {
 				LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME,
 						boundName + "가 이미 Registry에 등록되어 있습니다.");
@@ -54,7 +54,7 @@ public class NFlightServerImpl implements
 				this.startup();
 			}
 			break;
-		case Constants.Boot.STR_SERVICE_COMMAND_SHUTDOWN:
+		case Env.Boot.STR_SERVICE_COMMAND_SHUTDOWN:
 			if (_isActivated) {
 				this.shutdown();
 			} else {
@@ -62,7 +62,7 @@ public class NFlightServerImpl implements
 						boundName + "가  Registry에 등록되어 있지 않습니다.");
 			}
 			break;
-		case Constants.Boot.STR_SERVICE_COMMAND_STATUS:
+		case Env.Boot.STR_SERVICE_COMMAND_STATUS:
 			if (_isActivated) {
 				boolean status = this.status();
 				if (status == true) {

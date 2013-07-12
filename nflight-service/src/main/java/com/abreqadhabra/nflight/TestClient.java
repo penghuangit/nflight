@@ -41,7 +41,7 @@ import java.net.InetAddress;
 import java.rmi.registry.Registry;
 import java.util.Arrays;
 
-import com.abreqadhabra.nflight.service.NFlightService;
+import com.abreqadhabra.nflight.service.core.NFlightService;
 import com.abreqadhabra.nflight.service.rmi.server.RMIManager;
 import com.abreqadhabra.nflight.service.rmi.server.scoket.SecureSocketFactory;
 
@@ -53,17 +53,18 @@ public class TestClient {
 	public static void main(String[] args) {
 
 		try {
-			
-			
+
 			String host = InetAddress.getLocalHost().getHostAddress();
 			int port = 9999;
 			SecureSocketFactory socketFactory = new SecureSocketFactory();
 			Registry registry = RMIManager.getRegistry(host, port);
-		//	Registry registry = LocateRegistry.getRegistry();
+			// Registry registry = LocateRegistry.getRegistry();
 			System.out.println(Arrays.toString(registry.list()));
 
-			NFlightService stub = (NFlightService) registry.lookup("rmi://192.168.0.100:9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
-					//registry.lookup("rmi://192.168.0.100:9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
+			NFlightService stub = (NFlightService) registry.lookup("rmi://"
+					+ host
+					+ ":9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
+			// registry.lookup("rmi://192.168.0.100:9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
 			String response = stub.sayHello();
 			System.out.println("response: " + response);
 		} catch (Exception e) {
