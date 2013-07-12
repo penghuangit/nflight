@@ -27,7 +27,7 @@
 	<modules>
 		<module>nflight-common</module>
 		<module>nflight-dao</module>
-		<module>nflight-server</module>
+		<module>nflight-service</module>
 		<module>nflight-client</module>
 		<!-- <module>nflight-build-tools</module>
 
@@ -35,6 +35,7 @@
 		
 		<module>nflight-references-sources</module>
 		 -->
+	
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
