@@ -76,7 +76,7 @@ public class SetupRef2 {
 				BASE_LOCATION + Env.RMI.DEFAULT_POLICY_FILE_NAME);*/
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				Env.RMI.KEY_JAVA_SECURITY_POLICY + ":" + BASE_LOCATION + Env.RMI.FILE_ACTIVATION_CONFIG_DEFAULT);
+				Env.RMI.KEY_JAVA_SECURITY_POLICY + ":" + BASE_LOCATION + Env.RMI.FILE_ACTIVATION_SETUP_DEFAULT);
 		
 		PropertyLoader.setSystemProperties(_props);
 
@@ -87,7 +87,7 @@ public class SetupRef2 {
 		String implCodebase = System
 				.getProperty(Env.RMI.KEY_RMI_ACTIVATION_IMPL_CODEBASE);
 		String filename = System.getProperty(
-				Env.RMI.FILE_ACTIVATION_CONFIG_DEFAULT, "");
+				Env.RMI.FILE_ACTIVATION_SETUP_DEFAULT, "");
 		String name = System.getProperty("nflight.system.rmi.activation.name");
 
 		ActivationGroupID groupID = registerActivationGroup(_props);
@@ -180,7 +180,7 @@ public class SetupRef2 {
 
 		try {
 			_props = PropertyFile
-					.readPropertyFile(Env.RMI.FILE_ACTIVATION_CONFIG_DEFAULT);
+					.readPropertyFile(Env.RMI.FILE_ACTIVATION_SETUP_DEFAULT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

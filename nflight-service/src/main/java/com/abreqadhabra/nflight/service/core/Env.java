@@ -55,7 +55,7 @@ public class Env {
 
 	public class RMI {
 
-		public static final String FILE_ACTIVATION_CONFIG_DEFAULT = "/com/abreqadhabra/nflight/rmi/server/servent/activation/conf/activation.properties";
+		public static final String FILE_ACTIVATION_SETUP_DEFAULT = "/com/abreqadhabra/nflight/service/rmi/server/servant/activation/conf/setup.properties";
 
 		public static final String KEY_JAVA_SECURITY_POLICY = "java.security.policy";
 		public static final String KEY_JAVA_RMI_SERVER_CODEBASE = "java.rmi.server.codebase";

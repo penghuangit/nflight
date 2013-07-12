@@ -20,10 +20,7 @@ public class Setup {
 	public static void main(String[] args) {
 
 		
-		
-		
-		
-
+		Properties _props = getActivationProperties();
 	}
 	
 	
@@ -32,7 +29,7 @@ public class Setup {
 
 		try {
 			_props = PropertyFile
-					.readPropertyFile(Env.RMI.FILE_ACTIVATION_CONFIG_DEFAULT);
+					.readPropertyFile(Env.RMI.FILE_ACTIVATION_SETUP_DEFAULT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
