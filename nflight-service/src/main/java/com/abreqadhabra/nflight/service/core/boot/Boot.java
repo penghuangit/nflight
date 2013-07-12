@@ -50,7 +50,7 @@ public class Boot {
 				serviceCommand);
 		props.remove(Env.Boot.KEY_BOOT_OPTION_SERVICE);
 
-		return props;
+		return props.;
 	}
 	
 	/**
@@ -344,46 +344,47 @@ public class Boot {
      *            The print stream to output to.
      */
     public static void printUsage(PrintStream out) {
-	out.println("Usage: java -cp <classpath> com.abreqadhabra.nflight.core.Boot [--options]");
-	out.println("");
-	out.println("where options are:");
-	out.println("  -host <host name>\tHost where RMI registry for the platform is located");
-	out.println("  -port <port number>\tThe port where RMI registry for the platform resides");
-	out.println("  -gui\t\t\tIf specified, a new Remote Management Agent is created.");
-	out.println("  -conf <file name>\tStarts NFlight using the configuration properties read in the specified file.");
-	out.println("  -version\t\tIf specified, current JADE version number and build date is printed.");
-	out.println("  -service <service name>\tThe symbolic platform name specified only for the main container.");
-	out.println("  -help\t\t\tPrints out usage informations.");
-	out.println("");
-	out.println("Examples:");
-	out.println("  Connect to RMI Server, starting an service named 'rmiclient'");
-	out.println("  \tjava com.abreqadhabra.nflight.core.Boot --service rmiclient --host 192.168.0.1 -- port 9999");
-	out.println("");
-	out.println("  Connect to Socket Server, starting an service named 'socketclient'");
-	out.println("  \tjava com.abreqadhabra.nflight.core.Boot --service socketclient --host 192.168.0.1 -- port 9999");
-	out.println("");
-	out.println("  Visit at the https://github.com/abreqadhabra for more details.");
-	out.println("");
-	System.exit(0);
-    }
+//	out.println("Usage: java -cp <classpath> com.abreqadhabra.nflight.core.Boot [--options]");
+//	out.println("");
+//	out.println("where options are:");
+//	out.println("  -host <host name>\tHost where RMI registry for the platform is located");
+//	out.println("  -port <port number>\tThe port where RMI registry for the platform resides");
+//	out.println("  -gui\t\t\tIf specified, a new Remote Management Agent is created.");
+//	out.println("  -conf <file name>\tStarts NFlight using the configuration properties read in the specified file.");
+//	out.println("  -version\t\tIf specified, current JADE version number and build date is printed.");
+//	out.println("  -service <service name>\tThe symbolic platform name specified only for the main container.");
+//	out.println("  -help\t\t\tPrints out usage informations.");
+		out.println("    Usage: java -jar nflight-<service-name>.jar [optional parameters]");
+		out.println("");
+		out.println("    		where options are:");
+		out.println("    		  --conf <file name>	Starts NFlight Service using the configuration properties read in the specified file.");
+		out.println("    		  --version		If specified, current NFlight Application version number and build date is printed.");
+		out.println("    		  ");
+		out.println("    		  --service <service-specifier>");
+		out.println("    			where service-specifier = <service-name>:<service-type>:<service-type>:<service-command>[(semicolon-separated <property-name>=<property-value>)]");
+		out.println("    				where properties are:");
+		out.println("    					-local-host	 <host(or host address) where to bind the local server socket on>");
+		out.println("    					-local-port	 <port where to bind the local server socket on>");
+		out.println("    					-remote-host	 <host(or host address) where to bind the remote server socket on>");
+		out.println("    					-remote-port	 <port where to bind the remote server socket on>");
+		out.println("    					-gui		 If specified, GUI created.");
+		out.println("    					");
+		out.println("   ");
+		out.println("    -service-mode	tcp/udp or unicast/activatable");
+		out.println("");
+		out.println("Examples:");
+		out.println("  Connect to RMI Server, starting an service named 'rmiclient'");
+		out.println("  \tjava com.abreqadhabra.nflight.core.Boot --service rmiclient --host 192.168.0.1 -- port 9999");
+		out.println("");
+		out.println("  Connect to Socket Server, starting an service named 'socketclient'");
+		out.println("  \tjava com.abreqadhabra.nflight.core.Boot --service socketclient --host 192.168.0.1 -- port 9999");
+		out.println("");
+		out.println("  Visit at the https://github.com/abreqadhabra for more details.");
+		out.println("");
+		System.exit(0);
+	}
     
-//    Usage: java -jar nflight-<service-name>.jar [optional parameters]
-//
-//    		where options are:
-//    		  --conf <file name>	Starts NFlight Service using the configuration properties read in the specified file.
-//    		  --version		If specified, current NFlight Application version number and build date is printed.
-//    		  
-//    		  --service <service-specifier>
-//    			where service-specifier = <service-name>:<service-type>:<service-type>:<service-command>[(semicolon-separated <property-name>=<property-value>)]
-//    				where properties are:
-//    					-local-host	 <host(or host address) where to bind the local server socket on>
-//    					-local-port	 <port where to bind the local server socket on>
-//    					-remote-host	 <host(or host address) where to bind the remote server socket on>
-//    					-remote-port	 <port where to bind the remote server socket on>
-//    					-gui		 If specified, GUI created.
-//    					
-//   
-//    -service-mode	tcp/udp or unicast/activatable
+	
     
     
     
