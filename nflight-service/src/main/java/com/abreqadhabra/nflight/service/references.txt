@@ -4,4 +4,5 @@ http://docs.oracle.com/javase/7/docs/technotes/guides/rmi/
 http://commons.apache.org/proper/commons-cli/usage.html
 
 policytool.exe
-
+http://www.samuraiz.co.jp/adobeproduct/jrun/docs/jrun31j/html/JRun_Advanced_Configuration_Guide/ejbs2.html
+http://www.javaworld.com/javaworld/jw-12-2000/jw-1229-traps.html?page=4

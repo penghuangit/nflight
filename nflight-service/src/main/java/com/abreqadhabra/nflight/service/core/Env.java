@@ -116,8 +116,10 @@ public class Env {
 
 			public static class Constants {
 
-				public static final String FILE_NAME_BOOTCOMMAND_PROPERTIES = "/com/abreqadhabra/nflight/service/boot/conf/bootcommand.properties";
-				public static final String BOOTCOMMAND_OS_DEFAULT = "windows";
+				public static final String FILE_NAME_BOOTCOMMAND_PROPERTIES = "/com/abreqadhabra/nflight/service/core/boot/conf/bootcommand.properties";
+				public static final OS BOOTCOMMAND_OS_DEFAULT = OS.windows;
+				public static final int BOOTCOMMAND_SLEEPTIME_1_= 2000;
+				public static final int BOOTCOMMAND_SLEEPTIME_2= 10000;
 			}
 
 			public static enum PropertyKey {
@@ -129,8 +131,8 @@ public class Env {
 				NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_CLIENT_SHUTDOWN_WINDOWS,
 				NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_CLIENT_STARTUP_LINUX,
 				NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_CLIENT_STARTUP_WINDOWS,
-				NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_SHUTDOWN_LINUX,
-				NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_SHUTDOWN_WINDOWS,
+				NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_STOP_LINUX,
+				NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_STOP_WINDOWS,
 				NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_LINUX,
 				NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS,
 				NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_SERVER_SHUTDOWN_LINUX,
@@ -162,6 +164,11 @@ public class Env {
 					}
 					return lowercase;
 				}
+			}
+			
+			public static enum OS {
+				windows,
+				linux;
 			}
 		}
 

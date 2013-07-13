@@ -41,7 +41,9 @@ import java.net.InetAddress;
 import java.rmi.registry.Registry;
 import java.util.Arrays;
 
+import com.abreqadhabra.nflight.service.core.Env;
 import com.abreqadhabra.nflight.service.core.NFlightService;
+import com.abreqadhabra.nflight.service.core.boot.BootCommand;
 import com.abreqadhabra.nflight.service.rmi.server.RMIManager;
 import com.abreqadhabra.nflight.service.rmi.server.scoket.SecureSocketFactory;
 
@@ -60,6 +62,29 @@ public class TestClient {
 			Registry registry = RMIManager.getRegistry(host, port);
 			// Registry registry = LocateRegistry.getRegistry();
 			System.out.println(Arrays.toString(registry.list()));
+
+			/*String command = System
+					.getProperty(Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
+							.toString());
+*/
+
+			String BASE_LOCATION = TestClient.class
+					.getProtectionDomain().getCodeSource().getLocation().getFile();
+			
+		//	String command = "rmid  -stop";		
+		//	String command = "rmid  -J-Djava.security.policy="+BASE_LOCATION+"com/abreqadhabra/nflight/service/core/boot/conf/boot.policy";
+			String command = System.getProperty(Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
+							.toString());
+			
+			System.out
+					.println(Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
+							.toString() + ": " + command);
+
+			new BootCommand().execute(command);
+			
+
+			
+			BootCommand.execute(command);
 
 			NFlightService stub = (NFlightService) registry.lookup("rmi://"
 					+ host

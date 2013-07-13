@@ -266,26 +266,26 @@ public abstract class WrapperException extends Exception implements
 	}
     }
 
-    public static String getStackTrace(Exception e) {
-	StringBuffer sb = null;
-	try {
-	    StringWriter stringWriter = new StringWriter();
-	    PrintWriter printWriter = new PrintWriter(stringWriter);
-	    e.printStackTrace(printWriter);
+	public static String getStackTrace(Exception e) {
+		StringBuffer sb = null;
+		try {
+			StringWriter stringWriter = new StringWriter();
+			PrintWriter printWriter = new PrintWriter(stringWriter);
+			e.printStackTrace(printWriter);
 
-	    sb = stringWriter.getBuffer();
+			sb = stringWriter.getBuffer();
 
-	    stringWriter.flush();
-	    stringWriter.close();
-	    printWriter.flush();
-	    printWriter.close();
-	} catch (IOException ioe) {
+			stringWriter.flush();
+			stringWriter.close();
+			printWriter.flush();
+			printWriter.close();
+		} catch (IOException ioe) {
+		}
+
+		if (sb != null) {
+			return sb.toString();
+		} else {
+			return "";
+		}
 	}
-
-	if (sb != null) {
-	    return sb.toString();
-	} else {
-	    return "";
-	}
-    }
 }
