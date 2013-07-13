@@ -18,7 +18,7 @@ public class NFlightServerImpl implements
 	private static final Class<NFlightServerImpl> THIS_CLAZZ = NFlightServerImpl.class;
 	private Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 	public final String SERVICE_COMMAND = System
-			.getProperty(Env.Boot.KEY_BOOT_OPTION_SERVICE_COMMAND);
+			.getProperty(Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_COMMAND.toString());
 
 	private RMIManager rman;
 	private static final long serialVersionUID = 1L;
@@ -45,8 +45,10 @@ public class NFlightServerImpl implements
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 				"SERVICE_COMMAND:" + SERVICE_COMMAND);
 
-		switch (this.SERVICE_COMMAND) {
-		case Env.Boot.STR_SERVICE_COMMAND_STARTUP:
+		Env.Properties.Boot.ServiceCommand command = Env.Properties.Boot.ServiceCommand.valueOf(this.SERVICE_COMMAND);
+		
+		switch (command) {
+		case startup:
 			if (_isActivated) {
 				LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME,
 						boundName + "가 이미 Registry에 등록되어 있습니다.");
@@ -54,7 +56,7 @@ public class NFlightServerImpl implements
 				this.startup();
 			}
 			break;
-		case Env.Boot.STR_SERVICE_COMMAND_SHUTDOWN:
+		case shutdown:
 			if (_isActivated) {
 				this.shutdown();
 			} else {
@@ -62,7 +64,7 @@ public class NFlightServerImpl implements
 						boundName + "가  Registry에 등록되어 있지 않습니다.");
 			}
 			break;
-		case Env.Boot.STR_SERVICE_COMMAND_STATUS:
+		case status:
 			if (_isActivated) {
 				boolean status = this.status();
 				if (status == true) {

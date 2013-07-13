@@ -58,7 +58,7 @@ public class Setup {
 			e.printStackTrace();
 		}
 		
-		String policy = BASE_LOCATION + System.getProperty(Env.RMI.KEY_RMI_ACTIVATION_POLICY);
+		String policy = BASE_LOCATION + System.getProperty(Env.Properties.Setup.PropertyKey.NFLIGHT_SERVICE_RMI_SERVER_SERVANT_ACTIVATION_POLICY.toString());
 	 	Properties props = new Properties();
         props.put("java.security.policy", policy);
 
@@ -73,7 +73,7 @@ public class Setup {
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 				"groupID : " + groupID);
 		
-		String filename =System.getProperty(Env.RMI.KEY_RMI_ACTIVATION_FILE);
+		String filename =System.getProperty(Env.Properties.Setup.PropertyKey.NFLIGHT_SERVICE_RMI_SERVER_SERVANT_ACTIVATION_FILE.toString());
 
 		MarshalledObject data = null;
 		if (filename != null && !filename.equals("")) {
@@ -88,11 +88,12 @@ public class Setup {
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 				"data : " + data.toString());
 
-		String implCodebase =
-			    System.getProperty(Env.RMI.KEY_RMI_ACTIVATION_IMPL_CODEBASE);
+		String implCodebase = System
+				.getProperty(Env.Properties.Setup.PropertyKey.NFLIGHT_SERVICE_RMI_SERVER_SERVANT_ACTIVATION_IMPL_CODEBASE.toString());
 		
 		String implClass =
-			    System.getProperty(Env.RMI.KEY_RMI_ACTIVATION_IMPL_CLASSES);
+				System
+				.getProperty(Env.Properties.Setup.PropertyKey.NFLIGHT_SERVICE_RMI_SERVER_SERVANT_ACTIVATION_IMPL_CLASS.toString());
 		
 
 
@@ -132,7 +133,7 @@ public class Setup {
 
 		try {
 			_props = PropertyFile
-					.readPropertyFile(Env.RMI.FILE_ACTIVATION_SETUP_DEFAULT);
+					.readPropertyFile(Env.Properties.Setup.Constants.FILE_NAME_SETUP_PROPERTIES);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -43,7 +43,7 @@ public class RMIManager {
 	public RMIManager() throws Exception {
 		this.host = InetAddress.getLocalHost().getHostAddress();
 		this.port = Integer.parseInt(System
-				.getProperty(Env.Boot.KEY_BOOT_OPTION_PORT));
+				.getProperty(Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_PORT.toString()));
 		this.registry = getRegistry(this.host, this.port);
 		this.boundNameList = getBoundNameList(this.host, this.port);
 		this.socketFactory = new SecureSocketFactory();
@@ -197,7 +197,7 @@ public class RMIManager {
 
 	public String getBoundName(String objName) {
 		return "rmi://" + this.host + ":" + this.port + "/"
-				+ Env.RMI.STR_BOUND_NAME_SUFFIX + objName;
+				+ Env.Properties.Boot.Constants.RMI_BOUND_NAME_SUFFIX + objName;
 	}
 
 	public Remote getUnicastRemoteObjectNFlightServiceImpl() throws Exception {

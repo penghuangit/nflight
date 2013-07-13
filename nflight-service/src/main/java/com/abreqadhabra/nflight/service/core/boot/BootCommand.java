@@ -21,7 +21,7 @@ public class BootCommand {
 	static {
 		try {
 			Properties props = PropertyFile
-					.readPropertyFile(Env.BootCommand.FILE_COMMAND_CONFIG_DEFAULT);
+					.readPropertyFile(Env.Properties.BootCommand.Constants.FILE_NAME_BOOTCOMMAND_PROPERTIES);
 			PropertyLoader.setSystemProperties(props);
 		} catch (Exception e) {
 			StackTraceElement[] current = e.getStackTrace();
@@ -96,7 +96,7 @@ public class BootCommand {
 			Process proc = rt.exec(command);
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "proc : " + proc.toString());
 			Thread.sleep(Integer.parseInt(System
-					.getProperty(Env.BootCommand.KEY_COMMAND_SLEEP_TIME_2)));
+					.getProperty(Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_SLEEPTIME_2.toString())));
 		} catch (InterruptedException e) {
 			StackTraceElement[] current = e.getStackTrace();
 			LOGGER.logp(Level.SEVERE, current[0].getClassName(),

@@ -35,6 +35,9 @@ public class Env {
 				
 				public static final String FILE_NAME_BOOT_PROPERTIES = "/com/abreqadhabra/nflight/service/core/boot/conf/boot.properties";
 				public static final String FILE_NAME_BOOT_POLICY = "com/abreqadhabra/nflight/service/core/boot/conf/boot.policy";
+				
+				public static final String RMI_BOUND_NAME_SUFFIX = "NFlight/";
+
 			}
 
 			public static enum PropertyKey {
@@ -44,8 +47,9 @@ public class Env {
 				NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE, 
 				NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_TYPE, 
 				NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_MODE, 
-				NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_NAME, 
-				NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_COMMAND, 
+				NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_NAME,
+				NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_COMMAND,
+				NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_MAINCLASS,
 				NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_GUI, 
 				NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_HOST, 
 				NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_PORT;
@@ -72,6 +76,7 @@ public class Env {
 				type, 
 				mode, 
 				command, 
+				imainclass,
 				gui, 
 				host, 
 				port;
@@ -97,7 +102,8 @@ public class Env {
 				
 				client, 
 				server;
-			}		
+			}	
+			
 			public static enum ServiceCommand {
 				
 				startup, 
@@ -164,7 +170,6 @@ public class Env {
 			public static class Constants {
 
 				public static final String FILE_NAME_SETUP_PROPERTIES = "/com/abreqadhabra/nflight/service/rmi/server/servant/activation/conf/setup.properties";
-				public static final String REGISTRY_BOUND_NAME_SUFFIX = "NFlight/";
 			}
 
 			public static enum PropertyKey {

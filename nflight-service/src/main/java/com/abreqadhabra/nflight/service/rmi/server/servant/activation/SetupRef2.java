@@ -76,18 +76,18 @@ public class SetupRef2 {
 				BASE_LOCATION + Env.RMI.DEFAULT_POLICY_FILE_NAME);*/
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				Env.RMI.KEY_RMI_ACTIVATION_POLICY + ":" + BASE_LOCATION + Env.RMI.FILE_ACTIVATION_SETUP_DEFAULT);
+				Env.Properties.Setup.PropertyKey.NFLIGHT_SERVICE_RMI_SERVER_SERVANT_ACTIVATION_POLICY + ":" + BASE_LOCATION + Env.Properties.Setup.Constants.FILE_NAME_SETUP_PROPERTIES);
 		
 		PropertyLoader.setSystemProperties(_props);
 
 		String implClass = "com.abreqadhabra.nflight.service.rmi.server.remote.ActivatableNFlightServiceImpl";
 		
 		String policy = System.getProperty(
-				Env.RMI.KEY_RMI_ACTIVATION_POLICY, "group.policy");
+				Env.Properties.Setup.PropertyKey.NFLIGHT_SERVICE_RMI_SERVER_SERVANT_ACTIVATION_POLICY.toString(), "group.policy");
 		String implCodebase = System
-				.getProperty(Env.RMI.KEY_RMI_ACTIVATION_IMPL_CODEBASE);
+				.getProperty(Env.Properties.Setup.PropertyKey.NFLIGHT_SERVICE_RMI_SERVER_SERVANT_ACTIVATION_IMPL_CODEBASE.toString());
 		String filename = System.getProperty(
-				Env.RMI.FILE_ACTIVATION_SETUP_DEFAULT, "");
+				Env.Properties.Setup.PropertyKey.NFLIGHT_SERVICE_RMI_SERVER_SERVANT_ACTIVATION_FILE.toString(), "");
 		String name = System.getProperty("nflight.system.rmi.activation.name");
 
 		ActivationGroupID groupID = registerActivationGroup(_props);
@@ -180,7 +180,7 @@ public class SetupRef2 {
 
 		try {
 			_props = PropertyFile
-					.readPropertyFile(Env.RMI.FILE_ACTIVATION_SETUP_DEFAULT);
+					.readPropertyFile(Env.Properties.Setup.Constants.FILE_NAME_SETUP_PROPERTIES);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
