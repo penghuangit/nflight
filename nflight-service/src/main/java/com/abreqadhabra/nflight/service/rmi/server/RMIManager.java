@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.exception.NFlightUnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.service.core.Env;
 import com.abreqadhabra.nflight.service.core.boot.Profile;
 import com.abreqadhabra.nflight.service.rmi.server.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.service.rmi.server.scoket.SecureSocketFactory;
@@ -44,7 +43,7 @@ public class RMIManager {
 	public RMIManager() throws Exception {
 		this.host = InetAddress.getLocalHost().getHostAddress();
 		this.port = Integer.parseInt(System
-				.getProperty(Profile.BOOT_PROPERTIES.NFLIGHT_BOOT_OPTION_SERVICE_PORT.toString()));
+				.getProperty(Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_PORT.toString()));
 		this.registry = getRegistry(this.host, this.port);
 		this.boundNameList = getBoundNameList(this.host, this.port);
 		this.socketFactory = new SecureSocketFactory();
@@ -198,7 +197,7 @@ public class RMIManager {
 
 	public String getBoundName(String objName) {
 		return "rmi://" + this.host + ":" + this.port + "/"
-				+ Env.Properties.Boot.Constants.RMI_BOUND_NAME_SUFFIX + objName;
+				+ Profile.BOOT_OPTION_PREFIX + objName;
 	}
 
 	public Remote getUnicastRemoteObjectNFlightServiceImpl() throws Exception {

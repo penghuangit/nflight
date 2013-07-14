@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
-import com.abreqadhabra.nflight.service.core.Env;
 import com.abreqadhabra.nflight.service.core.boot.exception.NFlightBootException;
 
 public class BootProfile extends Profile {
@@ -20,32 +19,28 @@ public class BootProfile extends Profile {
 
 	private static final String BASE_LOCATION = THIS_CLAZZ
 			.getProtectionDomain().getCodeSource().getLocation().getFile();
-	
+
 	private String serviceName;
 	private String serviceMainClass;
-	private   String serviceCommand ;
+	private String serviceCommand;
 	private String bootCommand;
-	
+
 	public BootProfile(Properties props) {
 
 		PropertyLoader.setSystemProperties(props);
 
-		this.setServiceName(System
-				.getProperty(Profile.BOOT_PROPERTIES.NFLIGHT_BOOT_OPTION_SERVICE_NAME
-						.toString()));
-
 		this.setServiceMainClass(System
-				.getProperty(Profile.BOOT_PROPERTIES.NFLIGHT_BOOT_OPTION_SERVICE_MAINCLASS
+				.getProperty(Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_MAINCLASS
 						.toString()));
 
 		this.setServiceCommand(System
-				.getProperty(Profile.BOOT_PROPERTIES.NFLIGHT_BOOT_OPTION_SERVICE_COMMAND
+				.getProperty(Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_COMMAND
 						.toString()));
 
-//		this.setBootCommand(System
-//				.getProperty(Profile.BOOTCOMMAND_PROPERTIES.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
-//						.toString()));
-		
+		// this.setBootCommand(System
+		// .getProperty(Profile.BOOTCOMMAND_PROPERTIES.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
+		// .toString()));
+
 	}
 
 	public static Properties parseCMDLineArgs(String[] args) throws Exception {
@@ -65,49 +60,43 @@ public class BootProfile extends Profile {
 				// handle long option --foo or --foo bar
 				if (key.startsWith("--")) {
 					key = stripLeadingHyphens(key);
-					if (key.equalsIgnoreCase(Env.Properties.Boot.Option.gui
-							.toString())) {
+					if (key.equalsIgnoreCase(Profile.BOOT_OPTION.gui.toString())) {
 						argsProps.setProperty(
-								Env.Properties.Boot.Option.gui.toString(),
-								value);
+								Profile.BOOT_OPTION.gui.toString(), value);
 					} else {
 						argsProps.setProperty(
-								Env.Properties.Boot.Option.gui.toString(),
-								"false");
+								Profile.BOOT_OPTION.gui.toString(), "false");
 					}
 
-					if (key.equalsIgnoreCase(Env.Properties.Boot.Option.service
+					if (key.equalsIgnoreCase(Profile.BOOT_OPTION.service
 							.toString())) {
 						value = (String) options.next();
 						if (checkNotLeadingHyphens(key, value)) {
 							argsProps
 									.setProperty(
-											Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE
+											Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE
 													.toString(), value);
 						}
-					} else if (key
-							.equalsIgnoreCase(Env.Properties.Boot.Option.host
-									.toString())) {
+					} else if (key.equalsIgnoreCase(Profile.BOOT_OPTION.host
+							.toString())) {
 						value = (String) options.next();
 						if (checkNotLeadingHyphens(key, value)) {
 							argsProps
 									.setProperty(
-											Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_HOST
+											Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_HOST
 													.toString(), value);
 						}
-					} else if (key
-							.equalsIgnoreCase(Env.Properties.Boot.Option.port
-									.toString())) {
+					} else if (key.equalsIgnoreCase(Profile.BOOT_OPTION.port
+							.toString())) {
 						value = (String) options.next();
 						if (checkNotLeadingHyphens(key, value)) {
 							argsProps
 									.setProperty(
-											Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_PORT
+											Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_PORT
 													.toString(), value);
 						}
-					} else if (key
-							.equalsIgnoreCase(Env.Properties.Boot.Option.conf
-									.toString())) {
+					} else if (key.equalsIgnoreCase(Profile.BOOT_OPTION.conf
+							.toString())) {
 
 						try {
 							value = (String) options.next();
@@ -178,8 +167,7 @@ public class BootProfile extends Profile {
 
 	public static Properties parseServiceSpecifiers(Properties props) {
 
-		String service = props
-				.getProperty(Env.Properties.Boot.Constants.FILE_NAME_BOOT_PROPERTIES);
+		String service = props.getProperty(Profile.FILE_BOOT_PROPERTIES);
 
 		int index1 = service.indexOf(':');
 		int index2 = service.indexOf(';');
@@ -191,37 +179,31 @@ public class BootProfile extends Profile {
 		String serviceMainClass = service.substring(index1 + 1, index2);
 		String serviceCommand = service.substring(index2 + 1, service.length());
 
-		props.setProperty(Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_NAME.toString(),
-				serviceName);
-		
-		
-		props.setProperty(Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_MAINCLASS.toString(),
-				serviceMainClass);
 		props.setProperty(
-				Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_COMMAND.toString(),
-				serviceCommand);
-		props.remove(Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE);
-		
+				Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_MAINCLASS
+						.toString(), serviceMainClass);
+		props.setProperty(
+				Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_COMMAND
+						.toString(), serviceCommand);
+		props.remove(Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE);
+
 		return props;
 	}
-	
+
 	public static void setSecurityManager() {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		System.setProperty(
-				Env.Properties.System.PropertyKey.JAVA_SECURITY_POLICY
-						.toString(),
-				BASE_LOCATION
-						+ Env.Properties.Boot.Constants.FILE_NAME_BOOT_POLICY
-								.toString());
+				Profile.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(),
+				BASE_LOCATION + Profile.FILE_BOOT_POLICY.toString());
 		LOGGER.logp(
 				Level.CONFIG,
 				THIS_CLAZZ.getName(),
 				METHOD_NAME,
-				Env.Properties.System.PropertyKey.JAVA_SECURITY_POLICY
+				Profile.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY
 						+ "="
-						+ System.getProperty(Env.Properties.System.PropertyKey.JAVA_SECURITY_POLICY
+						+ System.getProperty(Profile.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY
 								.toString()));
 		if (System.getSecurityManager() == null) {
 			// System.setSecurityManager(new RMISecurityManager());
@@ -230,7 +212,7 @@ public class BootProfile extends Profile {
 	}
 
 	public boolean getBooleanProperty(
-			BOOT_PROPERTIES nflightBootOptionServiceName) {
+			PROPERTIES_BOOT nflightBootOptionServiceName) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -266,6 +248,5 @@ public class BootProfile extends Profile {
 	public void setBootCommand(String bootCommand) {
 		this.bootCommand = bootCommand;
 	}
-
 
 }

@@ -11,7 +11,6 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.IOStream;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
-import com.abreqadhabra.nflight.service.core.Env;
 import com.abreqadhabra.nflight.service.core.boot.exception.NFlightBootCommandException;
 
 public class BootCommand {
@@ -22,7 +21,7 @@ public class BootCommand {
 	static {
 		try {
 			Properties props = PropertyFile
-					.readPropertyFile(Env.Properties.BootCommand.Constants.FILE_NAME_BOOTCOMMAND_PROPERTIES);
+					.readPropertyFile(Profile.FILE_BOOTCOMMAND_PROPERTIES);
 			PropertyLoader.setSystemProperties(props);
 		} catch (Exception e) {
 			StackTraceElement[] current = e.getStackTrace();
@@ -59,7 +58,7 @@ public class BootCommand {
 			command = args[0];
 		} else if (args.length == 0) {
 			command = System
-					.getProperty(Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
+					.getProperty(Profile.PROPERTIES_BOOTCOMMAND.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
 							.toString());
 			// command =
 			// System.getProperty(Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_STOP_WINDOWS
@@ -133,7 +132,7 @@ public class BootCommand {
 					throw new NFlightBootCommandException(command
 							+ ": subprocess abnormal termination :" + exitValue);
 				}
-				Thread.sleep(Env.Properties.BootCommand.Constants.BOOTCOMMAND_SLEEPTIME_2);
+				Thread.sleep(Profile.BOOTCOMMAND_SLEEPTIME_2);
 			} catch (InterruptedException e) {
 				StackTraceElement[] current = e.getStackTrace();
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),

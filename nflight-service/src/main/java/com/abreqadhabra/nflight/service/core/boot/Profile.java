@@ -1,6 +1,5 @@
 package com.abreqadhabra.nflight.service.core.boot;
 
-import com.abreqadhabra.nflight.service.core.Env.Properties.BootCommand.OS;
 
 /**
  * This class allows retrieving configuration-dependent classes.
@@ -8,7 +7,7 @@ import com.abreqadhabra.nflight.service.core.Env.Properties.BootCommand.OS;
  */
 public abstract class Profile {
 	
-	public static enum SYSTEM_PROPERTIES {
+	public static enum PROPERTIES_SYSTEM {
 		
 		JAVA_SECURITY_POLICY, 
 		JAVA_RMI_SERVER_CODEBASE;
@@ -27,17 +26,14 @@ public abstract class Profile {
 		}
 	}
 	
-	public static final String BOOT_PROPERTIES_FILE = "/com/abreqadhabra/nflight/service/core/boot/conf/boot.properties";
-	public static final String BOOT_POLICY_FILE = "com/abreqadhabra/nflight/service/core/boot/conf/boot.policy";
+	public static final String FILE_BOOT_PROPERTIES = "/com/abreqadhabra/nflight/service/core/boot/conf/boot.properties";
+	public static final String FILE_BOOT_POLICY = "com/abreqadhabra/nflight/service/core/boot/conf/boot.policy";
 	 
-	public static enum BOOT_PROPERTIES {
+	public static enum PROPERTIES_BOOT {
 
 		NFLIGHT_BOOT_OPTION_CONF, 
 		NFLIGHT_BOOT_OPTION_VERSION, 
 		NFLIGHT_BOOT_OPTION_SERVICE, 
-		NFLIGHT_BOOT_OPTION_SERVICE_TYPE, 
-		NFLIGHT_BOOT_OPTION_SERVICE_MODE, 
-		NFLIGHT_BOOT_OPTION_SERVICE_NAME,
 		NFLIGHT_BOOT_OPTION_SERVICE_COMMAND,
 		NFLIGHT_BOOT_OPTION_SERVICE_MAINCLASS,
 		NFLIGHT_BOOT_OPTION_SERVICE_GUI, 
@@ -130,12 +126,16 @@ public abstract class Profile {
 	        }
 	}
 
-	public static final String BOOTCOMMAND_PROPERTIES_FILE = "/com/abreqadhabra/nflight/service/core/boot/conf/bootcommand.properties";
-	public static final OS BOOTCOMMAND_OS_DEFAULT = OS.windows;
+	public static final String FILE_BOOTCOMMAND_PROPERTIES = "/com/abreqadhabra/nflight/service/core/boot/conf/bootcommand.properties";
+	public static final BOOTCOMMAND_OS BOOTCOMMAND_OS_DEFAULT = BOOTCOMMAND_OS.windows;
 	public static final int BOOTCOMMAND_SLEEPTIME_1_= 2000;
 	public static final int BOOTCOMMAND_SLEEPTIME_2= 10000;
 	
-	public static enum BOOTCOMMAND_PROPERTIES {
+	public static enum BOOTCOMMAND_OS {
+		windows,
+		linux;
+	}
+	public static enum PROPERTIES_BOOTCOMMAND {
 		NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS,
 		NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_STOP_WINDOWS,
 		UNKNOWN;
@@ -150,6 +150,31 @@ public abstract class Profile {
 			if (lowercase == null) {
 				lowercase = name().toLowerCase(java.util.Locale.US).replace(
 						"_", ".");
+			}
+			return lowercase;
+		}
+	}
+	
+		public static final String FILE_SETUP_PROPERTIES = "/com/abreqadhabra/nflight/service/rmi/server/servant/activation/conf/setup.properties";
+
+	public static enum PROPERTIES_SETUP {
+
+		NFLIGHT_ACTIVATION_SETUP_CODEBASE,
+		NFLIGHT_ACTIVATION_IMPL_CODEBASE,
+		NFLIGHT_ACTIVATION_IMPL_CLASS,
+		NFLIGHT_ACTIVATION_NAME,
+		NFLIGHT_ACTIVATION_FILE,
+		NFLIGHT_ACTIVATION_POLICY;
+	
+		private String lowercase = null; // property name in lowercase
+
+		/**
+		 * Returns this property's name in lowercase.
+		 */
+		public String toString() {
+			if (lowercase == null) {
+				lowercase = name().toLowerCase(java.util.Locale.US)
+						.replace("_", ".");
 			}
 			return lowercase;
 		}

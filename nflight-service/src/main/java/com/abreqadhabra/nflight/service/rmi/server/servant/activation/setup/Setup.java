@@ -20,8 +20,8 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
-import com.abreqadhabra.nflight.service.core.Env;
 import com.abreqadhabra.nflight.service.core.boot.BootProfile;
+import com.abreqadhabra.nflight.service.core.boot.Profile;
 import com.abreqadhabra.nflight.service.rmi.server.RMIManager;
 
 public class Setup {
@@ -58,7 +58,7 @@ public class Setup {
 			e.printStackTrace();
 		}
 		
-		String policy = BASE_LOCATION + System.getProperty(Env.Properties.Setup.PropertyKey.NFLIGHT_SERVICE_RMI_SERVER_SERVANT_ACTIVATION_POLICY.toString());
+		String policy = BASE_LOCATION + System.getProperty(Profile.PROPERTIES_SETUP.NFLIGHT_ACTIVATION_POLICY.toString());
 	 	Properties props = new Properties();
         props.put("java.security.policy", policy);
 
@@ -73,7 +73,7 @@ public class Setup {
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 				"groupID : " + groupID);
 		
-		String filename =System.getProperty(Env.Properties.Setup.PropertyKey.NFLIGHT_SERVICE_RMI_SERVER_SERVANT_ACTIVATION_FILE.toString());
+		String filename =System.getProperty(Profile.PROPERTIES_SETUP.NFLIGHT_ACTIVATION_FILE.toString());
 
 		MarshalledObject data = null;
 		if (filename != null && !filename.equals("")) {
@@ -89,11 +89,11 @@ public class Setup {
 				"data : " + data.toString());
 
 		String implCodebase = System
-				.getProperty(Env.Properties.Setup.PropertyKey.NFLIGHT_SERVICE_RMI_SERVER_SERVANT_ACTIVATION_IMPL_CODEBASE.toString());
+				.getProperty(Profile.PROPERTIES_SETUP.NFLIGHT_ACTIVATION_IMPL_CODEBASE.toString());
 		
 		String implClass =
 				System
-				.getProperty(Env.Properties.Setup.PropertyKey.NFLIGHT_SERVICE_RMI_SERVER_SERVANT_ACTIVATION_IMPL_CLASS.toString());
+				.getProperty(Profile.PROPERTIES_SETUP.NFLIGHT_ACTIVATION_IMPL_CLASS.toString());
 		
 
 
@@ -133,7 +133,7 @@ public class Setup {
 
 		try {
 			_props = PropertyFile
-					.readPropertyFile(Env.Properties.Setup.Constants.FILE_NAME_SETUP_PROPERTIES);
+					.readPropertyFile(Profile.FILE_SETUP_PROPERTIES);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

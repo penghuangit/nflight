@@ -46,7 +46,7 @@ public class Boot {
 			} else {
 				// Settings specified in the default property file
 				props = PropertyFile
-						.readPropertyFile(Profile.BOOT_PROPERTIES_FILE);
+						.readPropertyFile(Profile.FILE_BOOT_PROPERTIES);
 			}
 
 			BootProfile p = new BootProfile(props);
@@ -64,7 +64,7 @@ public class Boot {
 					BootCommand command = new BootCommand();
 					
 					p.setBootCommand(System
-							.getProperty(Profile.BOOTCOMMAND_PROPERTIES.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
+							.getProperty(Profile.PROPERTIES_BOOTCOMMAND.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
 									.toString()));
 					
 					String bootCommand = p.getBootCommand();
