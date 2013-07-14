@@ -6,8 +6,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.service.core.Env;
 import com.abreqadhabra.nflight.service.core.NFlightService;
+import com.abreqadhabra.nflight.service.core.boot.BootProfile;
+import com.abreqadhabra.nflight.service.core.boot.Profile;
 import com.abreqadhabra.nflight.service.core.server.NFlightServer;
 import com.abreqadhabra.nflight.service.rmi.server.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.service.rmi.server.servant.UnicastRemoteObjectNFlightServiceImpl;
@@ -17,13 +18,15 @@ public class NFlightServerImpl implements
 
 	private static final Class<NFlightServerImpl> THIS_CLAZZ = NFlightServerImpl.class;
 	private Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
-	public final String SERVICE_COMMAND = System
-			.getProperty(Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_COMMAND.toString());
+	
+	private BootProfile profile;
+	
 
 	private RMIManager rman;
 	private static final long serialVersionUID = 1L;
 
-	public NFlightServerImpl() throws Exception {
+	public NFlightServerImpl(BootProfile profile) throws Exception {
+		this.profile = profile;
 		init();
 		execute();
 	}
@@ -42,10 +45,13 @@ public class NFlightServerImpl implements
 		
 		boolean _isActivated = this.rman.isActivatedRegistry(boundName);
 
+		String serviceCommand = this.profile.getServiceCommand();
+		
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				"SERVICE_COMMAND:" + SERVICE_COMMAND);
+				"serviceCommand: " + serviceCommand);
 
-		Env.Properties.Boot.ServiceCommand command = Env.Properties.Boot.ServiceCommand.valueOf(this.SERVICE_COMMAND);
+		Profile.BOOT_OPTION_SERVICE_COMMAND command = Profile.BOOT_OPTION_SERVICE_COMMAND
+				.valueOf(serviceCommand);
 		
 		switch (command) {
 		case startup:
@@ -81,7 +87,7 @@ public class NFlightServerImpl implements
 			break;
 		default:
 			throw new NFlightRemoteException("Service 실행이 실패하였습니다.")
-					.addContextValue("Service Command", this.SERVICE_COMMAND);
+					.addContextValue("Service Command", serviceCommand);
 		}
 	}
 

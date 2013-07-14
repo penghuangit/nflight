@@ -21,7 +21,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
 import com.abreqadhabra.nflight.service.core.Env;
-import com.abreqadhabra.nflight.service.core.boot.Boot;
+import com.abreqadhabra.nflight.service.core.boot.BootProfile;
 import com.abreqadhabra.nflight.service.rmi.server.RMIManager;
 
 public class Setup {
@@ -37,7 +37,7 @@ public class Setup {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		
-		Boot.setSecurityManager();
+		BootProfile.setSecurityManager();
 	
 		setSystemProperties();
 		

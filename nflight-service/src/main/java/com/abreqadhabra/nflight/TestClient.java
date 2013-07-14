@@ -43,7 +43,6 @@ import java.util.Arrays;
 
 import com.abreqadhabra.nflight.service.core.Env;
 import com.abreqadhabra.nflight.service.core.NFlightService;
-import com.abreqadhabra.nflight.service.core.boot.BootCommand;
 import com.abreqadhabra.nflight.service.rmi.server.RMIManager;
 import com.abreqadhabra.nflight.service.rmi.server.scoket.SecureSocketFactory;
 
@@ -80,17 +79,23 @@ public class TestClient {
 					.println(Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
 							.toString() + ": " + command);
 
-			new BootCommand().execute(command);
+	//		new BootCommand().execute(command);
 			
 
 			
-			BootCommand.execute(command);
+	//		BootCommand.execute(command);
 
 			NFlightService stub = (NFlightService) registry.lookup("rmi://"
 					+ host
 					+ ":9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
 			// registry.lookup("rmi://192.168.0.100:9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
 			String response = stub.sayHello();
+			System.out.println("response: " + response);
+			
+			NFlightService stub2 = (NFlightService) registry.lookup("rmi://"
+					+ host
+					+ ":9999/NFlight/ActivatableNFlightServiceImpl");
+			response = stub2.sayHello();
 			System.out.println("response: " + response);
 		} catch (Exception e) {
 			System.err.println("Client exception: " + e.toString());

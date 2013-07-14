@@ -6,7 +6,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.exception.NFlightSystemException;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.IOStream;
@@ -47,26 +46,30 @@ public class BootCommand {
 	 *            The port of naming service like rmi registry.
 	 */
 	public static void main(String[] args) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "args: "
 				+ Arrays.toString(args));
-		
+
+		BootCommand bootCommand = new BootCommand();
 		String command = null;
-		
-		if(args.length==1){
+
+		if (args.length == 1) {
 			command = args[0];
-		}else if(args.length==0){
-			//command = System.getProperty(Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS.toString());
-			command = System.getProperty(Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_STOP_WINDOWS	.toString());
-			
-		}else{
-			command = getCommand();
+		} else if (args.length == 0) {
+			command = System
+					.getProperty(Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
+							.toString());
+			// command =
+			// System.getProperty(Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_STOP_WINDOWS
+			// .toString());
+
 		}
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "command: "
 				+ command);
 		try {
-			execute(command);
+			bootCommand.execute(command);
 		} catch (Exception e) {
 			StackTraceElement[] current = e.getStackTrace();
 			if (e instanceof WrapperException) {
@@ -80,7 +83,6 @@ public class BootCommand {
 			}
 		}
 	}
-
 
 	/**
 	 * <p>
@@ -98,81 +100,53 @@ public class BootCommand {
 	 * @throws Exception
 	 * @since STEP1
 	 */
-	public static void execute(String command) throws Exception {
+	public void execute(String command) throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		try {
-			Runtime rt = Runtime.getRuntime();
-			Process proc = rt.exec(command);
-			String errorString = IOStream.convertStreamToString(proc
-					.getErrorStream());
-			String outputString = IOStream.convertStreamToString(proc
-					.getInputStream());
-			// any error message?
-			if (errorString.length() != 0) {
-				LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME,
-						"command-line output of the subprocess" + errorString);
+		if (command != null) {
+			try {
+				Runtime rt = Runtime.getRuntime();
+				Process proc = rt.exec(command);
+				String errorString = IOStream.convertStreamToString(proc
+						.getErrorStream());
+				String outputString = IOStream.convertStreamToString(proc
+						.getInputStream());
+				// any error message?
+				if (errorString.length() != 0) {
+					LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME,
+							"command-line output of the subprocess"
+									+ errorString);
+				}
+				// any output?
+				if (outputString.length() != 0) {
+					LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME,
+							"command-line output of the subprocess"
+									+ outputString);
+				}
+				// any error???
+				int exitValue = proc.waitFor();
+				if (exitValue == 0) {
+					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+							"subprocess normal termination :" + exitValue);
+				} else {
+					throw new NFlightBootCommandException(command
+							+ ": subprocess abnormal termination :" + exitValue);
+				}
+				Thread.sleep(Env.Properties.BootCommand.Constants.BOOTCOMMAND_SLEEPTIME_2);
+			} catch (InterruptedException e) {
+				StackTraceElement[] current = e.getStackTrace();
+				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
+						current[0].getMethodName(), "이 오류는 발생하지 않습니다.");
+			} catch (IOException ioe) {
+				throw new NFlightBootCommandException(
+						"Can't boot background process.Command :" + command,
+						ioe);
 			}
-			// any output?
-			if (outputString.length() != 0) {
-				LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME,
-						"command-line output of the subprocess" + outputString);
-			}
-			// any error???
-			int exitValue = proc.waitFor();
-			if (exitValue == 0) {
-				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-						"subprocess normal termination :"
-								+ exitValue);
-			} else {
-				throw new NFlightBootCommandException(command +": subprocess abnormal termination :"
-								+ exitValue);
-			}
-			Thread.sleep(Env.Properties.BootCommand.Constants.BOOTCOMMAND_SLEEPTIME_2);
-		} catch (InterruptedException e) {
-			StackTraceElement[] current = e.getStackTrace();
-			LOGGER.logp(Level.SEVERE, current[0].getClassName(),
-					current[0].getMethodName(), "이 오류는 발생하지 않습니다.");
-		} catch (IOException ioe) {
-			throw new NFlightBootCommandException(
-					"Can't boot background process.Command :" + command, ioe);
-		}
-	}
-
-
-	
-	protected static String getCommand() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
-
-
-		// java -D<name>=<value> 시스템 속성
-		String osName = System.getProperty(Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_OS_DEFAULT.toString());
-		if (osName == null) {
-			osName = Env.Properties.BootCommand.Constants.BOOTCOMMAND_OS_DEFAULT.toString();
-		}
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_OS_DEFAULT.toString() + ": " + osName);
-		return osName;
-		
-	/*	String key = null;
-		String value = null;
-		if (osName.equals(Env.Properties.BootCommand.OS.windows)) {
-			key = Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_CLIENT_SHUTDOWN_LINUX b
-			value = System.getProperty(key);
-		} else if (osName.equals(Env.Properties.BootCommand.OS.linux)) {
-			key = Env.BootCommand.KEY_COMMAND_OS_LINUX;
-			value = System.getProperty(key);
 		} else {
-			LOGGER.logp(Level.SEVERE, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Incorrect property(" + Env.BootCommand.KEY_COMMAND_OS + "):"
-							+ osName);
-			System.exit(1);
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+					"command :" + command);
 		}
-
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				Env.BootCommand.STR_COMMAND_OS_WINDOWS + ": " + value);
-		return value;*/
-		
 	}
+
 }

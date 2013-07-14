@@ -6,8 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,45 +13,11 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
-import com.abreqadhabra.nflight.common.util.PropertyLoader;
-import com.abreqadhabra.nflight.service.core.Env;
 import com.abreqadhabra.nflight.service.core.boot.exception.NFlightBootException;
 
 public class Boot {
 	private static final Class<Boot> THIS_CLAZZ = Boot.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
-
-	private static final String BASE_LOCATION = THIS_CLAZZ
-			.getProtectionDomain().getCodeSource().getLocation().getFile();
-
-	public static Properties parseServiceSpecifiers(Properties props) {
-
-		String service = props
-				.getProperty(Env.Properties.Boot.Constants.FILE_NAME_BOOT_PROPERTIES);
-
-		int index1 = service.indexOf(':');
-		int index2 = service.indexOf(';');
-
-		// Cursor on the given string: marks the parser position
-		int cursor = 0;
-
-		String serviceName = service.substring(cursor, index1);
-		String serviceMainClass = service.substring(index1 + 1, index2);
-		String serviceCommand = service.substring(index2 + 1, service.length());
-
-		props.setProperty(Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_NAME.toString(),
-				serviceName);
-		
-		
-		props.setProperty(Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_MAINCLASS.toString(),
-				serviceMainClass);
-		props.setProperty(
-				Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_COMMAND.toString(),
-				serviceCommand);
-		props.remove(Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE);
-		
-		return props;
-	}
 
 	/**
 	 * Fires up the <b><em>NFlight</em></b> system. This method initializes the
@@ -64,17 +28,17 @@ public class Boot {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		// setSecurityManager();
+		// BootProfile.setSecurityManager();
 		Properties props = null;
 
 		try {
 			if (args.length > 0) {
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 						"args : " + Arrays.toString(args));
-				if (args[0].startsWith("--")) {
+				if (args[0].startsWith(Profile.BOOT_OPTION_PREFIX)) {
 					// Settings specified as command line arguments
-					props = parseCMDLineArgs(args);
-					props = parseServiceSpecifiers(props);
+					props = BootProfile.parseCMDLineArgs(args);
+					props = BootProfile.parseServiceSpecifiers(props);
 				} else {
 					// Settings specified in a property file
 					props = PropertyFile.readPropertyFile(args[0]);
@@ -82,61 +46,68 @@ public class Boot {
 			} else {
 				// Settings specified in the default property file
 				props = PropertyFile
-						.readPropertyFile(Env.Properties.Boot.Constants.FILE_NAME_BOOT_PROPERTIES);
+						.readPropertyFile(Profile.BOOT_PROPERTIES_FILE);
 			}
 
-			PropertyLoader.setSystemProperties(props);
+			BootProfile p = new BootProfile(props);
 
-			String serviceName = System
-					.getProperty(Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_NAME
-							.toString());
-
-			String serviceClass = System
-					.getProperty(Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_MAINCLASS
-							.toString());
-
+			String className = p.getServiceMainClass();
 			ArrayList<Class<?>> parameterTypeList = new ArrayList<Class<?>>();
-			;
 			ArrayList<Object> initArgList = new ArrayList<Object>();
 
-			if (serviceName.equals(Env.Properties.Boot.ServiceName.server.toString())) {
-
-			} else if (serviceName
-					.equals(Env.Properties.Boot.ServiceName.client.toString())) {
+			if (Profile.BOOT_OPTION_SERVICE_MAINCLASS.contains(className)) {
+				Profile.BOOT_OPTION_SERVICE_MAINCLASS mainClass = Profile.BOOT_OPTION_SERVICE_MAINCLASS
+						.getValue(className);
+				switch (mainClass) {
+				case com_abreqadhabra_nflight_service_rmi_server_NFlightServerImpl:
+					
+					BootCommand command = new BootCommand();
+					
+					p.setBootCommand(System
+							.getProperty(Profile.BOOTCOMMAND_PROPERTIES.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
+									.toString()));
+					
+					String bootCommand = p.getBootCommand();
+					command.execute(bootCommand);
+					parameterTypeList.add(BootProfile.class);
+					initArgList.add(p);
+					break;
+				default:
+					break;
+				}
 
 			} else {
 				throw new NFlightBootException(
-						"No value specified for Service Name");
+						"No value specified for Service Main Class");
 			}
 
-			execute(serviceClass, parameterTypeList.toArray(new Class[] {}),
+			execute(className, parameterTypeList.toArray(new Class[] {}),
 					initArgList.toArray());
-			/*
-			 * properties = profile.getArgProperties(); if
-			 * (properties.getBooleanProperty(BootProfileImpl.DUMP_KEY, false))
-			 * { listProperties(System.out); }
-			 * 
-			 * if (properties.getBooleanProperty(BootProfileImpl.VERSION_KEY,
-			 * false)) { System.out.println(Runtime.getCopyrightNotice());
-			 * return; }
-			 * 
-			 * if (properties.getBooleanProperty(BootProfileImpl.HELP_KEY,
-			 * false)) { usage(System.out); return; }
-			 * 
-			 * if (properties.getProperty(Profile.MAIN_HOST) == null) { try {
-			 * properties.setProperty(Profile.MAIN_HOST, InetAddress
-			 * .getLocalHost().getHostName()); } catch (UnknownHostException
-			 * uhe) { System.out
-			 * .print("Unknown host exception in getLocalHost(): "); System.out
-			 * .println(
-			 * " please use '-host' and/or '-port' options to setup JADE host and port"
-			 * ); System.exit(1); } }
-			 * 
-			 * if (properties.getBooleanProperty(BootProfileImpl.CONF_KEY,
-			 * false)) { new BootGUI(this); if
-			 * (properties.getBooleanProperty(BootProfileImpl.DUMP_KEY, false))
-			 * { listProperties(System.out); } }
-			 */
+
+			// properties = profile.getArgProperties(); if
+			// (properties.getBooleanProperty(BootProfileImpl.DUMP_KEY, false))
+			// { listProperties(System.out); }
+			//
+			// if (properties.getBooleanProperty(BootProfileImpl.VERSION_KEY,
+			// false)) { System.out.println(Runtime.getCopyrightNotice());
+			// return; }
+			//
+			// if (properties.getBooleanProperty(BootProfileImpl.HELP_KEY,
+			// false)) { usage(System.out); return; }
+			//
+			// if (properties.getProperty(Profile.MAIN_HOST) == null) { try {
+			// properties.setProperty(Profile.MAIN_HOST, InetAddress
+			// .getLocalHost().getHostName()); } catch (UnknownHostException
+			// uhe) { System.out
+			// .print("Unknown host exception in getLocalHost(): "); System.out
+			// .println(
+			// " please use '-host' and/or '-port' options to setup JADE host and port"
+			// ); System.exit(1); } }
+			//
+			// if (properties.getBooleanProperty(BootProfileImpl.CONF_KEY,
+			// false)) { new BootGUI(this); if
+			// (properties.getBooleanProperty(BootProfileImpl.DUMP_KEY, false))
+			// { listProperties(System.out); } }
 
 		} catch (Exception e) {
 			StackTraceElement[] current = e.getStackTrace();
@@ -155,36 +126,12 @@ public class Boot {
 		}
 	}
 
-	public static void setSecurityManager() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-
-		System.setProperty(
-				Env.Properties.System.PropertyKey.JAVA_SECURITY_POLICY
-						.toString(),
-				BASE_LOCATION
-						+ Env.Properties.Boot.Constants.FILE_NAME_BOOT_POLICY
-								.toString());
-		LOGGER.logp(
-				Level.CONFIG,
-				THIS_CLAZZ.getName(),
-				METHOD_NAME,
-				Env.Properties.System.PropertyKey.JAVA_SECURITY_POLICY
-						+ "="
-						+ System.getProperty(Env.Properties.System.PropertyKey.JAVA_SECURITY_POLICY
-								.toString()));
-		if (System.getSecurityManager() == null) {
-			// System.setSecurityManager(new RMISecurityManager());
-			System.setSecurityManager(new SecurityManager());
-		}
-	}
-
-	private static void execute(final String name,
+	private static void execute(final String className,
 			final Class<?>[] parameterTypes, final Object[] initArgs)
 			throws Exception {
 		ClassLoader classLoader = THIS_CLAZZ.getClassLoader();
 		try {
-			Class<?> clazz = classLoader.loadClass(name);
+			Class<?> clazz = classLoader.loadClass(className);
 			Constructor<?> constructor = null;
 			if (parameterTypes.length != 0) {
 				constructor = clazz.getDeclaredConstructor(parameterTypes);
@@ -202,134 +149,6 @@ public class Boot {
 				| InvocationTargetException e) {
 			throw new NFlightBootException("Class loading error. ", e);
 		}
-	}
-
-	public static Properties parseCMDLineArgs(String[] args) throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-
-		Properties argsProps = new Properties();
-		try {
-			// an iterator for the command line tokens
-			Iterator<String> options = Arrays.asList(args).iterator();
-
-			// process each command line token
-			while (options.hasNext()) {
-				// get the next command line token
-				String key = (String) options.next();
-				String value = "true";
-				// handle long option --foo or --foo bar
-				if (key.startsWith("--")) {
-					key = stripLeadingHyphens(key);
-					if (key.equalsIgnoreCase(Env.Properties.Boot.Option.gui
-							.toString())) {
-						argsProps.setProperty(
-								Env.Properties.Boot.Option.gui.toString(),
-								value);
-					} else {
-						argsProps.setProperty(
-								Env.Properties.Boot.Option.gui.toString(),
-								"false");
-					}
-
-					if (key.equalsIgnoreCase(Env.Properties.Boot.Option.service
-							.toString())) {
-						value = (String) options.next();
-						if (checkNotLeadingHyphens(key, value)) {
-							argsProps
-									.setProperty(
-											Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE
-													.toString(), value);
-						}
-					} else if (key
-							.equalsIgnoreCase(Env.Properties.Boot.Option.host
-									.toString())) {
-						value = (String) options.next();
-						if (checkNotLeadingHyphens(key, value)) {
-							argsProps
-									.setProperty(
-											Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_HOST
-													.toString(), value);
-						}
-					} else if (key
-							.equalsIgnoreCase(Env.Properties.Boot.Option.port
-									.toString())) {
-						value = (String) options.next();
-						if (checkNotLeadingHyphens(key, value)) {
-							argsProps
-									.setProperty(
-											Env.Properties.Boot.PropertyKey.NFLIGHT_SERVICE_CORE_BOOT_OPTION_SERVICE_PORT
-													.toString(), value);
-						}
-					} else if (key
-							.equalsIgnoreCase(Env.Properties.Boot.Option.conf
-									.toString())) {
-
-						try {
-							value = (String) options.next();
-							if (checkNotLeadingHyphens(key, value)) {
-								argsProps.clear();
-								argsProps = PropertyFile
-										.readPropertyFile(value);
-								LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
-										METHOD_NAME,
-										"Command line arguments will be ignored. loading properties from file: "
-												+ value);
-								return argsProps;
-							}
-						} catch (NoSuchElementException nsee) {
-							throw new IllegalArgumentException(
-									"No value specified for property --" + key);
-						}
-					}
-					// Default handling for all other properties
-					else {
-						throw new IllegalArgumentException(
-								"No value specified for property --" + key);
-					}
-				} // Consistency check
-				else {
-					throw new IllegalArgumentException(
-							"No value specified for property --" + key);
-				}
-			}
-		} catch (Exception e) {
-			throw new NFlightBootException(
-					"Command line arguments format error. ", e);
-		}
-
-		return argsProps;
-	}
-
-	private static boolean checkNotLeadingHyphens(String key, String value) {
-		if (value.startsWith("--")) {
-			throw new IllegalArgumentException("No " + key
-					+ "name specified after \"--" + key + "\" option");
-		} else {
-			return true;
-		}
-	}
-
-	/**
-	 * Remove the hyphens from the begining of <code>str</code> and return the
-	 * new String.
-	 * 
-	 * @param str
-	 *            The string from which the hyphens should be removed.
-	 * 
-	 * @return the new String.
-	 */
-	private static String stripLeadingHyphens(String str) {
-		if (str == null) {
-			return null;
-		}
-		if (str.startsWith("--")) {
-			return str.substring(2, str.length());
-		} else if (str.startsWith("-")) {
-			return str.substring(1, str.length());
-		}
-
-		return str;
 	}
 
 	/**
