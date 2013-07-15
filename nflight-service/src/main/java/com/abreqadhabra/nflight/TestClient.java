@@ -38,7 +38,6 @@
 package com.abreqadhabra.nflight;
 
 import java.net.InetAddress;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.activation.ActivationException;
@@ -54,6 +53,9 @@ import com.abreqadhabra.nflight.service.rmi.server.RMIManager;
 
 public class TestClient {
 
+	private static final String BASE_LOCATION = TestClient.class
+			.getProtectionDomain().getCodeSource().getLocation().getFile();
+	
 	private TestClient() {
 	}
 
@@ -61,6 +63,12 @@ public class TestClient {
 
 		try {
 
+			String policy = "com/abreqadhabra/nflight/service/rmi/server/servant/activation/conf/activation.policy";
+			System.setProperty(Profile.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(), BASE_LOCATION + policy);
+			
+			if (System.getSecurityManager() == null) {
+				System.setSecurityManager(new SecurityManager());
+			}
 			String host = InetAddress.getLocalHost().getHostAddress();
 			int port = 9999;
 			Registry registry = RMIManager.getRegistry(host, port);
@@ -80,13 +88,12 @@ public class TestClient {
 			
 		//	String command = "rmid  -stop";		
 		//	String command = "rmid  -J-Djava.security.policy="+BASE_LOCATION+"com/abreqadhabra/nflight/service/core/boot/conf/boot.policy";
-			String command = System.getProperty(Profile.PROPERTIES_BOOTCOMMAND.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
-							.toString());
+			//String command = System.getProperty(Profile.PROPERTIES_BOOTCOMMAND.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS							.toString());
 			
-			System.out
+/*			System.out
 					.println(Profile.PROPERTIES_BOOTCOMMAND.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
 							.toString() + ": " + command);
-
+*/
 	//		new BootCommand().execute(command);
 			
 
@@ -94,25 +101,33 @@ public class TestClient {
 	//		BootCommand.execute(command);
 
 			String response = null;
-			
-			System.out.println( Arrays.asList(registry.list()));
-			 
+
+			System.out.println(Arrays.asList(registry.list()));
+
 			try {
 				NFlightService stub = (NFlightService) registry.lookup("rmi://"
 						+ host + ":" + port
 						+ "/UnicastRemoteObjectNFlightServiceImpl");
 				// registry.lookup("rmi://192.168.0.100:9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
 				response = stub.sayHello();
-				System.out.println("UnicastRemoteObjectNFlightServiceImpl response: " + response);
-			} catch (NotBoundException nbe) {
-				WrapperException.getStackTrace(nbe);
+				System.out
+						.println("UnicastRemoteObjectNFlightServiceImpl response: "
+								+ response);
+			} catch (Exception e) {
+				WrapperException.getStackTrace(e);
 			}
 
-			NFlightService stub2 = (NFlightService) registry.lookup("rmi://"
-					+ host + ":" + port
-					+ "/ActivatableNFlightServiceImpl");
-			response = stub2.sayHello();
-			System.out.println("ActivatableNFlightServiceImpl response: " + response);
+			try {
+				NFlightService stub2 = (NFlightService) registry
+						.lookup("rmi://" + host + ":" + port
+								+ "/ActivatableNFlightServiceImpl");
+				response = stub2.sayHello();
+				System.out.println("ActivatableNFlightServiceImpl response: "
+						+ response);
+			} catch (Exception e) {
+				WrapperException.getStackTrace(e);
+			}
+
 		} catch (Exception e) {
 			System.err.println("Client exception: " + e.toString());
 			e.printStackTrace();

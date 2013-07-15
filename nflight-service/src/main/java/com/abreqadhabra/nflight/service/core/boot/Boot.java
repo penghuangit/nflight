@@ -19,6 +19,7 @@ public class Boot {
 	private static final Class<Boot> THIS_CLAZZ = Boot.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
+
 	/**
 	 * Fires up the <b><em>NFlight</em></b> system. This method initializes the
 	 * Profile Manager and then starts the bootstrap process for the <B>
@@ -61,7 +62,7 @@ public class Boot {
 				switch (mainClass) {
 				case com_abreqadhabra_nflight_service_rmi_server_NFlightServerImpl:
 					
-
+					
 					parameterTypeList.add(BootProfile.class);
 					initArgList.add(p);
 					break;
@@ -119,6 +120,8 @@ public class Boot {
 		}
 	}
 
+
+	
 	private static void execute(final String className,
 			final Class<?>[] parameterTypes, final Object[] initArgs)
 			throws Exception {

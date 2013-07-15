@@ -66,7 +66,8 @@ public class RMIManager {
 
 		Registry _registry = null;
 		try {
-			_registry = LocateRegistry.getRegistry(host, port, socketFactory);
+//			_registry = LocateRegistry.getRegistry(host, port, socketFactory);
+			_registry = LocateRegistry.getRegistry(host, port);
 			LOGGER.logp(
 					Level.FINER,
 					THIS_CLAZZ.getName(),
@@ -75,8 +76,8 @@ public class RMIManager {
 							+ Arrays.toString(_registry.list()));
 		} catch (RemoteException re) {
 			try {
-				_registry = LocateRegistry.createRegistry(port, socketFactory,
-						socketFactory);
+				//_registry = LocateRegistry.createRegistry(port, socketFactory,socketFactory);
+				_registry = LocateRegistry.createRegistry(port);
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 						"New registry(using custom socket factories) is created and returned.");
 			} catch (RemoteException re1) {

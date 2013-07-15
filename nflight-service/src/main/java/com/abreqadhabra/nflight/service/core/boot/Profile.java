@@ -130,7 +130,7 @@ public abstract class Profile {
 
 	public static final String FILE_BOOTCOMMAND_PROPERTIES = "/com/abreqadhabra/nflight/service/core/boot/conf/bootcommand.properties";
 	public static final BOOTCOMMAND_OS BOOTCOMMAND_OS_DEFAULT = BOOTCOMMAND_OS.windows;
-	public static final int BOOTCOMMAND_SLEEPTIME_1_= 2000;
+	public static final int BOOTCOMMAND_SLEEPTIME_1= 2000;
 	public static final int BOOTCOMMAND_SLEEPTIME_2= 10000;
 	
 	public static enum BOOTCOMMAND_OS {
@@ -158,6 +158,10 @@ public abstract class Profile {
 	}
 	
 	public static final String FILE_ACTIVATION_PROPERTIES = "/com/abreqadhabra/nflight/service/rmi/server/servant/activation/conf/activation.properties";
+	
+	public static final String FILE_ACTIVATION_POLICY = "com/abreqadhabra/nflight/service/rmi/server/servant/activation/conf/activation.policy";
+	public static final String FILE_RMID_POLICY = "/com/abreqadhabra/nflight/service/rmi/server/servant/activation/conf/rmid.policy";
+
 	public static final String ACTIVATION_FILE_PREFIX = "file:";
 	
 	public static enum PROPERTIES_ACTIVATION {

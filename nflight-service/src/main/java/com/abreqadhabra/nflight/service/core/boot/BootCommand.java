@@ -109,6 +109,7 @@ public class BootCommand {
 			try {
 				Runtime rt = Runtime.getRuntime();
 				Process proc = rt.exec(command);
+				Thread.sleep(Profile.BOOTCOMMAND_SLEEPTIME_1);
 				String errorString = IOStream.convertStreamToString(proc
 						.getErrorStream());
 				String outputString = IOStream.convertStreamToString(proc
@@ -134,14 +135,14 @@ public class BootCommand {
 					throw new NFlightBootCommandException(command
 							+ ": subprocess abnormal termination :" + exitValue);
 				}
-				Thread.sleep(Profile.BOOTCOMMAND_SLEEPTIME_2);
+
 			} catch (InterruptedException e) {
 				StackTraceElement[] current = e.getStackTrace();
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(), "이 오류는 발생하지 않습니다.");
 			} catch (IOException ioe) {
 				throw new NFlightBootCommandException(
-						"Can't boot background process.Command :" + command,
+						"Can't boot background process.Command: " + command,
 						ioe);
 			}
 		} else {

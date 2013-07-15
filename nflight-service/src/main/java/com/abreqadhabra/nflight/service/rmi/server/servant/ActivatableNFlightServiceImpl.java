@@ -1,30 +1,21 @@
 package com.abreqadhabra.nflight.service.rmi.server.servant;
 
 import java.rmi.MarshalledObject;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.activation.Activatable;
 import java.rmi.activation.ActivationID;
 
 import com.abreqadhabra.nflight.service.core.NFlightService;
 
-public class ActivatableNFlightServiceImpl extends Activatable implements Remote, NFlightService {
+public class ActivatableNFlightServiceImpl extends Activatable implements  NFlightService {
 	
-    /**
-     * Constructs an <code>ExtendsActivatable</code> instance with
-     * the specified activation ID and data.  This constructor is
-     * called during activation to construct the object.
-     **/
-    public ActivatableNFlightServiceImpl(ActivationID id, MarshalledObject<?> data) 
-	throws RemoteException
-    {
-	/*
-	 * Export the activatable object on an anonymous port.
-	 */
-	super(id, 0);
-    }
-	
-
+	public ActivatableNFlightServiceImpl(ActivationID id, MarshalledObject data)
+			throws RemoteException {
+		// Register the object with the activation
+		// system then export it on an
+		// anonymous port
+		super(id, 0);
+	}
 
 	private static final long serialVersionUID = 1L;
 

@@ -55,29 +55,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>rmic-maven-plugin</artifactId>
-        <version>1.2.1</version>
-        <executions>
-          <execution>
-            <id>rmic-process-classes</id>
-            <goals>
-              <goal>rmic</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>
-                  <includes>
-                    <include>**/ActivatableNFlightServiceImp.class</include>
-                  </includes>
-                  <iiop>true</iiop>
-                </source>
-              </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
 		</plugins>
 	</build>
 	<dependencies>
