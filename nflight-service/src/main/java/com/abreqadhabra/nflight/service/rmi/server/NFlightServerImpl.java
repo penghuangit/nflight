@@ -28,20 +28,20 @@ public class NFlightServerImpl implements
 	public NFlightServerImpl(BootProfile profile) throws Exception {
 		this.profile = profile;
 		init();
-		execute();
 	}
 
 	private void init() throws Exception {
 		this.rman = new RMIManager();
-	}
-
-	private void execute() throws Exception {
+		
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		String boundName = this.rman
-				.getBoundName(UnicastRemoteObjectNFlightServiceImpl
-						.getObjName());
+				.getBoundName(UnicastRemoteObjectNFlightServiceImpl.class.getSimpleName());
+		
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				"boundName: " + boundName);
+
 		
 		boolean _isActivated = this.rman.isActivatedRegistry(boundName);
 
@@ -93,6 +93,17 @@ public class NFlightServerImpl implements
 
 	@Override
 	public void startup() throws Exception {
+		startupUnicastRemoteObjectService();
+		startupActivatableService();
+	}
+
+	private void startupActivatableService() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void startupUnicastRemoteObjectService() throws Exception {
+
 		try {
 			// NFlightService uniServant = new
 			// UnicastRemoteObjectNFlightServiceImpl();
@@ -103,7 +114,7 @@ public class NFlightServerImpl implements
 			String boundName = this.rman
 					.getBoundName(UnicastRemoteObjectNFlightServiceImpl
 							.getObjName());
-			this.rman.rebind(boundName, obj);			
+			this.rman.rebind(boundName, obj);
 		} catch (Exception e) {
 			throw e;
 		}

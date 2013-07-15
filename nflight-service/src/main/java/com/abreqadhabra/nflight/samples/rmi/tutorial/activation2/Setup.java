@@ -37,8 +37,14 @@
  */
 package com.abreqadhabra.nflight.samples.rmi.tutorial.activation2; 
 
-import java.rmi.*;
-import java.rmi.activation.*;
+import java.rmi.MarshalledObject;
+import java.rmi.Naming;
+import java.rmi.RMISecurityManager;
+import java.rmi.activation.Activatable;
+import java.rmi.activation.ActivationDesc;
+import java.rmi.activation.ActivationGroup;
+import java.rmi.activation.ActivationGroupDesc;
+import java.rmi.activation.ActivationGroupID;
 import java.util.Properties;
 
 public class Setup {

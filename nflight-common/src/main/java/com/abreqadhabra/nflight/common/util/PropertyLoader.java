@@ -52,7 +52,7 @@ public class PropertyLoader
 	        Arrays.sort(keys);
 	        StringBuffer sb = new StringBuffer();
 	        for(String key : keys) {          	
-	        	if(key.startsWith("nflight.") | key.startsWith("java.")  ){
+	        	if(key.startsWith("nflight.") | key.startsWith("java.") | key.startsWith("sun.")   ){
 	            sb.append("\n" +key + " : " + systemProps.get(key)  );
 	        	}
 	        } 

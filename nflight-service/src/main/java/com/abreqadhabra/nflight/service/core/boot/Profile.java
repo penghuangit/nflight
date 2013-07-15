@@ -10,7 +10,9 @@ public abstract class Profile {
 	public static enum PROPERTIES_SYSTEM {
 		
 		JAVA_SECURITY_POLICY, 
-		JAVA_RMI_SERVER_CODEBASE;
+		JAVA_RMI_SERVER_CODEBASE,
+		SUN_JNU_ENCODING,
+		UNKNOWN;
 
 		private String lowercase = null; // property name in lowercase
 		/**
@@ -155,17 +157,13 @@ public abstract class Profile {
 		}
 	}
 	
-		public static final String FILE_SETUP_PROPERTIES = "/com/abreqadhabra/nflight/service/rmi/server/servant/activation/conf/setup.properties";
-
-	public static enum PROPERTIES_SETUP {
-
-		NFLIGHT_ACTIVATION_SETUP_CODEBASE,
-		NFLIGHT_ACTIVATION_IMPL_CODEBASE,
-		NFLIGHT_ACTIVATION_IMPL_CLASS,
-		NFLIGHT_ACTIVATION_NAME,
-		NFLIGHT_ACTIVATION_FILE,
-		NFLIGHT_ACTIVATION_POLICY;
+	public static final String FILE_ACTIVATION_PROPERTIES = "/com/abreqadhabra/nflight/service/rmi/server/servant/activation/conf/activation.properties";
+	public static final String ACTIVATION_FILE_PREFIX = "file:";
 	
+	public static enum PROPERTIES_ACTIVATION {
+
+		NFLIGHT_SERVANT_ACTIVATION_SETUP_CODEBASE, NFLIGHT_SERVANT_ACTIVATION_IMPL_CODEBASE, NFLIGHT_SERVANT_ACTIVATION_IMPL_CLASS, NFLIGHT_SERVANT_ACTIVATION_NAME, NFLIGHT_SERVANT_ACTIVATION_FILE, NFLIGHT_SERVANT_ACTIVATION_POLICY;
+
 		private String lowercase = null; // property name in lowercase
 
 		/**
@@ -173,8 +171,8 @@ public abstract class Profile {
 		 */
 		public String toString() {
 			if (lowercase == null) {
-				lowercase = name().toLowerCase(java.util.Locale.US)
-						.replace("_", ".");
+				lowercase = name().toLowerCase(java.util.Locale.US).replace(
+						"_", ".");
 			}
 			return lowercase;
 		}

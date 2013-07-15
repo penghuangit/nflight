@@ -196,8 +196,7 @@ public class RMIManager {
 	}
 
 	public String getBoundName(String objName) {
-		return "rmi://" + this.host + ":" + this.port + "/"
-				+ Profile.BOOT_OPTION_PREFIX + objName;
+		return "rmi://" + this.host + ":" + this.port + "/" + objName;
 	}
 
 	public Remote getUnicastRemoteObjectNFlightServiceImpl() throws Exception {

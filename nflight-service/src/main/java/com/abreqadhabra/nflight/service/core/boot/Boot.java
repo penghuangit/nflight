@@ -61,14 +61,7 @@ public class Boot {
 				switch (mainClass) {
 				case com_abreqadhabra_nflight_service_rmi_server_NFlightServerImpl:
 					
-					BootCommand command = new BootCommand();
-					
-					p.setBootCommand(System
-							.getProperty(Profile.PROPERTIES_BOOTCOMMAND.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
-									.toString()));
-					
-					String bootCommand = p.getBootCommand();
-					command.execute(bootCommand);
+
 					parameterTypeList.add(BootProfile.class);
 					initArgList.add(p);
 					break;

@@ -38,13 +38,19 @@
 package com.abreqadhabra.nflight;
 
 import java.net.InetAddress;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.activation.ActivationException;
+import java.rmi.activation.ActivationGroup;
+import java.rmi.activation.ActivationSystem;
 import java.rmi.registry.Registry;
 import java.util.Arrays;
 
+import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.service.core.NFlightService;
 import com.abreqadhabra.nflight.service.core.boot.Profile;
 import com.abreqadhabra.nflight.service.rmi.server.RMIManager;
-import com.abreqadhabra.nflight.service.rmi.server.scoket.SecureSocketFactory;
 
 public class TestClient {
 
@@ -57,11 +63,13 @@ public class TestClient {
 
 			String host = InetAddress.getLocalHost().getHostAddress();
 			int port = 9999;
-			SecureSocketFactory socketFactory = new SecureSocketFactory();
 			Registry registry = RMIManager.getRegistry(host, port);
 			// Registry registry = LocateRegistry.getRegistry();
 			System.out.println(Arrays.toString(registry.list()));
 
+			
+			getActivationSystem();
+			
 			/*String command = System
 					.getProperty(Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
 							.toString());
@@ -85,21 +93,37 @@ public class TestClient {
 			
 	//		BootCommand.execute(command);
 
-			NFlightService stub = (NFlightService) registry.lookup("rmi://"
-					+ host
-					+ ":9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
-			// registry.lookup("rmi://192.168.0.100:9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
-			String response = stub.sayHello();
-			System.out.println("response: " + response);
+			String response = null;
 			
+			System.out.println( Arrays.asList(registry.list()));
+			 
+			try {
+				NFlightService stub = (NFlightService) registry.lookup("rmi://"
+						+ host + ":" + port
+						+ "/UnicastRemoteObjectNFlightServiceImpl");
+				// registry.lookup("rmi://192.168.0.100:9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
+				response = stub.sayHello();
+				System.out.println("UnicastRemoteObjectNFlightServiceImpl response: " + response);
+			} catch (NotBoundException nbe) {
+				WrapperException.getStackTrace(nbe);
+			}
+
 			NFlightService stub2 = (NFlightService) registry.lookup("rmi://"
-					+ host
-					+ ":9999/NFlight/ActivatableNFlightServiceImpl");
+					+ host + ":" + port
+					+ "/ActivatableNFlightServiceImpl");
 			response = stub2.sayHello();
-			System.out.println("response: " + response);
+			System.out.println("ActivatableNFlightServiceImpl response: " + response);
 		} catch (Exception e) {
 			System.err.println("Client exception: " + e.toString());
 			e.printStackTrace();
 		}
+	}
+
+	public static void getActivationSystem() throws ActivationException, RemoteException {
+
+
+	        ActivationSystem system = ActivationGroup.getSystem();
+	        System.err.println("ActivationSystem = " + system);
+
 	}
 }

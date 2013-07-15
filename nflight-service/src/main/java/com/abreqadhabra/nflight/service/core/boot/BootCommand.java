@@ -8,10 +8,10 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.common.util.IOStream;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
 import com.abreqadhabra.nflight.service.core.boot.exception.NFlightBootCommandException;
+import com.abreqadhabra.nflight.service.core.util.IOStream;
 
 public class BootCommand {
 
@@ -102,7 +102,9 @@ public class BootCommand {
 	public void execute(String command) throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
-
+		LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME, "command: "
+				+ command);
+		
 		if (command != null) {
 			try {
 				Runtime rt = Runtime.getRuntime();
