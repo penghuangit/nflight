@@ -11,7 +11,7 @@ class connectionClient3 {
 			InetAddress serverHost = InetAddress.getByName(args[0]);
 			int serverPortNum = Integer.parseInt(args[1]);
 			Socket clientSocket = new Socket(serverHost, serverPortNum);
-		//	EmployeeData empData = new EmployeeData();
+			EmployeeData empData = new EmployeeData();
 			Scanner input = new Scanner(System.in);
 			System.out.print("Enter employee id: ");
 			int id = input.nextInt();
@@ -19,12 +19,12 @@ class connectionClient3 {
 			String name = input.next();
 			System.out.print("Enter employee salary: ");
 			double salary = input.nextDouble();
-		//	empData.setID(id);
-		//	empData.setName(name);
-		//	empData.setSalary(salary);
+			empData.setID(id);
+			empData.setName(name);
+			empData.setSalary(salary);
 			ObjectOutputStream oos = new ObjectOutputStream(
 					clientSocket.getOutputStream());
-		//	oos.writeObject(empData);
+			oos.writeObject(empData);
 			oos.flush();
 			clientSocket.close();
 		} catch (Exception e) {
