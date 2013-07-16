@@ -9,10 +9,14 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.service.core.NFService;
 
-class ServerSockwtThread extends Thread {
+public class ServerSockwtThread extends Thread {
+	private static final Class<ServerSockwtThread> THIS_CLAZZ = ServerSockwtThread.class;
+	private Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	protected Socket socket;
 	protected NFService service;
@@ -114,4 +118,4 @@ class ServerSockwtThread extends Thread {
 		}
 	}
 
-}// class ServerThread
+}

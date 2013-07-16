@@ -121,7 +121,8 @@ public class NFServerRMIImpl implements NFServer {
 
 		PropertyLoader.setSystemProperties(_props);
 
-		String securityPolicy = bootProfile.getCodeBase() + Profile.FILE_ACTIVATION_POLICY;
+		String securityPolicy = bootProfile.getCodeBase()
+				+ Profile.FILE_ACTIVATION_POLICY;
 		System.out.println(securityPolicy);
 
 		System.setProperty(
@@ -194,8 +195,7 @@ public class NFServerRMIImpl implements NFServer {
 			Remote obj = this.rman.getUnicastRemoteObjectNFlightServiceImpl();
 			// Remote obj = this.rman.getActivatableNFlightServiceImpl();
 			String boundName = this.rman
-					.getBoundName(NFServiceUnicastRemoteObjectImpl
-							.getObjName());
+					.getBoundName(NFServiceUnicastRemoteObjectImpl.getObjName());
 			this.rman.rebind(boundName, obj);
 		} catch (Exception e) {
 			throw e;
@@ -206,8 +206,7 @@ public class NFServerRMIImpl implements NFServer {
 	public void shutdown() throws Exception {
 		try {
 			String boundName = this.rman
-					.getBoundName(NFServiceUnicastRemoteObjectImpl
-							.getObjName());
+					.getBoundName(NFServiceUnicastRemoteObjectImpl.getObjName());
 			rman.unbind(boundName);
 		} catch (Exception e) {
 			throw e;
@@ -220,8 +219,7 @@ public class NFServerRMIImpl implements NFServer {
 				.getMethodName();
 
 		String boundName = this.rman
-				.getBoundName(NFServiceUnicastRemoteObjectImpl
-						.getObjName());
+				.getBoundName(NFServiceUnicastRemoteObjectImpl.getObjName());
 
 		NFService service = (NFService) this.rman.lookup(boundName);
 		boolean _isRunning = false;
