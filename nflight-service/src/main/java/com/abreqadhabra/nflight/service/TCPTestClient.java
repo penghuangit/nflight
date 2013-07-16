@@ -24,7 +24,7 @@ public class TCPTestClient {
 	}
 
 	public TCPTestClient(String url) throws Exception {
-		this(url, 6666);
+		this(url, 9999);
 	}
 
 	public TCPTestClient(String url, int port) throws Exception {
@@ -34,7 +34,7 @@ public class TCPTestClient {
 
 	public synchronized void connect(String url, int port) {
 		if (url == null | port == 0) {
-			url = "127.0.0.1";
+			url = "localhost";
 			port = 6666;
 		}
 		if (clientSocket == null) {

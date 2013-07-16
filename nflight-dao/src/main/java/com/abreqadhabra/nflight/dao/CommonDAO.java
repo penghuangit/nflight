@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.exception.NFlightUnexpectedException;
+import com.abreqadhabra.nflight.common.exception.NFUnexpectedException;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.dao.exception.NFlightDAOException;
+import com.abreqadhabra.nflight.dao.exception.NFDAOException;
 import com.abreqadhabra.nflight.dao.util.ResultSetBeanUtil;
 
 public class CommonDAO {
@@ -62,13 +62,13 @@ public class CommonDAO {
 					jdbcPassword);
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException | SQLException e) {
-			throw new NFlightDAOException(e)
+			throw new NFDAOException(e)
 					.addContextValue("jdbcDriver", jdbcDriver)
 					.addContextValue("jdbcURL", jdbcURL)
 					.addContextValue("jdbcUser", jdbcUser)
 					.addContextValue("jdbcPassword", jdbcPassword);
 		} catch (Exception e) {
-			throw new NFlightUnexpectedException(e);
+			throw new NFUnexpectedException(e);
 		}
 
 		return connection;
@@ -99,10 +99,10 @@ public class CommonDAO {
 			}
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new NFlightDAOException(e).addContextValue("sql", sql)
+			throw new NFDAOException(e).addContextValue("sql", sql)
 					.addContextValue("sqlParams", Arrays.toString(sqlParams));
 		} catch (Exception e) {
-			throw new NFlightUnexpectedException(e);
+			throw new NFUnexpectedException(e);
 		} finally {
 			closeAll(connection, preparedStatement);
 		}
@@ -133,11 +133,11 @@ public class CommonDAO {
 			// fetch the results
 			results = fetchMultiResults(resultSet, type);
 		} catch (SQLException e) {
-			throw new NFlightDAOException(e).addContextValue("sql", sql)
+			throw new NFDAOException(e).addContextValue("sql", sql)
 					.addContextValue("sqlParams", Arrays.toString(sqlParams))
 					.addContextValue("type", type.getCanonicalName());
 		} catch (Exception e) {
-			throw new NFlightUnexpectedException(e);
+			throw new NFUnexpectedException(e);
 		} finally {
 			closeAll(connection, preparedStatement);
 		}
@@ -181,11 +181,11 @@ public class CommonDAO {
 				results.add(ResultSetBeanUtil.populateDTO(resultSet, type));
 			}
 		} catch (SQLException e) {
-			throw new NFlightDAOException(e)
+			throw new NFDAOException(e)
 					.addContextValue("results", results).addContextValue(
 							"type", type.getCanonicalName());
 		} catch (Exception e) {
-			throw new NFlightUnexpectedException(e);
+			throw new NFUnexpectedException(e);
 		}
 		return results;
 	}
@@ -194,10 +194,10 @@ public class CommonDAO {
 		try {
 			connection.setAutoCommit(autoCommit);
 		} catch (SQLException e) {
-			throw new NFlightDAOException(e).addContextValue("autoCommit",
+			throw new NFDAOException(e).addContextValue("autoCommit",
 					autoCommit);
 		} catch (Exception e) {
-			throw new NFlightUnexpectedException(e);
+			throw new NFUnexpectedException(e);
 		}
 	}
 
@@ -205,9 +205,9 @@ public class CommonDAO {
 		try {
 			connection.commit();
 		} catch (SQLException e) {
-			throw new NFlightDAOException(e);
+			throw new NFDAOException(e);
 		} catch (Exception e) {
-			throw new NFlightUnexpectedException(e);
+			throw new NFUnexpectedException(e);
 		}
 	}
 
@@ -215,9 +215,9 @@ public class CommonDAO {
 		try {
 			connection.rollback();
 		} catch (SQLException e) {
-			throw new NFlightDAOException(e);
+			throw new NFDAOException(e);
 		} catch (Exception e) {
-			throw new NFlightUnexpectedException(e);
+			throw new NFUnexpectedException(e);
 		}
 	}
 
@@ -225,9 +225,9 @@ public class CommonDAO {
 		try {
 			conn.close();
 		} catch (SQLException e) {
-			throw new NFlightDAOException(e);
+			throw new NFDAOException(e);
 		} catch (Exception e) {
-			throw new NFlightUnexpectedException(e);
+			throw new NFUnexpectedException(e);
 		}
 	}
 
@@ -235,9 +235,9 @@ public class CommonDAO {
 		try {
 			stmt.close();
 		} catch (SQLException e) {
-			throw new NFlightDAOException(e);
+			throw new NFDAOException(e);
 		} catch (Exception e) {
-			throw new NFlightUnexpectedException(e);
+			throw new NFUnexpectedException(e);
 		}
 	}
 
@@ -245,9 +245,9 @@ public class CommonDAO {
 		try {
 			rs.close();
 		} catch (SQLException e) {
-			throw new NFlightDAOException(e);
+			throw new NFDAOException(e);
 		} catch (Exception e) {
-			throw new NFlightUnexpectedException(e);
+			throw new NFUnexpectedException(e);
 		}
 	}
 
@@ -258,9 +258,9 @@ public class CommonDAO {
 			statement.close();
 			resultSet.close();
 		} catch (SQLException e) {
-			throw new NFlightDAOException(e);
+			throw new NFDAOException(e);
 		} catch (Exception e) {
-			throw new NFlightUnexpectedException(e);
+			throw new NFUnexpectedException(e);
 		}
 	}
 
@@ -270,9 +270,9 @@ public class CommonDAO {
 			connection.close();
 			statement.close();
 		} catch (SQLException e) {
-			throw new NFlightDAOException(e);
+			throw new NFDAOException(e);
 		} catch (Exception e) {
-			throw new NFlightUnexpectedException(e);
+			throw new NFUnexpectedException(e);
 		}
 	}
 

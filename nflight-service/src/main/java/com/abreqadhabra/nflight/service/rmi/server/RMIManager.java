@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.exception.NFlightUnexpectedException;
+import com.abreqadhabra.nflight.common.exception.NFUnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.service.core.boot.Profile;
-import com.abreqadhabra.nflight.service.rmi.server.exception.NFlightRemoteException;
+import com.abreqadhabra.nflight.service.rmi.server.exception.NFRemoteException;
 import com.abreqadhabra.nflight.service.rmi.server.scoket.SecureSocketFactory;
-import com.abreqadhabra.nflight.service.rmi.server.servant.UnicastRemoteObjectNFlightServiceImpl;
+import com.abreqadhabra.nflight.service.rmi.server.servant.NFServiceUnicastRemoteObjectImpl;
 
 public class RMIManager {
 
@@ -81,7 +81,7 @@ public class RMIManager {
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 						"New registry(using custom socket factories) is created and returned.");
 			} catch (RemoteException re1) {
-				throw new NFlightRemoteException(
+				throw new NFRemoteException(
 						"Local RMI Registry creation failure", re1)
 						.addContextValue("host", host).addContextValue("port",
 								port);
@@ -103,7 +103,7 @@ public class RMIManager {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"Found " + boundNameList.size() + " registiries");
 		} catch (RemoteException e) {
-			throw new NFlightRemoteException(
+			throw new NFRemoteException(
 					"Cannot connect to RMI registry: " + host + ":"
 							+ Integer.toBinaryString(port), e);
 		}
@@ -117,7 +117,7 @@ public class RMIManager {
 		try {
 			_obj = registry.lookup(boundName);
 		} catch (RemoteException re) {
-			throw new NFlightRemoteException(
+			throw new NFRemoteException(
 					"Exception occured during connecting Remote Object.", re)
 					.addContextValue("boundName", boundName);
 		} catch (NotBoundException e) {
@@ -143,7 +143,7 @@ public class RMIManager {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"RMIServerImpl bound in registry: " + name);
 		} catch (RemoteException e) {
-			throw new NFlightRemoteException(
+			throw new NFRemoteException(
 					"Cannot bound to Remote Object: " + name, e);
 		}
 	}
@@ -160,10 +160,10 @@ public class RMIManager {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"Remove the RMI remote object from the RMI registry");
 		} catch (RemoteException re) {
-			throw new NFlightRemoteException(
+			throw new NFRemoteException(
 					"Remote communication with the registry failed", re);
 		} catch (NotBoundException nbe) {
-			throw new NFlightUnexpectedException(name
+			throw new NFUnexpectedException(name
 					+ " is not currently bound", nbe);
 		}
 	}
@@ -202,14 +202,14 @@ public class RMIManager {
 
 	public Remote getUnicastRemoteObjectNFlightServiceImpl() throws Exception {
 		//Remote _obj = new UnicastRemoteObjectNFlightServiceImpl(0,socketFactory, socketFactory);
-		Remote _obj = (Remote) new UnicastRemoteObjectNFlightServiceImpl();
+		Remote _obj = (Remote) new NFServiceUnicastRemoteObjectImpl();
 		try {
 			// Create remote object and export it to
 			// use custom secure socket
 			//_obj = UnicastRemoteObject.exportObject(_obj, 0, socketFactory, socketFactory);
 			_obj = UnicastRemoteObject.toStub(_obj);
 		} catch (RemoteException e) {
-			throw new NFlightRemoteException("Cannot export to Remote Object: "
+			throw new NFRemoteException("Cannot export to Remote Object: "
 					+ _obj.getClass().getName(), e);
 		}
 

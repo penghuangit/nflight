@@ -1,14 +1,11 @@
-package com.abreqadhabra.nflight.samples.data.exception;
-
-import com.abreqadhabra.nflight.common.exception.WrapperException;
-
+package com.abreqadhabra.nflight.common.exception;
 
 /**
  * <p>
- * [개 요] DB Server 공통 기본 예외클래스
+ * [개 요] 시스템공통 기본 예외클래스
  * </p>
  * <p>
- * [상 세] WrapperException을 상속받은 DAO 공통  예외클래스
+ * [상 세] CommonException을 상속받은 시스템공통 기본 예외클래스
  * </p>
  * <p>
  * [비 고]
@@ -24,7 +21,7 @@ import com.abreqadhabra.nflight.common.exception.WrapperException;
  * @since STEP1
  * @see WrapperException
  */
-public class NFlightDBServerException extends WrapperException {
+public class NFSystemException extends WrapperException {
 
     /**
      * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정
@@ -36,21 +33,21 @@ public class NFlightDBServerException extends WrapperException {
      * 
      * @since STEP1
      */
-    private static final String ERROR_ID = "NF000002";
+    private static final String ERROR_ID = "NF000000";
 
     /**
      * 메시지ID
      * 
      * @since STEP1
      */
-    private static final String MESSAGE_ID = "CE000002";
+    private static final String MESSAGE_ID = "CE000000";
 
     /**
      * 에러메시지
      * 
      * @since STEP1
      */
-    private static final String MESSAGE = "데이터베이스 서버 실행중에 예기치 않은 오류가 발생했습니다.";
+    private static final String MESSAGE = "예기치 않은 오류가 발생했습니다.";
 
     /**
      * <p>
@@ -67,7 +64,7 @@ public class NFlightDBServerException extends WrapperException {
      *            상세 메시지
      * @since STEP1
      */
-    public NFlightDBServerException(String message) {
+    public NFSystemException(String message) {
 	super(message);
 
 	// NFlightException의 에러ID를 설정합니다.
@@ -95,7 +92,7 @@ public class NFlightDBServerException extends WrapperException {
      *            자식 예외
      * @since STEP1
      */
-    public NFlightDBServerException(String message, Throwable cause) {
+    public NFSystemException(String message, Throwable cause) {
 	super(message, cause);
 
 	// NFlightException의 에러ID를 설정합니다.
@@ -120,7 +117,7 @@ public class NFlightDBServerException extends WrapperException {
      *            자식 예외
      * @since STEP1
      */
-    public NFlightDBServerException(Throwable cause) {
+    public NFSystemException(Throwable cause) {
 	super(MESSAGE, cause);
 
 	// NFlightException의 에러ID를 설정합니다.

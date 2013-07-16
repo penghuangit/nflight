@@ -11,8 +11,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.exception.NFlightPropertyException;
-import com.abreqadhabra.nflight.common.exception.NFlightSystemException;
+import com.abreqadhabra.nflight.common.exception.NFPropertyException;
+import com.abreqadhabra.nflight.common.exception.NFSystemException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class PropertyFile {
@@ -99,12 +99,12 @@ public class PropertyFile {
 				properties.load(is);
 				is.close();
 			} else {
-				throw new NFlightPropertyException("Can't read property file")
+				throw new NFPropertyException("Can't read property file")
 						.addContextValue("fileName", fileName);
 			}
 			// properties.load(ClassLoader.getSystemResourceAsStream(fileName));
 		} catch (IOException e) {
-			throw new NFlightSystemException("Can't load properties: ", e)
+			throw new NFSystemException("Can't load properties: ", e)
 					.addContextValue("fileName", fileName);
 		}
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,

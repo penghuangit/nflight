@@ -16,10 +16,10 @@ import java.util.logging.Logger;
 
 import org.apache.derby.drda.NetworkServerControl;
 
-import com.abreqadhabra.nflight.common.exception.NFlightUnexpectedException;
+import com.abreqadhabra.nflight.common.exception.NFUnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.samples.data.bin.JavaDBServer;
-import com.abreqadhabra.nflight.samples.data.exception.NFlightDBServerException;
+import com.abreqadhabra.nflight.samples.data.exception.NFDataServerException;
 
 public class JavaDBServerControl {
 
@@ -241,12 +241,12 @@ public class JavaDBServerControl {
 		try {
 			connection = DriverManager.getConnection(url, properties);
 		} catch (SQLException e) {
-			throw new NFlightDBServerException(e)
+			throw new NFDataServerException(e)
 					.addContextValue("Connected to database",
 							STRING_DATABASE_NAME).addContextValue("url", url)
 					.addContextValue("properties", properties);
 		} catch (Exception e) {
-			throw new NFlightUnexpectedException(e);
+			throw new NFUnexpectedException(e);
 		}
 
 		// We want to control transactions manually. Autocommit is on by

@@ -12,7 +12,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.IOStream;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
-import com.abreqadhabra.nflight.service.core.boot.exception.NFlightBootException;
+import com.abreqadhabra.nflight.service.core.boot.exception.NFBootException;
 
 public class BootProfile extends Profile {
 
@@ -22,6 +22,7 @@ public class BootProfile extends Profile {
 	private String serviceMainClass;
 	private String serviceCommand;
 	private String codeBase; 
+	private int servicePort; 
 
 	public BootProfile(Properties props) {
 
@@ -37,11 +38,24 @@ public class BootProfile extends Profile {
 						.toString()));
 
 		this.setCodeBase(IOStream.getCodebase(serviceMainClass));
+
+		this.setServicePort(Integer.parseInt(System
+				.getProperty(Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_PORT
+						.toString())));
+		
 		
 		// this.setBootCommand(System
 		// .getProperty(Profile.BOOTCOMMAND_PROPERTIES.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
 		// .toString()));
 
+	}
+
+	public int getServicePort() {
+		return this.servicePort;
+	}
+
+	public void setServicePort(int servicePort) {
+		this.servicePort = servicePort;
 	}
 
 	public String getCodeBase() {
@@ -136,7 +150,7 @@ public class BootProfile extends Profile {
 				}
 			}
 		} catch (Exception e) {
-			throw new NFlightBootException(
+			throw new NFBootException(
 					"Command line arguments format error. ", e);
 		}
 

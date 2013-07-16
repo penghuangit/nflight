@@ -2,9 +2,9 @@ package com.abreqadhabra.nflight.service.socket.server;
 
 import java.rmi.RemoteException;
 
-import com.abreqadhabra.nflight.service.core.NFlightService;
+import com.abreqadhabra.nflight.service.core.NFService;
 
-public class NFlightServiceImpl implements NFlightService {
+public class NFServiceSocketImpl implements NFService {
 
 	@Override
 	public boolean isRunning() throws RemoteException {

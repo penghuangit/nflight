@@ -5,11 +5,11 @@ import java.rmi.RemoteException;
 import java.rmi.activation.Activatable;
 import java.rmi.activation.ActivationID;
 
-import com.abreqadhabra.nflight.service.core.NFlightService;
+import com.abreqadhabra.nflight.service.core.NFService;
 
-public class ActivatableNFlightServiceImpl extends Activatable implements  NFlightService {
+public class NFServiceRMIActivatableImpl extends Activatable implements  NFService {
 	
-	public ActivatableNFlightServiceImpl(ActivationID id, MarshalledObject data)
+	public NFServiceRMIActivatableImpl(ActivationID id, MarshalledObject data)
 			throws RemoteException {
 		// Register the object with the activation
 		// system then export it on an

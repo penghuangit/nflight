@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
-import com.abreqadhabra.nflight.service.core.boot.exception.NFlightBootException;
+import com.abreqadhabra.nflight.service.core.boot.exception.NFBootException;
 
 public class Boot {
 	private static final Class<Boot> THIS_CLAZZ = Boot.class;
@@ -60,8 +60,8 @@ public class Boot {
 				Profile.BOOT_OPTION_SERVICE_MAINCLASS mainClass = Profile.BOOT_OPTION_SERVICE_MAINCLASS
 						.getValue(className);
 				switch (mainClass) {
-				case com_abreqadhabra_nflight_service_rmi_server_NFlightRMIServerImpl:
-				case com_abreqadhabra_nflight_service_socket_server_NFlightSocketServerImpl:
+				case com_abreqadhabra_nflight_service_rmi_server_NFServerRMIImpl:
+				case com_abreqadhabra_nflight_service_socket_server_NFServerSocketImpl:
 					parameterTypeList.add(BootProfile.class);
 					initArgList.add(p);
 					break;
@@ -70,7 +70,7 @@ public class Boot {
 				}
 
 			} else {
-				throw new NFlightBootException(
+				throw new NFBootException(
 						"No value specified for Service Main Class");
 			}
 
@@ -142,7 +142,7 @@ public class Boot {
 				| SecurityException | InstantiationException
 				| IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
-			throw new NFlightBootException("Class loading error. ", e);
+			throw new NFBootException("Class loading error. ", e);
 		}
 	}
 

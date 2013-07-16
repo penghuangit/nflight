@@ -20,17 +20,17 @@ import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
-import com.abreqadhabra.nflight.service.core.NFlightService;
+import com.abreqadhabra.nflight.service.core.NFService;
 import com.abreqadhabra.nflight.service.core.boot.BootProfile;
 import com.abreqadhabra.nflight.service.core.boot.Profile;
-import com.abreqadhabra.nflight.service.core.server.NFlightServer;
-import com.abreqadhabra.nflight.service.rmi.server.exception.NFlightRemoteException;
-import com.abreqadhabra.nflight.service.rmi.server.servant.ActivatableNFlightServiceImpl;
-import com.abreqadhabra.nflight.service.rmi.server.servant.UnicastRemoteObjectNFlightServiceImpl;
+import com.abreqadhabra.nflight.service.core.server.NFServer;
+import com.abreqadhabra.nflight.service.rmi.server.exception.NFRemoteException;
+import com.abreqadhabra.nflight.service.rmi.server.servant.NFServiceRMIActivatableImpl;
+import com.abreqadhabra.nflight.service.rmi.server.servant.NFServiceUnicastRemoteObjectImpl;
 
-public class NFlightRMIServerImpl implements NFlightServer {
+public class NFServerRMIImpl implements NFServer {
 
-	private static final Class<NFlightRMIServerImpl> THIS_CLAZZ = NFlightRMIServerImpl.class;
+	private static final Class<NFServerRMIImpl> THIS_CLAZZ = NFServerRMIImpl.class;
 	private Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private BootProfile bootProfile;
@@ -38,7 +38,7 @@ public class NFlightRMIServerImpl implements NFlightServer {
 	private RMIManager rman;
 	private static final long serialVersionUID = 1L;
 
-	public NFlightRMIServerImpl(BootProfile profile) throws Exception {
+	public NFServerRMIImpl(BootProfile profile) throws Exception {
 		this.bootProfile = profile;
 		init();
 	}
@@ -50,7 +50,7 @@ public class NFlightRMIServerImpl implements NFlightServer {
 				.getMethodName();
 
 		String boundName = this.rman
-				.getBoundName(UnicastRemoteObjectNFlightServiceImpl.class
+				.getBoundName(NFServiceUnicastRemoteObjectImpl.class
 						.getSimpleName());
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
@@ -99,7 +99,7 @@ public class NFlightRMIServerImpl implements NFlightServer {
 			}
 			break;
 		default:
-			throw new NFlightRemoteException("Service 실행이 실패하였습니다.")
+			throw new NFRemoteException("Service 실행이 실패하였습니다.")
 					.addContextValue("Service Command", serviceCommand);
 		}
 	}
@@ -175,7 +175,7 @@ public class NFlightRMIServerImpl implements NFlightServer {
 		int port = 9999;
 
 		String name = "rmi://" + host + ":" + port + "/"
-				+ ActivatableNFlightServiceImpl.class.getSimpleName();
+				+ NFServiceRMIActivatableImpl.class.getSimpleName();
 
 		Registry registry = RMIManager.getRegistry(host, port);
 		registry.rebind(name, stub);
@@ -194,7 +194,7 @@ public class NFlightRMIServerImpl implements NFlightServer {
 			Remote obj = this.rman.getUnicastRemoteObjectNFlightServiceImpl();
 			// Remote obj = this.rman.getActivatableNFlightServiceImpl();
 			String boundName = this.rman
-					.getBoundName(UnicastRemoteObjectNFlightServiceImpl
+					.getBoundName(NFServiceUnicastRemoteObjectImpl
 							.getObjName());
 			this.rman.rebind(boundName, obj);
 		} catch (Exception e) {
@@ -206,7 +206,7 @@ public class NFlightRMIServerImpl implements NFlightServer {
 	public void shutdown() throws Exception {
 		try {
 			String boundName = this.rman
-					.getBoundName(UnicastRemoteObjectNFlightServiceImpl
+					.getBoundName(NFServiceUnicastRemoteObjectImpl
 							.getObjName());
 			rman.unbind(boundName);
 		} catch (Exception e) {
@@ -220,16 +220,16 @@ public class NFlightRMIServerImpl implements NFlightServer {
 				.getMethodName();
 
 		String boundName = this.rman
-				.getBoundName(UnicastRemoteObjectNFlightServiceImpl
+				.getBoundName(NFServiceUnicastRemoteObjectImpl
 						.getObjName());
 
-		NFlightService service = (NFlightService) this.rman.lookup(boundName);
+		NFService service = (NFService) this.rman.lookup(boundName);
 		boolean _isRunning = false;
 		if (service != null) {
 			try {
 				_isRunning = service.isRunning();
 			} catch (RemoteException re) {
-				throw new NFlightRemoteException("데이터서버의 상태를 확인할 수 없습니다.", re)
+				throw new NFRemoteException("데이터서버의 상태를 확인할 수 없습니다.", re)
 						.addContextValue("service", service).addContextValue(
 								"isRunning", _isRunning);
 			}

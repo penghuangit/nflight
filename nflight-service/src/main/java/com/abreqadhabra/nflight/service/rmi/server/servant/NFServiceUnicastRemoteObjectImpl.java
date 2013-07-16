@@ -5,15 +5,15 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.service.core.NFlightService;
+import com.abreqadhabra.nflight.service.core.NFService;
 
-public class UnicastRemoteObjectNFlightServiceImpl extends UnicastRemoteObject implements NFlightService {
+public class NFServiceUnicastRemoteObjectImpl extends UnicastRemoteObject implements NFService {
 
-	public UnicastRemoteObjectNFlightServiceImpl() throws RemoteException {
+	public NFServiceUnicastRemoteObjectImpl() throws RemoteException {
 		super();
 	}
 
-	private static final Class<UnicastRemoteObjectNFlightServiceImpl> THIS_CLAZZ = UnicastRemoteObjectNFlightServiceImpl.class;
+	private static final Class<NFServiceUnicastRemoteObjectImpl> THIS_CLAZZ = NFServiceUnicastRemoteObjectImpl.class;
 	private Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private static final long serialVersionUID = 1L;

@@ -48,7 +48,7 @@ import java.util.Arrays;
 import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.util.IOStream;
-import com.abreqadhabra.nflight.service.core.NFlightService;
+import com.abreqadhabra.nflight.service.core.NFService;
 import com.abreqadhabra.nflight.service.rmi.server.RMIManager;
 
 public class TestRMIClient {
@@ -100,7 +100,7 @@ public class TestRMIClient {
 			System.out.println(Arrays.asList(registry.list()));
 
 			try {
-				NFlightService stub = (NFlightService) registry.lookup("rmi://"
+				NFService stub = (NFService) registry.lookup("rmi://"
 						+ host + ":" + port
 						+ "/UnicastRemoteObjectNFlightServiceImpl");
 				// registry.lookup("rmi://192.168.0.100:9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
@@ -113,7 +113,7 @@ public class TestRMIClient {
 			}
 
 			try {
-				NFlightService stub2 = (NFlightService) registry
+				NFService stub2 = (NFService) registry
 						.lookup("rmi://" + host + ":" + port
 								+ "/ActivatableNFlightServiceImpl");
 				response = stub2.sayHello();

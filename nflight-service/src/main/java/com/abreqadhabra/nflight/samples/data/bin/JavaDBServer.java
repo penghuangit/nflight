@@ -52,12 +52,12 @@ import java.util.logging.Logger;
 
 import org.apache.derby.drda.NetworkServerControl;
 
-import com.abreqadhabra.nflight.common.exception.NFlightUnexpectedException;
+import com.abreqadhabra.nflight.common.exception.NFUnexpectedException;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.samples.data.JavaDBServerControl;
 import com.abreqadhabra.nflight.samples.data.JavaDBUtil;
-import com.abreqadhabra.nflight.samples.data.exception.NFlightDBServerException;
+import com.abreqadhabra.nflight.samples.data.exception.NFDataServerException;
 
 public class JavaDBServer {
 	private static final Class<JavaDBServer> THIS_CLAZZ = JavaDBServer.class;
@@ -133,7 +133,7 @@ public class JavaDBServer {
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(), "\n" + ce.getStackTrace(e));
 			} else {
-				throw new NFlightUnexpectedException(e);
+				throw new NFUnexpectedException(e);
 			}
 		}
 
@@ -210,7 +210,7 @@ public class JavaDBServer {
 					server.getSysinfo());
 
 		} catch (Exception e) {
-			throw new NFlightDBServerException(e);
+			throw new NFDataServerException(e);
 		}
 
 		while (true) {

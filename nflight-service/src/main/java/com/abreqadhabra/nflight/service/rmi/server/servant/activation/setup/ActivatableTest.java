@@ -19,10 +19,10 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.IOStream;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
-import com.abreqadhabra.nflight.service.core.NFlightService;
+import com.abreqadhabra.nflight.service.core.NFService;
 import com.abreqadhabra.nflight.service.core.boot.Profile;
 import com.abreqadhabra.nflight.service.rmi.server.RMIManager;
-import com.abreqadhabra.nflight.service.rmi.server.servant.ActivatableNFlightServiceImpl;
+import com.abreqadhabra.nflight.service.rmi.server.servant.NFServiceRMIActivatableImpl;
 
 public class ActivatableTest {
 	private static final Class<ActivatableTest> THIS_CLAZZ = ActivatableTest.class;
@@ -111,14 +111,14 @@ public class ActivatableTest {
 		int port = 9999;
 
 		String name = "rmi://" + host + ":" + port + "/"
-				+ ActivatableNFlightServiceImpl.class.getSimpleName();
+				+ NFServiceRMIActivatableImpl.class.getSimpleName();
 
 		Registry registry = RMIManager.getRegistry(host, port);
 		registry.rebind(name, stub);
 		System.err.println("Stub bound in registry."
 				+ Arrays.toString(registry.list()));
 
-		NFlightService service = (NFlightService) registry.lookup("rmi://"
+		NFService service = (NFService) registry.lookup("rmi://"
 				+ host + ":" + port + "/ActivatableNFlightServiceImpl");
 		String response = service.sayHello();
 		System.out.println("ActivatableNFlightServiceImpl response: "

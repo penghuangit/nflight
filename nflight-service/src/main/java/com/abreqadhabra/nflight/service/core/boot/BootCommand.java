@@ -11,7 +11,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.IOStream;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
-import com.abreqadhabra.nflight.service.core.boot.exception.NFlightBootCommandException;
+import com.abreqadhabra.nflight.service.core.boot.exception.NFBootCommandException;
 
 public class BootCommand {
 
@@ -132,7 +132,7 @@ public class BootCommand {
 					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 							"subprocess normal termination :" + exitValue);
 				} else {
-					throw new NFlightBootCommandException(command
+					throw new NFBootCommandException(command
 							+ ": subprocess abnormal termination :" + exitValue);
 				}
 
@@ -141,7 +141,7 @@ public class BootCommand {
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(), "이 오류는 발생하지 않습니다.");
 			} catch (IOException ioe) {
-				throw new NFlightBootCommandException(
+				throw new NFBootCommandException(
 						"Can't boot background process.Command: " + command,
 						ioe);
 			}

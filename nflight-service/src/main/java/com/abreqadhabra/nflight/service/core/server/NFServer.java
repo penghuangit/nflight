@@ -1,6 +1,6 @@
 package com.abreqadhabra.nflight.service.core.server;
 
-public interface NFlightServer{
+public interface NFServer{
 
 	public void startup() throws Exception;
 
