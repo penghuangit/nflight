@@ -7,7 +7,9 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
+import com.abreqadhabra.nflight.common.util.IOStream;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
 import com.abreqadhabra.nflight.service.core.boot.exception.NFlightBootException;
@@ -17,18 +19,15 @@ public class BootProfile extends Profile {
 	private static final Class<BootProfile> THIS_CLAZZ = BootProfile.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private static final String BASE_LOCATION = THIS_CLAZZ
-			.getProtectionDomain().getCodeSource().getLocation().getFile();
-
-	private String serviceName;
 	private String serviceMainClass;
 	private String serviceCommand;
-	private String bootCommand;
+	private String codeBase; 
 
 	public BootProfile(Properties props) {
 
 		PropertyLoader.setSystemProperties(props);
 
+		
 		this.setServiceMainClass(System
 				.getProperty(Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_MAINCLASS
 						.toString()));
@@ -37,10 +36,20 @@ public class BootProfile extends Profile {
 				.getProperty(Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_COMMAND
 						.toString()));
 
+		this.setCodeBase(IOStream.getCodebase(serviceMainClass));
+		
 		// this.setBootCommand(System
 		// .getProperty(Profile.BOOTCOMMAND_PROPERTIES.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
 		// .toString()));
 
+	}
+
+	public String getCodeBase() {
+		return codeBase;
+	}
+
+	public void setCodeBase(String codeBase) {
+		this.codeBase = codeBase;
 	}
 
 	public static Properties parseCMDLineArgs(String[] args) throws Exception {
@@ -190,20 +199,20 @@ public class BootProfile extends Profile {
 		return props;
 	}
 
-	public static void setSecurityManager() {
+	public void setSecurityManager() {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		System.setProperty(
-				Profile.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(),
-				BASE_LOCATION + Profile.FILE_BOOT_POLICY.toString());
+				Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(),
+				this.codeBase + Profile.FILE_BOOT_POLICY.toString());
 		LOGGER.logp(
 				Level.CONFIG,
 				THIS_CLAZZ.getName(),
 				METHOD_NAME,
-				Profile.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY
+				Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY
 						+ "="
-						+ System.getProperty(Profile.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY
+						+ System.getProperty(Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY
 								.toString()));
 		if (System.getSecurityManager() == null) {
 			// System.setSecurityManager(new RMISecurityManager());
@@ -215,14 +224,6 @@ public class BootProfile extends Profile {
 			PROPERTIES_BOOT nflightBootOptionServiceName) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	public String getServiceName() {
-		return serviceName;
-	}
-
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
 	}
 
 	public String getServiceMainClass() {
@@ -241,12 +242,5 @@ public class BootProfile extends Profile {
 		this.serviceCommand = serviceCommand;
 	}
 
-	public String getBootCommand() {
-		return bootCommand;
-	}
-
-	public void setBootCommand(String bootCommand) {
-		this.bootCommand = bootCommand;
-	}
 
 }

@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.Set;
 
+import com.abreqadhabra.nflight.common.util.IOStream;
+
 public class LoadPropertiesExample {
 
 	public static void main(String[] args) {
@@ -16,8 +18,7 @@ public class LoadPropertiesExample {
 
 		Properties properties = new Properties();
 
-		String propertyFilePath = LoadPropertiesExample.class.getProtectionDomain()
-			.getCodeSource().getLocation().getFile() + propertyPath
+		String propertyFilePath = IOStream.getCodebase(LoadPropertiesExample.class.getName()) + propertyPath
 				+ propertyFileName;
 
 		properties = readPropertiesFromFilePath(propertyFilePath);

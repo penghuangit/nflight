@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.service.rmi.server.servant.activation;
+package com.abreqadhabra.nflight.samples.rmi;
 
 import java.io.File;
 import java.io.FileInputStream;

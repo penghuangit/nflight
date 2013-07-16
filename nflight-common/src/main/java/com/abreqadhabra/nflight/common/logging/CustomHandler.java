@@ -8,13 +8,14 @@ import java.io.PrintWriter;
 import java.util.logging.FileHandler;
 import java.util.logging.LogRecord;
 
+import com.abreqadhabra.nflight.common.util.IOStream;
+
 /**
  * MyCustomHandler outputs contents to a specified file
  */
 public class CustomHandler extends FileHandler {
 
-     String BASE_LOCATION = CustomHandler.class.getProtectionDomain()
-		.getCodeSource().getLocation().getFile();
+
 	FileOutputStream fileOutputStream;
 	PrintWriter printWriter;
 
@@ -22,9 +23,10 @@ public class CustomHandler extends FileHandler {
 			IOException {
 		super();
 
-		File loggingPath = new File(BASE_LOCATION + "log");
+		String codeBase = IOStream.getCodebase(CustomHandler.class.getName());
+		File loggingPath = new File(codeBase + "log");
 
-		System.out.println(BASE_LOCATION + "log");
+		System.out.println(codeBase + "log");
 		if (!loggingPath.exists()) {
 			loggingPath.mkdir();
 		}

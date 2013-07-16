@@ -4,6 +4,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.util.IOStream;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.dao.DAOFactory;
 
@@ -30,9 +31,7 @@ public abstract class DatabaseFactory {
 
 	public static DatabaseFactory getDatabaseFactory() throws Exception {
 
-		DB_PROPERTIES = PropertyFile.readPropertyFile(DatabaseFactory.class
-					.getProtectionDomain().getCodeSource().getLocation()
-					.getFile()
+		DB_PROPERTIES = PropertyFile.readPropertyFile(IOStream.getCodebase(DAOFactory.class.getName())
 					+ DB_PROPERTY_FILE_NAME); 
 					
 		String databaseType = DB_PROPERTIES.getProperty(DATABASE_TYPE);

@@ -7,8 +7,7 @@ import com.abreqadhabra.nflight.common.util.PropertyFileUtil;
 
 public class PropertiesToXMLFileConvertExample {
     
-    static String BASE_LOCATION = PropertiesToXMLFileConvertExample.class.getProtectionDomain()
-		.getCodeSource().getLocation().getFile();
+
 
 	public static void main(String[] args) throws IOException {
 

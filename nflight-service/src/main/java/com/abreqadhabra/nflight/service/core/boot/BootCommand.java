@@ -8,10 +8,10 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
+import com.abreqadhabra.nflight.common.util.IOStream;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
 import com.abreqadhabra.nflight.service.core.boot.exception.NFlightBootCommandException;
-import com.abreqadhabra.nflight.service.core.util.IOStream;
 
 public class BootCommand {
 

@@ -32,8 +32,7 @@ public class tempCustomLoggerExample {
 
 		// Set up a custom Handler (see MyCustomHandler example)
 
-		File loggingPath = new File(tempCustomLoggerExample.class.getProtectionDomain()
-				.getCodeSource().getLocation().getFile() + "/log");
+		File loggingPath = new File(IOStream.getCodebase(tempCustomLoggerExample.class.getName()) + "/log");
 
 		if (!loggingPath.exists()) {
 			loggingPath.mkdir();

@@ -16,6 +16,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
@@ -27,48 +28,44 @@ import com.abreqadhabra.nflight.service.rmi.server.exception.NFlightRemoteExcept
 import com.abreqadhabra.nflight.service.rmi.server.servant.ActivatableNFlightServiceImpl;
 import com.abreqadhabra.nflight.service.rmi.server.servant.UnicastRemoteObjectNFlightServiceImpl;
 
-public class NFlightServerImpl implements
-		NFlightServer {
+public class NFlightRMIServerImpl implements NFlightServer {
 
-	private static final Class<NFlightServerImpl> THIS_CLAZZ = NFlightServerImpl.class;
+	private static final Class<NFlightRMIServerImpl> THIS_CLAZZ = NFlightRMIServerImpl.class;
 	private Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
-	private static final String BASE_LOCATION = THIS_CLAZZ
-			.getProtectionDomain().getCodeSource().getLocation().getFile();
-	
-	private BootProfile profile;
-	
+
+	private BootProfile bootProfile;
 
 	private RMIManager rman;
 	private static final long serialVersionUID = 1L;
 
-	public NFlightServerImpl(BootProfile profile) throws Exception {
-		this.profile = profile;
+	public NFlightRMIServerImpl(BootProfile profile) throws Exception {
+		this.bootProfile = profile;
 		init();
 	}
 
 	private void init() throws Exception {
 		this.rman = new RMIManager();
-		
+
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		String boundName = this.rman
-				.getBoundName(UnicastRemoteObjectNFlightServiceImpl.class.getSimpleName());
-		
+				.getBoundName(UnicastRemoteObjectNFlightServiceImpl.class
+						.getSimpleName());
+
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 				"boundName: " + boundName);
 
-		
 		boolean _isActivated = this.rman.isActivatedRegistry(boundName);
 
-		String serviceCommand = this.profile.getServiceCommand();
-		
+		String serviceCommand = this.bootProfile.getServiceCommand();
+
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 				"serviceCommand: " + serviceCommand);
 
 		Profile.BOOT_OPTION_SERVICE_COMMAND command = Profile.BOOT_OPTION_SERVICE_COMMAND
 				.valueOf(serviceCommand);
-		
+
 		switch (command) {
 		case startup:
 			if (_isActivated) {
@@ -113,28 +110,22 @@ public class NFlightServerImpl implements
 		startupActivatableService();
 	}
 
-
-
 	private void startupActivatableService() throws Exception {
-
-		new RMIDCommand();
-
-		System.err.println("BASE_LOCATION: " + BASE_LOCATION);
 
 		Properties _props = PropertyFile
 				.readPropertyFile(Profile.FILE_ACTIVATION_PROPERTIES);
 		_props.put(
 				Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_IMPL_CODEBASE
 						.toString(), Profile.ACTIVATION_FILE_PREFIX
-						+ BASE_LOCATION);
+						+ bootProfile.getCodeBase());
 
 		PropertyLoader.setSystemProperties(_props);
 
-		String securityPolicy = BASE_LOCATION + Profile.FILE_ACTIVATION_POLICY;
+		String securityPolicy = bootProfile.getCodeBase() + Profile.FILE_ACTIVATION_POLICY;
 		System.out.println(securityPolicy);
 
 		System.setProperty(
-				Profile.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(),
+				Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(),
 				securityPolicy);
 
 		if (System.getSecurityManager() == null) {
@@ -188,8 +179,9 @@ public class NFlightServerImpl implements
 
 		Registry registry = RMIManager.getRegistry(host, port);
 		registry.rebind(name, stub);
-		System.err.println("Stub bound in registry." + Arrays.toString(registry.list()));
-				
+		System.err.println("Stub bound in registry."
+				+ Arrays.toString(registry.list()));
+
 	}
 
 	private void startupUnicastRemoteObjectService() throws Exception {
@@ -230,9 +222,8 @@ public class NFlightServerImpl implements
 		String boundName = this.rman
 				.getBoundName(UnicastRemoteObjectNFlightServiceImpl
 						.getObjName());
-		
-		NFlightService service = (NFlightService) this.rman
-				.lookup(boundName);
+
+		NFlightService service = (NFlightService) this.rman.lookup(boundName);
 		boolean _isRunning = false;
 		if (service != null) {
 			try {
@@ -248,9 +239,5 @@ public class NFlightServerImpl implements
 
 		return _isRunning;
 	}
-
-
-
-
 
 }

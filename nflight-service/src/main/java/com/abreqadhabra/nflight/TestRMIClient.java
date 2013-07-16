@@ -38,7 +38,6 @@
 package com.abreqadhabra.nflight;
 
 import java.net.InetAddress;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.activation.ActivationException;
 import java.rmi.activation.ActivationGroup;
@@ -46,25 +45,22 @@ import java.rmi.activation.ActivationSystem;
 import java.rmi.registry.Registry;
 import java.util.Arrays;
 
+import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
+import com.abreqadhabra.nflight.common.util.IOStream;
 import com.abreqadhabra.nflight.service.core.NFlightService;
-import com.abreqadhabra.nflight.service.core.boot.Profile;
 import com.abreqadhabra.nflight.service.rmi.server.RMIManager;
 
-public class TestClient {
+public class TestRMIClient {
 
-	private static final String BASE_LOCATION = TestClient.class
-			.getProtectionDomain().getCodeSource().getLocation().getFile();
-	
-	private TestClient() {
-	}
 
 	public static void main(String[] args) {
 
 		try {
-
+			String codeBase = IOStream.getCodebase(TestRMIClient.class.getName());
+			
 			String policy = "com/abreqadhabra/nflight/service/rmi/server/servant/activation/conf/activation.policy";
-			System.setProperty(Profile.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(), BASE_LOCATION + policy);
+			System.setProperty(Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(), codeBase + policy);
 			
 			if (System.getSecurityManager() == null) {
 				System.setSecurityManager(new SecurityManager());
@@ -83,8 +79,7 @@ public class TestClient {
 							.toString());
 */
 
-			String BASE_LOCATION = TestClient.class
-					.getProtectionDomain().getCodeSource().getLocation().getFile();
+
 			
 		//	String command = "rmid  -stop";		
 		//	String command = "rmid  -J-Djava.security.policy="+BASE_LOCATION+"com/abreqadhabra/nflight/service/core/boot/conf/boot.policy";

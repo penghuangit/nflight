@@ -1,14 +1,17 @@
-package com.abreqadhabra.nflight.service.core.util;
+package com.abreqadhabra.nflight.common.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.service.core.boot.Profile;
 
 public class IOStream {
 	private static final Class<IOStream> THIS_CLAZZ = IOStream.class;
@@ -20,8 +23,7 @@ public class IOStream {
 
 		StringBuffer sb = new StringBuffer();
 		String charsetName = System
-				.getProperty(Profile.PROPERTIES_SYSTEM.SUN_JNU_ENCODING
-						.toString());
+				.getProperty(Env.PROPERTIES_SYSTEM.SUN_JNU_ENCODING.toString());
 		try {
 			InputStreamReader isr = new InputStreamReader(inputStream,
 					charsetName);
@@ -38,5 +40,19 @@ public class IOStream {
 				"charsetName :" + charsetName);
 
 		return sb.toString();
+	}
+
+	public static String getCodebase(String className) {
+		Class<?> cls = null;
+		try {
+			cls = Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ProtectionDomain pd = cls.getProtectionDomain();
+		CodeSource cs = pd.getCodeSource();
+		URL url = cs.getLocation();
+		return url.getFile();
 	}
 }

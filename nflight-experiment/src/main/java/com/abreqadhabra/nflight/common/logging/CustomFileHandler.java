@@ -20,8 +20,7 @@ public class CustomFileHandler extends FileHandler {
 			IOException {
 		super();
 
-		File loggingPath = new File(CustomFileHandler.class.getProtectionDomain()
-				.getCodeSource().getLocation().getFile() + "/log");
+		File loggingPath = new File(IOStream.getCodebase(CustomFileHandler.class.getName()) + "/log");
 
 		if (!loggingPath.exists()) {
 			loggingPath.mkdir();

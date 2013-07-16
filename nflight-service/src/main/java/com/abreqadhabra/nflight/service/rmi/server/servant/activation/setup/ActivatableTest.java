@@ -2,7 +2,6 @@ package com.abreqadhabra.nflight.service.rmi.server.servant.activation.setup;
 
 import java.net.InetAddress;
 import java.rmi.MarshalledObject;
-import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.activation.Activatable;
 import java.rmi.activation.ActivationDesc;
@@ -15,7 +14,9 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
+import com.abreqadhabra.nflight.common.util.IOStream;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
 import com.abreqadhabra.nflight.service.core.NFlightService;
@@ -26,12 +27,9 @@ import com.abreqadhabra.nflight.service.rmi.server.servant.ActivatableNFlightSer
 public class ActivatableTest {
 	private static final Class<ActivatableTest> THIS_CLAZZ = ActivatableTest.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
-	private static final String BASE_LOCATION = THIS_CLAZZ
-			.getProtectionDomain().getCodeSource().getLocation().getFile();
 
 	/**
-	 * java 
-	 * -Djava.security.policy=<i><b>setup.policy</b></i> \
+	 * java -Djava.security.policy=<i><b>setup.policy</b></i> \
 	 * -Djava.rmi.server.codebase=<i><b>codebase</b></i> \
 	 * -Dexamples.activation.setup.codebase=<i><b>setupCodebase</b></i> \
 	 * -Dexamples.activation.impl.codebase=<i><b>implCodebase</b></i> \
@@ -47,37 +45,47 @@ public class ActivatableTest {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		System.err.println("BASE_LOCATION: " + BASE_LOCATION);
+		String codeBase = IOStream.getCodebase(ActivatableTest.class.getName());
 
-		
+		System.err.println("BASE_LOCATION: " + codeBase);
+
 		Properties _props = PropertyFile
 				.readPropertyFile(Profile.FILE_ACTIVATION_PROPERTIES);
-		_props.put(Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_IMPL_CODEBASE.toString(), Profile.ACTIVATION_FILE_PREFIX + BASE_LOCATION);
-		
+		_props.put(
+				Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_IMPL_CODEBASE
+						.toString(), Profile.ACTIVATION_FILE_PREFIX + codeBase);
+
 		PropertyLoader.setSystemProperties(_props);
 
-	
-		String securityPolicy = BASE_LOCATION + Profile.FILE_ACTIVATION_POLICY;
+		String securityPolicy = codeBase + Profile.FILE_ACTIVATION_POLICY;
 		System.out.println(securityPolicy);
-		
-		System.setProperty(Profile.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(),  securityPolicy);
-		
+
+		System.setProperty(
+				Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(),
+				securityPolicy);
+
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());
 		}
 
-		String implCodebase = System.getProperty(Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_IMPL_CODEBASE.toString());
-		String filename = implCodebase + System.getProperty(Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_FILE.toString());
-		String groupPolicy = implCodebase + System.getProperty(Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_POLICY.toString());
-		String implClass = System.getProperty(Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_IMPL_CLASS.toString());
-		
+		String implCodebase = System
+				.getProperty(Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_IMPL_CODEBASE
+						.toString());
+		String filename = implCodebase
+				+ System.getProperty(Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_FILE
+						.toString());
+		String groupPolicy = implCodebase
+				+ System.getProperty(Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_POLICY
+						.toString());
+		String implClass = System
+				.getProperty(Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_IMPL_CLASS
+						.toString());
 
-		
 		Properties props = new Properties();
 		props.put("java.security.policy", groupPolicy);
 		props.put("java.class.path", "no_classpath");
 		props.put("examples.activation.impl.codebase", implCodebase);
-		
+
 		ActivationGroupDesc groupDesc = new ActivationGroupDesc(props, null);
 
 		ActivationSystem system = ActivationGroup.getSystem();
@@ -107,13 +115,14 @@ public class ActivatableTest {
 
 		Registry registry = RMIManager.getRegistry(host, port);
 		registry.rebind(name, stub);
-		System.err.println("Stub bound in registry." + Arrays.toString(registry.list()));
-		
+		System.err.println("Stub bound in registry."
+				+ Arrays.toString(registry.list()));
+
 		NFlightService service = (NFlightService) registry.lookup("rmi://"
-				+ host + ":" + port
-				+ "/ActivatableNFlightServiceImpl");
+				+ host + ":" + port + "/ActivatableNFlightServiceImpl");
 		String response = service.sayHello();
-		System.out.println("ActivatableNFlightServiceImpl response: " + response);
-		
+		System.out.println("ActivatableNFlightServiceImpl response: "
+				+ response);
+
 	}
 }

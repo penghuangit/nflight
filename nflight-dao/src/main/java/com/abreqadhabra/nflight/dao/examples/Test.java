@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-public class Test {
+import com.abreqadhabra.nflight.common.util.IOStream;
 
-	public static String BASE_LOCATION = Test.class
-			.getProtectionDomain().getCodeSource().getLocation().getFile();
+public class Test {
 
 	public static String ORIGINAL_DATASET_FILE = "/com/abreqadhabra/nflight/dao/resources/test/initial-dummy-data.xml";
 
@@ -22,7 +21,10 @@ public class Test {
 	}
 
 	protected void getDataSet() throws IOException  {
-		String filePath = BASE_LOCATION + ORIGINAL_DATASET_FILE;
+		
+		String codeBase = IOStream.getCodebase(Test.class.getName());
+		
+		String filePath = codeBase + ORIGINAL_DATASET_FILE;
 	//	String encoding = FileUtil.getEncoding(filePath);
 
 /*		InputStreamReader isr = new InputStreamReader(new FileInputStream(
