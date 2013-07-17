@@ -48,8 +48,8 @@ import java.util.Arrays;
 import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.util.IOStream;
-import com.abreqadhabra.nflight.service.core.NFService;
-import com.abreqadhabra.nflight.service.rmi.server.RMIManager;
+import com.abreqadhabra.nflight.service.server.NFService;
+import com.abreqadhabra.nflight.service.server.rmi.RMIManager;
 
 public class TestRMIClient {
 
