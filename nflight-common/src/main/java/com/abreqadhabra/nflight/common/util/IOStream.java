@@ -4,7 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.logging.Level;
@@ -54,5 +58,42 @@ public class IOStream {
 		CodeSource cs = pd.getCodeSource();
 		URL url = cs.getLocation();
 		return url.getFile();
+	}
+	
+	public static URI getCodebasePath(String className) {
+		Class<?> cls = null;
+		try {
+			cls = Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ProtectionDomain pd = cls.getProtectionDomain();
+		CodeSource cs = pd.getCodeSource();
+		URL url = cs.getLocation();
+		URI uri = null;
+		try {
+		 uri = url.toURI(); 
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return uri;
+	}
+
+	public static Path getFilePath(String className, String... paths) {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		URI codebaseURI = IOStream.getCodebasePath(className);
+		Path filePath = Paths.get(codebaseURI);
+		for (String path : paths) {
+			filePath = filePath.resolve(path);
+		}
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				"filePath :" + filePath);
+
+		return filePath;
 	}
 }

@@ -7,8 +7,8 @@ package com.abreqadhabra.nflight.service.boot;
  */
 public abstract class Profile {
 
-	public static final String FILE_BOOT_PROPERTIES = "/com/abreqadhabra/nflight/service/core/boot/conf/boot.properties";
-	public static final String FILE_BOOT_POLICY = "com/abreqadhabra/nflight/service/core/boot/conf/boot.policy";
+	public static final String FILE_BOOT_PROPERTIES = "/com/abreqadhabra/nflight/service/boot/conf/boot.properties";
+	public static final String FILE_BOOT_POLICY = "com/abreqadhabra/nflight/service/boot/conf/boot.policy";
 
 	public static enum PROPERTIES_BOOT {
 
@@ -38,8 +38,8 @@ public abstract class Profile {
 
 	public static enum BOOT_OPTION_SERVICE_MAINCLASS {
 
-		com_abreqadhabra_nflight_service_rmi_server_NFServerRMIImpl,
-		com_abreqadhabra_nflight_service_socket_server_NFServerSocketImpl,
+		com_abreqadhabra_nflight_service_server_rmi_NFServerRMIImpl,
+		com_abreqadhabra_nflight_service_server_socket_NFServerSocketImpl,
 		UNKNOWN;
 
 		private String name = null; // property name
@@ -86,7 +86,7 @@ public abstract class Profile {
 		}
 	}
 
-	public static final String FILE_BOOTCOMMAND_PROPERTIES = "/com/abreqadhabra/nflight/service/core/boot/conf/bootcommand.properties";
+	public static final String FILE_BOOTCOMMAND_PROPERTIES = "/com/abreqadhabra/nflight/service/boot/conf/bootcommand.properties";
 	public static final BOOTCOMMAND_OS BOOTCOMMAND_OS_DEFAULT = BOOTCOMMAND_OS.windows;
 	public static final int BOOTCOMMAND_SLEEPTIME_1 = 2000;
 	public static final int BOOTCOMMAND_SLEEPTIME_2 = 10000;
@@ -113,10 +113,10 @@ public abstract class Profile {
 		}
 	}
 
-	public static final String FILE_ACTIVATION_PROPERTIES = "/com/abreqadhabra/nflight/service/rmi/server/servant/activation/conf/activation.properties";
+	public static final String FILE_ACTIVATION_PROPERTIES = "/com/abreqadhabra/nflight/service/server/rmi/conf/activation.properties";
 
-	public static final String FILE_ACTIVATION_POLICY = "com/abreqadhabra/nflight/service/rmi/server/servant/activation/conf/activation.policy";
-	public static final String FILE_RMID_POLICY = "/com/abreqadhabra/nflight/service/rmi/server/servant/activation/conf/rmid.policy";
+	public static final String FILE_ACTIVATION_POLICY = "com/abreqadhabra/nflight/service/server/rmi/conf/activation.policy";
+	public static final String FILE_RMID_POLICY = "/com/abreqadhabra/nflight/service/server/rmi/conf/rmid.policy";
 
 	public static final String ACTIVATION_FILE_PREFIX = "file:";
 

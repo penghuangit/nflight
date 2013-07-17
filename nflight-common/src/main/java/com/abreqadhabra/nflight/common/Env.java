@@ -2,6 +2,8 @@ package com.abreqadhabra.nflight.common;
 
 public class Env {
 
+	public static String Charset = "UTF-8";
+
 	public static enum PROPERTIES_SYSTEM {
 
 		JAVA_SECURITY_POLICY, JAVA_RMI_SERVER_CODEBASE, SUN_JNU_ENCODING, UNKNOWN;

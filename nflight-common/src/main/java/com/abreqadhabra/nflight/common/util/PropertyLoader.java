@@ -3,6 +3,7 @@ package com.abreqadhabra.nflight.common.util;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -122,36 +123,41 @@ public class PropertyLoader
     public static boolean load(String propertyFileName) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
-	try {
-	    LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-		    "Reading Configuration");
-/*
-	    String configurationFileProperty = propertyName;
-	    String defaultConfigurationFile = propertyFileName;
-	    
-	    String configurationFile = System.getProperty(configurationFileProperty, defaultConfigurationFile);
-	    InputStream propertiesInput = ClassLoader
-		    .getSystemResourceAsStream(configurationFile);
-	    if (propertiesInput == null) {
-		throw new NFlightRSystemException("Configuration Not Found")
-			.addContextValue("propertyName", propertyName).addContextValue(
-				"fileName", propertyFileName);
-	    }
-	    Properties properties = new Properties();
-	    properties.load(propertiesInput);
-	    propertiesInput.close();
-	    */
-	    
-	    Properties properties = PropertyFile.readPropertyFile(propertyFileName);
-	    
-	    for (Iterator<Object> it = properties.keySet().iterator(); it
-		    .hasNext();) {
-		String key = (String) it.next();
-		if (System.getProperty(key) == null) {
-		    String value = properties.getProperty(key);
-		    System.setProperty(key, value);
-		}
-	    }
+		try {
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+					"Reading Configuration");
+
+			// String configurationFileProperty = propertyName;
+			// String defaultConfigurationFile = propertyFileName;
+			//
+			// String configurationFile =
+			// System.getProperty(configurationFileProperty,
+			// defaultConfigurationFile);
+			// InputStream propertiesInput = ClassLoader
+			// .getSystemResourceAsStream(configurationFile);
+			// if (propertiesInput == null) {
+			// throw new NFlightRSystemException("Configuration Not Found")
+			// .addContextValue("propertyName", propertyName).addContextValue(
+			// "fileName", propertyFileName);
+			// }
+			// Properties properties = new Properties();
+			// properties.load(propertiesInput);
+			// propertiesInput.close();
+			//
+
+			Properties properties = PropertyFile
+					.readPropertyFile(propertyFileName);
+
+			printProperties(properties);
+			
+			for (Iterator<Object> it = properties.keySet().iterator(); it
+					.hasNext();) {
+				String key = (String) it.next();
+				if (System.getProperty(key) == null) {
+					String value = properties.getProperty(key);
+					System.setProperty(key, value);
+				}
+			}
 	} catch (Exception e) {
 	    StackTraceElement[] current = e.getStackTrace();
 	    LOGGER.logp(Level.SEVERE, current[0].getClassName(),
@@ -161,6 +167,18 @@ public class PropertyLoader
 	return true;
     }
 
+	private static void printProperties(Properties props) {
+
+		Set<Object> keys = props.keySet();
+		keys = props.keySet();
+		// System.out.println("\n----\n" + propertyFile + "\n");
+		for (Object obj : keys) {
+			System.out.println(":: Key = " + obj.toString() + "\tValue = "
+					+ props.getProperty(obj.toString()));
+		}
+		System.out.println("----\n");
+	}
+	
     /**
      * <p>
      * [개 요] 지정된 파일을 읽어 내용을 시스템 프로퍼티에 반영합니다.

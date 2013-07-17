@@ -16,7 +16,6 @@ import com.abreqadhabra.nflight.common.exception.NFUnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.service.boot.Profile;
 import com.abreqadhabra.nflight.service.server.rmi.exception.NFRemoteException;
-import com.abreqadhabra.nflight.service.server.rmi.servant.NFServiceUnicastRemoteObjectImpl;
 import com.abreqadhabra.nflight.service.server.rmi.socket.SecureSocketFactory;
 
 
