@@ -1,5 +1,6 @@
 package com.abreqadhabra.nflight.common.util;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
@@ -120,7 +121,7 @@ public class PropertyLoader
      * @return boolean 정상적으로 파일을 읽은 경우에는 true를 반환합니다.
      * @since STEP1
      */
-    public static boolean load(String propertyFileName) {
+    public static boolean load(String className, String filePath) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		try {
@@ -145,8 +146,8 @@ public class PropertyLoader
 			// propertiesInput.close();
 			//
 
-			Properties properties = PropertyFile
-					.readPropertyFile(propertyFileName);
+						Properties properties = PropertyFile
+					.readPropertyFilePath(className, filePath);
 
 			printProperties(properties);
 			

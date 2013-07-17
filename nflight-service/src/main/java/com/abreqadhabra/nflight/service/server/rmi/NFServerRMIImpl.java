@@ -140,7 +140,7 @@ public class NFServerRMIImpl extends NFServer {
 	private void startupActivatableService() throws Exception {
 
 		Properties _props = PropertyFile
-				.readPropertyFile(Profile.FILE_ACTIVATION_PROPERTIES);
+				.readPropertyFilePath(THIS_CLAZZ.getName() ,Profile.FILE_ACTIVATION_PROPERTIES);
 		String codeBase = super.getBootPofile().getCodeBase();
 		_props.put(
 				Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_IMPL_CODEBASE

@@ -4,12 +4,11 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.util.IOStream;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.dao.DAOFactory;
 
 public abstract class DatabaseFactory {
-
+	private static final Class<DatabaseFactory> THIS_CLAZZ = DatabaseFactory.class;
 	// 로그 출력을 위한 선언
 	static Logger logger = Logger.getLogger(DatabaseFactory.class
 			.getCanonicalName());
@@ -31,8 +30,7 @@ public abstract class DatabaseFactory {
 
 	public static DatabaseFactory getDatabaseFactory() throws Exception {
 
-		DB_PROPERTIES = PropertyFile.readPropertyFile(IOStream.getCodebase(DAOFactory.class.getName())
-					+ DB_PROPERTY_FILE_NAME); 
+		DB_PROPERTIES = PropertyFile.readPropertyFilePath(THIS_CLAZZ.getName() ,DB_PROPERTY_FILE_NAME); 
 					
 		String databaseType = DB_PROPERTIES.getProperty(DATABASE_TYPE);
 		String databaseMode = DB_PROPERTIES.getProperty(DATABASE_MODE);

@@ -20,7 +20,7 @@ public class LoadPropertiesExample {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		String filePath = "com/abreqadhabra/nflight/examples/common/i18n";
+		String filePath = "com/abreqadhabra/nflight/examples/common/conf";
 		String fileName = "logging.properties";
 		
 		Path propsFilePath = IOStream.getFilePath(THIS_CLAZZ.getName(),

@@ -42,12 +42,12 @@ public class Boot {
 					props = BootProfile.parseServiceSpecifiers(props);
 				} else {
 					// Settings specified in a property file
-					props = PropertyFile.readPropertyFile(args[0]);
+					props = PropertyFile.readPropertyFilePath(THIS_CLAZZ.getName() ,args[0]); 
 				}
 			} else {
 				// Settings specified in the default property file
 				props = PropertyFile
-						.readPropertyFile(Profile.FILE_BOOT_PROPERTIES);
+						.readPropertyFilePath(THIS_CLAZZ.getName() ,Profile.FILE_BOOT_PROPERTIES);
 			}
 
 			BootProfile p = new BootProfile(props);

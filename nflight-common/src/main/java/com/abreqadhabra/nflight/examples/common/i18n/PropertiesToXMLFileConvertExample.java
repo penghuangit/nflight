@@ -15,7 +15,7 @@ public class PropertiesToXMLFileConvertExample {
 
 	public static void main(String[] args) throws IOException {
 
-		String filePath = "com/abreqadhabra/nflight/examples/common/i18n";
+		String filePath = "com/abreqadhabra/nflight/examples/common/conf";
 
 		Path dirPath = IOStream.getFilePath(THIS_CLAZZ.getName(),
 				filePath);

@@ -10,7 +10,7 @@ import com.abreqadhabra.nflight.common.i18n.XMLResourceBundleControl;
 public class ResourceBundleExample {
 
 	private static ResourceBundle resourceBundle;
-	private static String resourceBundleName = "com.abreqadhabra.nflight.examples.common.i18n.LoggingMessages";
+	private static String resourceBundleName = "com.abreqadhabra.nflight.examples.common.conf.LoggingMessages";
 
 	// Singleton Pattern
 	static {

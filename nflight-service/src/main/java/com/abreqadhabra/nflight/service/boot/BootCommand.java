@@ -21,7 +21,7 @@ public class BootCommand {
 	static {
 		try {
 			Properties props = PropertyFile
-					.readPropertyFile(Profile.FILE_BOOTCOMMAND_PROPERTIES);
+					.readPropertyFilePath(THIS_CLAZZ.getName() ,Profile.FILE_BOOTCOMMAND_PROPERTIES);
 			PropertyLoader.setSystemProperties(props);
 		} catch (Exception e) {
 			StackTraceElement[] current = e.getStackTrace();

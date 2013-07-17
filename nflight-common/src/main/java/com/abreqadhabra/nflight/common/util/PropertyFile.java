@@ -58,7 +58,7 @@ public class PropertyFile {
 					if (fileAttr.isRegularFile()
 							&& file.getFileName().toString()
 									.endsWith(".properties")) {
-						props = PropertyFile.readPropertyFilePath(file);
+						props = PropertyFile.readPropertyFilePath(THIS_CLAZZ.getName(), file.toString());
 						PropertyFile.writeXMLPropertyFilePath(props, file);
 					}
 					if (fileAttr.isDirectory()) {
@@ -72,10 +72,12 @@ public class PropertyFile {
 		}
 	}
 
-	private static Properties readPropertyFilePath(Path path) throws Exception {
+	public static Properties readPropertyFilePath(String className, String filePath) throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
+		Path path = IOStream.getFilePath(className, filePath);
+		
 		Properties props = new Properties();
 		try {
 			props.load(Files.newInputStream(path, StandardOpenOption.READ));

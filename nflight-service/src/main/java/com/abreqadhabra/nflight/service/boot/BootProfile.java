@@ -126,7 +126,7 @@ public class BootProfile extends Profile {
 							if (checkNotLeadingHyphens(key, value)) {
 								argsProps.clear();
 								argsProps = PropertyFile
-										.readPropertyFile(value);
+										.readPropertyFilePath(THIS_CLAZZ.getName() ,value);
 								LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
 										METHOD_NAME,
 										"Command line arguments will be ignored. loading properties from file: "

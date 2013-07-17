@@ -51,7 +51,7 @@ public class ActivatableTest {
 		System.err.println("BASE_LOCATION: " + codeBase);
 
 		Properties _props = PropertyFile
-				.readPropertyFile(Profile.FILE_ACTIVATION_PROPERTIES);
+				.readPropertyFilePath(THIS_CLAZZ.getName() ,Profile.FILE_ACTIVATION_PROPERTIES);
 		_props.put(
 				Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_IMPL_CODEBASE
 						.toString(), Profile.ACTIVATION_FILE_PREFIX + codeBase);

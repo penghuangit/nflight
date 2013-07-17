@@ -1,38 +1,38 @@
-package examples.logging;
+package com.abreqadhabra.nflight.common.logging.examples;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.common.util.IOStream;
 
-public class tempCustomLoggerExample {
-	public tempCustomLoggerExample() {
-		super();
-	}
+
+public class CustomLoggerExample {
+	private static final Class<CustomLoggerExample> THIS_CLAZZ = CustomLoggerExample.class;
+	
+	private static String resourceBundleName = "com.abreqadhabra.nflight.examples.common.conf.LoggingMessages";
+	private static String configFile = "com/abreqadhabra/nflight/examples/common/conf/logging.properties";
 
 	public static void initializeLogging(String componentName)
 			throws SecurityException, IOException {
 
-		// String componentName =
-		// "com.abreqadhabra.nflight.example.logging.CustomLoggingExample";
-		String resourceBundleName = "com.abreqadhabra.nflight.commons.resources.logging.LoggingMessages";
-
-		String configFile = "/com/abreqadhabra/nflight/common/resources/conf/logging.properties";
-
 		Logger logger = Logger.getLogger(componentName, resourceBundleName);
 
 		LogManager logManager = LogManager.getLogManager();
-		InputStream inputStream = tempCustomLoggerExample.class
-				.getResourceAsStream(configFile);
-		logManager.readConfiguration(inputStream);
+		
+		Path configPath = IOStream.getFilePath(THIS_CLAZZ.getName(),configFile);
+		
+		logManager.readConfiguration(Files.newInputStream(configPath, StandardOpenOption.READ));
 
 		// Set up a custom Handler (see MyCustomHandler example)
 
-		File loggingPath = new File(IOStream.getCodebase(tempCustomLoggerExample.class.getName()) + "/log");
+		File loggingPath = new File(IOStream.getCodebase(CustomLoggerExample.class.getName()) + "/log");
 
 		if (!loggingPath.exists()) {
 			loggingPath.mkdir();
@@ -68,7 +68,7 @@ public class tempCustomLoggerExample {
 	public static void main(String[] args) {
 
 		try {
-			initializeLogging(tempCustomLoggerExample.class.getCanonicalName());
+			initializeLogging(CustomLoggerExample.class.getCanonicalName());
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -77,7 +77,7 @@ public class tempCustomLoggerExample {
 			e.printStackTrace();
 		}
 
-		Logger logger = Logger.getLogger(tempCustomLoggerExample.class
+		Logger logger = Logger.getLogger(CustomLoggerExample.class
 				.getCanonicalName());
 
 		logger.log(Level.INFO, "MSG_KEY_01", "가나다");
