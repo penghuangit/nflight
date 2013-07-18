@@ -1,6 +1,7 @@
 package com.abreqadhabra.nflight.common.util;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -80,7 +81,10 @@ public class PropertyFile {
 		
 		Properties props = new Properties();
 		try {
-			props.load(Files.newInputStream(path, StandardOpenOption.READ));
+			
+			InputStream is =Files.newInputStream(path);
+			props.load(is);
+			is.close();
 		} catch (IOException e) {
 			throw new NFSystemException("Can't load properties: ", e)
 					.addContextValue("path :", path);
