@@ -15,9 +15,9 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.common.exception.NFUnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.service.core.Profile;
+import com.abreqadhabra.nflight.service.core.rmi.socket.SecureSocketFactory;
 import com.abreqadhabra.nflight.service.exception.NFRemoteException;
-import com.abreqadhabra.nflight.service.rmi.server.socket.SecureSocketFactory;
-import com.abreqadhabra.nflight.service.rmi.server.unicast.NFServiceUnicastRemoteObjectImpl;
+import com.abreqadhabra.nflight.service.rmi.server.unicast.UnicastRMIServiceImpl;
 
 
 public class RMIManager {
@@ -203,7 +203,7 @@ public class RMIManager {
 
 	public Remote getUnicastRemoteObjectNFlightServiceImpl() throws Exception {
 		//Remote _obj = new UnicastRemoteObjectNFlightServiceImpl(0,socketFactory, socketFactory);
-		Remote _obj = (Remote) new NFServiceUnicastRemoteObjectImpl();
+		Remote _obj = (Remote) new UnicastRMIServiceImpl();
 		try {
 			// Create remote object and export it to
 			// use custom secure socket

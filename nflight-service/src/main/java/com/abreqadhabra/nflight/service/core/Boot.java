@@ -64,6 +64,8 @@ public class Boot {
 				switch (mainClass) {
 				case com_abreqadhabra_nflight_service_rmi_server_NFServerRMIImpl:
 				case com_abreqadhabra_nflight_service_socket_server_NFServerSocketImpl:
+				case 	com_abreqadhabra_nflight_service_rmi_server_unicast_UnicastRMIServerImpl:
+				case com_abreqadhabra_nflight_service_rmi_server_activatable_ActivatableRMIServerImpl:
 					parameterTypeList.add(ProfileImpl.class);
 					initArgList.add(p);
 					break;

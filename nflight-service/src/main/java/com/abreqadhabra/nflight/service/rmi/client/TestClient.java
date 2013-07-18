@@ -73,8 +73,6 @@ public class TestClient {
 			// Registry registry = LocateRegistry.getRegistry();
 			System.out.println(Arrays.toString(registry.list()));
 
-			getActivationSystem();
-
 			/*
 			 * String command = System
 			 * .getProperty(Env.Properties.BootCommand.PropertyKey
@@ -100,27 +98,27 @@ public class TestClient {
 
 			String response = null;
 
-			try {
-				
-				String name1 = "rmi://" + host
-						+ ":" + port + "/unicast";
-				String name2  = "rmi://" + host
-						+ ":" + port + "/activatable";
-				System.out.println(name1 +"\t:\t" + name2);
+			String name1 = "rmi://" + host + ":" + port + "/unicast";
+			String name2 = "rmi://" + host + ":" + port + "/activatable";
+			System.out.println(name1 + "\t:\t" + name2);
 
-				
+			try {
 				NFService stub1 = (NFService) registry.lookup(name1);
 				// registry.lookup("rmi://192.168.0.100:9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
 				response = stub1.sayHello();
-				System.out.println(stub1 +"\t:\t" + response);
-
-
+				System.out.println(stub1 + "\t:\t" + response);
+			} catch (Exception e) {
+				System.out.println(WrapperException.getStackTrace(e));
+			}
+			try {
+				getActivationSystem();
 				NFService stub2 = (NFService) registry.lookup(name2);
 
 				response = stub2.sayHello();
-				System.out.println(stub2 +"\t:\t" + response);
+				System.out.println(stub2 + "\t:\t" + response);
+
 			} catch (Exception e) {
-				WrapperException.getStackTrace(e);
+				System.out.println(WrapperException.getStackTrace(e));
 			}
 
 		} catch (Exception e) {

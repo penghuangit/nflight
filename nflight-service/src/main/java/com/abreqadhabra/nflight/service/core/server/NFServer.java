@@ -4,7 +4,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.dao.DAOFactory;
 import com.abreqadhabra.nflight.service.core.Profile;
 import com.abreqadhabra.nflight.service.core.ProfileImpl;
 import com.abreqadhabra.nflight.service.exception.NFBootException;

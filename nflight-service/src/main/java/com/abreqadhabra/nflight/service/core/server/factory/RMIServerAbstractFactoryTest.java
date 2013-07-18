@@ -10,7 +10,6 @@ import com.abreqadhabra.nflight.service.core.Profile;
 import com.abreqadhabra.nflight.service.core.ProfileImpl;
 import com.abreqadhabra.nflight.service.core.server.NFServer;
 import com.abreqadhabra.nflight.service.core.server.NFService;
-import com.abreqadhabra.nflight.service.rmi.server.NFServerRMIImpl;
 
 abstract class AbstractRMIServer extends NFServer {
 	public AbstractRMIServer(ProfileImpl profile) throws Exception {
@@ -18,9 +17,9 @@ abstract class AbstractRMIServer extends NFServer {
 	}
 }
 
-class UnicastRMIServer extends AbstractRMIServer {
+class UnicastRMIServerImpl extends AbstractRMIServer {
 
-	public UnicastRMIServer(ProfileImpl profile) throws Exception {
+	public UnicastRMIServerImpl(ProfileImpl profile) throws Exception {
 		super(profile);
 	}
 
@@ -46,9 +45,9 @@ class UnicastRMIServer extends AbstractRMIServer {
 	}
 }
 
-class ActivatableRMIServer extends AbstractRMIServer {
+class ActivatableRMIServerImpl extends AbstractRMIServer {
 
-	public ActivatableRMIServer(ProfileImpl profile) throws Exception {
+	public ActivatableRMIServerImpl(ProfileImpl profile) throws Exception {
 		super(profile);
 	}
 
@@ -78,9 +77,9 @@ abstract class AbstractRMIService implements NFService {
 
 }
 
-class UnicastRMIService extends AbstractRMIService {
+class UnicastRMIServiceImpl extends AbstractRMIService {
 
-	public UnicastRMIService(ProfileImpl profile) {
+	public UnicastRMIServiceImpl(ProfileImpl profile) {
 
 	}
 
@@ -97,9 +96,9 @@ class UnicastRMIService extends AbstractRMIService {
 	}
 }
 
-class ActivatableRMIService extends AbstractRMIService {
+class ActivatableRMIServiceImpl extends AbstractRMIService {
 
-	public ActivatableRMIService(ProfileImpl profile) {
+	public ActivatableRMIServiceImpl(ProfileImpl profile) {
 
 	}
 
@@ -127,21 +126,21 @@ abstract class RMIServerAbstractFactory {
 class UnicastRMIServerConcreteFactory extends RMIServerAbstractFactory {
 
 	AbstractRMIServer createServer(ProfileImpl profile) throws Exception {
-		return new UnicastRMIServer(profile);
+		return new UnicastRMIServerImpl(profile);
 	}
 
 	AbstractRMIService createService(ProfileImpl profile) {
-		return new UnicastRMIService(profile);
+		return new UnicastRMIServiceImpl(profile);
 	}
 }
 
 class ActivatableRMIServerConcreteFactory extends RMIServerAbstractFactory {
 	AbstractRMIServer createServer(ProfileImpl profile) throws Exception {
-		return new ActivatableRMIServer(profile);
+		return new ActivatableRMIServerImpl(profile);
 	}
 
 	AbstractRMIService createService(ProfileImpl profile) {
-		return new ActivatableRMIService(profile);
+		return new ActivatableRMIServiceImpl(profile);
 	}
 }
 
