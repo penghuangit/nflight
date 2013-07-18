@@ -10,3 +10,4 @@ http://www.javaworld.com/javaworld/jw-12-2000/jw-1229-traps.html?page=4
 http://www.oreillynet.com/onjava/blog/2008/02/customizing_enums.html
 http://eureka7.com.ne.kr/jdk-1_5_0-Korean-doc/docs/guide/rmi/sunrmiproperties.html
 http://cafe.naver.com/janitproject/45
+http://oodesign.com/
