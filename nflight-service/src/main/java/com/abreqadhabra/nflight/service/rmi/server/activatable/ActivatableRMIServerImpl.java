@@ -20,7 +20,7 @@ import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
 import com.abreqadhabra.nflight.service.core.Profile;
 import com.abreqadhabra.nflight.service.core.ProfileImpl;
-import com.abreqadhabra.nflight.service.core.rmi.RMIManager;
+import com.abreqadhabra.nflight.service.core.server.IService;
 import com.abreqadhabra.nflight.service.rmi.server.AbstractRMIServer;
 
 public class ActivatableRMIServerImpl extends AbstractRMIServer {
@@ -28,8 +28,8 @@ public class ActivatableRMIServerImpl extends AbstractRMIServer {
 	private static final Class<ActivatableRMIServerImpl> THIS_CLAZZ = ActivatableRMIServerImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public ActivatableRMIServerImpl(ProfileImpl profile) throws Exception {
-		super(profile);
+	public ActivatableRMIServerImpl(ProfileImpl profile, IService service) throws Exception {
+		super(profile, service);
 	}
 
 	@Override
@@ -96,8 +96,8 @@ public class ActivatableRMIServerImpl extends AbstractRMIServer {
 		String host = InetAddress.getLocalHost().getHostAddress();
 		int port = 9999;
 
-		Registry registry = RMIManager.getRegistry(host, port);
-		registry.rebind(rman.getBoundName("activatable"), stub);
+		Registry registry = super.getRegistry(host, port);
+		registry.rebind(super.getBoundName("activatable"), stub);
 		System.err.println("Stub bound in registry."
 				+ Arrays.toString(registry.list()));
 	}

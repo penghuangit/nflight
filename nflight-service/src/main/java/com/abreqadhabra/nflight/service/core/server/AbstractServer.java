@@ -8,14 +8,17 @@ import com.abreqadhabra.nflight.service.core.Profile;
 import com.abreqadhabra.nflight.service.core.ProfileImpl;
 import com.abreqadhabra.nflight.service.exception.NFBootException;
 
-public abstract class NFServer {
-	private static final Class<NFServer> THIS_CLAZZ = NFServer.class;
+public abstract class AbstractServer {
+	private static final Class<AbstractServer> THIS_CLAZZ = AbstractServer.class;
 	private Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private ProfileImpl bootPofile;
+	private ProfileImpl profile;
+	private IService service;
 	
-	public NFServer(ProfileImpl profile) throws Exception {
+	public AbstractServer(ProfileImpl profile, IService service) throws Exception {
 		this.setBootPofile(profile);
+		this.setService(service);
+		
 		/*ServerFactory serverFactory = ServerFactory
 				.getServerFactory(ServerFactory.SERVER_MODE_RMI);*/
 		
@@ -23,11 +26,19 @@ public abstract class NFServer {
 		excute();
 	}
 
+	public IService getService() {
+		return service;
+	}
+
+	public void setService(IService service) {
+		this.service = service;
+	}
+
 	private void excute() throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		String serviceCommand = this.bootPofile.getServiceCommand();
+		String serviceCommand = this.profile.getServiceCommand();
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 				"serviceCommand: " + serviceCommand);
 		Profile.BOOT_OPTION_SERVICE_COMMAND command = Profile.BOOT_OPTION_SERVICE_COMMAND
@@ -65,11 +76,11 @@ public abstract class NFServer {
 	public abstract boolean status() throws Exception;
 
 	public ProfileImpl getBootPofile() {
-		return bootPofile;
+		return profile;
 	}
 
 	public void setBootPofile(ProfileImpl bootPofile) {
-		this.bootPofile = bootPofile;
+		this.profile = bootPofile;
 	}
 
 }

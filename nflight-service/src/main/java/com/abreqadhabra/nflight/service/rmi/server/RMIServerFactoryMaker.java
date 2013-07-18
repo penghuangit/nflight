@@ -1,7 +1,5 @@
 package com.abreqadhabra.nflight.service.rmi.server;
 
-import java.util.Arrays;
-
 import com.abreqadhabra.nflight.service.rmi.server.activatable.ActivatableRMIServerConcreteFactory;
 import com.abreqadhabra.nflight.service.rmi.server.unicast.UnicastRMIServerConcreteFactory;
 
@@ -10,10 +8,10 @@ public class RMIServerFactoryMaker {
 	private static RMIServerAbstractFactory abstractFactory = null;
 	public static final String[] SERVICE_NAMES = { "unicast", "activatable" };
 
-	static RMIServerAbstractFactory getFactory(String serviceName) {
-		if (Arrays.asList(SERVICE_NAMES).contains(serviceName)) {
+	public static RMIServerAbstractFactory getFactory(String serviceName) {
+		if (serviceName.equals("unicast")) {
 			abstractFactory = new UnicastRMIServerConcreteFactory();
-		} else if (Arrays.asList(SERVICE_NAMES).contains(serviceName)) {
+		} else if (serviceName.equals("activatable")) {
 			abstractFactory = new ActivatableRMIServerConcreteFactory();
 		}
 		return abstractFactory;

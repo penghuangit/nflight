@@ -38,11 +38,12 @@ public abstract class Profile {
 
 	public static enum BOOT_OPTION_SERVICE_MAINCLASS {
 
-		com_abreqadhabra_nflight_service_rmi_server_NFServerRMIImpl,
-		com_abreqadhabra_nflight_service_socket_server_NFServerSocketImpl,
-		
-		com_abreqadhabra_nflight_service_rmi_server_unicast_UnicastRMIServerImpl,
-		com_abreqadhabra_nflight_service_rmi_server_activatable_ActivatableRMIServerImpl,
+		com_abreqadhabra_nflight_service_core_server_NFlightServer,
+//		com_abreqadhabra_nflight_service_rmi_server_NFServerRMIImpl,
+//		com_abreqadhabra_nflight_service_socket_server_NFServerSocketImpl,
+//		
+//		com_abreqadhabra_nflight_service_rmi_server_unicast_UnicastRMIServerImpl,
+//		com_abreqadhabra_nflight_service_rmi_server_activatable_ActivatableRMIServerImpl,
 		UNKNOWN;
 
 		private String name = null; // property name

@@ -38,7 +38,6 @@
 package com.abreqadhabra.nflight.service.rmi.client;
 
 import java.net.InetAddress;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.activation.ActivationException;
 import java.rmi.activation.ActivationGroup;
@@ -49,8 +48,8 @@ import java.util.Arrays;
 import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.util.IOStream;
-import com.abreqadhabra.nflight.service.core.rmi.RMIManager;
-import com.abreqadhabra.nflight.service.core.server.NFService;
+import com.abreqadhabra.nflight.service.core.server.IService;
+import com.abreqadhabra.nflight.service.rmi.server.AbstractRMIServer;
 
 public class TestClient {
 
@@ -69,7 +68,7 @@ public class TestClient {
 			}
 			String host = InetAddress.getLocalHost().getHostAddress();
 			int port = 9999;
-			Registry registry = RMIManager.getRegistry(host, port);
+			Registry registry = AbstractRMIServer.getRegistry(host, port);
 			// Registry registry = LocateRegistry.getRegistry();
 			System.out.println(Arrays.toString(registry.list()));
 
@@ -103,7 +102,7 @@ public class TestClient {
 			System.out.println(name1 + "\t:\t" + name2);
 
 			try {
-				NFService stub1 = (NFService) registry.lookup(name1);
+				IService stub1 = (IService) registry.lookup(name1);
 				// registry.lookup("rmi://192.168.0.100:9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
 				response = stub1.sayHello();
 				System.out.println(stub1 + "\t:\t" + response);
@@ -112,7 +111,7 @@ public class TestClient {
 			}
 			try {
 				getActivationSystem();
-				NFService stub2 = (NFService) registry.lookup(name2);
+				IService stub2 = (IService) registry.lookup(name2);
 
 				response = stub2.sayHello();
 				System.out.println(stub2 + "\t:\t" + response);

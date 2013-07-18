@@ -19,6 +19,10 @@ public class ActivatableRMIServiceImpl extends AbstractRMIService {
 		
 	}
 
+	public ActivatableRMIServiceImpl() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public boolean isRunning() throws RemoteException {
 		return true;

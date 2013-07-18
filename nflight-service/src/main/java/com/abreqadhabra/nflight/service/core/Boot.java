@@ -62,10 +62,7 @@ public class Boot {
 				Profile.BOOT_OPTION_SERVICE_MAINCLASS mainClass = Profile.BOOT_OPTION_SERVICE_MAINCLASS
 						.getValue(className);
 				switch (mainClass) {
-				case com_abreqadhabra_nflight_service_rmi_server_NFServerRMIImpl:
-				case com_abreqadhabra_nflight_service_socket_server_NFServerSocketImpl:
-				case 	com_abreqadhabra_nflight_service_rmi_server_unicast_UnicastRMIServerImpl:
-				case com_abreqadhabra_nflight_service_rmi_server_activatable_ActivatableRMIServerImpl:
+				case com_abreqadhabra_nflight_service_core_server_NFlightServer:
 					parameterTypeList.add(ProfileImpl.class);
 					initArgList.add(p);
 					break;

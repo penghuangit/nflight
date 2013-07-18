@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.service.core.rmi.socket;
+package com.abreqadhabra.nflight.service.rmi.server.socket;
 
 import java.io.IOException;
 import java.io.Serializable;

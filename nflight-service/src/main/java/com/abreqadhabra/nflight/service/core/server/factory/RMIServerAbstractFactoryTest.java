@@ -8,19 +8,21 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.service.core.Profile;
 import com.abreqadhabra.nflight.service.core.ProfileImpl;
-import com.abreqadhabra.nflight.service.core.server.NFServer;
-import com.abreqadhabra.nflight.service.core.server.NFService;
+import com.abreqadhabra.nflight.service.core.server.AbstractServer;
+import com.abreqadhabra.nflight.service.core.server.IService;
 
-abstract class AbstractRMIServer extends NFServer {
-	public AbstractRMIServer(ProfileImpl profile) throws Exception {
-		super(profile);
+abstract class AbstractRMIServer extends AbstractServer {
+	public AbstractRMIServer(ProfileImpl profile, IService service)
+			throws Exception {
+		super(profile, service);
 	}
 }
 
 class UnicastRMIServerImpl extends AbstractRMIServer {
 
-	public UnicastRMIServerImpl(ProfileImpl profile) throws Exception {
-		super(profile);
+	public UnicastRMIServerImpl(ProfileImpl profile, IService service)
+			throws Exception {
+		super(profile, service);
 	}
 
 	@Override
@@ -47,8 +49,9 @@ class UnicastRMIServerImpl extends AbstractRMIServer {
 
 class ActivatableRMIServerImpl extends AbstractRMIServer {
 
-	public ActivatableRMIServerImpl(ProfileImpl profile) throws Exception {
-		super(profile);
+	public ActivatableRMIServerImpl(ProfileImpl profile, IService service)
+			throws Exception {
+		super(profile, service);
 	}
 
 	@Override
@@ -73,7 +76,7 @@ class ActivatableRMIServerImpl extends AbstractRMIServer {
 	}
 }
 
-abstract class AbstractRMIService implements NFService {
+abstract class AbstractRMIService implements IService {
 
 }
 
@@ -117,16 +120,17 @@ class ActivatableRMIServiceImpl extends AbstractRMIService {
 }
 
 abstract class RMIServerAbstractFactory {
-	abstract AbstractRMIServer createServer(ProfileImpl profile)
-			throws Exception;
+	abstract AbstractRMIServer createServer(ProfileImpl profile,
+			IService service) throws Exception;
 
 	abstract AbstractRMIService createService(ProfileImpl profile);
 }
 
 class UnicastRMIServerConcreteFactory extends RMIServerAbstractFactory {
 
-	AbstractRMIServer createServer(ProfileImpl profile) throws Exception {
-		return new UnicastRMIServerImpl(profile);
+	AbstractRMIServer createServer(ProfileImpl profile, IService service)
+			throws Exception {
+		return new UnicastRMIServerImpl(profile, service);
 	}
 
 	AbstractRMIService createService(ProfileImpl profile) {
@@ -135,8 +139,9 @@ class UnicastRMIServerConcreteFactory extends RMIServerAbstractFactory {
 }
 
 class ActivatableRMIServerConcreteFactory extends RMIServerAbstractFactory {
-	AbstractRMIServer createServer(ProfileImpl profile) throws Exception {
-		return new ActivatableRMIServerImpl(profile);
+	AbstractRMIServer createServer(ProfileImpl profile, IService service)
+			throws Exception {
+		return new ActivatableRMIServerImpl(profile, service);
 	}
 
 	AbstractRMIService createService(ProfileImpl profile) {
@@ -173,17 +178,18 @@ public class RMIServerAbstractFactoryTest {
 
 		RMIServerAbstractFactory unicastAbstractFactory = RMIServerFactoryMaker
 				.getFactory("unicast");
-		AbstractRMIServer unicastServer = unicastAbstractFactory
-				.createServer(profile);
+
 		AbstractRMIService unicastService = unicastAbstractFactory
 				.createService(profile);
+		AbstractRMIServer unicastServer = unicastAbstractFactory.createServer(
+				profile, unicastService);
 
 		RMIServerAbstractFactory activatableAbstractFactory = RMIServerFactoryMaker
 				.getFactory("activatable");
-		AbstractRMIServer activatableServer = activatableAbstractFactory
-				.createServer(profile);
 		AbstractRMIService activatableService = activatableAbstractFactory
 				.createService(profile);
+		AbstractRMIServer activatableServer = activatableAbstractFactory
+				.createServer(profile, activatableService);
 
 		// more function calls on product
 	}

@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 
 
 
-public interface NFService extends Remote{
+public interface IService extends Remote{
 
 	public boolean isRunning() throws RemoteException;
     String sayHello() throws RemoteException;

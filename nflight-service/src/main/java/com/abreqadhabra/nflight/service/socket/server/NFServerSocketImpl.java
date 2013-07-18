@@ -8,20 +8,19 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.service.core.ProfileImpl;
-import com.abreqadhabra.nflight.service.core.server.NFServer;
-import com.abreqadhabra.nflight.service.core.server.NFService;
+import com.abreqadhabra.nflight.service.core.server.AbstractServer;
+import com.abreqadhabra.nflight.service.core.server.IService;
 
 
-public class NFServerSocketImpl extends NFServer {
+public class NFServerSocketImpl extends AbstractServer {
 
 	private static final Class<NFServerSocketImpl> THIS_CLAZZ = NFServerSocketImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private ServerSocket serverSocket;
-	private NFService service;
 
-	public NFServerSocketImpl(ProfileImpl bootProfile) throws Exception {
-		super(bootProfile);
+	public NFServerSocketImpl(ProfileImpl bootProfile, IService service) throws Exception {
+		super(bootProfile, service);
 		init();
 	}
 
@@ -35,7 +34,7 @@ public class NFServerSocketImpl extends NFServer {
 	public void startup() throws Exception {
 		int port = super.getBootPofile().getServicePort();
 		serverSocket = new ServerSocket(port);
-		service = new NFServiceSocketImpl();
+	//	service = new NFServiceSocketImpl();
 		socketListening();
 
 	}
@@ -49,8 +48,8 @@ public class NFServerSocketImpl extends NFServer {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			ServerSocketThread serverThread = new ServerSocketThread(socket, service);
-			serverThread.start();
+	//		ServerSocketThread serverThread = new ServerSocketThread(socket, service);
+//			serverThread.start();
 		}
 	}
 

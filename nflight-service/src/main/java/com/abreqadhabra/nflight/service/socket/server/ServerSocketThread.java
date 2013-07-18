@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.service.core.server.NFService;
+import com.abreqadhabra.nflight.service.core.server.IService;
 
 public class ServerSocketThread extends Thread {
 	private static final Class<ServerSocketThread> THIS_CLAZZ = ServerSocketThread.class;
 	private Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	protected Socket socket;
-	protected NFService service;
+	protected IService service;
 	protected DataInputStream dis;
 	protected DataOutputStream dos;
 	protected ObjectInputStream ois;
@@ -28,7 +28,7 @@ public class ServerSocketThread extends Thread {
 	public int port;
 	public String hostName;
 
-	public ServerSocketThread(Socket soc, NFService service) {
+	public ServerSocketThread(Socket soc, IService service) {
 
 		this.socket = soc;
 		this.service = service;
