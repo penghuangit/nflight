@@ -52,7 +52,6 @@ public class Boot {
 			ProfileImpl p = new ProfileImpl(props);
 
 			p.setSecurityManager();
-
 			
 			String className = p.getServiceMainClass();
 			ArrayList<Class<?>> parameterTypeList = new ArrayList<Class<?>>();

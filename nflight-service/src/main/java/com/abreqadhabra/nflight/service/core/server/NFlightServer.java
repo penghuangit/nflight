@@ -29,39 +29,39 @@ public class NFlightServer {
 		IService service = null;
 		AbstractServerReceiver server = null;
 		Command cmd = null;
+		Invoker invoker = new Invoker();
+	
 		
 		abstractFactory = ServerFactoryMaker.getFactory(Profile.RMI_SERVICE.unicast.toString());
 		service = abstractFactory.createService();
 		server = abstractFactory.createServer(profile, service);
 		
 		cmd = new StartupServerConcreteCommand(server);
-		executeCommand(cmd);
+		invoker.add(cmd);
 
 		cmd = new StatusServerConcreteCommand(server);
-		executeCommand(cmd);
+		invoker.add(cmd);
 
 		cmd = new ShutdownServerConcreteCommand(server);
-		executeCommand(cmd);
+		invoker.add(cmd);
+
+		invoker.executeAll();
+		invoker.clear();
 		
 		abstractFactory = ServerFactoryMaker.getFactory(Profile.RMI_SERVICE.activatable.toString());
 		service = abstractFactory.createService();
 		server = abstractFactory.createServer(profile, service);
 
 		cmd = new StartupServerConcreteCommand(server);
-		executeCommand(cmd);
+		invoker.execute(cmd);
 		
 		cmd = new StatusServerConcreteCommand(server);
-		executeCommand(cmd);
+		invoker.execute(cmd);
 		
 		cmd = new ShutdownServerConcreteCommand(server);
-		executeCommand(cmd);
+		invoker.execute(cmd);
 
 	}
 
-	private void executeCommand(Command cmd)
-			throws Exception {
-		Invoker invoker = new Invoker();
-		invoker.executeCommand(cmd); // shutdown server
-	}
 
 }
