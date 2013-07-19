@@ -10,8 +10,6 @@ import com.abreqadhabra.nflight.service.core.command.Invoker;
 import com.abreqadhabra.nflight.service.core.server.command.ShutdownServerConcreteCommand;
 import com.abreqadhabra.nflight.service.core.server.command.StartupServerConcreteCommand;
 import com.abreqadhabra.nflight.service.core.server.command.StatusServerConcreteCommand;
-import com.abreqadhabra.nflight.service.rmi.server.RMIServerAbstractFactory;
-import com.abreqadhabra.nflight.service.rmi.server.RMIServerFactoryMaker;
 
 public class NFlightServer {
 	private static final Class<NFlightServer> THIS_CLAZZ = NFlightServer.class;
@@ -27,12 +25,12 @@ public class NFlightServer {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		RMIServerAbstractFactory abstractFactory = null;
+		ServerAbstractFactory abstractFactory = null;
 		IService service = null;
 		AbstractServerReceiver server = null;
 		Command cmd = null;
 		
-		abstractFactory = RMIServerFactoryMaker.getFactory(Profile.RMI_SERVICE.unicast.toString());
+		abstractFactory = ServerFactoryMaker.getFactory(Profile.RMI_SERVICE.unicast.toString());
 		service = abstractFactory.createService();
 		server = abstractFactory.createServer(profile, service);
 		
@@ -45,7 +43,7 @@ public class NFlightServer {
 		cmd = new ShutdownServerConcreteCommand(server);
 		executeCommand(cmd);
 		
-		abstractFactory = RMIServerFactoryMaker.getFactory(Profile.RMI_SERVICE.activatable.toString());
+		abstractFactory = ServerFactoryMaker.getFactory(Profile.RMI_SERVICE.activatable.toString());
 		service = abstractFactory.createService();
 		server = abstractFactory.createServer(profile, service);
 

@@ -5,7 +5,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -14,7 +13,6 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.common.exception.NFUnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.service.exception.NFRemoteException;
-import com.abreqadhabra.nflight.service.rmi.server.unicast.UnicastRMIServiceImpl;
 
 public class RegistryManager {
 	private static final Class<RegistryManager> THIS_CLAZZ = RegistryManager.class;
@@ -71,11 +69,12 @@ public class RegistryManager {
 
 		List<String> _boundNameList = null;
 		try {
-			String [] names =registry.list();
-			
+			String[] names = registry.list();
+
 			_boundNameList = Arrays.asList(registry.list());
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Found " + _boundNameList.size() + " registiries: " + Arrays.toString(names));
+					"Found " + _boundNameList.size() + " registiries: "
+							+ Arrays.toString(names));
 		} catch (RemoteException e) {
 			throw new NFRemoteException("Cannot connect to RMI registry: "
 					+ registry.toString(), e);
@@ -126,20 +125,23 @@ public class RegistryManager {
 	/*
 	 * Remove the RMI remote object from the RMI registry
 	 */
-	public static void unbind(Registry registry, String boundName) throws Exception {
+	public static void unbind(Registry registry, String boundName)
+			throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
 			registry.unbind(boundName);
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Remove the RMI remote object from the RMI registry:" + boundName);
+					"Remove the RMI remote object from the RMI registry:"
+							+ boundName);
 		} catch (RemoteException re) {
 			throw new NFRemoteException(
-					"Remote communication with the registry failed", re).addContextValue("boundName", boundName);
+					"Remote communication with the registry failed", re)
+					.addContextValue("boundName", boundName);
 		} catch (NotBoundException nbe) {
-			throw new NFUnexpectedException(boundName + " is not currently bound",
-					nbe);
+			throw new NFUnexpectedException(boundName
+					+ " is not currently bound", nbe);
 		}
 	}
 
@@ -169,22 +171,4 @@ public class RegistryManager {
 		return "rmi://" + host + ":" + port + "/" + objName;
 	}
 
-	public Remote getUnicastRemoteObjectNFlightServiceImpl() throws Exception {
-		// Remote _obj = new
-		// UnicastRemoteObjectNFlightServiceImpl(0,socketFactory,
-		// socketFactory);
-		Remote _obj = (Remote) new UnicastRMIServiceImpl();
-		try {
-			// Create remote object and export it to
-			// use custom secure socket
-			// _obj = UnicastRemoteObject.exportObject(_obj, 0, socketFactory,
-			// socketFactory);
-			_obj = UnicastRemoteObject.toStub(_obj);
-		} catch (RemoteException e) {
-			throw new NFRemoteException("Cannot export to Remote Object: "
-					+ _obj.getClass().getName(), e);
-		}
-
-		return _obj;
-	}
 }

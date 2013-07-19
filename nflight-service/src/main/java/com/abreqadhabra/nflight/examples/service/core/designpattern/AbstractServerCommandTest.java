@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.service.core.designpattern;
+package com.abreqadhabra.nflight.examples.service.core.designpattern;
 
 import java.util.LinkedList;
 import java.util.Queue;
