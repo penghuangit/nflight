@@ -3,3 +3,4 @@ http://www.javadom.com/tutorial/rmi-idl/
 http://docs.oracle.com/javase/7/docs/technotes/guides/rmi/activation/overview.html
 http://cafe.naver.com/janitproject/45
 http://www.scribd.com/doc/106295467/Enterprise-Java
+http://stackoverflow.com/questions/1673841/examples-of-gof-design-patterns

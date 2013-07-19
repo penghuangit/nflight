@@ -117,12 +117,16 @@ public abstract class Profile {
 		}
 	}
 
+	public static enum RMI_SERVICE  {
+		unicast, activatable;
+	}
+	
 	public static final String FILE_ACTIVATION_PROPERTIES = "com/abreqadhabra/nflight/service/rmi/server/activatable/conf/activatable.properties";
 	public static final String FILE_ACTIVATION_POLICY = "com/abreqadhabra/nflight/service/rmi/server/activatable/conf/activation.policy";
 	public static final String FILE_RMID_POLICY = "com/abreqadhabra/nflight/service/rmi/server/activatable/conf/rmid.policy";
 
 	public static final String ACTIVATION_FILE_PREFIX = "file:";
-
+	
 	public static enum PROPERTIES_ACTIVATION {
 
 		NFLIGHT_SERVANT_ACTIVATION_SETUP_CODEBASE, NFLIGHT_SERVANT_ACTIVATION_IMPL_CODEBASE, NFLIGHT_SERVANT_ACTIVATION_IMPL_CLASS, NFLIGHT_SERVANT_ACTIVATION_NAME, NFLIGHT_SERVANT_ACTIVATION_FILE, NFLIGHT_SERVANT_ACTIVATION_POLICY;

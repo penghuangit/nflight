@@ -7,6 +7,12 @@ import com.abreqadhabra.nflight.service.core.server.IService;
 public class NFServiceSocketImpl implements IService {
 
 	@Override
+	public String getServiceName() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public boolean isRunning() throws RemoteException {
 		return true;
 	}
@@ -15,5 +21,6 @@ public class NFServiceSocketImpl implements IService {
 	public String sayHello() throws RemoteException {
 		return "Hello, world!";
 	}
+
 
 }

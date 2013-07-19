@@ -1,5 +1,6 @@
 package com.abreqadhabra.nflight.service.rmi.server;
 
+import com.abreqadhabra.nflight.service.core.Profile;
 import com.abreqadhabra.nflight.service.rmi.server.activatable.ActivatableRMIServerConcreteFactory;
 import com.abreqadhabra.nflight.service.rmi.server.unicast.UnicastRMIServerConcreteFactory;
 
@@ -9,9 +10,10 @@ public class RMIServerFactoryMaker {
 	public static final String[] SERVICE_NAMES = { "unicast", "activatable" };
 
 	public static RMIServerAbstractFactory getFactory(String serviceName) {
-		if (serviceName.equals("unicast")) {
+		if (serviceName.equals(Profile.RMI_SERVICE.unicast.toString())) {
 			abstractFactory = new UnicastRMIServerConcreteFactory();
-		} else if (serviceName.equals("activatable")) {
+		} else if (serviceName.equals(Profile.RMI_SERVICE.activatable
+				.toString())) {
 			abstractFactory = new ActivatableRMIServerConcreteFactory();
 		}
 		return abstractFactory;

@@ -8,11 +8,11 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.service.core.ProfileImpl;
-import com.abreqadhabra.nflight.service.core.server.AbstractServer;
+import com.abreqadhabra.nflight.service.core.server.AbstractServerReceiver;
 import com.abreqadhabra.nflight.service.core.server.IService;
 
 
-public class NFServerSocketImpl extends AbstractServer {
+public class NFServerSocketImpl extends AbstractServerReceiver {
 
 	private static final Class<NFServerSocketImpl> THIS_CLAZZ = NFServerSocketImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
@@ -32,7 +32,7 @@ public class NFServerSocketImpl extends AbstractServer {
 
 	@Override
 	public void startup() throws Exception {
-		int port = super.getBootPofile().getServicePort();
+		int port = super.profile.getServicePort();
 		serverSocket = new ServerSocket(port);
 	//	service = new NFServiceSocketImpl();
 		socketListening();

@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.service.core.server.factory;
+package com.abreqadhabra.nflight.service.core.designpattern;
 
 import java.rmi.RemoteException;
 import java.util.Properties;
@@ -8,10 +8,10 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.service.core.Profile;
 import com.abreqadhabra.nflight.service.core.ProfileImpl;
-import com.abreqadhabra.nflight.service.core.server.AbstractServer;
+import com.abreqadhabra.nflight.service.core.server.AbstractServerReceiver;
 import com.abreqadhabra.nflight.service.core.server.IService;
 
-abstract class AbstractRMIServer extends AbstractServer {
+abstract class AbstractRMIServer extends AbstractServerReceiver {
 	public AbstractRMIServer(ProfileImpl profile, IService service)
 			throws Exception {
 		super(profile, service);
@@ -97,6 +97,12 @@ class UnicastRMIServiceImpl extends AbstractRMIService {
 
 		return null;
 	}
+
+	@Override
+	public String getServiceName() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
 
 class ActivatableRMIServiceImpl extends AbstractRMIService {
@@ -114,6 +120,12 @@ class ActivatableRMIServiceImpl extends AbstractRMIService {
 	@Override
 	public String sayHello() throws RemoteException {
 
+		return null;
+	}
+
+	@Override
+	public String getServiceName() throws RemoteException {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
