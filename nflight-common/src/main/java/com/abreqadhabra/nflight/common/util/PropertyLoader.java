@@ -54,12 +54,11 @@ public class PropertyLoader
 	        Arrays.sort(keys);
 	        StringBuffer sb = new StringBuffer();
 	        for(String key : keys) {          	
-	        	if(key.startsWith("nflight.") | key.startsWith("java.") | key.startsWith("sun.")   ){
+	        	if(key.startsWith("nflight.")/* | key.startsWith("java.") | key.startsWith("sun.")  */ ){
 	            sb.append("\n" +key + " : " + systemProps.get(key)  );
 	        	}
 	        } 
-			LOGGER.logp(Level.CONFIG, THIS_CLAZZ.getName(),
-					METHOD_NAME, "System Properties:" + sb);
+			LOGGER.logp(Level.CONFIG, THIS_CLAZZ.getName(),	METHOD_NAME, "System Properties:" + sb);
 		}
 	}
 	
