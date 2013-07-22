@@ -32,35 +32,47 @@ public class NFlightServer {
 		Invoker invoker = new Invoker();
 	
 		
-		abstractFactory = ServerFactoryMaker.getFactory(Profile.RMI_SERVICE.unicast.toString());
-		service = abstractFactory.createService();
-		server = abstractFactory.createServer(profile, service);
+//		abstractFactory = ServerFactoryMaker.getFactory(Profile.RMI_SERVICE.unicast.toString());
+//		service = abstractFactory.createService();
+//		server = abstractFactory.createServer(profile, service);
+//
+//		cmd = new StartupServerConcreteCommand(server);
+//		invoker.add(cmd);
+//
+//		cmd = new StatusServerConcreteCommand(server);
+//		invoker.add(cmd);
+//
+//		cmd = new ShutdownServerConcreteCommand(server);
+//		invoker.add(cmd);
 		
-		cmd = new StartupServerConcreteCommand(server);
-		invoker.add(cmd);
+//		invoker.executeAll();
+//		invoker.clear();
+				
+//		abstractFactory = ServerFactoryMaker.getFactory(Profile.RMI_SERVICE.activatable.toString());
+//		service = abstractFactory.createService();
+//		server = abstractFactory.createServer(profile, service);
 
-		cmd = new StatusServerConcreteCommand(server);
-		invoker.add(cmd);
+//		cmd = new StartRMIDConcreteCommand();
+//		invoker.execute(cmd);
 
-		cmd = new ShutdownServerConcreteCommand(server);
-		invoker.add(cmd);
-
-		invoker.executeAll();
-		invoker.clear();
+//		cmd = new StartupServerConcreteCommand(server);
+//		invoker.execute(cmd);
+//
+//		cmd = new StatusServerConcreteCommand(server);
+//		invoker.execute(cmd);
+//		
+//		cmd = new ShutdownServerConcreteCommand(server);
+//		invoker.execute(cmd);
 		
-		abstractFactory = ServerFactoryMaker.getFactory(Profile.RMI_SERVICE.activatable.toString());
-		service = abstractFactory.createService();
-		server = abstractFactory.createServer(profile, service);
+//		cmd = new StopRMIDConcreteCommand();
+//		invoker.execute(cmd);
 
-		cmd = new StartupServerConcreteCommand(server);
-		invoker.execute(cmd);
+		for(Profile.SOCKET_SERVICE socketService: Profile.SOCKET_SERVICE.values()){
+			abstractFactory = ServerFactoryMaker.getFactory(socketService.toString());
+			service = abstractFactory.createService();
+			server = abstractFactory.createServer(profile, service);			
+		}
 		
-		cmd = new StatusServerConcreteCommand(server);
-		invoker.execute(cmd);
-		
-		cmd = new ShutdownServerConcreteCommand(server);
-		invoker.execute(cmd);
-
 	}
 
 

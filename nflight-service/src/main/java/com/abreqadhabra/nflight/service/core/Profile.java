@@ -1,6 +1,5 @@
 package com.abreqadhabra.nflight.service.core;
 
-
 /**
  * This class allows retrieving configuration-dependent classes.
  * 
@@ -39,11 +38,11 @@ public abstract class Profile {
 	public static enum BOOT_OPTION_SERVICE_MAINCLASS {
 
 		com_abreqadhabra_nflight_service_core_server_NFlightServer,
-//		com_abreqadhabra_nflight_service_rmi_server_NFServerRMIImpl,
-//		com_abreqadhabra_nflight_service_socket_server_NFServerSocketImpl,
-//		
-//		com_abreqadhabra_nflight_service_rmi_server_unicast_UnicastRMIServerImpl,
-//		com_abreqadhabra_nflight_service_rmi_server_activatable_ActivatableRMIServerImpl,
+		// com_abreqadhabra_nflight_service_rmi_server_NFServerRMIImpl,
+		// com_abreqadhabra_nflight_service_socket_server_NFServerSocketImpl,
+		//
+		// com_abreqadhabra_nflight_service_rmi_server_unicast_UnicastRMIServerImpl,
+		// com_abreqadhabra_nflight_service_rmi_server_activatable_ActivatableRMIServerImpl,
 		UNKNOWN;
 
 		private String name = null; // property name
@@ -117,16 +116,16 @@ public abstract class Profile {
 		}
 	}
 
-	public static enum RMI_SERVICE  {
-		unicast, activatable;
+	public static enum RMI_SERVICE {
+		unicast, activatable, rmid;
 	}
-	
+
 	public static final String FILE_ACTIVATION_PROPERTIES = "com/abreqadhabra/nflight/service/rmi/server/activatable/conf/activatable.properties";
 	public static final String FILE_ACTIVATION_POLICY = "com/abreqadhabra/nflight/service/rmi/server/activatable/conf/activation.policy";
 	public static final String FILE_RMID_POLICY = "com/abreqadhabra/nflight/service/rmi/server/activatable/conf/rmid.policy";
 
 	public static final String ACTIVATION_FILE_PREFIX = "file:";
-	
+
 	public static enum PROPERTIES_ACTIVATION {
 
 		NFLIGHT_SERVANT_ACTIVATION_SETUP_CODEBASE, NFLIGHT_SERVANT_ACTIVATION_IMPL_CODEBASE, NFLIGHT_SERVANT_ACTIVATION_IMPL_CLASS, NFLIGHT_SERVANT_ACTIVATION_NAME, NFLIGHT_SERVANT_ACTIVATION_FILE, NFLIGHT_SERVANT_ACTIVATION_POLICY;
@@ -144,4 +143,9 @@ public abstract class Profile {
 			return lowercase;
 		}
 	}
+
+	public static enum SOCKET_SERVICE {
+		stream, datagram, multicast;
+	}
+
 }

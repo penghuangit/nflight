@@ -12,6 +12,7 @@ import java.rmi.activation.ActivationSystem;
 import java.rmi.registry.Registry;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.Env;
@@ -33,6 +34,11 @@ public class ActivatableRMIServerImpl extends AbstractRMIServer {
 	public ActivatableRMIServerImpl(ProfileImpl profile, IService service)
 			throws Exception {
 		super(profile, service);
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+		
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				"Instantiating a " + THIS_CLAZZ.getSimpleName() + " Class ");
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.abreqadhabra.nflight.service.rmi.server.unicast;
 
 import java.rmi.Remote;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -19,6 +20,11 @@ public class UnicastRMIServerImpl extends AbstractRMIServer {
 	public UnicastRMIServerImpl(ProfileImpl profile, IService service)
 			throws Exception {
 		super(profile, service);
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				"Instantiating a " + THIS_CLAZZ.getSimpleName() + " Class ");		
 	}
 
 	@Override

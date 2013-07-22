@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.service.core.server.NFlightServer;
 
 public class Invoker {
 	private static final Class<Invoker> THIS_CLAZZ = Invoker.class;
