@@ -14,8 +14,8 @@ import com.abreqadhabra.nflight.common.exception.NFUnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.service.exception.NFRemoteException;
 
-public class RegistryManager {
-	private static final Class<RegistryManager> THIS_CLAZZ = RegistryManager.class;
+public class RMIServiceHelper {
+	private static final Class<RMIServiceHelper> THIS_CLAZZ = RMIServiceHelper.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	/**

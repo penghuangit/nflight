@@ -21,7 +21,7 @@ import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
 import com.abreqadhabra.nflight.service.core.Profile;
 import com.abreqadhabra.nflight.service.core.ProfileImpl;
-import com.abreqadhabra.nflight.service.core.rmi.RegistryManager;
+import com.abreqadhabra.nflight.service.core.rmi.RMIServiceHelper;
 import com.abreqadhabra.nflight.service.core.server.IService;
 import com.abreqadhabra.nflight.service.exception.NFRemoteException;
 import com.abreqadhabra.nflight.service.rmi.server.AbstractRMIServer;
@@ -43,7 +43,7 @@ public class ActivatableRMIServerImpl extends AbstractRMIServer {
 
 	@Override
 	public void startup() throws Exception {
-		if (RegistryManager
+		if (RMIServiceHelper
 				.isActivatedRegistry(super.registry, super.boundName)) {
 			throw new NFRemoteException(boundName + "가 레지스트리에 이미 등록되어 있습니다.");
 		} else {
@@ -110,8 +110,8 @@ public class ActivatableRMIServerImpl extends AbstractRMIServer {
 			String host = InetAddress.getLocalHost().getHostAddress();
 			int port = 9999;
 
-			Registry registry = RegistryManager.getRegistry(host, port);
-			registry.rebind(RegistryManager.getBoundName(super.host,
+			Registry registry = RMIServiceHelper.getRegistry(host, port);
+			registry.rebind(RMIServiceHelper.getBoundName(super.host,
 					super.port, "activatable"), stub);
 			System.err.println("Stub bound in registry."
 					+ Arrays.toString(registry.list()));

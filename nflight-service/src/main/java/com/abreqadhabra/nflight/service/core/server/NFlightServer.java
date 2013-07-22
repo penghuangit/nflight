@@ -70,7 +70,7 @@ public class NFlightServer {
 		for(Profile.SOCKET_SERVICE socketService: Profile.SOCKET_SERVICE.values()){
 			abstractFactory = ServerFactoryMaker.getFactory(socketService.toString());
 			service = abstractFactory.createService();
-			server = abstractFactory.createServer(profile, service);			
+		//	server = abstractFactory.createServer(profile, service);			
 		}
 		
 	}

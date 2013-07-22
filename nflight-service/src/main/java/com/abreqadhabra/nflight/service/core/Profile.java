@@ -116,6 +116,10 @@ public abstract class Profile {
 		}
 	}
 
+	public static enum SERVICE_NAME {
+		unicast, activatable, rmid, stream, datagram, multicast;
+	}
+	
 	public static enum RMI_SERVICE {
 		unicast, activatable, rmid;
 	}

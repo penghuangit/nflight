@@ -48,7 +48,7 @@ import java.util.Arrays;
 import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.util.IOStream;
-import com.abreqadhabra.nflight.service.core.rmi.RegistryManager;
+import com.abreqadhabra.nflight.service.core.rmi.RMIServiceHelper;
 import com.abreqadhabra.nflight.service.core.server.IService;
 
 public class TestClient {
@@ -68,7 +68,7 @@ public class TestClient {
 			}
 			String host = InetAddress.getLocalHost().getHostAddress();
 			int port = 9999;
-			Registry registry = RegistryManager.getRegistry(host, port);
+			Registry registry = RMIServiceHelper.getRegistry(host, port);
 			// Registry registry = LocateRegistry.getRegistry();
 			System.out.println(Arrays.toString(registry.list()));
 

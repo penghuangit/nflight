@@ -36,24 +36,24 @@ public class StreamSocketServerImpl extends AbstractSocketServer {
 
 	@Override
 	public void init() throws Exception {
-		serverStrategy.initBehaviorInterface();
+		serverStrategy.init();
 		
 	}
 
 	@Override
 	public void startup() throws Exception {
-		serverStrategy.startupBehaviorInterface();
+		serverStrategy.startup();
 		
 	}
 
 	@Override
 	public void shutdown() throws Exception {
-		serverStrategy.shutdownBehaviorInterface();
+		serverStrategy.shutdown();
 	}
 
 	@Override
 	public boolean status() throws Exception {		
-		return serverStrategy.statusBehaviorInterface();
+		return serverStrategy.status();
 	}
 
 

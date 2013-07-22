@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.service.rmi.server.unicast;
+package com.abreqadhabra.nflight.server.service.rmi;
 
 import java.rmi.Remote;
 import java.rmi.server.UnicastRemoteObject;
@@ -6,36 +6,35 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.abreqadhabra.nflight.service.core.ProfileImpl;
+import com.abreqadhabra.nflight.server.service.ServiceDescriptor;
 import com.abreqadhabra.nflight.service.core.rmi.RMIServiceHelper;
-import com.abreqadhabra.nflight.service.core.server.IService;
 import com.abreqadhabra.nflight.service.exception.NFRemoteException;
-import com.abreqadhabra.nflight.service.rmi.server.AbstractRMIServer;
 
-public class UnicastRMIServerImpl extends AbstractRMIServer {
+//Strategy ConcreteStrategy
+public class UnicastRMIServiceImpl extends AbstractRMIService {
 
-	private static final Class<UnicastRMIServerImpl> THIS_CLAZZ = UnicastRMIServerImpl.class;
+	public UnicastRMIServiceImpl(ServiceDescriptor _desc) throws Exception {
+		super(_desc);
+	}
+
+	private static final Class<UnicastRMIServiceImpl> THIS_CLAZZ = UnicastRMIServiceImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public UnicastRMIServerImpl(ProfileImpl profile, IService service)
-			throws Exception {
-		super(profile, service);
+	@Override
+	public void startup() throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				"Instantiating a " + THIS_CLAZZ.getSimpleName() + " Class ");		
-	}
+				"Strategy -> ConcreteStrategy -> BehaviourInterface() : "
+						+ METHOD_NAME);
 
-	@Override
-	public void startup() throws Exception {
-		if (RMIServiceHelper
-				.isActivatedRegistry(super.registry, super.boundName)) {
+		if (RMIServiceHelper.isActivatedRegistry(super.registry,
+				super.boundName)) {
 			throw new NFRemoteException(boundName + "가 레지스트리에 이미 등록되어 있습니다.");
 		} else {
 			try {
-				Remote servant = UnicastRemoteObject.exportObject(
-						super.service, 0);
+				Remote servant = UnicastRemoteObject.exportObject(this, 0);
 				RMIServiceHelper.rebind(super.registry, RMIServiceHelper
 						.getBoundName(super.host, super.port, "unicast"),
 						servant);
@@ -43,5 +42,7 @@ public class UnicastRMIServerImpl extends AbstractRMIServer {
 				throw e;
 			}
 		}
+
 	}
+
 }

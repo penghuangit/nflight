@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.service.core.ProfileImpl;
-import com.abreqadhabra.nflight.service.core.rmi.RegistryManager;
+import com.abreqadhabra.nflight.service.core.rmi.RMIServiceHelper;
 import com.abreqadhabra.nflight.service.core.server.AbstractServerReceiver;
 import com.abreqadhabra.nflight.service.core.server.IService;
 import com.abreqadhabra.nflight.service.exception.NFRemoteException;
@@ -47,16 +47,16 @@ public abstract class AbstractRMIServer extends AbstractServerReceiver {
 	public void init() throws Exception {
 		this.host = InetAddress.getLocalHost().getHostAddress();
 		this.port = super.profile.getServicePort();
-		this.boundName = RegistryManager.getBoundName(this.host, this.port,
+		this.boundName = RMIServiceHelper.getBoundName(this.host, this.port,
 				this.service.getServiceName());
-		this.registry = RegistryManager.getRegistry(this.host, this.port);
+		this.registry = RMIServiceHelper.getRegistry(this.host, this.port);
 	}
 
 	@Override
 	public void shutdown() throws Exception {
-		if (RegistryManager.isActivatedRegistry(this.registry, this.boundName)) {
+		if (RMIServiceHelper.isActivatedRegistry(this.registry, this.boundName)) {
 			try {
-				RegistryManager.unbind(this.registry, boundName);
+				RMIServiceHelper.unbind(this.registry, boundName);
 			} catch (Exception e) {
 				throw e;
 			}
@@ -71,8 +71,8 @@ public abstract class AbstractRMIServer extends AbstractServerReceiver {
 				.getMethodName();
 
 		boolean _isRunning = false;
-		if (RegistryManager.isActivatedRegistry(this.registry, this.boundName)) {
-			IService service = (IService) RegistryManager.lookup(this.registry,
+		if (RMIServiceHelper.isActivatedRegistry(this.registry, this.boundName)) {
+			IService service = (IService) RMIServiceHelper.lookup(this.registry,
 					boundName);
 			if (service != null) {
 				try {
