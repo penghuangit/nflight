@@ -22,44 +22,43 @@ import com.abreqadhabra.nflight.common.util.IOStream;
 public class ServerTest {
 
 	private static final Class<ServerTest> THIS_CLAZZ = ServerTest.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
-	
-	String host = InetAddress.getLocalHost().getHostName();
-	String address = InetAddress.getLocalHost().getHostAddress();
-	int port = 9999;
-	
-	public ServerTest() throws Exception {
-		doTest();
-	}
+	private static final Logger LOGGER = LoggingHelper
+			.getLogger(ServerTest.THIS_CLAZZ);
 
-	public static void main(String[] args) throws Exception {
+	public static void main(final String[] args) throws Exception {
 
-		ServerTest test = new ServerTest();
+		final ServerTest test = new ServerTest();
 		test.doTest();
 
 	}
 
-	private  void doTest() throws Exception {
+	String host = InetAddress.getLocalHost().getHostName();
+	String address = InetAddress.getLocalHost().getHostAddress();
+
+	int port = 9999;
+
+	public ServerTest() throws Exception {
+		this.doTest();
+	}
+
+	private void doTest() throws Exception {
 
 		String serviceName = "unicast";
 
-		ServiceDescriptor sd = new ServiceDescriptor();
+		final ServiceDescriptor sd = new ServiceDescriptor();
 		sd.setServiceName(serviceName);
-		sd.setHost(host);
-		sd.setAddress(address);
-		sd.setPort(port);
-		
-		testService(sd);
-		
-		serviceName ="activatable";
-		sd.setServiceName(serviceName);
-		sd.setCodeBase(IOStream.getCodebase(THIS_CLAZZ.getName()));
-		
-		testService(sd);
-		
+		sd.setHost(this.host);
+		sd.setAddress(this.address);
+		sd.setPort(this.port);
 
-		
-		
+		this.testService(sd);
+
+		serviceName = "activatable";
+		sd.setServiceName(serviceName);
+		sd.setCodeBase(IOStream.getCodebase(ServerTest.THIS_CLAZZ.getName()));
+
+		this.testService(sd);
+
 		// server.init();
 		// server.startup();
 		// server.status();
@@ -67,22 +66,32 @@ public class ServerTest {
 
 	}
 
-	private void testService(ServiceDescriptor sd) throws Exception {
+	public IServer getServer(final ServiceDescriptor sd) throws Exception {
+
+		final IServer _server = new ServerImpl(sd.getServiceName());
+		final IService _service = ServiceFactory.getService(sd);
+		_server.setService(_service);
+
+		return _server;
+
+	}
+
+	private void testService(final ServiceDescriptor sd) throws Exception {
 		Command _cmd = null;
-		Invoker _invoker = new Invoker();
+		final Invoker _invoker = new Invoker();
 
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
 
-		
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				"service name : " + sd.getServiceName());
-		
-		IServer _server = getServer(sd);
+		ServerTest.LOGGER.logp(Level.FINER, ServerTest.THIS_CLAZZ.getName(),
+				METHOD_NAME, "service name : " + sd.getServiceName());
+
+		final IServer _server = this.getServer(sd);
 
 		try {
 			_cmd = new ShutdownServerCommand(_server);
 			_invoker.execute(_cmd);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			_cmd = new StartupServerCommand(_server);
 			_invoker.execute(_cmd);
 
@@ -90,46 +99,37 @@ public class ServerTest {
 			_invoker.execute(_cmd);
 
 			_cmd = new ShutdownServerCommand(_server);
-//			_invoker.execute(_cmd);
+			// _invoker.execute(_cmd);
 
 		}
-		
-		Registry registry = RMIServiceHelper.getRegistry(host, port);
 
-		
-		String name1 = "rmi://"+host+":"+port+"/unicast";
-		String name2 = "rmi://"+host+":"+port+"/activatable";
-		String response=null;
-		
-		
+		final Registry registry = RMIServiceHelper.getRegistry(this.host,
+				this.port);
+
+		final String name1 = "rmi://" + this.host + ":" + this.port
+				+ "/unicast";
+		final String name2 = "rmi://" + this.host + ":" + this.port
+				+ "/activatable";
+		String response = null;
+
 		try {
-			IService stub1 = (IService) registry.lookup(name1);
+			final IService stub1 = (IService) registry.lookup(name1);
 			// registry.lookup("rmi://192.168.0.100:9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
 			response = stub1.sayHello();
 			System.out.println(stub1 + "\t:\t" + response);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			System.out.println(WrapperException.getStackTrace(e));
 		}
 		try {
-		
-			IService stub2 = (IService) registry.lookup(name2);
+
+			final IService stub2 = (IService) registry.lookup(name2);
 
 			response = stub2.sayHello();
 			System.out.println(stub2 + "\t:\t" + response);
 
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			System.out.println(WrapperException.getStackTrace(e));
 		}
-		
-	}
-
-	public  IServer getServer(ServiceDescriptor sd) throws Exception {
-
-		IServer _server = new ServerImpl(sd.getServiceName());
-		IService _service = (IService) ServiceFactory.getService(sd);
-		_server.setService(_service);
-
-		return _server;
 
 	}
 

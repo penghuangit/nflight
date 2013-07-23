@@ -6,3 +6,4 @@
 *.ear
 
 target/
+rmid.log/

@@ -17,72 +17,37 @@ import com.abreqadhabra.nflight.common.util.PropertyLoader;
 public class ProfileImpl extends Profile {
 
 	private static final Class<ProfileImpl> THIS_CLAZZ = ProfileImpl.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static final Logger LOGGER = LoggingHelper
+			.getLogger(ProfileImpl.THIS_CLAZZ);
 
-	private String serviceMainClass;
-	private String serviceCommand;
-	private String codeBase; 
-	private int servicePort; 
-
-	public ProfileImpl(Properties props) {
-
-		PropertyLoader.setSystemProperties(props);
-
-		
-		this.setServiceMainClass(System
-				.getProperty(Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_MAINCLASS
-						.toString()));
-
-		this.setServiceCommand(System
-				.getProperty(Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_COMMAND
-						.toString()));
-
-		this.setCodeBase(IOStream.getCodebase(serviceMainClass));
-
-		this.setServicePort(Integer.parseInt(System
-				.getProperty(Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_PORT
-						.toString())));
-		
-		
-		// this.setBootCommand(System
-		// .getProperty(Profile.BOOTCOMMAND_PROPERTIES.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
-		// .toString()));
-
+	private static boolean checkNotLeadingHyphens(final String key,
+			final String value) {
+		if (value.startsWith("--")) {
+			throw new IllegalArgumentException("No " + key
+					+ "name specified after \"--" + key + "\" option");
+		} else {
+			return true;
+		}
 	}
 
-	public int getServicePort() {
-		return this.servicePort;
-	}
-
-	public void setServicePort(int servicePort) {
-		this.servicePort = servicePort;
-	}
-
-	public String getCodeBase() {
-		return codeBase;
-	}
-
-	public void setCodeBase(String codeBase) {
-		this.codeBase = codeBase;
-	}
-
-	public static Properties parseCMDLineArgs(String[] args) throws Exception {
+	public static Properties parseCMDLineArgs(final String[] args)
+			throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		Properties argsProps = new Properties();
 		try {
 			// an iterator for the command line tokens
-			Iterator<String> options = Arrays.asList(args).iterator();
+			final Iterator<String> options = Arrays.asList(args).iterator();
 
 			// process each command line token
 			while (options.hasNext()) {
 				// get the next command line token
-				String key = (String) options.next();
+				String key = options.next();
 				String value = "true";
 				// handle long option --foo or --foo bar
 				if (key.startsWith("--")) {
-					key = stripLeadingHyphens(key);
+					key = ProfileImpl.stripLeadingHyphens(key);
 					if (key.equalsIgnoreCase(Profile.BOOT_OPTION.gui.toString())) {
 						argsProps.setProperty(
 								Profile.BOOT_OPTION.gui.toString(), value);
@@ -93,8 +58,8 @@ public class ProfileImpl extends Profile {
 
 					if (key.equalsIgnoreCase(Profile.BOOT_OPTION.service
 							.toString())) {
-						value = (String) options.next();
-						if (checkNotLeadingHyphens(key, value)) {
+						value = options.next();
+						if (ProfileImpl.checkNotLeadingHyphens(key, value)) {
 							argsProps
 									.setProperty(
 											Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE
@@ -102,8 +67,8 @@ public class ProfileImpl extends Profile {
 						}
 					} else if (key.equalsIgnoreCase(Profile.BOOT_OPTION.host
 							.toString())) {
-						value = (String) options.next();
-						if (checkNotLeadingHyphens(key, value)) {
+						value = options.next();
+						if (ProfileImpl.checkNotLeadingHyphens(key, value)) {
 							argsProps
 									.setProperty(
 											Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_HOST
@@ -111,8 +76,8 @@ public class ProfileImpl extends Profile {
 						}
 					} else if (key.equalsIgnoreCase(Profile.BOOT_OPTION.port
 							.toString())) {
-						value = (String) options.next();
-						if (checkNotLeadingHyphens(key, value)) {
+						value = options.next();
+						if (ProfileImpl.checkNotLeadingHyphens(key, value)) {
 							argsProps
 									.setProperty(
 											Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_PORT
@@ -122,18 +87,21 @@ public class ProfileImpl extends Profile {
 							.toString())) {
 
 						try {
-							value = (String) options.next();
-							if (checkNotLeadingHyphens(key, value)) {
+							value = options.next();
+							if (ProfileImpl.checkNotLeadingHyphens(key, value)) {
 								argsProps.clear();
 								argsProps = PropertyFile
-										.readPropertyFilePath(THIS_CLAZZ.getName() ,value);
-								LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
+										.readPropertyFilePath(
+												ProfileImpl.THIS_CLAZZ
+														.getName(), value);
+								ProfileImpl.LOGGER.logp(Level.FINER,
+										ProfileImpl.THIS_CLAZZ.getName(),
 										METHOD_NAME,
 										"Command line arguments will be ignored. loading properties from file: "
 												+ value);
 								return argsProps;
 							}
-						} catch (NoSuchElementException nsee) {
+						} catch (final NoSuchElementException nsee) {
 							throw new IllegalArgumentException(
 									"No value specified for property --" + key);
 						}
@@ -149,58 +117,28 @@ public class ProfileImpl extends Profile {
 							"No value specified for property --" + key);
 				}
 			}
-		} catch (Exception e) {
-			throw new NFBootException(
-					"Command line arguments format error. ", e);
+		} catch (final Exception e) {
+			throw new NFBootException("Command line arguments format error. ",
+					e);
 		}
 
 		return argsProps;
 	}
 
-	/**
-	 * Remove the hyphens from the begining of <code>str</code> and return the
-	 * new String.
-	 * 
-	 * @param str
-	 *            The string from which the hyphens should be removed.
-	 * 
-	 * @return the new String.
-	 */
-	private static String stripLeadingHyphens(String str) {
-		if (str == null) {
-			return null;
-		}
-		if (str.startsWith("--")) {
-			return str.substring(2, str.length());
-		} else if (str.startsWith("-")) {
-			return str.substring(1, str.length());
-		}
+	public static Properties parseServiceSpecifiers(final Properties props) {
 
-		return str;
-	}
+		final String service = props.getProperty(Profile.FILE_BOOT_PROPERTIES);
 
-	private static boolean checkNotLeadingHyphens(String key, String value) {
-		if (value.startsWith("--")) {
-			throw new IllegalArgumentException("No " + key
-					+ "name specified after \"--" + key + "\" option");
-		} else {
-			return true;
-		}
-	}
-
-	public static Properties parseServiceSpecifiers(Properties props) {
-
-		String service = props.getProperty(Profile.FILE_BOOT_PROPERTIES);
-
-		int index1 = service.indexOf(':');
-		int index2 = service.indexOf(';');
+		final int index1 = service.indexOf(':');
+		final int index2 = service.indexOf(';');
 
 		// Cursor on the given string: marks the parser position
-		int cursor = 0;
+		final int cursor = 0;
 
-		String serviceName = service.substring(cursor, index1);
-		String serviceMainClass = service.substring(index1 + 1, index2);
-		String serviceCommand = service.substring(index2 + 1, service.length());
+		service.substring(cursor, index1);
+		final String serviceMainClass = service.substring(index1 + 1, index2);
+		final String serviceCommand = service.substring(index2 + 1,
+				service.length());
 
 		props.setProperty(
 				Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_MAINCLASS
@@ -213,6 +151,86 @@ public class ProfileImpl extends Profile {
 		return props;
 	}
 
+	/**
+	 * Remove the hyphens from the begining of <code>str</code> and return the
+	 * new String.
+	 * 
+	 * @param str
+	 *            The string from which the hyphens should be removed.
+	 * 
+	 * @return the new String.
+	 */
+	private static String stripLeadingHyphens(final String str) {
+		if (str == null) {
+			return null;
+		}
+		if (str.startsWith("--")) {
+			return str.substring(2, str.length());
+		} else if (str.startsWith("-")) {
+			return str.substring(1, str.length());
+		}
+
+		return str;
+	}
+
+	private String serviceMainClass;
+
+	private String serviceCommand;
+
+	private String codeBase;
+
+	private int servicePort;
+
+	public ProfileImpl(final Properties props) {
+
+		PropertyLoader.setSystemProperties(props);
+
+		this.setServiceMainClass(System
+				.getProperty(Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_MAINCLASS
+						.toString()));
+
+		this.setServiceCommand(System
+				.getProperty(Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_COMMAND
+						.toString()));
+
+		this.setCodeBase(IOStream.getCodebase(this.serviceMainClass));
+
+		this.setServicePort(Integer.parseInt(System
+				.getProperty(Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_PORT
+						.toString())));
+
+		// this.setBootCommand(System
+		// .getProperty(Profile.BOOTCOMMAND_PROPERTIES.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
+		// .toString()));
+
+	}
+
+	public boolean getBooleanProperty(
+			final PROPERTIES_BOOT nflightBootOptionServiceName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public String getCodeBase() {
+		return this.codeBase;
+	}
+
+	public String getServiceCommand() {
+		return this.serviceCommand;
+	}
+
+	public String getServiceMainClass() {
+		return this.serviceMainClass;
+	}
+
+	public int getServicePort() {
+		return this.servicePort;
+	}
+
+	public void setCodeBase(final String codeBase) {
+		this.codeBase = codeBase;
+	}
+
 	public void setSecurityManager() {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
@@ -220,41 +238,30 @@ public class ProfileImpl extends Profile {
 		System.setProperty(
 				Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(),
 				this.codeBase + Profile.FILE_BOOT_POLICY.toString());
-		LOGGER.logp(
-				Level.CONFIG,
-				THIS_CLAZZ.getName(),
-				METHOD_NAME,
-				Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY
-						+ "="
-						+ System.getProperty(Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY
-								.toString()));
+		ProfileImpl.LOGGER
+				.logp(Level.CONFIG,
+						ProfileImpl.THIS_CLAZZ.getName(),
+						METHOD_NAME,
+						Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY
+								+ "="
+								+ System.getProperty(Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY
+										.toString()));
 		if (System.getSecurityManager() == null) {
 			// System.setSecurityManager(new RMISecurityManager());
 			System.setSecurityManager(new SecurityManager());
 		}
 	}
 
-	public boolean getBooleanProperty(
-			PROPERTIES_BOOT nflightBootOptionServiceName) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public String getServiceMainClass() {
-		return serviceMainClass;
-	}
-
-	public void setServiceMainClass(String serviceMainClass) {
-		this.serviceMainClass = serviceMainClass;
-	}
-
-	public String getServiceCommand() {
-		return serviceCommand;
-	}
-
-	public void setServiceCommand(String serviceCommand) {
+	public void setServiceCommand(final String serviceCommand) {
 		this.serviceCommand = serviceCommand;
 	}
 
+	public void setServiceMainClass(final String serviceMainClass) {
+		this.serviceMainClass = serviceMainClass;
+	}
+
+	public void setServicePort(final int servicePort) {
+		this.servicePort = servicePort;
+	}
 
 }

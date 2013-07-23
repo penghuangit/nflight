@@ -8,44 +8,44 @@ public class ServiceDescriptor {
 	int port;
 	String codeBase;
 
-	public String getServiceName() {
-		return this.serviceName;
+	public String getAddress() {
+		return this.address;
 	}
 
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
+	public String getCodeBase() {
+		return this.codeBase;
 	}
 
 	public String getHost() {
 		return this.host;
 	}
 
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	public String getAddress() {
-		return this.address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
 	public int getPort() {
 		return this.port;
 	}
 
-	public void setPort(int port) {
+	public String getServiceName() {
+		return this.serviceName;
+	}
+
+	public void setAddress(final String address) {
+		this.address = address;
+	}
+
+	public void setCodeBase(final String codeBase) {
+		this.codeBase = codeBase;
+	}
+
+	public void setHost(final String host) {
+		this.host = host;
+	}
+
+	public void setPort(final int port) {
 		this.port = port;
 	}
 
-	public String getCodeBase() {
-		return codeBase;
-	}
-
-	public void setCodeBase(String codeBase) {
-		this.codeBase = codeBase;
+	public void setServiceName(final String serviceName) {
+		this.serviceName = serviceName;
 	}
 
 }

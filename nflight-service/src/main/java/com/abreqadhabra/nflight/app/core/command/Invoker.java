@@ -9,11 +9,29 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class Invoker {
 	private static final Class<Invoker> THIS_CLAZZ = Invoker.class;
-	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Logger LOGGER = LoggingHelper.getLogger(Invoker.THIS_CLAZZ);
 
 	Queue<Command> cmdQueue = new LinkedList<Command>();
 
-	public void execute(Command command) throws Exception {
+	public void add(final Command cmd) {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+		this.cmdQueue.offer(cmd);
+
+		Invoker.LOGGER.logp(Level.FINER, Invoker.THIS_CLAZZ.getName(),
+				METHOD_NAME, "cmdQueue  :" + this.cmdQueue.size());
+	}
+
+	public void clear() {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		this.cmdQueue.clear();
+		Invoker.LOGGER.logp(Level.FINER, Invoker.THIS_CLAZZ.getName(),
+				METHOD_NAME, "cmdQueue  :" + this.cmdQueue.size());
+	}
+
+	public void execute(final Command command) throws Exception {
 		command.execute();
 	}
 
@@ -21,30 +39,12 @@ public class Invoker {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		while (cmdQueue.peek() != null) {
-			Command cmd = cmdQueue.poll();
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"execute  :" + cmd.getClass().getSimpleName());
+		while (this.cmdQueue.peek() != null) {
+			final Command cmd = this.cmdQueue.poll();
+			Invoker.LOGGER.logp(Level.FINER, Invoker.THIS_CLAZZ.getName(),
+					METHOD_NAME, "execute  :" + cmd.getClass().getSimpleName());
 			cmd.execute();
 		}
-	}
-
-	public void add(Command cmd) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-		cmdQueue.offer(cmd);
-
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				"cmdQueue  :" + cmdQueue.size());
-	}
-
-	public void clear() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-
-		cmdQueue.clear();
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				"cmdQueue  :" + cmdQueue.size());
 	}
 
 }

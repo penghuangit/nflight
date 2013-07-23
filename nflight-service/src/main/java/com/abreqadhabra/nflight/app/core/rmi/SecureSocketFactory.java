@@ -25,6 +25,35 @@ public class SecureSocketFactory implements RMIClientSocketFactory,
 	}
 
 	/**
+	 * Creates the server socket, which will be used to instantiate a
+	 * <code>UnicastRemoteObject</code>.
+	 * 
+	 * @param port
+	 *            The port to listen on.
+	 * @return The server socket.
+	 */
+	@Override
+	public ServerSocket createServerSocket(final int port) throws IOException {
+		if (this.serverSocketFactory == null) {
+			try {
+				SSLContext ctx = null;
+				ctx = SSLContext.getInstance("TLS");
+				ctx.init(null, null, null);
+
+				this.serverSocketFactory = ctx.getServerSocketFactory();
+			} catch (final Exception e) {
+				throw new IOException("Error creating SSLServerSocketFactory. "
+						+ e.toString());
+			}
+		}
+
+		final SSLServerSocket sss = (SSLServerSocket) this.serverSocketFactory
+				.createServerSocket(port);
+		sss.setEnabledCipherSuites(new String[] { "SSL_DH_anon_WITH_RC4_128_MD5" });
+		return sss;
+	}
+
+	/**
 	 * Creates the client socket, which will be used to instantiate a
 	 * <code>UnicastRemoteObject</code>.
 	 * 
@@ -34,48 +63,23 @@ public class SecureSocketFactory implements RMIClientSocketFactory,
 	 *            The port to connect to.
 	 * @return The client socket.
 	 */
-	public Socket createSocket(String host, int port) throws IOException {
-		if (clientSocketFactory == null) {
+	@Override
+	public Socket createSocket(final String host, final int port)
+			throws IOException {
+		if (this.clientSocketFactory == null) {
 			try {
-				SSLContext ctx = SSLContext.getInstance("TLS");
+				final SSLContext ctx = SSLContext.getInstance("TLS");
 				ctx.init(null, null, null);
-				clientSocketFactory = (SSLSocketFactory) ctx.getSocketFactory();
-			} catch (Exception e) {
+				this.clientSocketFactory = ctx.getSocketFactory();
+			} catch (final Exception e) {
 				throw new IOException("Error creating SSLSocketFactory. "
 						+ e.toString());
 			}
 		}
-		SSLSocket sc = (SSLSocket) clientSocketFactory.createSocket(host, port);
+		final SSLSocket sc = (SSLSocket) this.clientSocketFactory.createSocket(
+				host, port);
 		sc.setEnabledCipherSuites(new String[] { "SSL_DH_anon_WITH_RC4_128_MD5" });
 		return sc;
-	}
-
-	/**
-	 * Creates the server socket, which will be used to instantiate a
-	 * <code>UnicastRemoteObject</code>.
-	 * 
-	 * @param port
-	 *            The port to listen on.
-	 * @return The server socket.
-	 */
-	public ServerSocket createServerSocket(int port) throws IOException {
-		if (serverSocketFactory == null) {
-			try {
-				SSLContext ctx = null;
-				ctx = SSLContext.getInstance("TLS");
-				ctx.init(null, null, null);
-
-				serverSocketFactory = ctx.getServerSocketFactory();
-			} catch (Exception e) {
-				throw new IOException("Error creating SSLServerSocketFactory. "
-						+ e.toString());
-			}
-		}
-
-		SSLServerSocket sss = (SSLServerSocket) serverSocketFactory
-				.createServerSocket(port);
-		sss.setEnabledCipherSuites(new String[] { "SSL_DH_anon_WITH_RC4_128_MD5" });
-		return sss;
 	}
 
 }

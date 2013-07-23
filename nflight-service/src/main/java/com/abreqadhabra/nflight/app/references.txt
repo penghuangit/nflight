@@ -18,3 +18,7 @@ http://docs.oracle.com/javase/7/docs/technotes/guides/rmi/activation/overview.ht
 http://cafe.naver.com/janitproject/45
 http://www.scribd.com/doc/106295467/Enterprise-Java
 http://stackoverflow.com/questions/1673841/examples-of-gof-design-patterns
+
+http://docs.oracle.com/javase/6/docs/technotes/guides/rmi/codebase.html
+http://docs.oracle.com/javase/7/docs/technotes/guides/rmi/enhancements-7.html
+http://stackoverflow.com/questions/16884047/java-rmi-server-codebase-not-working-on-linux

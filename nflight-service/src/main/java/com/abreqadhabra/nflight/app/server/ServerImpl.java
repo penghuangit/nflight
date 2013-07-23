@@ -11,32 +11,25 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 public class ServerImpl implements IServer {
 
 	private static final Class<ServerImpl> THIS_CLAZZ = ServerImpl.class;
-	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Logger LOGGER = LoggingHelper
+			.getLogger(ServerImpl.THIS_CLAZZ);
 
 	Profile profile;
 	IService service;
 	String serviceName;
 
-	public ServerImpl(String _serviceName) {
+	public ServerImpl(final String _serviceName) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		this.serviceName = _serviceName;
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				"Strategy -> Context : " + THIS_CLAZZ.getSimpleName());
+		ServerImpl.LOGGER.logp(
+				Level.FINER,
+				ServerImpl.THIS_CLAZZ.getName(),
+				METHOD_NAME,
+				"Strategy -> Context : "
+						+ ServerImpl.THIS_CLAZZ.getSimpleName());
 
-	}
-
-	@Override
-	public void setService(IService _operation) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-
-		this.service = _operation;
-
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				"Strategy -> ConcreteStrategy  : "
-						+ service.getClass().getSimpleName());
 	}
 
 	@Override
@@ -47,26 +40,37 @@ public class ServerImpl implements IServer {
 
 	@Override
 	public void init() throws Exception {
+		Thread.currentThread().getStackTrace()[1].getMethodName();
+
+		this.service.init();
+
+	}
+
+	@Override
+	public void setService(final IService _operation) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		service.init();
+		this.service = _operation;
 
-	}
-
-	@Override
-	public void startup() throws Exception {
-		service.startup();
-	}
-
-	@Override
-	public boolean status() throws Exception {
-		return service.status();
+		ServerImpl.LOGGER.logp(Level.FINER, ServerImpl.THIS_CLAZZ.getName(),
+				METHOD_NAME, "Strategy -> ConcreteStrategy  : "
+						+ this.service.getClass().getSimpleName());
 	}
 
 	@Override
 	public void shutdown() throws Exception {
-		service.shutdown();
+		this.service.shutdown();
+	}
+
+	@Override
+	public void startup() throws Exception {
+		this.service.startup();
+	}
+
+	@Override
+	public boolean status() throws Exception {
+		return this.service.status();
 	}
 
 }

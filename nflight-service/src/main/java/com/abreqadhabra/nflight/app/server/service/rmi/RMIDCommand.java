@@ -6,25 +6,26 @@ import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.util.IOStream;
 
 public class RMIDCommand {
-	
-	private String codeBase = IOStream.getCodebase(RMIDCommand.class.getName());
-	
-	public RMIDCommand(){
+
+	/**
+	 * @param args
+	 */
+	public static void main(final String[] args) {
 		try {
-			startRMID();
-		} catch (Exception e) {
+			new RMIDCommand();
+		} catch (final Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
+
+	private final String codeBase = IOStream.getCodebase(RMIDCommand.class
+			.getName());
+
+	public RMIDCommand() {
 		try {
-			new RMIDCommand();
-		} catch (Exception e) {
+			this.startRMID();
+		} catch (final Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -32,27 +33,13 @@ public class RMIDCommand {
 
 	private void startRMID() throws Exception {
 		// TODO Auto-generated method stub
-		BootCommand cmd = new BootCommand();
+		final BootCommand cmd = new BootCommand();
 		String command = System
 				.getProperty(Profile.PROPERTIES_BOOTCOMMAND.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
 						.toString());
 		command = command + " -J-D"
-				+ Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString()
-				+ "=" + codeBase + Profile.FILE_RMID_POLICY
-				+ " -log rmid.log";
-		cmd.execute(command);
-	}
-
-	private void stopRMID() throws Exception {
-		// TODO Auto-generated method stub
-		BootCommand cmd = new BootCommand();
-		String command = System
-				.getProperty(Profile.PROPERTIES_BOOTCOMMAND.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_STOP_WINDOWS
-						.toString());
-		command = command + " -J-D"
-				+ Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString()
-				+ "=" + codeBase + Profile.FILE_RMID_POLICY
-				+ " -log rmid.log";
+				+ Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString() + "="
+				+ this.codeBase + Profile.FILE_RMID_POLICY + " -log rmid.log";
 		cmd.execute(command);
 	}
 }

@@ -16,22 +16,25 @@ import com.abreqadhabra.nflight.common.util.PropertyLoader;
 public class BootCommand {
 
 	private static final Class<BootCommand> THIS_CLAZZ = BootCommand.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static final Logger LOGGER = LoggingHelper
+			.getLogger(BootCommand.THIS_CLAZZ);
 
 	static {
 		try {
-			Properties props = PropertyFile
-					.readPropertyFilePath(THIS_CLAZZ.getName() ,Profile.FILE_BOOTCOMMAND_PROPERTIES);
+			final Properties props = PropertyFile.readPropertyFilePath(
+					BootCommand.THIS_CLAZZ.getName(),
+					Profile.FILE_BOOTCOMMAND_PROPERTIES);
 			PropertyLoader.setSystemProperties(props);
-		} catch (Exception e) {
-			StackTraceElement[] current = e.getStackTrace();
+		} catch (final Exception e) {
+			final StackTraceElement[] current = e.getStackTrace();
 			if (e instanceof WrapperException) {
-				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
-						current[0].getMethodName(),
+				BootCommand.LOGGER.logp(Level.SEVERE,
+						current[0].getClassName(), current[0].getMethodName(),
 						"\n" + WrapperException.getStackTrace(e));
 			} else {
-				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
-						current[0].getMethodName(), e.getMessage());
+				BootCommand.LOGGER.logp(Level.SEVERE,
+						current[0].getClassName(), current[0].getMethodName(),
+						e.getMessage());
 			}
 		}
 	}
@@ -44,14 +47,14 @@ public class BootCommand {
 	 * @param args
 	 *            The port of naming service like rmi registry.
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "args: "
-				+ Arrays.toString(args));
+		BootCommand.LOGGER.logp(Level.FINER, BootCommand.THIS_CLAZZ.getName(),
+				METHOD_NAME, "args: " + Arrays.toString(args));
 
-		BootCommand bootCommand = new BootCommand();
+		final BootCommand bootCommand = new BootCommand();
 		String command = null;
 
 		if (args.length == 1) {
@@ -65,19 +68,19 @@ public class BootCommand {
 			// .toString());
 
 		}
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "command: "
-				+ command);
+		BootCommand.LOGGER.logp(Level.FINER, BootCommand.THIS_CLAZZ.getName(),
+				METHOD_NAME, "command: " + command);
 		try {
 			bootCommand.execute(command);
-		} catch (Exception e) {
-			StackTraceElement[] current = e.getStackTrace();
+		} catch (final Exception e) {
+			final StackTraceElement[] current = e.getStackTrace();
 			if (e instanceof WrapperException) {
-				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
-						current[0].getMethodName(),
+				BootCommand.LOGGER.logp(Level.SEVERE,
+						current[0].getClassName(), current[0].getMethodName(),
 						"\n" + WrapperException.getStackTrace(e));
 			} else {
-				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
-						current[0].getMethodName(),
+				BootCommand.LOGGER.logp(Level.SEVERE,
+						current[0].getClassName(), current[0].getMethodName(),
 						"\n" + WrapperException.getStackTrace(e));
 			}
 		}
@@ -99,55 +102,60 @@ public class BootCommand {
 	 * @throws Exception
 	 * @since STEP1
 	 */
-	public void execute(String command) throws Exception {
+	public void execute(final String command) throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
-		LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME, "command: "
-				+ command);
-		
+		BootCommand.LOGGER.logp(Level.INFO, BootCommand.THIS_CLAZZ.getName(),
+				METHOD_NAME, "command: " + command);
+
 		if (command != null) {
 			try {
-				Runtime rt = Runtime.getRuntime();
-				Process proc = rt.exec(command);
+				final Runtime rt = Runtime.getRuntime();
+				final Process proc = rt.exec(command);
 				Thread.sleep(Profile.BOOTCOMMAND_SLEEPTIME_1);
-				String errorString = IOStream.convertStreamToString(proc
+				final String errorString = IOStream.convertStreamToString(proc
 						.getErrorStream());
-				String outputString = IOStream.convertStreamToString(proc
+				final String outputString = IOStream.convertStreamToString(proc
 						.getInputStream());
 				// any error message?
 				if (errorString.length() != 0) {
-					LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME,
+					BootCommand.LOGGER.logp(Level.INFO,
+							BootCommand.THIS_CLAZZ.getName(), METHOD_NAME,
 							"command-line output of the subprocess"
 									+ errorString);
 				}
 				// any output?
 				if (outputString.length() != 0) {
-					LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME,
+					BootCommand.LOGGER.logp(Level.INFO,
+							BootCommand.THIS_CLAZZ.getName(), METHOD_NAME,
 							"command-line output of the subprocess"
 									+ outputString);
 				}
 				// any error???
-				int exitValue = proc.waitFor();
+				final int exitValue = proc.waitFor();
 				if (exitValue == 0) {
-					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+					BootCommand.LOGGER.logp(Level.FINER,
+							BootCommand.THIS_CLAZZ.getName(), METHOD_NAME,
 							"subprocess normal termination :" + exitValue);
 				} else {
 					throw new NFBootCommandException(command
 							+ ": subprocess abnormal termination :" + exitValue);
 				}
 
-			} catch (InterruptedException e) {
-				StackTraceElement[] current = e.getStackTrace();
-				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
-						current[0].getMethodName(), "이 오류는 발생하지 않습니다.");
-			} catch (IOException ioe) {
+			} catch (final InterruptedException e) {
+				final StackTraceElement[] current = e.getStackTrace();
+				BootCommand.LOGGER.logp(Level.SEVERE,
+						current[0].getClassName(), current[0].getMethodName(),
+						"이 오류는 발생하지 않습니다.");
+			} catch (final IOException ioe) {
 				throw new NFBootCommandException(
 						"Can't boot background process.Command: " + command,
 						ioe);
 			}
 		} else {
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"command :" + command);
+			BootCommand.LOGGER.logp(Level.FINER,
+					BootCommand.THIS_CLAZZ.getName(), METHOD_NAME, "command :"
+							+ command);
 		}
 	}
 
