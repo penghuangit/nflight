@@ -16,8 +16,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class RMIServiceHelper {
 	private static final Class<RMIServiceHelper> THIS_CLAZZ = RMIServiceHelper.class;
-	private static final Logger LOGGER = LoggingHelper
-			.getLogger(RMIServiceHelper.THIS_CLAZZ);
+	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	public static String getBoundName(final String host, final int port,
 			final String objName) {
@@ -34,8 +33,7 @@ public class RMIServiceHelper {
 			final String[] names = registry.list();
 
 			_boundNameList = Arrays.asList(registry.list());
-			RMIServiceHelper.LOGGER.logp(Level.FINER,
-					RMIServiceHelper.THIS_CLAZZ.getName(), METHOD_NAME,
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"Found " + _boundNameList.size() + " registiries: "
 							+ Arrays.toString(names));
 		} catch (final RemoteException e) {
@@ -67,9 +65,9 @@ public class RMIServiceHelper {
 			// _registry = LocateRegistry.getRegistry(host, port,
 			// socketFactory);
 			_registry = LocateRegistry.getRegistry(host, port);
-			RMIServiceHelper.LOGGER.logp(
+			LOGGER.logp(
 					Level.FINER,
-					RMIServiceHelper.THIS_CLAZZ.getName(),
+					THIS_CLAZZ.getName(),
 					METHOD_NAME,
 					"already exist registry is returned."
 							+ Arrays.toString(_registry.list()));
@@ -78,11 +76,8 @@ public class RMIServiceHelper {
 				// _registry = LocateRegistry.createRegistry(port,
 				// socketFactory,socketFactory);
 				_registry = LocateRegistry.createRegistry(port);
-				RMIServiceHelper.LOGGER
-						.logp(Level.FINER,
-								RMIServiceHelper.THIS_CLAZZ.getName(),
-								METHOD_NAME,
-								"New registry(using custom socket factories) is created and returned.");
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+						"New registry(using custom socket factories) is created and returned.");
 			} catch (final RemoteException re1) {
 				throw new NFRemoteException(
 						"Local RMI Registry creation failure", re1)
@@ -107,12 +102,11 @@ public class RMIServiceHelper {
 			final String name) throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
-		if (RMIServiceHelper.getBoundNameList(registry).contains(name)) {
+		if (getBoundNameList(registry).contains(name)) {
 			return true;
 		} else {
-			RMIServiceHelper.LOGGER.logp(Level.FINER,
-					RMIServiceHelper.THIS_CLAZZ.getName(), METHOD_NAME, name
-							+ ": not found in registry");
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, name
+					+ ": not found in registry");
 			return false;
 		}
 	}
@@ -129,8 +123,8 @@ public class RMIServiceHelper {
 					.addContextValue("boundName", boundName);
 		} catch (final NotBoundException e) {
 			final StackTraceElement[] current = e.getStackTrace();
-			RMIServiceHelper.LOGGER.logp(Level.FINER,
-					current[0].getClassName(), current[0].getMethodName(),
+			LOGGER.logp(Level.FINER, current[0].getClassName(),
+					current[0].getMethodName(),
 					"Ignored NotBoundException occured during connecting Remote Object. "
 							+ e.getLocalizedMessage());
 		}
@@ -148,8 +142,7 @@ public class RMIServiceHelper {
 
 		try {
 			registry.rebind(name, obj);
-			RMIServiceHelper.LOGGER.logp(Level.FINER,
-					RMIServiceHelper.THIS_CLAZZ.getName(), METHOD_NAME,
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"RMIServerImpl bound in registry: " + name);
 		} catch (final RemoteException e) {
 			throw new NFRemoteException("Cannot bound to Remote Object: "
@@ -167,8 +160,7 @@ public class RMIServiceHelper {
 
 		try {
 			registry.unbind(boundName);
-			RMIServiceHelper.LOGGER.logp(Level.FINER,
-					RMIServiceHelper.THIS_CLAZZ.getName(), METHOD_NAME,
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"Remove the RMI remote object from the RMI registry:"
 							+ boundName);
 		} catch (final RemoteException re) {

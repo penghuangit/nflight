@@ -10,23 +10,23 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 public class XMLResourceBundle extends ResourceBundle {
-	private Properties properties;
+	private final Properties properties;
 
-	XMLResourceBundle(InputStream stream)
+	XMLResourceBundle(final InputStream stream)
 			throws InvalidPropertiesFormatException, IOException {
-		properties = new Properties();
-		properties.loadFromXML(stream);
-	}
-
-	@Override
-	protected Object handleGetObject(String key) {
-		return properties.getProperty(key);
+		this.properties = new Properties();
+		this.properties.loadFromXML(stream);
 	}
 
 	@Override
 	public Enumeration<String> getKeys() {
-		Set<String> handleKeys = properties.stringPropertyNames();
+		final Set<String> handleKeys = this.properties.stringPropertyNames();
 		return Collections.enumeration(handleKeys);
+	}
+
+	@Override
+	protected Object handleGetObject(final String key) {
+		return this.properties.getProperty(key);
 	}
 
 }

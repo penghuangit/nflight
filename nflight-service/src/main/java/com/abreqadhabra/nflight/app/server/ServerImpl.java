@@ -12,7 +12,7 @@ public class ServerImpl implements IServer {
 
 	private static final Class<ServerImpl> THIS_CLAZZ = ServerImpl.class;
 	private static Logger LOGGER = LoggingHelper
-			.getLogger(ServerImpl.THIS_CLAZZ);
+			.getLogger(THIS_CLAZZ);
 
 	Profile profile;
 	IService service;
@@ -23,12 +23,12 @@ public class ServerImpl implements IServer {
 				.getMethodName();
 
 		this.serviceName = _serviceName;
-		ServerImpl.LOGGER.logp(
+		LOGGER.logp(
 				Level.FINER,
-				ServerImpl.THIS_CLAZZ.getName(),
+				THIS_CLAZZ.getName(),
 				METHOD_NAME,
 				"Strategy -> Context : "
-						+ ServerImpl.THIS_CLAZZ.getSimpleName());
+						+ THIS_CLAZZ.getSimpleName());
 
 	}
 
@@ -53,7 +53,7 @@ public class ServerImpl implements IServer {
 
 		this.service = _operation;
 
-		ServerImpl.LOGGER.logp(Level.FINER, ServerImpl.THIS_CLAZZ.getName(),
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
 				METHOD_NAME, "Strategy -> ConcreteStrategy  : "
 						+ this.service.getClass().getSimpleName());
 	}

@@ -2,8 +2,6 @@ package com.abreqadhabra.nflight.common;
 
 public class Env {
 
-	public static String Charset = "UTF-8";
-
 	public static enum PROPERTIES_SYSTEM {
 
 		JAVA_SECURITY_POLICY, JAVA_RMI_SERVER_CODEBASE, SUN_JNU_ENCODING, UNKNOWN;
@@ -15,11 +13,13 @@ public class Env {
 		 */
 		@Override
 		public String toString() {
-			if (lowercase == null) {
-				lowercase = name().toLowerCase(java.util.Locale.US).replace(
-						"_", ".");
+			if (this.lowercase == null) {
+				this.lowercase = this.name().toLowerCase(java.util.Locale.US)
+						.replace("_", ".");
 			}
-			return lowercase;
+			return this.lowercase;
 		}
 	}
+
+	public static String Charset = "UTF-8";
 }

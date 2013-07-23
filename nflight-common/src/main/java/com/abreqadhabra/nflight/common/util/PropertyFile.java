@@ -19,47 +19,30 @@ public class PropertyFile {
 	private static final Class<PropertyFile> THIS_CLAZZ = PropertyFile.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public static String stripFileName(String pathName) {
-
-		pathName = pathName.replace("\\", "/");
-
-		int slashIdx = pathName.lastIndexOf("/");
-
-		// if dot is in the first position,
-		// we are dealing with a hidden file rather than an extension
-		return (slashIdx > 0) ? pathName.substring(slashIdx + 1,
-				pathName.length()) : pathName;
-	}
-
-	public static String stripFileExtension(String fileName) {
-		int dotIdx = fileName.lastIndexOf('.');
-
-		// if dot is in the first position,
-		// we are dealing with a hidden file rather than an extension
-		return (dotIdx > 0) ? fileName.substring(0, dotIdx) : fileName;
-	}
-
-	public static void convertAllXMLProperties(Path dirPath) throws Exception {
+	public static void convertAllXMLProperties(final Path dirPath)
+			throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					dirPath.toString());
-			BasicFileAttributes pathAttr = Files.readAttributes(dirPath,
+			final BasicFileAttributes pathAttr = Files.readAttributes(dirPath,
 					BasicFileAttributes.class);
 
 			Properties props = new Properties();
 
 			if (pathAttr.isDirectory()) {
-				DirectoryStream<Path> ds = Files.newDirectoryStream(dirPath);
-				for (Path file : ds) {
-					BasicFileAttributes fileAttr = Files.readAttributes(file,
-							BasicFileAttributes.class);
+				final DirectoryStream<Path> ds = Files
+						.newDirectoryStream(dirPath);
+				for (final Path file : ds) {
+					final BasicFileAttributes fileAttr = Files.readAttributes(
+							file, BasicFileAttributes.class);
 					if (fileAttr.isRegularFile()
 							&& file.getFileName().toString()
 									.endsWith(".properties")) {
-						props = PropertyFile.readPropertyFilePath(THIS_CLAZZ.getName(), file.toString());
+						props = PropertyFile.readPropertyFilePath(
+								THIS_CLAZZ.getName(), file.toString());
 						PropertyFile.writeXMLPropertyFilePath(props, file);
 					}
 					if (fileAttr.isDirectory()) {
@@ -67,25 +50,26 @@ public class PropertyFile {
 					}
 				}
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public static Properties readPropertyFilePath(String className, String filePath) throws Exception {
+	public static Properties readPropertyFilePath(final String className,
+			final String filePath) throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		Path path = IOStream.getFilePath(className, filePath);
-		
-		Properties props = new Properties();
+		final Path path = IOStream.getFilePath(className, filePath);
+
+		final Properties props = new Properties();
 		try {
-			
-			InputStream is =Files.newInputStream(path);
+
+			final InputStream is = Files.newInputStream(path);
 			props.load(is);
 			is.close();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new NFSystemException("Can't load properties: ", e)
 					.addContextValue("path :", path);
 		}
@@ -94,12 +78,33 @@ public class PropertyFile {
 		return props;
 	}
 
-	private static void writeXMLPropertyFilePath(Properties props, Path path) {
+	public static String stripFileExtension(final String fileName) {
+		final int dotIdx = fileName.lastIndexOf('.');
+
+		// if dot is in the first position,
+		// we are dealing with a hidden file rather than an extension
+		return (dotIdx > 0) ? fileName.substring(0, dotIdx) : fileName;
+	}
+
+	public static String stripFileName(String pathName) {
+
+		pathName = pathName.replace("\\", "/");
+
+		final int slashIdx = pathName.lastIndexOf("/");
+
+		// if dot is in the first position,
+		// we are dealing with a hidden file rather than an extension
+		return (slashIdx > 0) ? pathName.substring(slashIdx + 1,
+				pathName.length()) : pathName;
+	}
+
+	private static void writeXMLPropertyFilePath(final Properties props,
+			Path path) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		String newFileName = stripFileExtension(path.getFileName().toString())
-				+ ".xml";
+		final String newFileName = stripFileExtension(path.getFileName()
+				.toString()) + ".xml";
 		path = path.resolveSibling(newFileName);
 
 		try {
@@ -108,7 +113,7 @@ public class PropertyFile {
 					path.getFileName().toString(), Env.Charset);
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, path
 					+ " written successfully");
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}

@@ -16,29 +16,27 @@ public class CustomFormatter extends Formatter {
 	}
 
 	@Override
-	public String format(LogRecord record) {
+	public String format(final LogRecord record) {
 		// Create a StringBuffer to contain the formatted record
 		// start with the date.
-		StringBuffer sb = new StringBuffer();
+		final StringBuffer sb = new StringBuffer();
 
-		
 		sb.append("\n");
 		// Get the date from the LogRecord and add it to the buffer
-		String dateTime = Misc.getDateTime();
+		final String dateTime = Misc.getDateTime();
 		sb.append(dateTime);
 		sb.append(": ");
-		
+
 		// Get the level name and add it to the buffer
-		String leveName = String.format("%9s", "["+record.getLevel().getName()+"]");
+		final String leveName = String.format("%9s", "["
+				+ record.getLevel().getName() + "]");
 		// System.out.printf("%-30s : %50s%n", prop.getKey(), prop.getValue());
 		sb.append(leveName);
 		sb.append(" ");
 
-
-
 		// Get the formatted message (includes localization
 		// and substitution of paramters) and add it to the buffer
-		sb.append(formatMessage(record));
+		sb.append(this.formatMessage(record));
 
 		return sb.toString();
 	}

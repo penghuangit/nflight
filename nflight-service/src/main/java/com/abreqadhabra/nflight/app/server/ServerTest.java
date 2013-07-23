@@ -22,8 +22,7 @@ import com.abreqadhabra.nflight.common.util.IOStream;
 public class ServerTest {
 
 	private static final Class<ServerTest> THIS_CLAZZ = ServerTest.class;
-	private static final Logger LOGGER = LoggingHelper
-			.getLogger(ServerTest.THIS_CLAZZ);
+	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	public static void main(final String[] args) throws Exception {
 
@@ -51,11 +50,21 @@ public class ServerTest {
 		sd.setAddress(this.address);
 		sd.setPort(this.port);
 
-		this.testService(sd);
+		// this.testService(sd);
 
 		serviceName = "activatable";
 		sd.setServiceName(serviceName);
-		sd.setCodeBase(IOStream.getCodebase(ServerTest.THIS_CLAZZ.getName()));
+		sd.setCodeBase(IOStream.getCodebase(THIS_CLAZZ.getName()));
+
+		// this.testService(sd);
+
+		serviceName = "datagram";
+		sd.setServiceName(serviceName);
+
+		// this.testService(sd);
+
+		serviceName = "multicast";
+		sd.setServiceName(serviceName);
 
 		this.testService(sd);
 
@@ -83,54 +92,54 @@ public class ServerTest {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		ServerTest.LOGGER.logp(Level.FINER, ServerTest.THIS_CLAZZ.getName(),
-				METHOD_NAME, "service name : " + sd.getServiceName());
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				"service name : " + sd.getServiceName());
 
-		final IServer _server = this.getServer(sd);
+		IServer _server = null;
+
+		_server = this.getServer(sd);
 
 		try {
-			_cmd = new ShutdownServerCommand(_server);
-			_invoker.execute(_cmd);
-		} catch (final Exception e) {
 			_cmd = new StartupServerCommand(_server);
 			_invoker.execute(_cmd);
-
 			_cmd = new StatusServerCommand(_server);
 			_invoker.execute(_cmd);
-
+		} catch (Exception e) {
 			_cmd = new ShutdownServerCommand(_server);
-			// _invoker.execute(_cmd);
-
+			_invoker.execute(_cmd);
+			e.printStackTrace();
 		}
 
-		final Registry registry = RMIServiceHelper.getRegistry(this.host,
-				this.port);
+		if (sd.getServiceName().equals("unicast")
+				| sd.getServiceName().equals("activatable")) {
+			final Registry registry = RMIServiceHelper.getRegistry(this.host,
+					this.port);
 
-		final String name1 = "rmi://" + this.host + ":" + this.port
-				+ "/unicast";
-		final String name2 = "rmi://" + this.host + ":" + this.port
-				+ "/activatable";
-		String response = null;
+			final String name1 = "rmi://" + this.host + ":" + this.port
+					+ "/unicast";
+			final String name2 = "rmi://" + this.host + ":" + this.port
+					+ "/activatable";
+			String response = null;
 
-		try {
-			final IService stub1 = (IService) registry.lookup(name1);
-			// registry.lookup("rmi://192.168.0.100:9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
-			response = stub1.sayHello();
-			System.out.println(stub1 + "\t:\t" + response);
-		} catch (final Exception e) {
-			System.out.println(WrapperException.getStackTrace(e));
+			try {
+				final IService stub1 = (IService) registry.lookup(name1);
+				// registry.lookup("rmi://192.168.0.100:9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
+				response = stub1.sayHello();
+				System.out.println(stub1 + "\t:\t" + response);
+			} catch (final Exception e) {
+				System.out.println(WrapperException.getStackTrace(e));
+			}
+			try {
+
+				final IService stub2 = (IService) registry.lookup(name2);
+
+				response = stub2.sayHello();
+				System.out.println(stub2 + "\t:\t" + response);
+
+			} catch (final Exception e) {
+				System.out.println(WrapperException.getStackTrace(e));
+			}
 		}
-		try {
-
-			final IService stub2 = (IService) registry.lookup(name2);
-
-			response = stub2.sayHello();
-			System.out.println(stub2 + "\t:\t" + response);
-
-		} catch (final Exception e) {
-			System.out.println(WrapperException.getStackTrace(e));
-		}
-
 	}
 
 }

@@ -11,14 +11,14 @@ import com.abreqadhabra.nflight.app.server.service.ServiceDescriptor;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 //Strategy ConcreteStrategy
-public class UnicastRMIServantImpl extends AbstractRMIServant {
+public class UnicastServantImpl extends AbstractServant {
 
-	private static final Class<UnicastRMIServantImpl> THIS_CLAZZ = UnicastRMIServantImpl.class;
+	private static final Class<UnicastServantImpl> THIS_CLAZZ = UnicastServantImpl.class;
 
 	private static Logger LOGGER = LoggingHelper
-			.getLogger(UnicastRMIServantImpl.THIS_CLAZZ);
+			.getLogger(THIS_CLAZZ);
 
-	public UnicastRMIServantImpl(final ServiceDescriptor _desc)
+	public UnicastServantImpl(final ServiceDescriptor _desc)
 			throws Exception {
 		super(_desc);
 	}
@@ -28,8 +28,8 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		UnicastRMIServantImpl.LOGGER.logp(Level.FINER,
-				UnicastRMIServantImpl.THIS_CLAZZ.getName(), METHOD_NAME,
+		LOGGER.logp(Level.FINER,
+				THIS_CLAZZ.getName(), METHOD_NAME,
 				"Strategy -> ConcreteStrategy -> BehaviourInterface() : "
 						+ METHOD_NAME);
 

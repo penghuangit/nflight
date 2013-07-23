@@ -9,7 +9,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class Invoker {
 	private static final Class<Invoker> THIS_CLAZZ = Invoker.class;
-	private static Logger LOGGER = LoggingHelper.getLogger(Invoker.THIS_CLAZZ);
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	Queue<Command> cmdQueue = new LinkedList<Command>();
 
@@ -18,7 +18,7 @@ public class Invoker {
 				.getMethodName();
 		this.cmdQueue.offer(cmd);
 
-		Invoker.LOGGER.logp(Level.FINER, Invoker.THIS_CLAZZ.getName(),
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
 				METHOD_NAME, "cmdQueue  :" + this.cmdQueue.size());
 	}
 
@@ -27,7 +27,7 @@ public class Invoker {
 				.getMethodName();
 
 		this.cmdQueue.clear();
-		Invoker.LOGGER.logp(Level.FINER, Invoker.THIS_CLAZZ.getName(),
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
 				METHOD_NAME, "cmdQueue  :" + this.cmdQueue.size());
 	}
 
@@ -41,7 +41,7 @@ public class Invoker {
 
 		while (this.cmdQueue.peek() != null) {
 			final Command cmd = this.cmdQueue.poll();
-			Invoker.LOGGER.logp(Level.FINER, Invoker.THIS_CLAZZ.getName(),
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
 					METHOD_NAME, "execute  :" + cmd.getClass().getSimpleName());
 			cmd.execute();
 		}

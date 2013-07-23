@@ -18,12 +18,12 @@ import com.abreqadhabra.nflight.common.util.PropertyFile;
 public class Boot {
 	private static final Class<Boot> THIS_CLAZZ = Boot.class;
 	private static final Logger LOGGER = LoggingHelper
-			.getLogger(Boot.THIS_CLAZZ);
+			.getLogger(THIS_CLAZZ);
 
 	private static void execute(final String className,
 			final Class<?>[] parameterTypes, final Object[] initArgs)
 			throws Exception {
-		final ClassLoader classLoader = Boot.THIS_CLAZZ.getClassLoader();
+		final ClassLoader classLoader = THIS_CLAZZ.getClassLoader();
 		try {
 			final Class<?> clazz = classLoader.loadClass(className);
 			Constructor<?> constructor = null;
@@ -71,13 +71,13 @@ public class Boot {
 					Thread.sleep(3000);
 				} catch (final InterruptedException ie) {
 					// 이 예외는 발생하지 않습니다.
-					Boot.LOGGER.logp(Level.FINER, Boot.THIS_CLAZZ.getName(),
+					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
 							METHOD_NAME, "Thread was interrupted\n"
 									+ WrapperException.getStackTrace(ie));
 				}
 				System.gc();
 				System.runFinalization();
-				Boot.LOGGER.logp(Level.INFO, Boot.THIS_CLAZZ.getName(),
+				LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(),
 						METHOD_NAME, "system exit");
 				System.exit(0);
 			}
@@ -97,7 +97,7 @@ public class Boot {
 
 		try {
 			if (args.length > 0) {
-				Boot.LOGGER.logp(Level.FINER, Boot.THIS_CLAZZ.getName(),
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
 						METHOD_NAME, "args : " + Arrays.toString(args));
 				if (args[0].startsWith(Profile.BOOT_OPTION_PREFIX)) {
 					// Settings specified as command line arguments
@@ -106,12 +106,12 @@ public class Boot {
 				} else {
 					// Settings specified in a property file
 					props = PropertyFile.readPropertyFilePath(
-							Boot.THIS_CLAZZ.getName(), args[0]);
+							THIS_CLAZZ.getName(), args[0]);
 				}
 			} else {
 				// Settings specified in the default property file
 				props = PropertyFile
-						.readPropertyFilePath(Boot.THIS_CLAZZ.getName(),
+						.readPropertyFilePath(THIS_CLAZZ.getName(),
 								Profile.FILE_BOOT_PROPERTIES);
 			}
 
@@ -140,7 +140,7 @@ public class Boot {
 						"No value specified for Service Main Class");
 			}
 
-			Boot.execute(className, parameterTypeList.toArray(new Class[] {}),
+			execute(className, parameterTypeList.toArray(new Class[] {}),
 					initArgList.toArray());
 
 			// properties = profile.getArgProperties(); if
@@ -171,17 +171,17 @@ public class Boot {
 		} catch (final Exception e) {
 			final StackTraceElement[] current = e.getStackTrace();
 			if (e instanceof WrapperException) {
-				Boot.LOGGER.logp(Level.SEVERE, current[0].getClassName(),
+				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(),
 						"\n" + WrapperException.getStackTrace(e));
-				Boot.printUsage(System.out);
+				printUsage(System.out);
 			} else {
-				Boot.LOGGER.logp(Level.SEVERE, current[0].getClassName(),
+				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(),
 						"\n" + WrapperException.getStackTrace(e));
-				Boot.printUsage(System.out);
+				printUsage(System.out);
 			}
-			Boot.exit();
+			exit();
 		}
 	}
 

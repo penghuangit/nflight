@@ -15,12 +15,14 @@ public class XMLResourceBundleControl extends Control {
 
 	private static String XML = "xml";
 
-	public List<String> getFormats(String baseName) {
+	@Override
+	public List<String> getFormats(final String baseName) {
 		return Collections.singletonList(XML);
 	}
 
-	public ResourceBundle newBundle(String baseName, Locale locale,
-			String format, ClassLoader loader, boolean reload)
+	@Override
+	public ResourceBundle newBundle(final String baseName, final Locale locale,
+			final String format, final ClassLoader loader, final boolean reload)
 			throws IOException {
 
 		if ((baseName == null) || (locale == null) || (format == null)
@@ -32,24 +34,24 @@ public class XMLResourceBundleControl extends Control {
 			return null;
 		}
 
-		String bundleName = toBundleName(baseName, locale);
-		String resourceName = toResourceName(bundleName, format);
-		URL url = loader.getResource(resourceName);
+		final String bundleName = this.toBundleName(baseName, locale);
+		final String resourceName = this.toResourceName(bundleName, format);
+		final URL url = loader.getResource(resourceName);
 		if (url == null) {
 			return null;
 		}
-		URLConnection connection = url.openConnection();
+		final URLConnection connection = url.openConnection();
 		if (connection == null) {
 			return null;
 		}
 		if (reload) {
 			connection.setUseCaches(false);
 		}
-		InputStream stream = connection.getInputStream();
+		final InputStream stream = connection.getInputStream();
 		if (stream == null) {
 			return null;
 		}
-		BufferedInputStream bis = new BufferedInputStream(stream);
+		final BufferedInputStream bis = new BufferedInputStream(stream);
 		bundle = new XMLResourceBundle(bis);
 		bis.close();
 

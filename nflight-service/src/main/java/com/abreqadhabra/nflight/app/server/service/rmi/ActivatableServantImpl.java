@@ -27,17 +27,17 @@ import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.common.util.PropertyLoader;
 
 //Strategy ConcreteStrategy
-public class ActivatableRMIServantImpl extends AbstractRMIServant {
+public class ActivatableServantImpl extends AbstractServant {
 
-	private static final Class<ActivatableRMIServantImpl> THIS_CLAZZ = ActivatableRMIServantImpl.class;
+	private static final Class<ActivatableServantImpl> THIS_CLAZZ = ActivatableServantImpl.class;
 	private static Logger LOGGER = LoggingHelper
-			.getLogger(ActivatableRMIServantImpl.THIS_CLAZZ);
+			.getLogger(THIS_CLAZZ);
 
-	public ActivatableRMIServantImpl() {
+	public ActivatableServantImpl() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ActivatableRMIServantImpl(final ActivationID id,
+	public ActivatableServantImpl(final ActivationID id,
 			final MarshalledObject<?> data) throws RemoteException {
 
 		// Register the object with the activation system
@@ -47,17 +47,17 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		ActivatableRMIServantImpl.LOGGER.logp(
+		LOGGER.logp(
 				Level.FINER,
-				ActivatableRMIServantImpl.THIS_CLAZZ.getName(),
+				THIS_CLAZZ.getName(),
 				METHOD_NAME,
 				"Instantiating a "
-						+ ActivatableRMIServantImpl.THIS_CLAZZ.getSimpleName()
+						+ THIS_CLAZZ.getSimpleName()
 						+ " Class ");
 	}
 
 	// public ActivatableRMIServiceImpl(){}
-	public ActivatableRMIServantImpl(final ServiceDescriptor _desc)
+	public ActivatableServantImpl(final ServiceDescriptor _desc)
 			throws Exception {
 		super(_desc);
 	}
@@ -67,8 +67,7 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		ActivatableRMIServantImpl.LOGGER.logp(Level.FINER,
-				ActivatableRMIServantImpl.THIS_CLAZZ.getName(), METHOD_NAME,
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 				"Strategy -> ConcreteStrategy -> BehaviourInterface() : "
 						+ METHOD_NAME);
 
@@ -78,7 +77,7 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 					+ "가 레지스트리에 이미 등록되어 있습니다.");
 		} else {
 			final Properties _props = PropertyFile.readPropertyFilePath(
-					ActivatableRMIServantImpl.THIS_CLAZZ.getName(),
+					THIS_CLAZZ.getName(),
 					Profile.FILE_ACTIVATION_PROPERTIES);
 
 			final String codeBase = super.desc.getCodeBase();
@@ -146,22 +145,22 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 			final ActivationGroupDesc groupDesc = new ActivationGroupDesc(
 					props, null);
 
-			ActivatableRMIServantImpl.LOGGER.logp(Level.FINER,
-					ActivatableRMIServantImpl.THIS_CLAZZ.getName(),
-					METHOD_NAME, "groupDesc : " + groupDesc);
+			LOGGER.logp(Level.FINER,
+					THIS_CLAZZ.getName(), METHOD_NAME,
+					"groupDesc : " + groupDesc);
 
 			final ActivationSystem system = ActivationGroup.getSystem();
 
 			final ActivationGroupID groupID = system.registerGroup(groupDesc);
 
-			ActivatableRMIServantImpl.LOGGER.logp(Level.FINER,
-					ActivatableRMIServantImpl.THIS_CLAZZ.getName(),
-					METHOD_NAME, "Activation group descriptor registered.");
+			LOGGER.logp(Level.FINER,
+					THIS_CLAZZ.getName(), METHOD_NAME,
+					"Activation group descriptor registered.");
 
 			// Pass the file that we want to persist to as the Marshalled
 			// object
 			MarshalledObject<?> data = null;
-			if (filename != null && !filename.equals("")) {
+			if ((filename != null) && !filename.equals("")) {
 				data = new MarshalledObject(filename);
 			}
 
@@ -174,16 +173,16 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 			// "file:/D:/dskim/workspace/nflight/nflight-service/target/nflight-service/0.0.1-SNAPSHOT/classes/",
 			// null);
 
-			ActivatableRMIServantImpl.LOGGER.logp(Level.FINER,
-					ActivatableRMIServantImpl.THIS_CLAZZ.getName(),
-					METHOD_NAME, "groupID:" + groupID + "\nimplClass : "
-							+ implClass + "\nimplCodebase : " + implCodebase
-							+ "\ndata : " + data);
+			LOGGER.logp(Level.FINER,
+					THIS_CLAZZ.getName(), METHOD_NAME,
+					"groupID:" + groupID + "\nimplClass : " + implClass
+							+ "\nimplCodebase : " + implCodebase + "\ndata : "
+							+ data);
 
 			final Remote stub = Activatable.register(desc);
-			ActivatableRMIServantImpl.LOGGER.logp(Level.FINER,
-					ActivatableRMIServantImpl.THIS_CLAZZ.getName(),
-					METHOD_NAME, "Activation descriptor registered : " + stub);
+			LOGGER.logp(Level.FINER,
+					THIS_CLAZZ.getName(), METHOD_NAME,
+					"Activation descriptor registered : " + stub);
 
 			final String host = InetAddress.getLocalHost().getHostAddress();
 			final int port = 9999;
@@ -191,9 +190,9 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 			final Registry registry = RMIServiceHelper.getRegistry(host, port);
 			registry.rebind(RMIServiceHelper.getBoundName(super.host,
 					super.port, "activatable"), stub);
-			ActivatableRMIServantImpl.LOGGER.logp(
+			LOGGER.logp(
 					Level.FINER,
-					ActivatableRMIServantImpl.THIS_CLAZZ.getName(),
+					THIS_CLAZZ.getName(),
 					METHOD_NAME,
 					"Stub bound in registry."
 							+ Arrays.toString(registry.list()));

@@ -90,7 +90,7 @@ public class LoggingHelper {
 	handler = new ConsoleHandler();
 
 	// Set up a custom Filter (see MyCustomFilter example)
-	Vector acceptableLevels = new Vector();
+	Vector<Level> acceptableLevels = new Vector<Level>();
 	acceptableLevels.add(Level.ALL);
 	acceptableLevels.add(Level.CONFIG);
 	acceptableLevels.add(Level.FINE);

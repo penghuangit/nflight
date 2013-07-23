@@ -1,15 +1,11 @@
 package com.abreqadhabra.nflight.common.util.test;
 
-import java.io.File;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 import com.abreqadhabra.nflight.common.util.IOStream;
-import com.abreqadhabra.nflight.common.util.PropertyFile;
 
 /**
  * @author nhn

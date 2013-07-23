@@ -21,22 +21,22 @@ public class IOStream {
 	private static final Class<IOStream> THIS_CLAZZ = IOStream.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public static String convertStreamToString(InputStream inputStream) {
+	public static String convertStreamToString(final InputStream inputStream) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		StringBuffer sb = new StringBuffer();
-		String charsetName = System
+		final StringBuffer sb = new StringBuffer();
+		final String charsetName = System
 				.getProperty(Env.PROPERTIES_SYSTEM.SUN_JNU_ENCODING.toString());
 		try {
-			InputStreamReader isr = new InputStreamReader(inputStream,
+			final InputStreamReader isr = new InputStreamReader(inputStream,
 					charsetName);
-			BufferedReader br = new BufferedReader(isr);
+			final BufferedReader br = new BufferedReader(isr);
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				sb.append("\n" + line);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 
@@ -46,49 +46,50 @@ public class IOStream {
 		return sb.toString();
 	}
 
-	public static String getCodebase(String className) {
+	public static String getCodebase(final String className) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(className);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ProtectionDomain pd = cls.getProtectionDomain();
-		CodeSource cs = pd.getCodeSource();
-		URL url = cs.getLocation();
+		final ProtectionDomain pd = cls.getProtectionDomain();
+		final CodeSource cs = pd.getCodeSource();
+		final URL url = cs.getLocation();
 		return url.getFile();
 	}
-	
-	public static URI getCodebasePath(String className) {
+
+	public static URI getCodebasePath(final String className) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(className);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ProtectionDomain pd = cls.getProtectionDomain();
-		CodeSource cs = pd.getCodeSource();
-		URL url = cs.getLocation();
+		final ProtectionDomain pd = cls.getProtectionDomain();
+		final CodeSource cs = pd.getCodeSource();
+		final URL url = cs.getLocation();
 		URI uri = null;
 		try {
-		 uri = url.toURI(); 
-		} catch (URISyntaxException e) {
+			uri = url.toURI();
+		} catch (final URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return uri;
 	}
 
-	public static Path getFilePath(String className, String... paths) {
+	public static Path getFilePath(final String className,
+			final String... paths) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		URI codebaseURI = IOStream.getCodebasePath(className);
+		final URI codebaseURI = IOStream.getCodebasePath(className);
 		Path filePath = Paths.get(codebaseURI);
-		for (String path : paths) {
+		for (final String path : paths) {
 			filePath = filePath.resolve(path);
 		}
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,

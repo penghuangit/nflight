@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.app.server.service.socket;
+package com.abreqadhabra.nflight.app.server.service.net.sample;
 
 import java.rmi.RemoteException;
 

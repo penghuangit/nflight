@@ -21,9 +21,9 @@ public class StartupServerCommand implements Command {
 
 		this.server = server;
 
-		StartupServerCommand.LOGGER.logp(Level.FINER,
-				StartupServerCommand.THIS_CLAZZ.getName(), METHOD_NAME,
-				"Command -> ConcreteCommand  : ");
+		LOGGER.logp(Level.FINER,
+				THIS_CLAZZ.getName(), METHOD_NAME,
+				"Command -> ConcreteCommand  : " + THIS_CLAZZ.getName());
 	}
 
 	@Override

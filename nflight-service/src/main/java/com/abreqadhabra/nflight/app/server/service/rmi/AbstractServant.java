@@ -12,22 +12,23 @@ import com.abreqadhabra.nflight.app.server.service.ServiceDescriptor;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 //Strategy ConcreteStrategy  / Flyweight ConcreteFlyweight
-public abstract class AbstractRMIServant implements IService {
+public abstract class AbstractServant implements IService {
 
-	private static final Class<AbstractRMIServant> THIS_CLAZZ = AbstractRMIServant.class;
+	private static final Class<AbstractServant> THIS_CLAZZ = AbstractServant.class;
 	private static Logger LOGGER = LoggingHelper
-			.getLogger(AbstractRMIServant.THIS_CLAZZ);
+			.getLogger(THIS_CLAZZ);
 
 	protected ServiceDescriptor desc;
 	protected String host;
+	protected String address;
 	protected int port;
 	protected Registry registry;
 	protected String boundName;
 
-	public AbstractRMIServant() {
+	public AbstractServant() {
 	}
 
-	public AbstractRMIServant(final ServiceDescriptor _desc) throws Exception {
+	public AbstractServant(final ServiceDescriptor _desc) throws Exception {
 		this.desc = _desc;
 		this.init();
 	}
@@ -37,12 +38,13 @@ public abstract class AbstractRMIServant implements IService {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		AbstractRMIServant.LOGGER.logp(Level.FINER,
-				AbstractRMIServant.THIS_CLAZZ.getName(), METHOD_NAME,
+		LOGGER.logp(Level.FINER,
+				THIS_CLAZZ.getName(), METHOD_NAME,
 				"Strategy -> ConcreteStrategy -> BehaviourInterface() : "
 						+ METHOD_NAME);
 
 		this.host = this.desc.getHost(); // InetAddress.getLocalHost().getHostAddress();
+		this.address = this.desc.getAddress();
 		this.port = this.desc.getPort(); // ; super.profile.getServicePort();
 		this.boundName = RMIServiceHelper.getBoundName(this.host, this.port,
 				this.desc.getServiceName());
@@ -65,8 +67,8 @@ public abstract class AbstractRMIServant implements IService {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		AbstractRMIServant.LOGGER.logp(Level.FINER,
-				AbstractRMIServant.THIS_CLAZZ.getName(), METHOD_NAME,
+		LOGGER.logp(Level.FINER,
+				THIS_CLAZZ.getName(), METHOD_NAME,
 				"Strategy -> ConcreteStrategy -> BehaviourInterface() : "
 						+ METHOD_NAME);
 
@@ -87,8 +89,8 @@ public abstract class AbstractRMIServant implements IService {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		AbstractRMIServant.LOGGER.logp(Level.FINER,
-				AbstractRMIServant.THIS_CLAZZ.getName(), METHOD_NAME,
+		LOGGER.logp(Level.FINER,
+				THIS_CLAZZ.getName(), METHOD_NAME,
 				"Strategy -> ConcreteStrategy -> BehaviourInterface() : "
 						+ METHOD_NAME);
 
@@ -106,14 +108,14 @@ public abstract class AbstractRMIServant implements IService {
 							.addContextValue("isRunning", _isRunning);
 				}
 			}
-			AbstractRMIServant.LOGGER.logp(Level.FINER,
-					AbstractRMIServant.THIS_CLAZZ.getName(), METHOD_NAME,
+			LOGGER.logp(Level.FINER,
+					THIS_CLAZZ.getName(), METHOD_NAME,
 					this.boundName + " is running: " + _isRunning);
 
 			return _isRunning;
 		} else {
-			AbstractRMIServant.LOGGER.logp(Level.FINER,
-					AbstractRMIServant.THIS_CLAZZ.getName(), METHOD_NAME,
+			LOGGER.logp(Level.FINER,
+					THIS_CLAZZ.getName(), METHOD_NAME,
 					this.boundName + "가 레지스트리에 등록되어 있지 않습니다.");
 		}
 

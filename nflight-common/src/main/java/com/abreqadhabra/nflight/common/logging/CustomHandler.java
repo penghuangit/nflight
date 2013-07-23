@@ -15,16 +15,15 @@ import com.abreqadhabra.nflight.common.util.IOStream;
  */
 public class CustomHandler extends FileHandler {
 
-
 	FileOutputStream fileOutputStream;
 	PrintWriter printWriter;
 
-	public CustomHandler(String fileName) throws SecurityException,
-			IOException {
+	public CustomHandler(String fileName) throws SecurityException, IOException {
 		super();
 
-		String codeBase = IOStream.getCodebase(CustomHandler.class.getName());
-		File loggingPath = new File(codeBase + "log");
+		final String codeBase = IOStream.getCodebase(CustomHandler.class
+				.getName());
+		final File loggingPath = new File(codeBase + "log");
 
 		System.out.println(codeBase + "log");
 		if (!loggingPath.exists()) {
@@ -35,32 +34,33 @@ public class CustomHandler extends FileHandler {
 
 		// initialize the file
 		try {
-			fileOutputStream = new FileOutputStream(fileName);
-		} catch (FileNotFoundException e) {
+			this.fileOutputStream = new FileOutputStream(fileName);
+		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		printWriter = new PrintWriter(fileOutputStream);
+		this.printWriter = new PrintWriter(this.fileOutputStream);
 
-	}
-
-	@Override
-	public void publish(LogRecord record) {
-		// ensure that this LogRecord should be logged by this Handler
-		if (!isLoggable(record))
-			return;
-
-		// Output the formatted data to the file
-		printWriter.println(getFormatter().format(record));
-	}
-
-	@Override
-	public void flush() {
-		printWriter.flush();
 	}
 
 	@Override
 	public void close() throws SecurityException {
-		printWriter.close();
+		this.printWriter.close();
+	}
+
+	@Override
+	public void flush() {
+		this.printWriter.flush();
+	}
+
+	@Override
+	public void publish(final LogRecord record) {
+		// ensure that this LogRecord should be logged by this Handler
+		if (!this.isLoggable(record)) {
+			return;
+		}
+
+		// Output the formatted data to the file
+		this.printWriter.println(this.getFormatter().format(record));
 	}
 
 }

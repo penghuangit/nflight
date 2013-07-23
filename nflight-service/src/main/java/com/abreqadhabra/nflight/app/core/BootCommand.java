@@ -17,22 +17,22 @@ public class BootCommand {
 
 	private static final Class<BootCommand> THIS_CLAZZ = BootCommand.class;
 	private static final Logger LOGGER = LoggingHelper
-			.getLogger(BootCommand.THIS_CLAZZ);
+			.getLogger(THIS_CLAZZ);
 
 	static {
 		try {
 			final Properties props = PropertyFile.readPropertyFilePath(
-					BootCommand.THIS_CLAZZ.getName(),
+					THIS_CLAZZ.getName(),
 					Profile.FILE_BOOTCOMMAND_PROPERTIES);
 			PropertyLoader.setSystemProperties(props);
 		} catch (final Exception e) {
 			final StackTraceElement[] current = e.getStackTrace();
 			if (e instanceof WrapperException) {
-				BootCommand.LOGGER.logp(Level.SEVERE,
+				LOGGER.logp(Level.SEVERE,
 						current[0].getClassName(), current[0].getMethodName(),
 						"\n" + WrapperException.getStackTrace(e));
 			} else {
-				BootCommand.LOGGER.logp(Level.SEVERE,
+				LOGGER.logp(Level.SEVERE,
 						current[0].getClassName(), current[0].getMethodName(),
 						e.getMessage());
 			}
@@ -51,7 +51,7 @@ public class BootCommand {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		BootCommand.LOGGER.logp(Level.FINER, BootCommand.THIS_CLAZZ.getName(),
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
 				METHOD_NAME, "args: " + Arrays.toString(args));
 
 		final BootCommand bootCommand = new BootCommand();
@@ -64,22 +64,22 @@ public class BootCommand {
 					.getProperty(Profile.PROPERTIES_BOOTCOMMAND.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
 							.toString());
 			// command =
-			// System.getProperty(Env.Properties.BootCommand.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_STOP_WINDOWS
+			// System.getProperty(Env.Properties.PropertyKey.NFLIGHT_SERVICE_CORE_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_STOP_WINDOWS
 			// .toString());
 
 		}
-		BootCommand.LOGGER.logp(Level.FINER, BootCommand.THIS_CLAZZ.getName(),
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
 				METHOD_NAME, "command: " + command);
 		try {
 			bootCommand.execute(command);
 		} catch (final Exception e) {
 			final StackTraceElement[] current = e.getStackTrace();
 			if (e instanceof WrapperException) {
-				BootCommand.LOGGER.logp(Level.SEVERE,
+				LOGGER.logp(Level.SEVERE,
 						current[0].getClassName(), current[0].getMethodName(),
 						"\n" + WrapperException.getStackTrace(e));
 			} else {
-				BootCommand.LOGGER.logp(Level.SEVERE,
+				LOGGER.logp(Level.SEVERE,
 						current[0].getClassName(), current[0].getMethodName(),
 						"\n" + WrapperException.getStackTrace(e));
 			}
@@ -105,7 +105,7 @@ public class BootCommand {
 	public void execute(final String command) throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
-		BootCommand.LOGGER.logp(Level.INFO, BootCommand.THIS_CLAZZ.getName(),
+		LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(),
 				METHOD_NAME, "command: " + command);
 
 		if (command != null) {
@@ -119,23 +119,23 @@ public class BootCommand {
 						.getInputStream());
 				// any error message?
 				if (errorString.length() != 0) {
-					BootCommand.LOGGER.logp(Level.INFO,
-							BootCommand.THIS_CLAZZ.getName(), METHOD_NAME,
+					LOGGER.logp(Level.INFO,
+							THIS_CLAZZ.getName(), METHOD_NAME,
 							"command-line output of the subprocess"
 									+ errorString);
 				}
 				// any output?
 				if (outputString.length() != 0) {
-					BootCommand.LOGGER.logp(Level.INFO,
-							BootCommand.THIS_CLAZZ.getName(), METHOD_NAME,
+					LOGGER.logp(Level.INFO,
+							THIS_CLAZZ.getName(), METHOD_NAME,
 							"command-line output of the subprocess"
 									+ outputString);
 				}
 				// any error???
 				final int exitValue = proc.waitFor();
 				if (exitValue == 0) {
-					BootCommand.LOGGER.logp(Level.FINER,
-							BootCommand.THIS_CLAZZ.getName(), METHOD_NAME,
+					LOGGER.logp(Level.FINER,
+							THIS_CLAZZ.getName(), METHOD_NAME,
 							"subprocess normal termination :" + exitValue);
 				} else {
 					throw new NFBootCommandException(command
@@ -144,7 +144,7 @@ public class BootCommand {
 
 			} catch (final InterruptedException e) {
 				final StackTraceElement[] current = e.getStackTrace();
-				BootCommand.LOGGER.logp(Level.SEVERE,
+				LOGGER.logp(Level.SEVERE,
 						current[0].getClassName(), current[0].getMethodName(),
 						"이 오류는 발생하지 않습니다.");
 			} catch (final IOException ioe) {
@@ -153,8 +153,8 @@ public class BootCommand {
 						ioe);
 			}
 		} else {
-			BootCommand.LOGGER.logp(Level.FINER,
-					BootCommand.THIS_CLAZZ.getName(), METHOD_NAME, "command :"
+			LOGGER.logp(Level.FINER,
+					THIS_CLAZZ.getName(), METHOD_NAME, "command :"
 							+ command);
 		}
 	}

@@ -10,15 +10,16 @@ import java.util.logging.LogRecord;
  */
 public class CustomFilter implements Filter {
 
-	private Vector<?> acceptableLevels;
+	private final Vector<?> acceptableLevels;
 
-	public CustomFilter(Vector<?> acceptableLevels) {
+	public CustomFilter(final Vector<?> acceptableLevels) {
 		super();
 		this.acceptableLevels = acceptableLevels;
 	}
 
-	public boolean isLoggable(LogRecord record) {
-		return (acceptableLevels.contains(record.getLevel()));
+	@Override
+	public boolean isLoggable(final LogRecord record) {
+		return (this.acceptableLevels.contains(record.getLevel()));
 	}
 
 }

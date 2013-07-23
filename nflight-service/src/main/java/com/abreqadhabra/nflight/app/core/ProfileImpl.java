@@ -18,7 +18,7 @@ public class ProfileImpl extends Profile {
 
 	private static final Class<ProfileImpl> THIS_CLAZZ = ProfileImpl.class;
 	private static final Logger LOGGER = LoggingHelper
-			.getLogger(ProfileImpl.THIS_CLAZZ);
+			.getLogger(THIS_CLAZZ);
 
 	private static boolean checkNotLeadingHyphens(final String key,
 			final String value) {
@@ -47,7 +47,7 @@ public class ProfileImpl extends Profile {
 				String value = "true";
 				// handle long option --foo or --foo bar
 				if (key.startsWith("--")) {
-					key = ProfileImpl.stripLeadingHyphens(key);
+					key = stripLeadingHyphens(key);
 					if (key.equalsIgnoreCase(Profile.BOOT_OPTION.gui.toString())) {
 						argsProps.setProperty(
 								Profile.BOOT_OPTION.gui.toString(), value);
@@ -59,7 +59,7 @@ public class ProfileImpl extends Profile {
 					if (key.equalsIgnoreCase(Profile.BOOT_OPTION.service
 							.toString())) {
 						value = options.next();
-						if (ProfileImpl.checkNotLeadingHyphens(key, value)) {
+						if (checkNotLeadingHyphens(key, value)) {
 							argsProps
 									.setProperty(
 											Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE
@@ -68,7 +68,7 @@ public class ProfileImpl extends Profile {
 					} else if (key.equalsIgnoreCase(Profile.BOOT_OPTION.host
 							.toString())) {
 						value = options.next();
-						if (ProfileImpl.checkNotLeadingHyphens(key, value)) {
+						if (checkNotLeadingHyphens(key, value)) {
 							argsProps
 									.setProperty(
 											Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_HOST
@@ -77,7 +77,7 @@ public class ProfileImpl extends Profile {
 					} else if (key.equalsIgnoreCase(Profile.BOOT_OPTION.port
 							.toString())) {
 						value = options.next();
-						if (ProfileImpl.checkNotLeadingHyphens(key, value)) {
+						if (checkNotLeadingHyphens(key, value)) {
 							argsProps
 									.setProperty(
 											Profile.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_PORT
@@ -88,14 +88,14 @@ public class ProfileImpl extends Profile {
 
 						try {
 							value = options.next();
-							if (ProfileImpl.checkNotLeadingHyphens(key, value)) {
+							if (checkNotLeadingHyphens(key, value)) {
 								argsProps.clear();
 								argsProps = PropertyFile
 										.readPropertyFilePath(
-												ProfileImpl.THIS_CLAZZ
+												THIS_CLAZZ
 														.getName(), value);
-								ProfileImpl.LOGGER.logp(Level.FINER,
-										ProfileImpl.THIS_CLAZZ.getName(),
+								LOGGER.logp(Level.FINER,
+										THIS_CLAZZ.getName(),
 										METHOD_NAME,
 										"Command line arguments will be ignored. loading properties from file: "
 												+ value);
@@ -238,9 +238,9 @@ public class ProfileImpl extends Profile {
 		System.setProperty(
 				Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(),
 				this.codeBase + Profile.FILE_BOOT_POLICY.toString());
-		ProfileImpl.LOGGER
+		LOGGER
 				.logp(Level.CONFIG,
-						ProfileImpl.THIS_CLAZZ.getName(),
+						THIS_CLAZZ.getName(),
 						METHOD_NAME,
 						Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY
 								+ "="
