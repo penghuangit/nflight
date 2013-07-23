@@ -24,6 +24,7 @@ public class MulticastServiceImpl extends AbstractService {
 			.getLogger(MulticastServiceImpl.THIS_CLAZZ);
 
 	protected DatagramChannel datagramChannel;
+	protected boolean isOpen;
 
 	public MulticastServiceImpl(final ServiceDescriptor sd) throws Exception {
 		super(sd);
@@ -73,28 +74,35 @@ public class MulticastServiceImpl extends AbstractService {
 		/* try { */
 
 		// create a new datagram channel
-		this.datagramChannel = DatagramChannel
-				.open(StandardProtocolFamily.INET);
+		datagramChannel = DatagramChannel.open(StandardProtocolFamily.INET);
 
-		this.server = this.datagramChannel;
+		// check if it the channel was successfully opened
+		isOpen = datagramChannel.isOpen();
 
-		this.getNetworkInterfaceName(this.address);
+		if (isOpen) {
 
-		// get the network interface used for multicast
-		final NetworkInterface networkInterface = NetworkInterface
-				.getByName("eth5");
+			server = datagramChannel;
 
-		// set some options
-		this.datagramChannel.setOption(StandardSocketOptions.IP_MULTICAST_IF,
-				networkInterface);
-		this.datagramChannel
-				.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+			final String networkInterfaceName = this
+					.getNetworkInterfaceName(address);
 
-		// bind the channel to the local address
-		this.datagramChannel.bind(new InetSocketAddress(this.port));
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				"Date-time server is ready ... shortly I'll start sending ...");
+			// get the network interface used for multicast
+			final NetworkInterface networkInterface = NetworkInterface
+					.getByName(networkInterfaceName);
 
+			// set some options
+			datagramChannel.setOption(StandardSocketOptions.IP_MULTICAST_IF,
+					networkInterface);
+			datagramChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+
+			// bind the channel to the local address
+			datagramChannel.bind(new InetSocketAddress(port));
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+					"Date-time server is ready ... shortly I'll start sending ...");
+		} else {
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+					"The channel cannot be opened!");
+		}
 		/*
 		 * } catch (final Exception ex) { if (ex instanceof
 		 * ClosedChannelException) { LOGGER.logp(Level.FINER,
@@ -129,7 +137,7 @@ public class MulticastServiceImpl extends AbstractService {
 				.getMethodName();
 
 		// check if it the channel was successfully opened
-		if (this.datagramChannel.isOpen()) {
+		if (isOpen) {
 
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"Echo server was successfully opened!");
@@ -153,7 +161,7 @@ public class MulticastServiceImpl extends AbstractService {
 					THIS_CLAZZ.getName(),
 					METHOD_NAME,
 					"Echo server was binded on: "
-							+ this.datagramChannel.getLocalAddress());
+							+ datagramChannel.getLocalAddress());
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"Echo server is ready to echo ...");
 
@@ -170,8 +178,8 @@ public class MulticastServiceImpl extends AbstractService {
 				System.out.println("Sending data ...");
 
 				datetime = ByteBuffer.wrap(new Date().toString().getBytes());
-				this.datagramChannel.send(datetime, new InetSocketAddress(
-						InetAddress.getByName(this.host), this.port));
+				datagramChannel.send(datetime, new InetSocketAddress(
+						InetAddress.getByName(host), port));
 				datetime.flip();
 			}
 

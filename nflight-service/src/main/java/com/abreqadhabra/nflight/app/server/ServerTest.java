@@ -46,9 +46,9 @@ public class ServerTest {
 
 		final ServiceDescriptor sd = new ServiceDescriptor();
 		sd.setServiceName(serviceName);
-		sd.setHost(this.host);
-		sd.setAddress(this.address);
-		sd.setPort(this.port);
+		sd.setHost(host);
+		sd.setAddress(address);
+		sd.setPort(port);
 
 		// this.testService(sd);
 
@@ -64,6 +64,11 @@ public class ServerTest {
 		// this.testService(sd);
 
 		serviceName = "multicast";
+		sd.setServiceName(serviceName);
+
+		// this.testService(sd);
+
+		serviceName = "stream";
 		sd.setServiceName(serviceName);
 
 		this.testService(sd);
@@ -104,7 +109,7 @@ public class ServerTest {
 			_invoker.execute(_cmd);
 			_cmd = new StatusServerCommand(_server);
 			_invoker.execute(_cmd);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			_cmd = new ShutdownServerCommand(_server);
 			_invoker.execute(_cmd);
 			e.printStackTrace();
@@ -112,13 +117,10 @@ public class ServerTest {
 
 		if (sd.getServiceName().equals("unicast")
 				| sd.getServiceName().equals("activatable")) {
-			final Registry registry = RMIServiceHelper.getRegistry(this.host,
-					this.port);
+			final Registry registry = RMIServiceHelper.getRegistry(host, port);
 
-			final String name1 = "rmi://" + this.host + ":" + this.port
-					+ "/unicast";
-			final String name2 = "rmi://" + this.host + ":" + this.port
-					+ "/activatable";
+			final String name1 = "rmi://" + host + ":" + port + "/unicast";
+			final String name2 = "rmi://" + host + ":" + port + "/activatable";
 			String response = null;
 
 			try {

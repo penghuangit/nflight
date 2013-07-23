@@ -23,6 +23,7 @@ public class DatagramServiceImpl extends AbstractService {
 	protected DatagramChannel datagramChannel;
 
 	final int MAX_PACKET_SIZE = 65507;
+	private boolean isOpen;
 
 	public DatagramServiceImpl(final ServiceDescriptor sd) throws Exception {
 		super(sd);
@@ -30,23 +31,30 @@ public class DatagramServiceImpl extends AbstractService {
 
 	@Override
 	public void init() throws Exception {
-		Thread.currentThread().getStackTrace()[1].getMethodName();
-
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
 		/* try { */
 
 		// create a new datagram channel
-		this.datagramChannel = DatagramChannel
-				.open(StandardProtocolFamily.INET);
+		datagramChannel = DatagramChannel.open(StandardProtocolFamily.INET);
 
-		this.server = this.datagramChannel;
+		// check if it the channel was successfully opened
+		isOpen = datagramChannel.isOpen();
 
-		// set some options
-		this.datagramChannel.setOption(StandardSocketOptions.SO_RCVBUF,
-				4 * 1024).setOption(StandardSocketOptions.SO_SNDBUF, 4 * 1024);
-		// bind the channel to local address
-		this.datagramChannel.bind(new InetSocketAddress(this.desc.getAddress(),
-				this.desc.getPort()));
+		if (isOpen) {
+			server = datagramChannel;
 
+			// set some options
+			datagramChannel
+					.setOption(StandardSocketOptions.SO_RCVBUF, 4 * 1024)
+					.setOption(StandardSocketOptions.SO_SNDBUF, 4 * 1024);
+			// bind the channel to local address
+			datagramChannel.bind(new InetSocketAddress(desc.getAddress(), desc
+					.getPort()));
+		} else {
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+					"The channel cannot be opened!");
+		}
 		/*
 		 * } catch (final Exception ex) { if (ex instanceof
 		 * ClosedChannelException) { LOGGER.logp(Level.FINER,
@@ -81,7 +89,7 @@ public class DatagramServiceImpl extends AbstractService {
 				.getMethodName();
 
 		// check if it the channel was successfully opened
-		if (this.datagramChannel.isOpen()) {
+		if (isOpen) {
 
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"Echo server was successfully opened!");
@@ -105,25 +113,25 @@ public class DatagramServiceImpl extends AbstractService {
 					THIS_CLAZZ.getName(),
 					METHOD_NAME,
 					"Echo server was binded on: "
-							+ this.datagramChannel.getLocalAddress());
+							+ datagramChannel.getLocalAddress());
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"Echo server is ready to echo ...");
 
 			final ByteBuffer echoText = ByteBuffer
-					.allocateDirect(this.MAX_PACKET_SIZE);
+					.allocateDirect(MAX_PACKET_SIZE);
 
 			// transmitting data packets
 			while (true) {
 
 				SocketAddress clientAddress;
 				try {
-					clientAddress = this.datagramChannel.receive(echoText);
+					clientAddress = datagramChannel.receive(echoText);
 					echoText.flip();
 					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 							"I have received " + echoText.limit()
 									+ " bytes from " + clientAddress.toString()
 									+ "! Sending them back ...");
-					this.datagramChannel.send(echoText, clientAddress);
+					datagramChannel.send(echoText, clientAddress);
 					echoText.clear();
 				} catch (final IOException e) {
 					// TODO Auto-generated catch block

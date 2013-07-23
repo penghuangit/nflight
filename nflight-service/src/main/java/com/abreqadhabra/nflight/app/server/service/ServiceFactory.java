@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.app.core.Profile.SERVICE_NAME;
 import com.abreqadhabra.nflight.app.server.service.net.DatagramServiceImpl;
 import com.abreqadhabra.nflight.app.server.service.net.MulticastServiceImpl;
+import com.abreqadhabra.nflight.app.server.service.net.StreamServiceImpl;
 import com.abreqadhabra.nflight.app.server.service.rmi.ActivatableServantImpl;
 import com.abreqadhabra.nflight.app.server.service.rmi.UnicastServantImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -15,8 +16,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 public class ServiceFactory {
 
 	private static final Class<ServiceFactory> THIS_CLAZZ = ServiceFactory.class;
-	private static Logger LOGGER = LoggingHelper
-			.getLogger(THIS_CLAZZ);
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	/**
 	 * Pool for one soldier only if there are more soldier types this can be an
@@ -36,8 +36,7 @@ public class ServiceFactory {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		IService _operation = operationMap.get(sd
-				.getServiceName());
+		IService _operation = operationMap.get(sd.getServiceName());
 		if (_operation == null) {
 			final SERVICE_NAME _service = SERVICE_NAME.valueOf(sd
 					.getServiceName());
@@ -57,13 +56,16 @@ public class ServiceFactory {
 				// _operation = new ActivatableRMIServiceImpl(sd);
 				_operation = new MulticastServiceImpl(sd);
 				break;
+			case stream:
+				// _operation = new ActivatableRMIServiceImpl(sd);
+				_operation = new StreamServiceImpl(sd);
+				break;
 			default:
 				break;
 			}
 			operationMap.put(sd.getServiceName(), _operation);
 
-			LOGGER.logp(Level.FINER,
-					THIS_CLAZZ.getName(), METHOD_NAME,
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"Flyweight -> FlyweightFactory  : Creating operation of service name : "
 							+ sd.getServiceName() + "/"
 							+ _operation.getClass().getSimpleName());
