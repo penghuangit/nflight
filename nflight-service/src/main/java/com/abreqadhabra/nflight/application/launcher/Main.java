@@ -9,7 +9,7 @@ import java.net.URLClassLoader;
 public class Main {
 	private static String CLASSPATH_DIR = "lib";
 	private static String LIB_EXT = ".jar";
-	private static String LAUNCHER_CLASS = "demo.launcher.AppLauncher";
+	private static String LAUNCHER_CLASS = "com.abreqadhabra.nflight.application.launcher.AppLauncher";
 
 	private static ClassLoader cl;
 	static{
