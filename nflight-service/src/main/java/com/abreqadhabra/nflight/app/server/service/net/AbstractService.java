@@ -38,7 +38,7 @@ public abstract class AbstractService implements IService {
 	}
 
 	@Override
-	public void shutdown() {
+	public void shutdown() throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {

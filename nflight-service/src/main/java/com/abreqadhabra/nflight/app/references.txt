@@ -27,3 +27,9 @@ http://www.baptiste-wicht.com/2010/04/java-7-new-io-features-asynchronous-operat
 
 https://code.google.com/p/fluent-builders-generator-eclipse-plugin/
 http://sourcemaking.com/refactoring/replace-constructor-with-factory-method
+
+
+http://www.oracle.com/technetwork/java/index-139917.html
+http://javarevisited.blogspot.kr/2013/07/how-to-create-thread-pools-in-java-executors-framework-example-tutorial.html
+http://howtodoinjava.com/2013/03/12/java-executor-framework-tutorial-and-best-practices/
+http://www.javaworld.com/javaworld/jw-10-2011/111004-jtip-recursion-in-java-7.html

@@ -33,7 +33,6 @@ public class ServerTest {
 
 	String host = InetAddress.getLocalHost().getHostName();
 	String address = InetAddress.getLocalHost().getHostAddress();
-
 	int port = 9999;
 
 	public ServerTest() throws Exception {
@@ -61,7 +60,7 @@ public class ServerTest {
 		serviceName = "datagram";
 		sd.setServiceName(serviceName);
 
-		// this.testService(sd);
+		 this.testService(sd);
 
 		serviceName = "multicast";
 		sd.setServiceName(serviceName);
@@ -71,7 +70,7 @@ public class ServerTest {
 		serviceName = "stream";
 		sd.setServiceName(serviceName);
 
-		this.testService(sd);
+		//this.testService(sd);
 
 		// server.init();
 		// server.startup();
@@ -107,11 +106,13 @@ public class ServerTest {
 		try {
 			_cmd = new StartupServerCommand(_server);
 			_invoker.execute(_cmd);
-			_cmd = new StatusServerCommand(_server);
-			_invoker.execute(_cmd);
+//			_cmd = new StatusServerCommand(_server);
+//			_invoker.execute(_cmd);
+//			_cmd = new ShutdownServerCommand(_server);
+//			_invoker.execute(_cmd);
 		} catch (final Exception e) {
-			_cmd = new ShutdownServerCommand(_server);
-			_invoker.execute(_cmd);
+//			_cmd = new ShutdownServerCommand(_server);
+//			_invoker.execute(_cmd);
 			e.printStackTrace();
 		}
 

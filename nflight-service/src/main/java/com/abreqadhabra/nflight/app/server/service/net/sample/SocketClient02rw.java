@@ -1,6 +1,7 @@
 package com.abreqadhabra.nflight.app.server.service.net.sample;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.StandardProtocolFamily;
 import java.net.StandardSocketOptions;
@@ -19,9 +20,14 @@ public class SocketClient02rw {
 
 	public static void main(final String[] args) throws IOException {
 
-		final int REMOTE_PORT = 5555;
-		final String REMOTE_IP = "127.0.0.1"; // modify this accordingly if you
-												// want to test remote
+//		final int REMOTE_PORT = 9999;
+//		final String REMOTE_IP = "127.0.0.1"; // modify this accordingly if you
+//												// want to test remote
+		
+		
+		String REMOTE_IP = InetAddress.getLocalHost().getHostAddress();
+		int REMOTE_PORT = 9999;
+		
 		final int MAX_PACKET_SIZE = 65507;
 
 		CharBuffer charBuffer = null;

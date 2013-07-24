@@ -1,13 +1,5 @@
 package com.abreqadhabra.nflight.app.server.service.net;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.net.StandardProtocolFamily;
-import java.net.StandardSocketOptions;
-import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.app.server.service.ServiceDescriptor;
@@ -20,10 +12,7 @@ public class DatagramServiceImpl extends AbstractService {
 	private static Logger LOGGER = LoggingHelper
 			.getLogger(DatagramServiceImpl.THIS_CLAZZ);
 
-	protected DatagramChannel datagramChannel;
-
-	final int MAX_PACKET_SIZE = 65507;
-	private boolean isOpen;
+	DatagramAcceptor serverThread;
 
 	public DatagramServiceImpl(final ServiceDescriptor sd) throws Exception {
 		super(sd);
@@ -31,43 +20,7 @@ public class DatagramServiceImpl extends AbstractService {
 
 	@Override
 	public void init() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-		/* try { */
-
-		// create a new datagram channel
-		datagramChannel = DatagramChannel.open(StandardProtocolFamily.INET);
-
-		// check if it the channel was successfully opened
-		isOpen = datagramChannel.isOpen();
-
-		if (isOpen) {
-			server = datagramChannel;
-
-			// set some options
-			datagramChannel
-					.setOption(StandardSocketOptions.SO_RCVBUF, 4 * 1024)
-					.setOption(StandardSocketOptions.SO_SNDBUF, 4 * 1024);
-			// bind the channel to local address
-			datagramChannel.bind(new InetSocketAddress(desc.getAddress(), desc
-					.getPort()));
-		} else {
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"The channel cannot be opened!");
-		}
-		/*
-		 * } catch (final Exception ex) { if (ex instanceof
-		 * ClosedChannelException) { LOGGER.logp(Level.FINER,
-		 * THIS_CLAZZ.getName(), METHOD_NAME,
-		 * "The channel was unexpected closed ..."); } if (ex instanceof
-		 * SecurityException) { LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
-		 * METHOD_NAME, "A security exception occured ..."); } if (ex instanceof
-		 * IOException) { LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
-		 * METHOD_NAME, "An I/O error occured ..."); }
-		 * 
-		 * LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "\n" +
-		 * ex); }
-		 */
+		Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	}
 
@@ -85,71 +38,18 @@ public class DatagramServiceImpl extends AbstractService {
 
 	@Override
 	public void startup() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-
-		// check if it the channel was successfully opened
-		if (isOpen) {
-
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Echo server was successfully opened!");
-
-			// NetworkInterface networkInterface =
-			// NetworkInterface.getByName("hme0");
-			//
-			// DatagramChannel dc =
-			// DatagramChannel.open(StandardProtocolFamily.INET)
-			// .setOption(StandardSocketOption.SO_REUSEADDR, true)
-			// .bind(new InetSocketAddress(5000))
-			// .setOption(StandardSocketOption.IP_MULTICAST_IF,
-			// networkInterface);
-			//
-			// InetAddress group = InetAddress.getByName("225.4.5.6");
-			//
-			// MembershipKey key = dc.join(group, networkInterface);
-
-			LOGGER.logp(
-					Level.FINER,
-					THIS_CLAZZ.getName(),
-					METHOD_NAME,
-					"Echo server was binded on: "
-							+ datagramChannel.getLocalAddress());
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Echo server is ready to echo ...");
-
-			final ByteBuffer echoText = ByteBuffer
-					.allocateDirect(MAX_PACKET_SIZE);
-
-			// transmitting data packets
-			while (true) {
-
-				SocketAddress clientAddress;
-				try {
-					clientAddress = datagramChannel.receive(echoText);
-					echoText.flip();
-					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-							"I have received " + echoText.limit()
-									+ " bytes from " + clientAddress.toString()
-									+ "! Sending them back ...");
-					datagramChannel.send(echoText, clientAddress);
-					echoText.clear();
-				} catch (final IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-
-		} else {
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"The channel cannot be opened!");
-		}
+		serverThread = new DatagramAcceptor(desc.getAddress(), desc.getPort());
+		serverThread.start();
 	}
 
+	public void shutdown() throws Exception {
+		serverThread.disconnect();
+	}
+
+	
 	@Override
 	public boolean status() throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

@@ -19,7 +19,7 @@ public class SocektClient02 {
 
 	public static void main(final String[] args) throws IOException {
 
-		final int REMOTE_PORT = 5555;
+		final int REMOTE_PORT = 9999;
 		final String REMOTE_IP = "127.0.0.1"; // modify this accordingly if you
 												// want to test remote
 		final int MAX_PACKET_SIZE = 65507;
