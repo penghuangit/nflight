@@ -160,4 +160,6 @@ public abstract class Profile {
 
 	public static final String ACTIVATION_FILE_PREFIX = "file://";
 
+	public static final Object BOOT_OPTION_CONF = "--conf";
+
 }

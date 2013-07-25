@@ -13,135 +13,136 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class LoggingHelper {
-    private static final Class<LoggingHelper> THIS_CLAZZ = LoggingHelper.class;
-    private static final String DEFAULT_RESOURCE_BUNDLE_NAME = "com.abreqadhabra.nflight.common.conf.logging.LoggingMessages";
-    private static final String LOGGING_CONFIG_FILE_NAME = "/com/abreqadhabra/nflight/common/conf/logging/logging.properties";
+	private static final Class<LoggingHelper> THIS_CLAZZ = LoggingHelper.class;
+	private static final String DEFAULT_RESOURCE_BUNDLE_NAME = "com.abreqadhabra.nflight.common.conf.logging.LoggingMessages";
+	private static final String LOGGING_CONFIG_FILE_NAME = "/com/abreqadhabra/nflight/common/conf/logging/logging.properties";
 
-    /** Root Logger */
-    private static final Logger ROOT_LOGGER = Logger.getLogger("");
+	/** Root Logger */
+	private static final Logger ROOT_LOGGER = Logger.getLogger("");
 
-    
-    public static Logger getLogger(Class<?> clazz) {
-	return getLogger(clazz, null);
-    }
-
-    public static Logger getLogger(Class<?> clazz, String resourceBundleName) {
-	if (resourceBundleName == null) {
-	    resourceBundleName = DEFAULT_RESOURCE_BUNDLE_NAME;
+	public static String describe(final Class<?> clazz) {
+		return describe(clazz, "", "");
 	}
-	String loggerName = getPackageName(clazz, 4);
-	Logger _logger = Logger.getLogger(loggerName, resourceBundleName);
-	LogManager logManager = LogManager.getLogManager();
-	InputStream inputStream = THIS_CLAZZ
-		.getResourceAsStream(LOGGING_CONFIG_FILE_NAME);
-	try {
-	    logManager.readConfiguration(inputStream);
-	    inputStream.close();
-	} catch (FileNotFoundException e) {
-	    e.printStackTrace();
-	} catch (SecurityException e) {
-	    ROOT_LOGGER.log(Level.WARNING,
-		    "Failed to configure log manager due to an access problem",
-		    e);
-	} catch (IOException e) {
-	    ROOT_LOGGER.log(Level.WARNING,
-		    "Failed to configure log manager due to an IO problem", e);
-	} catch (Exception e) {
-	    ROOT_LOGGER
-		    .log(Level.WARNING,
-			    "Failed to configure log manager due to an unknown problem",
-			    e);
-	}
-	logManager.addLogger(_logger);
-	
-	return logManager.getLogger(loggerName);
-    }
 
-    private static String getPackageName(Class<?> clazz, int depth) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+	public static String describe(final Class<?> clazz, final String pad,
+			final String leadin) {
 
-	String packageName = clazz.getPackage().getName();
-	StringBuffer sb = new StringBuffer();
-	String[] strArray = packageName.split("\\.");
+		StringBuffer sb = new StringBuffer();
 
-	if (strArray.length >= depth) {
-	    for (int i = 0; i < depth; i++) {
-		sb.append(strArray[i]);
-		if (i < depth - 1) {
-		    sb.append(".");
+		if (clazz == null) {
+			return sb.toString();
+		} else {
+			final String type = clazz.isInterface() ? "Interface" : clazz
+					.isArray() ? "Array" : clazz.isPrimitive() ? "Primitive"
+					: clazz.isEnum() ? "Enum" : "Class";
+			
+			sb.append(String.format("%n%s%s%s %s [%s]", pad, leadin, type,
+					clazz.getSimpleName(), clazz.getName()));
+			for (final Class<?> interfaze : clazz.getInterfaces()) {
+				sb.append(describe(interfaze, pad + "\t", "implements "));
+			}
+			sb.append(describe(clazz.getComponentType(), pad + "\t\t", "elements are "));
+			sb.append(describe(clazz.getSuperclass(), pad + "\t\t", "extends "));
 		}
-	    }
+		return sb.toString();
 	}
 
-	return sb.toString();
-    }
+	public static Logger getLogger(final Class<?> clazz) {
+		return getLogger(clazz, null);
+	}
 
-    public static void initializeLogging(String componentName) {
+	public static Logger getLogger(final Class<?> clazz,
+			String resourceBundleName) {
+		if (resourceBundleName == null) {
+			resourceBundleName = DEFAULT_RESOURCE_BUNDLE_NAME;
+		}
+		final String loggerName = getPackageName(clazz, 4);
+		final Logger _logger = Logger.getLogger(loggerName, resourceBundleName);
+		final LogManager logManager = LogManager.getLogManager();
+		final InputStream inputStream = THIS_CLAZZ
+				.getResourceAsStream(LOGGING_CONFIG_FILE_NAME);
+		try {
+			logManager.readConfiguration(inputStream);
+			inputStream.close();
+		} catch (final FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (final SecurityException e) {
+			ROOT_LOGGER.log(Level.WARNING,
+					"Failed to configure log manager due to an access problem",
+					e);
+		} catch (final IOException e) {
+			ROOT_LOGGER.log(Level.WARNING,
+					"Failed to configure log manager due to an IO problem", e);
+		} catch (final Exception e) {
+			ROOT_LOGGER
+					.log(Level.WARNING,
+							"Failed to configure log manager due to an unknown problem",
+							e);
+		}
+		logManager.addLogger(_logger);
 
-	// Get the logger that you want to attach a custom Handler to
-	String defaultResourceBundleName = DEFAULT_RESOURCE_BUNDLE_NAME;
-	Logger logger = Logger.getLogger(componentName,
-		defaultResourceBundleName);
+		return logManager.getLogger(loggerName);
+	}
 
-	// Set up a custom Handler (see MyCustomHandler example)
-	Handler handler = null;
+	private static String getPackageName(final Class<?> clazz, final int depth) {
+		Thread.currentThread().getStackTrace()[1].getMethodName();
 
-	// handler = new CustomHandler("MyOutputFile.log");
-	handler = new ConsoleHandler();
+		final String packageName = clazz.getPackage().getName();
+		final StringBuffer sb = new StringBuffer();
+		final String[] strArray = packageName.split("\\.");
 
-	// Set up a custom Filter (see MyCustomFilter example)
-	Vector<Level> acceptableLevels = new Vector<Level>();
-	acceptableLevels.add(Level.ALL);
-	acceptableLevels.add(Level.CONFIG);
-	acceptableLevels.add(Level.FINE);
-	acceptableLevels.add(Level.FINER);
-	acceptableLevels.add(Level.FINEST);
-	acceptableLevels.add(Level.INFO);
-	acceptableLevels.add(Level.WARNING);
-	acceptableLevels.add(Level.SEVERE);
+		if (strArray.length >= depth) {
+			for (int i = 0; i < depth; i++) {
+				sb.append(strArray[i]);
+				if (i < (depth - 1)) {
+					sb.append(".");
+				}
+			}
+		}
 
-	Filter filter = new CustomFilter(acceptableLevels);
+		return sb.toString();
+	}
 
-	// Set up a custom Formatter (see MyCustomFormatter example)
-	Formatter formatter = new CustomFormatter();
+	public static void initializeLogging(final String componentName) {
 
-	// Connect the filter and formatter to the handler
-	handler.setFilter(filter);
-	handler.setFormatter(formatter);
+		// Get the logger that you want to attach a custom Handler to
+		final String defaultResourceBundleName = DEFAULT_RESOURCE_BUNDLE_NAME;
+		final Logger logger = Logger.getLogger(componentName,
+				defaultResourceBundleName);
 
-	// Connect the handler to the logger
-	logger.addHandler(handler);
+		// Set up a custom Handler (see MyCustomHandler example)
+		Handler handler = null;
 
-	// avoid sending events logged to com.myCompany showing up in WebSphere
-	// Application Server logs
-	logger.setUseParentHandlers(false);
+		// handler = new CustomHandler("MyOutputFile.log");
+		handler = new ConsoleHandler();
 
-    }
+		// Set up a custom Filter (see MyCustomFilter example)
+		final Vector<Level> acceptableLevels = new Vector<Level>();
+		acceptableLevels.add(Level.ALL);
+		acceptableLevels.add(Level.CONFIG);
+		acceptableLevels.add(Level.FINE);
+		acceptableLevels.add(Level.FINER);
+		acceptableLevels.add(Level.FINEST);
+		acceptableLevels.add(Level.INFO);
+		acceptableLevels.add(Level.WARNING);
+		acceptableLevels.add(Level.SEVERE);
 
-    static void describe(Class<?> clazz, String pad, String leadin) {
-        if (clazz == null) return;
-        String type =
-            clazz.isInterface() ? "interface" :
-            clazz.isArray() ? "array" :
-            clazz.isPrimitive() ? "primitive" :
-            clazz.isEnum() ? "enum" :
-            "class";
-        System.out.printf("%s%s%s %s ( %s )%n",
-            pad, leadin, type, clazz.getSimpleName(), clazz.getName());
-        for (Class<?> interfaze : clazz.getInterfaces()) {
-            describe(interfaze, pad + "   ", "implements ");
-        }
-        describe(clazz.getComponentType(), pad + "   ", "elements are ");
-        describe(clazz.getSuperclass(), pad + "   ", "extends ");
-    }
-    static void describe(Class<?> clazz) {
-        describe(clazz, "", "");
-        System.out.println();
-    }
-    public static void main(String[] args) {
-        describe(boolean[][].class);
-        describe(java.math.RoundingMode.class);
-        describe(java.util.ArrayList.class);
-        describe(void.class);
-    }
+		final Filter filter = new CustomFilter(acceptableLevels);
+
+		// Set up a custom Formatter (see MyCustomFormatter example)
+		final Formatter formatter = new CustomFormatter();
+
+		// Connect the filter and formatter to the handler
+		handler.setFilter(filter);
+		handler.setFormatter(formatter);
+
+		// Connect the handler to the logger
+		logger.addHandler(handler);
+
+		// avoid sending events logged to com.myCompany showing up in WebSphere
+		// Application Server logs
+		logger.setUseParentHandlers(false);
+
+	}
+
 }

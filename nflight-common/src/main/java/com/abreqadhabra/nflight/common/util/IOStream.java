@@ -46,6 +46,28 @@ public class IOStream {
 		return sb.toString();
 	}
 
+	
+	public static Path getCodebasePath(final String className) {
+		Class<?> cls = null;
+		try {
+			cls = Class.forName(className);
+		} catch (final ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		final ProtectionDomain pd = cls.getProtectionDomain();
+		final CodeSource cs = pd.getCodeSource();
+		final URL url = cs.getLocation();
+		try {
+			return Paths.get(url.toURI());
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}//.replace(":", "/");
+		
+		return null;
+	}
+	
 	public static String getCodebase(final String className) {
 		Class<?> cls = null;
 		try {
@@ -57,10 +79,10 @@ public class IOStream {
 		final ProtectionDomain pd = cls.getProtectionDomain();
 		final CodeSource cs = pd.getCodeSource();
 		final URL url = cs.getLocation();
-		return url.getFile();
+		return url.getFile();//.replace(":", "/");
 	}
 
-	public static URI getCodebasePath(final String className) {
+	public static URI getCodebaseURI(final String className) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(className);
@@ -87,7 +109,7 @@ public class IOStream {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		final URI codebaseURI = IOStream.getCodebasePath(className);
+		final URI codebaseURI = IOStream.getCodebaseURI(className);
 		Path filePath = Paths.get(codebaseURI);
 		for (final String path : paths) {
 			filePath = filePath.resolve(path);

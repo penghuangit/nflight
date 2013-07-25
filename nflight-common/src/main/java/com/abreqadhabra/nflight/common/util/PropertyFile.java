@@ -5,8 +5,10 @@ import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,6 +58,28 @@ public class PropertyFile {
 		}
 	}
 
+	public static Properties readPropertyFilePath(final Path path) throws Exception {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+	//	final Path path = Paths.get(filePath);
+
+		final Properties props = new Properties();
+		try {
+
+			final InputStream is = Files.newInputStream(path);
+			props.load(is);
+			is.close();
+		} catch (final IOException e) {
+			throw new NFSystemException("Can't load properties: ", e)
+					.addContextValue("path :", path);
+		}
+		LOGGER.logp(Level.CONFIG, THIS_CLAZZ.getName(), METHOD_NAME,
+				"load properties : " + path + "\n"
+						+ renderPropsText(props));
+		return props;
+	}
+	
 	public static Properties readPropertyFilePath(final String className,
 			final String filePath) throws Exception {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
@@ -73,9 +97,27 @@ public class PropertyFile {
 			throw new NFSystemException("Can't load properties: ", e)
 					.addContextValue("path :", path);
 		}
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, path
-				+ " :\n" + props);
+		LOGGER.logp(Level.CONFIG, THIS_CLAZZ.getName(), METHOD_NAME,
+				"load properties : " + path + "\n"
+						+ renderPropsText(props));
 		return props;
+	}
+
+	public static String renderPropsText(final Properties props)
+
+	{
+
+		final String[] keys = props.keySet().toArray(new String[0]);
+		Arrays.sort(keys);
+		final StringBuffer sb = new StringBuffer();
+
+		for (final String key : keys) {
+			final String formatString = ":: key = %-50s value = %s%n";
+			final String str = String.format(formatString, key, props.get(key));
+			sb.append(str);
+		}
+		return sb.toString();
+
 	}
 
 	public static String stripFileExtension(final String fileName) {

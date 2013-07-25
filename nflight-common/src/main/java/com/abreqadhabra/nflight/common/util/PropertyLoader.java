@@ -138,7 +138,7 @@ public class PropertyLoader {
 	 * true; }
 	 */
 
-	private static void printProperties(final Properties props) {
+	public static void printProperties(final Properties props) {
 
 		Set<Object> keys = props.keySet();
 		keys = props.keySet();
@@ -165,19 +165,23 @@ public class PropertyLoader {
 			final Properties systemProps = System.getProperties();
 			final String[] keys = systemProps.keySet().toArray(new String[0]);
 			Arrays.sort(keys);
-			final StringBuffer sb = new StringBuffer();
+			final StringBuffer sb = new StringBuffer("\n");
 			for (final String key : keys) {
-				if (key.startsWith("nflight.")/*
-											 * | key.startsWith("java.") |
-											 * key.startsWith("sun.")
-											 */) {
-					sb.append("\n" + key + " : " + systemProps.get(key));
+				if (key.startsWith("nflight.") | key.startsWith("java.")
+						| key.startsWith("sun.")) {
+					final String formatString = ":: key = %-50s value = %s%n";
+					final String str = String.format(formatString, key,
+							systemProps.get(key));
+					sb.append(str);
 				}
 			}
 			LOGGER.logp(Level.CONFIG, THIS_CLAZZ.getName(), METHOD_NAME,
 					"System Properties:" + sb);
 		}
 	}
+	
+
+
 
 	/**
 	 * <p>
