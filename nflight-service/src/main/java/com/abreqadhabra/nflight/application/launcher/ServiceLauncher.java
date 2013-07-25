@@ -6,8 +6,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.app.application.ProfileImpl;
 import com.abreqadhabra.nflight.application.Env;
+import com.abreqadhabra.nflight.application.server.ServerImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 
@@ -21,6 +21,7 @@ public class ServiceLauncher implements Launcher {
 		
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 				LoggingHelper.describe(THIS_CLAZZ));
+		
 		if (System.getSecurityManager() == null) {
 			LauncherHelper.setSecurityManager();
 		}
@@ -74,6 +75,9 @@ public class ServiceLauncher implements Launcher {
 		// throw new
 		// NFServiceException("No arguments specified for Night Flighr Service");
 
+		new ServerImpl(profile);
 	}
+	
+	
 
 }

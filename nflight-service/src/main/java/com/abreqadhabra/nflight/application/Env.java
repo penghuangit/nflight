@@ -17,7 +17,9 @@ public final class Env {
 	public static final Object BOOT_OPTION_CONF = BOOT_OPTION_PREFIX + "conf";
 	public static String Charset = "UTF-8";
 
-	
+	public static enum SERVICE_NAME {
+		unicast, activatable, rmid, stream, datagram, multicast;
+	}
 	public static enum PROPERTIES_SYSTEM {
 
 		JAVA_SECURITY_POLICY, JAVA_RMI_SERVER_CODEBASE, SUN_JNU_ENCODING, UNKNOWN;
