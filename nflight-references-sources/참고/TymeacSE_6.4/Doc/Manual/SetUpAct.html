@@ -1,0 +1,185 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Activatable Remote Object Set Up</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Activatable Remote Object Set Up</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p style="text-align: justify">If you did not do the <a href="SetUpBasic.html">basic set
+        up</a>, please do that first.</p>
+        <p style="text-align: justify">This section describes the steps necessary to make Tymeac
+        Server an activatable remote object.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+</blockquote>
+
+<blockquote>
+  <p align="left" style="text-align: justify">If you are not familiar with the Activation
+  Framework, then please read the documentation from Sun.&nbsp;This is part of the JDKdoc
+  directory.</p>
+  <blockquote>
+    <font size="+1"><b><p style="text-align: justify"></b></font><font size="3">Guide to
+    Features - Java Platform</font><br>
+    &nbsp;&nbsp;&nbsp; Enterprise Features<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Remote Method Invocation (RMI)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Activation
+    Tutorials</p>
+  </blockquote>
+  <font size="+1"><p style="text-align: justify">Creating an Activatable Object,
+  Implementation Class:</font></p>
+  <blockquote>
+    <p>We supply the Tymeac Activatable Object, Implementation Class.<br>
+    <strong>&nbsp;&nbsp; com.tymeac.base.TymeacActivationImpl</strong>.<br>
+    This class extends <code>java.rmi.activation.Activatable<br>
+    </code>and implements the <strong>com.tymeac.base.TymeacInterface</strong>.<br>
+    This class has two public constructors:</p>
+    <blockquote>
+      <p>(ActivationID id,&nbsp;
+      MarshalledObject data),</p>
+      <p>(ActivationID id,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      RMIClientSocketFactory client,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      RMIServerSocketFactory server,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      MarshalledObject data)</p>
+    </blockquote>
+    <p>The only problem is that when you create an activation description, you must declare
+    the name of the class for the Activation Daemon
+    &quot;com.tymeac.base.TymeacActivationImpl&quot;.&nbsp;If you use this name, than this is
+    the only Tymeac Server remote object within the activation system that can be
+    present.&nbsp;If you want to have several different Tymeac Servers active in one
+    configuration, than you must use a different class for each.</p>
+    <p>We supply a class, <strong>com.tymeac.demo.TyDemoActivation, </strong>to create a
+    different name for an activation description class. This is simply a user-named class that
+    extends TymeacActivationImpl, has a public two/four argument constructor that throws
+    RemoteException and Throwable and calls the super class passing the two/four arguments:</p>
+    <blockquote>
+      <font SIZE="2" COLOR="#7f0055"><b>
+      <p ALIGN="LEFT">public</b></font><font SIZE="2"> </font>
+      <font SIZE="2" COLOR="#7f0055"><b>class</b></font><font SIZE="2"> 
+      TyDemoActivation<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </font><font SIZE="2" COLOR="#7f0055"><b>extends</b></font><font SIZE="2"> 
+      TymeacActivationImpl { </font></p>
+      <font SIZE="2">
+      <p></font><font SIZE="2" COLOR="#7f0055"><b>&nbsp;&nbsp;&nbsp;&nbsp; 
+      private</b></font><font SIZE="2"> </font><font SIZE="2" COLOR="#7f0055">
+      <b>static</b></font><font SIZE="2"> </font><font SIZE="2" COLOR="#7f0055">
+      <b>final</b></font><font SIZE="2"> </font><font SIZE="2" COLOR="#7f0055">
+      <b>long</b></font><font SIZE="2"> </font><font SIZE="2" COLOR="#0000c0">
+      <i>serialVersionUID</i></font><font SIZE="2"> = 7461096817293558039L;</font></p>
+    </blockquote>
+    <p>Java only needs stubs for classes that directly implement an interface that extends
+    java.rmi.Remote.&nbsp; Therefore, you do not need to run &quot;rmic&quot; on this, or any
+    user-named, class.</p>
+    <p>The stub for class <strong>com.tymeac.base.TymeacActivationImpl</strong>
+    is in the &lt;home&gt;/com/tymeac/base directory.</p>
+    <p>For every activatable Tymeac Server you need, create a
+    front end class, as above, with any naming convention you wish.&nbsp; Place the class file
+    in &lt;home&gt;/com/tymeac/serveruser.</p>
+  </blockquote>
+  <p><font size="+1">Altering the TyVariables source code:</font></p>
+  <blockquote>
+    <p><font size="3">The <a href="TyVariables.html">TyVariables</a> class ships with the
+    tymeac_name set to &quot;</font><strong>com.tymeac.demo.TyDemoActivation</strong><font size="3">&quot;.&nbsp; This is the </font><font size="+1"><small>name of the
+    Implementation Class, above.</small></font></p>
+  </blockquote>
+  <blockquote>
+    <p>If you altered this name previously, then you must set it to:<br>
+    <strong>com.tymeac.demo.TyDemoActivation</strong>, and you must compile the source into
+    the<br>
+    &lt; home&gt;/com/tymeac/demo directory.</p>
+  </blockquote>
+  <p><font size="+1">(Optional) Altering the TymeacUserVariables source code:</font></p>
+  <blockquote>
+    <p><font size="+1"><small>The <a href="UserVariables.html">TymeacUserVariables</a> class
+    ships with the</small></font> <a href="TyCfg.html#activate">Inactivate Minutes</a>&nbsp;set
+    to two (2) minutes. This means that when there is no activity for two minutes, Tymeac
+    Server inactivates.&nbsp;The next request to Tymeac Server creates a new Java Virtual
+    Machine.&nbsp;If<font size="+1"><small> this is acceptable, then leave it as such.</small></font></p>
+    <p>If you alter this source, then you must compile the source into the<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt; home&gt;/com/tymeac/serveruser directory.</p>
+  </blockquote>
+  <p><font size="+1">Creating an Activatable Object, Set Up Class:</font></p>
+  <blockquote>
+    <p>We supply source code <strong>com.tymeac.demo.TyDemoActivationBase.java</strong>
+    for the set up class.&nbsp;<b>You must edit this module</b> replacing
+    String values therein with your installation requirements.&nbsp;There are editing
+    instruction <a href="TyDemoActBase.html">here</a>.</p>
+    <p>You must compile the source into the &quot;location&quot; you set in the class.<br>
+    (This should be &lt;home&gt;/com/tymeac/demo.)</p>
+  </blockquote>
+  <p><font size="+1">Creating a Runnable Class:</font></p>
+  <blockquote>
+    <p>We supply a basic class <strong>com.tymeac.demo.TyDemoBaseRMI</strong>, to run the Set
+    Up Class and register the activatable remote object with the Java Remote Object Registry.</p>
+    <p>This class sets<ul>
+      <li>the security manager,</li>
+      <li>creates a new com.tymeac.demo.TyDemoActivationBase(),</li>
+      <li>creates the backend object, createBackend() and</li>
+      <li>registers that object with the RMI Registry, registerWithRMI().</li>
+    </ul>
+  </blockquote>
+  <p><font size="+1">Creating a Run Time Script:</font></p>
+  <blockquote>
+    <p>We supply two scripts to run this creation: <a href="Scripts.html#act">ActStart</a>.[bat
+    and sh].</p>
+    <p>You <strong>must edit</strong> this script for you installation requirements.&nbsp;</p>
+  </blockquote>
+  <p><font size="+1">Testing:</font></p>
+  <blockquote>
+    <p>Start the Java Remote Object Registry (RMI Registry.)</p>
+    <p>Start the Activation Daemon (rmid).</p>
+    <blockquote>
+    <p>The Activation daemon requires security. You must supply a policy file. 
+    For the demonstration, simply use the policy.all file<br>
+&nbsp;&nbsp;&nbsp;&nbsp; -J-Djava.security.policy=%TYMEAC_HOME%\security\policy.all </p>
+    <p>This goes on the command line with either:</p>
+      <blockquote>
+    <p>start /min rmid<br>
+    rmid &amp;</p>
+      </blockquote>
+    <p>The easiest way to do this is to create a script with the above security 
+    statement inside.</p>
+    </blockquote>
+    <p>Run the run-time script, ActStart.bat[sh]</p>
+    <p>After running the above script, the first request to Tymeac will activate the Tymeac
+    Server.&nbsp;The only messages that the Tymeac Server is up <u>may</u> display on the rmid
+    window.</p>
+    <p>You may use any of the supplied frame, (<a href="TyDemoT1.html">TyDemoT1</a>, <a href="TyDemoT3.html">TyDemoT3</a>, <a href="TyMenu.html">TyMenu</a>) and non-frame classes
+    the same as you would for a non-activatable remote object.</p>
+    <p><b>N.B.</b> The demonstration activatable server deactivates in two (2) 
+    minutes when there is no activity. Activity is defined as [a]syncRequest() 
+    methods.</p>
+    <blockquote>
+    <p>If you don't run any requests and are only looking at the GUI screens, 
+    then the server may terminate. Your next request on a GUI screen will result 
+    in a new Tymeac Server. Any information you were looking at is replaced by 
+    information from the new server.</p>
+    <p>You may alter the inactivity interval with the <a href="TyAltSvr.html">
+    Alter Server Options</a> GUI.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

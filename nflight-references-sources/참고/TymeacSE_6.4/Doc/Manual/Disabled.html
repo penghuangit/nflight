@@ -1,0 +1,260 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>How Disabled</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>How a Thread Becomes Disabled. </h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>This section details the reasons a Tymeac Thread becomes logically disabled.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>The status of <a href="Definitions.html#quethread">Queue Threads</a> (Threads for this
+  discussion) is relevant to scheduling.</p>
+  <p>Threads process a request and then look in the Wait Lists for the next request.</p>
+  <blockquote>
+    <p>When the status of any Thread is 'busy', it is reasonable to assume that since a thread
+    is actively processing, this Thread or another Thread will process any request put into a
+    Wait List.&nbsp;It is also reasonable to assume that Threads with a status of 'notified'
+    or 'reactivated' will become active shortly and process the Wait Lists.</p>
+  </blockquote>
+  <p>When a Thread remains in an active or about to be active state for an unreasonable
+  amount of time then something may be wrong. In such a case, marking the thread 'cancelled'
+  and then 'disabled' after even more elapsed time is a way of eliminating the Thread from
+  consideration during scheduling.</p>
+  <blockquote>
+    <p>For a non performing Queue, rather than filling up all the Wait Lists with pending
+    requests and returning a &quot;no Wait List available&quot; message to the new request,
+    Tymeac rejects the request immediately with a &quot;no thread available&quot; message. The
+    &quot;no Wait List available&quot; message could mean, try again later. The &quot;no
+    thread available&quot; message means something is wrong.&nbsp; See also <a href="SchdFail.html">scheduling failures</a>.</p>
+  </blockquote>
+  <p>The Monitor Thread notifies system administrators when all Threads are 'disabled'.</p>
+  <p><strong>An entry becomes 'disabled' by:</strong></p>
+  <blockquote>
+  <p>1. An unhandled or re-thrown exception in a <a href="Definitions.html#pap">Processing
+  Application Class</a>.&nbsp;<br>
+&nbsp;&nbsp;&nbsp; Threads handle exceptions by marking the Thread 'disabled'.</p>
+  <p>2. When a user manually disables a thread in the <a href="TyQueThd.html">Queue Thread
+  display/alter</a>.</p>
+  <p>3. When the Thread detects Immediate <a href="Shutdown.html">Shut Down</a>.</p>
+  <p>4. The <a href="Monitor.html">Monitor Thread</a> changes the status from Cancelled to
+  Disabled.</p>
+  <blockquote>
+    <p><a name="five"></a><strong>Tymeac keeps track of the time of seven events:</strong></p>
+    <blockquote>
+    <p><strong style="font-weight: 400">Timing depends on an interval of time. 
+    For Tymeac <i>the base interval (bi)</i> is:</strong></p>
+      <ul>
+        <li>
+    <p align="left">the <a href="Monitor.html">Monitor</a> interval set at start up in either 
+    the <a href="TyCfg.html">Configuration File</a> or
+    <a href="TyVariables.html">User Variables</a>, or, </p>
+        </li>
+        <li>
+    <p align="left">one minute if the Monitor interval is less than one minute.</p>
+        </li>
+    </ul>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><strong>1.</strong>&nbsp; The time the Scheduler activates/reactivates a Queue Thread.</p>
+      <blockquote>
+        <p>The maximum time allowable is 2<strong style="font-weight: 400"><i>(bi)</i></strong>
+        <br>
+&nbsp; (two times
+        <strong style="font-weight: 400"><i>the base interval.)</i></strong></p>
+      </blockquote>
+      <p><strong>2.</strong>&nbsp; The time a Thread enters a 'Thread Processing' status
+      (executing Tymeac code.)</p>
+      <blockquote>
+        <p>The maximum time allowable is 2<strong style="font-weight: 400"><i>(bi)<br>
+&nbsp;</i></strong> (two times
+        <strong style="font-weight: 400"><i>the base interval</i></strong>.)</p>
+      </blockquote>
+      <p><strong>3.</strong>&nbsp; The time the Thread invokes the Processing Application Class.</p>
+      <blockquote>
+        <p>This value is determined by the individual Queue, <a href="TyQueMaint.html#timeout">timeout
+        value</a>.</p>
+        <blockquote>
+        <p>When the value is zero then the system default is used. That default is 
+        4<strong style="font-weight: 400"><i>(bi)<br>
+&nbsp;</i></strong> (four times <strong style="font-weight: 400"><i>the base interval</i></strong>.)</p>
+        <p>When that value is greater than zero, then the Queue's timeout value is used.</p>
+        </blockquote>
+      </blockquote>
+      <p><strong>4.</strong>&nbsp; The time the Thread calls the Scheduler (for the Output Agent
+      Queue).</p>
+      <blockquote>
+        <p>The maximum time allowable is 1<strong style="font-weight: 400"><i>(bi)<br>
+&nbsp;</i></strong> <strong style="font-weight: 400"><i>(the 
+        base interval</i></strong>.)</p>
+      </blockquote>
+      <p><strong>5.</strong>&nbsp; The time the Scheduler 'notifies' a waiting Queue Thread.</p>
+      <blockquote>
+        <p>The maximum time allowable is 2<strong style="font-weight: 400"><i>(bi)<br>
+&nbsp; (</i></strong>two times
+        <strong style="font-weight: 400"><i>the base interval</i></strong>.)</p>
+      </blockquote>
+      <p><strong>For 1-5 [ <a href="#foot1">Is all this necessary?</a></strong>&nbsp;<b>]</b><br>
+      When the Thread exceeds the time, the Monitor sets the
+      entry 'cancelled'.&nbsp;The next time the Monitor runs, it sets all 'cancelled'
+      entries 'disabled'.&nbsp;If a Thread resumes processing, the Thread resets the entry,
+      irrespective of any prior setting.&nbsp;Each time the Thread changes status it resets the
+      time. Therefore, this is not a cumulative total nor overall elapsed time.</p>
+      <p>As stated above, disabled Threads cannot participate in scheduling. 
+      However, users may enable those disabled Threads with the
+      <a href="TyQueThd.html">Queue Threads</a> GUI/non-GUI. Now it gets 
+      interesting.</p>
+      <p>&quot;Enabling all threads&quot; nulls the instance reference to the actual Thread 
+      in the Thread-Management Class (AreaThreadMgmt) and sets the status 
+      of the Thread in the same class to &quot;available for a new thread&quot;. If the old 
+      Thread awakens, it both checks to see if it's instance reference is null 
+      or if another thread has taken its place and dies gracefully. For a more detailed discussion of 
+      expunged threads, see the
+      <a href="InternalStructure.html#areaDetail">AreaThreadMgmt</a> Class and 
+      the footnote.</p>
+    </blockquote>
+  </blockquote>
+  <p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  <blockquote>
+    <blockquote>
+      <p>These next two timed events do not involve setting the status to 'disabled'. We mention
+      them here since they are part of the seven timed events.</p>
+      <p><strong>6.</strong>&nbsp; The time the Thread begins 'waiting for work'.</p>
+      <blockquote>
+        <p>The maximum time allowable is the Wait Time interval for the Thread as set in Queue
+        Maintenance (<a href="TyQueMaint.html">TyQueMaint</a>).</p>
+      </blockquote>
+      <blockquote>
+        <p><strong>For 6</strong>, each Thread sets its own entry 'inactive', not the
+        Monitor.&nbsp;A Queue Threshold exception must take place to reactivate this
+        thread.&nbsp;For a discussion of this event, see the section on <a href="Tuning.html#threads">Tuning</a>.</p>
+      </blockquote>
+      <p><strong>7.</strong>&nbsp; The time the Thread enters a status of 'inactive' (6,
+      above) and the Queue is participating in the <a href="TyQueMaint.html#kill">Idle Thread
+      Life</a> parameter.</p>
+      <blockquote>
+        <p><strong>For 7</strong>, The maximum time allowable is the Idle Thread Life interval for
+        the Thread as set in Queue Maintenance (<a href="TyQueMaint.html#kill">TyQueMaint</a>).&nbsp;When
+        the Thread exceeds the time, the Monitor destroys the Thread.&nbsp;Tymeac must get a new
+        instance of the Thread and start() it when necessary.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p><a name="nb"></a><img src="Images/note.gif" alt="note.gif (236 bytes)" width="40" height="40">The interval of
+    the timed events (1-5) is as above.&nbsp;Using variables for
+    System (and Queue) would establish an exclusive environment for a particular  need.&nbsp;When the  requirements change, the variables would need
+    changing.&nbsp;When the platform changes, the variables would need changing.&nbsp;Each
+    application on each platform would need re-engineering each time the need changes
+    either internally by function or externally by porting.</p>
+  </blockquote>
+  <blockquote>
+    <p>Tymeac event timing functions identically on all platforms. Adjusting the Monitor
+    Thread interval sets the interval across all Tymeac timed events. Porting to any machine
+    preserves the same application demeanor (synergy) it acts the same only faster (or
+    slower).</p>
+    <p>See also:<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="Tuning.html#waitlists">Tuning</a>, (Wait Lists, fixed number
+    of entries within each Queue).<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="Stalled.html">Stall Array</a> for timing of Asynchronous
+    Requests.<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; <a href="Monitor.html">Monitor</a> for timing of Synchronous Requests.</p>
+  </blockquote>
+  </blockquote>
+</blockquote>
+
+<hr>
+
+<p><b><a name="foot1"></a>Is all this timing necessary?</b></p>
+<blockquote>
+
+<p>In order to know if all this timing is necessary we must first answer the  
+question, &quot;Can a thread stall or die during processing?&quot;  </p>
+
+<blockquote>
+
+<p>The answer is yes. 
+Hardware, operating systems, the implementation of the JVM, Tymeac code and user 
+code can all fail at anytime. Tymeac is a professional product; professionals 
+plan for anomalies. Now, on to the timing question.</p>
+
+</blockquote>
+
+<p>It should be obvious that when Tymeac invokes your Processing Application 
+Class, the execution may block or take an excessive amount of time. It may even 
+stall completely. Therefore, timing this event is a no-brainer. That takes care 
+of number 3.</p>
+
+<p>Numbers 5 and sometimes 1 have to do with Thread state changes. That is, 
+going from a waiting or timed waiting state to a running state. (See 
+java.lang.Thread state codes.) It is unlikely that there would be a significant 
+delay in the thread getting CPU time after this state change, but it could 
+happen.</p>
+
+<p>Numbers 4 and sometimes 1 have to do with creating a new thread either for 
+the Normal or Output Agent Queue. Since creating a new thread usually involves 
+communicating with the underlying operating system, there could be a delay. It 
+is unlikely that there would be a significant delay, but it could happen.</p>
+
+<p>Number 2 is Tymeac code. As much as 
+we like to think it is unlikely that there could be a bug, it could happen.</p>
+
+<p>Finally there is just plain something going wrong somewhere. Like the &quot;<em>spurious 
+wakeup</em>&quot; that may happen to a waiting thread, a running thread may also die 
+or stall or another thread may damage the current thread's control structure at 
+the operating system level. It could happen.</p>
+
+<p>The consistent phrase here is &quot;it could happen.&quot; What we really mean is it 
+could happen again. Having done multi-tasking/threading for many decades we've run 
+into these problems before and we expect to see them again.</p>
+
+<p>Therefore, all this timing is necessary. But what about all the overhead?</p>
+
+<blockquote>
+
+<p>There isn't much overhead associated with 
+this timing.</p>
+<ul>
+  <li>Each time a Queue Thread changes status it checks whether it&nbsp; 
+has been expunged. If not, it sets the current time (System.currentTimeMillis()) 
+  into the field associated with this current status and nulls the time fields 
+  associated with other status codes. This is very little work and no object 
+  creation.</li>
+  <li>For a heavily used system the status changes are from Tymeac code to the 
+  Application code and back to Tymeac code. This is: fetching a request from the 
+  wait list, the application process, saving the application's object and 
+  fetching the next request. Exactly where timing is most necessary (the 
+  no-brainer above.)</li>
+  <li>When the Tymeac Monitor runs (probably about once a minute) it checks only 
+  one timing event: the current status of the Queue Thread. This is very little 
+  work and also no object creation.</li>
+</ul>
+
+<p>For all the benefits of timing, the overhead is piddle.</p>
+</blockquote>
+</blockquote>
+&nbsp;<p>&nbsp;</p>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

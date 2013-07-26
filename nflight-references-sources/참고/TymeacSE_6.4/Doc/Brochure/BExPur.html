@@ -1,0 +1,123 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+<title>Document System Example&nbsp; </title>
+
+
+<meta name="Microsoft Theme" content="none">
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/wheat.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+<div align="center"><center>
+
+<table border="0" cellpadding="0" cellspacing="4" width="728">
+  <tr>
+    <td valign="top" colspan="3" width="724"><h1>Document System Example</h1>
+    <blockquote>
+      <blockquote>
+        <p align="left">A document management system safe-stores a document so that subsequent
+        processing is recoverable.&nbsp;Then</p>
+        <ul>
+          <li>permanently stores the document on a central Data Base Management System,</li>
+          <li>indexes the key elements,</li>
+          <li>catalogs retrieval information and</li>
+          <li>notifies interested parties.</li>
+        </ul>
+      </blockquote>
+    </blockquote>
+    <p>&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" width="356"><h4><strong>Traditionally this involves a set of processes
+    that:</strong></h4>
+    <p>&nbsp;</p>
+    <p>Stores the document on a safe-store [RAID] so that it can be retrieved if any
+    subsequent processing fails.</p>
+    <p>&nbsp;</p>
+    <p>Then:</p>
+    <p>Permanently stores the document in a central Data Base Management System.</p>
+    <p>&nbsp;</p>
+    <p>Develops an index on key elements in the document and stores these in a central master
+    index.</p>
+    <p>&nbsp;</p>
+    <p>Stores retrieval information about the document in a central catalog.</p>
+    <p>&nbsp;</p>
+    <p>Notifies any concerned users of the new document.</p>
+    <p>&nbsp;</td>
+    <td width="14"></td>
+    <td valign="top" width="346"><img src="Images/Working1.gif" alt="Working1.gif (3260 bytes)" WIDTH="107" HEIGHT="528"></td>
+  </tr>
+  <tr>
+    <td valign="top" colspan="3" width="724"><p align="left">&nbsp;</p>
+    <h4><strong>The problem with this approach is:</strong></h4>
+    <blockquote>
+      <p>Each process is serial. The second process cannot start until the first is complete.
+      The third process cannot start until the second is complete. </p>
+    </blockquote>
+    <blockquote>
+      <p><a name="manage"></a>Multi threading the request solves this problem but it creates an
+      even worse problem:&nbsp;How to manage these threads.</p>
+    </blockquote>
+    <blockquote>
+      <ul>
+        <li>What if a thread hangs, abnormally terminates, needs a new process itself or the Virtual
+          Machine cannot handle any more threads?</li>
+        <li>What if no reply is necessary or the reply should be sent somewhere else?</li>
+        <li>What if the request takes longer than the user can wait or the 'hot' request needs
+          immediate processing?</li>
+        <li>What if an intermediate back out is necessary?</li>
+        <li>What is the status of this request?</li>
+        <li>What is the status of a prior request?</li>
+        <li>Where is the congestion? </li>
+      </ul>
+    </blockquote>
+    <h3>Tymeac<sup><small>&#153;</small></sup> is the solution. </h3>
+    <blockquote>
+      <font FACE="Arial" SIZE="2"><p></font><strong>Tymeac</strong><sup><small>&#153;</small></sup>
+      is a method of controlling Java<sup><small>&#153;</small></sup> threads that are
+      asynchronous.</p>
+      <p ALIGN="JUSTIFY">&nbsp;</p>
+    </blockquote>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="356"><strong>The same request using Tymeac</strong><sup><small>&#153;
+    </small></sup><strong>involves a process that:</strong><p>Stores the document on a
+    safe-store [RAID] so that it can be retrieved if any subsequent processing fails.</p>
+    <p>&nbsp;</p>
+    <p>Then:</p>
+    <p>Invokes a method on the <strong>Tymeac</strong><sup><small>&#153;</small></sup> remote
+    object.</p>
+    <p><strong>Tymeac</strong><sup><small>&#153;</small></sup> brokers the request to four
+    backend-process queues (with associated, well-managed threads) and returns the result to
+    the caller.</p>
+    <blockquote>
+      <p>This may be a synchronous request where the caller waits until all asynchronous threads
+      finish processing.</p>
+      <p>This may be an asynchronous request where the caller receives an &quot;in
+      progress&quot; message.&nbsp; The actual processing takes place as a background event</p>
+    </blockquote>
+    </td>
+    <td width="14"></td>
+    <td valign="top" width="346"><br>
+    <br>
+    <br>
+    <p><img src="Images/Working2.gif" alt="Working2.gif (3606 bytes)" WIDTH="332" HEIGHT="241"></td>
+  </tr>
+</table>
+</center></div>
+
+<p>&nbsp;&nbsp;&nbsp; [We provide the implementation of this example as a Jini<sup><small>&#153;</small></sup>
+Service in out <a href="../Manual/Samples.html">Product samples</a>.]</p>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

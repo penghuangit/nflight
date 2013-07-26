@@ -1,0 +1,277 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Testing For Developers</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Testing For Developers</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+
+<p>This section is for developers. There is a directory called <b>
+com.tymeac.test</b>. This section explains what those classes are and how to use 
+them. See also the <a href="InternalStructure.html">internal structure</a> 
+document.</p>
+    </blockquote>
+  </blockquote>
+
+<p>Testing multi-threaded applications can drive anyone to drink. Modifying Tymeac, without an IDE to single step code, 
+is a guarantee to 
+failure. Even with a good IDE there are storage areas of interest to developers 
+during execution that cannot be displayed by the IDE. (Before object-oriented 
+you could get the address of the storage area you needed and go peek at what was 
+in memory or get a core dump and spend your life with a hex calculator.) </p>
+
+<p>The client directory contains classes for general purpose. Anyone can look at 
+what stage the thread are in, how many of these and those have happened. But 
+what we really need to know is the internal status of the environment. That is, 
+what does a Queue Area look like, right now. How many sync/async requests are 
+active and what are the details of each.</p>
+
+<p>We also have a few quickies to modify the DBMS tables (delete, insert, 
+retrieve.) </p>
+<blockquote>
+
+<p>TyDBdelete <br>
+TyDBinsert<br>
+TyDBretrieve</p>
+
+<p>We also have quickies to display and modify the Derby and Hypersonic databases both as an 
+embedded database server and a network database server. You can easily modify 
+the code to use any other data base management system.</p>
+<blockquote>
+  <table cellpadding="0" cellspacing="0" "AutoNumber1" width="238">
+    <tr>
+      <td width="143">DerbyDelete<br>
+DerbyFuncTable<br>
+DerbyListTable<br>
+DerbyLogTable<br>
+DerbyStatsTable<br>
+DerbyQueTable</td>
+      <td width="92">HsqlDelete<br>
+      HsqlFuncTable<br>
+      HsqlListTable<br>
+      HsqlLogTable<br>
+      HsqlStatsTable<br>
+      HsqlQueTable</td>
+    </tr>
+  </table>
+
+<p>&nbsp;</p>
+</blockquote>
+</blockquote>
+
+<p><b>In a nutshell, </b> </p>
+
+<p>The Tymeac management modules are all in <b>
+com.tymeac.base.</b></p>
+
+<p>Tymeac accepts a client request syncRequest() / asyncRequest()</p>
+
+<p>Tymeac creates a <b>RequestDetail</b> object for the request and saves it in 
+the RequestHeader detail list (ConcurrentLinkedQueue.)&nbsp; The purpose of these objects is to hold the information necessary to 
+track the request and to recover from exceptions. Each client request returns a 
+pointer to the newly created <b>RequestDetail</b> object which is then put into 
+a Wait List for pickup by a Queue Thread. When the current request finishes, Tymeac frees the
+<b>RequestDetail</b>.</p>
+
+<blockquote>
+
+<p>To free the object, Tymeac sets the status of the RequestDetail to 64 and removes the RequestDetail from the RequestHeader 
+ConcurrentLinkedQueue. This should be the last live reference to the object so 
+garbage collection may proceed. Since remove() doesn't remove the element 
+immediately, iterating the list may return a freed objects. Eventually, the 
+freed objects disappear.</p>
+
+<p>Prior to release 5.3, Tymeac used a home-grown method of managing the 
+RequestDetail objects. When each RequestDetail was free, it was reused saving 
+allocate/de-allocate overhead. The garbage collection algorithms are so good 
+today, the home-grown method is no longer efficient.</p>
+
+</blockquote>
+
+<p>The RequestHeader contains methods to iterate the detail list, add and remove 
+elements.</p>
+
+<blockquote>
+
+<p>SyncRequest()'s time-out. After a <a href="Monitor.html#sync">very long 
+interval,</a> Tymeac will free the RequestDetail.  </p>
+
+<p>AsyncRequest()'s <a href="TyStalled.html">stall </a>and may be manually freed by 
+an administrator.</p>
+
+</blockquote>
+
+<p>Tymeac places the pointer to the RequestDetail object into a wait 
+list (Class AreaWaitList) in each Queue required by the Function. The threads 
+retrieve that pointer to process the request. Waitlists arrays for the pointers 
+are actually ConcurrentLinkedQueue&lt;RequestDetail&gt;.</p>
+
+<p>Tymeac then MAY inform a thread on each Queue (Class AreaBase) to do the 
+work. (When threads finish processing other requests they look in the wait lists 
+for more work.)  </p>
+
+<blockquote>
+
+<p>Each Queue has one or more threads but they are not the 
+traditional &quot;thread pool&quot; type. The Queue contains a Class, 
+<a href="InternalStructure.html#areaDetail">AreaThreadMgmt</a>, for each 
+thread so Tymeac can manage each thread individually. This is the big difference 
+between Tymeac and the concurrent utility Thread Pool classes.  </p>
+
+  <blockquote>
+
+<p>Think of thread 
+pools as a pool of sharks swimming around looking for prey. You wouldn't want to 
+venture into that pool. Tymeac's Queue Threads are well-behaved, leashed threads 
+that fetch prey, consume it and then return to the corral all under the watchful 
+eye of the <a href="Monitor.html">Tymeac Monitor</a>.</p>
+
+  </blockquote>
+</blockquote>
+
+<ul>
+  <li>When no thread is working, 
+Tymeac starts a new thread. </li>
+  <li>When a thread is 'waiting for work', Tymeac uses a Condition.signal() to wake up the thread.</li>
+  <li>For the steps Tymeac uses to inform 
+the thread, see method AreaBase.schedule(). </li>
+  <li>For a general discussion on the life 
+cycle of threads see <a href="Tuning.html#cycle">here</a>.</li>
+</ul>
+
+<p>Tymeac waits for all the Queues to finish for syncRequest() and passes back 
+the Object[] to the caller or returns immediately for asyncRequest().</p>
+
+<p>Additionally, for asyncRequest(), Tymeac may schedule an output agent (new 
+asynchronous process) when the original processing completes.</p>
+
+<p>Of concern to developers are the internal arrays Tymeac uses to process the 
+requests.</p>
+
+<blockquote>
+
+<p>RequestHeader -- Requests array (anchor point for details)<br>
+&nbsp;&nbsp;&nbsp; RequestDetail -- Request data</p>
+
+</blockquote>
+
+<p><b><a name="diag"></a>diagnoseRequest()</b><br>
+The&nbsp; main Tymeac interface is TymeacInterface. Implementing that interface is 
+TymeacImpl. The implementation contains a method diagnoseRequest(). You can put 
+anything in there you want. Naturally, you must also add code to the Tymeac 
+classes you want to look at. What is in there now is code to display (System.out.println) 
+the contents of the various arrays. These display on the Server window since 
+they run in the Server JVM. The clients display an 'ok' message.</p>
+
+<blockquote>
+
+<p>For example: to display all sync requests currently in the system, the client 
+fills in the Class TyParm (String, int, int, int) by setting the first two int's 
+to 1, 2 respectively. The client calls the Tymeac Server diagnoseRequest() method. The 
+diagnoseRequest() calls the RequestHeader object like so:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font SIZE="2" COLOR="#0000c0"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; request_tbl</font><font SIZE="2">.dsplyActiveSyncDetails();</p>
+
+  </font>
+
+<p>diagnoseRequest() returns an OK message to the client. dsply...() prints the 
+list of active sync requests on the console window such as:</p>
+
+<blockquote>
+
+<p>Total ALL Slots in use =&nbsp; 160, SR Slots in use at first scan = 50, total requests handled = 2000<br>
+<b>Next
+Detail</b><br>
+In=000000000000000000 Na=2 #Q=2 Now=1 Next Output=1 Backout=false Waittime=20000 
+Status=1</p>
+
+</blockquote>
+
+<p>What this means for a sync request is:</p>
+
+<ul>
+  <li><b>Total slots</b> is the total RequestDetail objects in the RequestHeader 
+  ConcurrentLinkedQueue. These are the Sync, Async and the freed objects mentioned 
+  above (status=64.)</li>
+  <li><b>Total requests handled</b> is just that.</li>
+  <li>...I<b>n use at first scan</b> is the total busy details Tymeac found by 
+  enumerating the number busy. Since there is no locking, when Tymeac prints the 
+  busy elements (below) the number may change.</li>
+  <li>When the count is zero, Tymeac says so and terminates. Otherwise Tymeac 
+  prints each busy detail. Tymeac starts at the beginning of the array and 
+  prints each busy entry as it finds it. Since there is no locking, the number 
+  of printed entries may not match the above first scan number.</li>
+  <li><b>Next Detail</b> is just a marker between details.</li>
+  <li><b>&nbsp;In=</b> is the input to the request using method: toString().</li>
+  <li><b>Na=</b> is the sequence number of this request starting at one (1).</li>
+  <li><b>#Q=</b> is the total number of Queues for this request.</li>
+  <li><b>Now=</b> is the number of Queues still to process. If the total is 3 
+  and Now= 1, then two finished and one is remaining.</li>
+  <li><b>Next output=</b> is the next available subscript to put a return object 
+  from a Queue Thread. The return of your Processing Application Class may be an 
+  object. Tymeac saves all the objects from all the Queues in the request and 
+  returns that array to the client. Tymeac puts the return object into an array 
+  of objects using an AtomicInteger starting at zero (0). Next Output is that 
+  integer. For the above, the integer is 1. This means that element 0 was used 
+  and 1 is next.</li>
+  <li><b>Backout=</b> true, the request timed-out or was cancelled. false 
+  otherwise.</li>
+  <li><b>Waittime=</b> The time in milliseconds this request will wait for all 
+  Queues to finish.</li>
+  <li><b>Status=</b> This is an integer. See RequestDetail for the values. (1 is 
+  busy)&nbsp; </li>
+</ul>
+
+<p><b>Remember</b> -- Tymeac does not use locking to gather this information. 
+The in-use-at-first-scan may be one and two details may print or no details may 
+print or anything else. Even the information contained in each detail may have 
+changed since it was fetched and printed.</p>
+
+<p>Displaying this information for an active system may be useless. We use it 
+when we think there are timed-out requests or when the system is quiet and we 
+use the <a href="TyOverall.html">Overall_Display</a> and it says there are 
+active (a)sync requests. So, we run this diagnoseRequest() to see what is going on. </p>
+
+</blockquote>
+
+<p>To use the supplied clients, duplicate any of the supplied client access scripts and change the class to 
+execute from com.tymeac.demo... to com.tymeac.test.?? where ?? is as follows:</p>
+  <blockquote>
+
+<p>TyDisplayAreaAAAA (AAAA - DDDD and Notify) these are the supplied 
+demonstration Queues Alter these as necessary for your own Queues.</p>
+
+<p>TyDisplay??table -- Where ?? is AR for the async RequestDetail elements, SR for the sync 
+RequestDetail elements 
+and STALL for the <a href="Stalled.html">stall array</a>.</p>
+
+<p>TyDisplayFUNCtable -- To display the current functions. (similar to the 
+client display but displays all the functions in the system)</p>
+
+<p>TyDisplayFUNCques -- To display the current functions with their queue names.</p>
+  </blockquote>
+
+<blockquote>
+
+<p>You can add anything you like here without impacting Tymeac.</p>
+
+<p>&nbsp;</p>
+</blockquote>
+</blockquote>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

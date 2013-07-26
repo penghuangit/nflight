@@ -1,0 +1,71 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Using Hsql</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Using Hypersonic SQL</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>You must download Hsql from the hsqldb.org website and install it on 
+        the machine on which you intend to use it. This document assumes you 
+        have installed Hsql.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><b>Tymeac setup</b></p>
+  <blockquote>
+    <blockquote>
+      <p>Follow the instructions for creating a database in the Getting 
+      Started Guide. The name of the database is upper-case TYMEAC. You may or may not use 
+      a username and password.</p>
+      <p>The Tymeac table names and elements are found starting from
+      <a href="DBMS.html">here</a>. We also supply sql statements for creating 
+      the tables. These are in the /scripts/sql directory. Once the database exists, 
+      use <b>Manager</b> to connect and then run the sql scripts.</p>
+      <p>Once all the tables are built, it's time to fill in the data for the 
+      demonstration system, <a href="#data">see below.</a></p>
+    </blockquote>
+    <p><b><a name="data"></a>Data:</b></p>
+    <blockquote>
+      <p>In order for Tymeac to find the names of the various tables and DBMS 
+      information, Tymeac uses a configuration file or preference data. Before 
+      you can use the Queue and Function GUI classes you must create the file or 
+      preference data. Use the <a href="TyCfg.html">GUI</a> to do this.</p>
+      <p>There are two tables necessary for the demonstration system. The Queue 
+      Table, where the Queue data lives and the Function Table where the 
+      Function data lives.</p>
+      <p>You must do the Queues first since adding Functions requires the Queues 
+      to exist. For Queues <a href="TyQueMaint.html">see here</a>. For 
+      Functions, <a href="TyFuncMaint.html">see here</a>.</p>
+    </blockquote>
+    <p><b>Scripts:</b></p>
+    <blockquote>
+      <p>All scripts are in the <a href="Scripts.html">script directory</a>.</p>
+      <p>You must set the SET_HSQL value in the supplied script.</p>
+    </blockquote>
+  </blockquote>
+  <p>That's all there is to it.</p>
+  <p>&nbsp;</p>
+</blockquote>
+<p>&nbsp;</p>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

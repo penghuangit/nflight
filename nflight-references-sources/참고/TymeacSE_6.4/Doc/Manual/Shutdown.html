@@ -1,0 +1,353 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Tymeac Shutdown</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Shut Down</h1>
+
+        <p align="center"><img border="0" src="Images/divider.gif" width="100" height="5"></p>
+
+<blockquote>
+        <p>Tymeac may quiesce and terminate gracefully.</p>
+        <p>Tymeac supports <a href="UserExits.html">user exits</a> for shut down.</p>
+  <p>Tymeac shuts down in two (and possibly three) stages. Tymeac is a thread
+  manager.&nbsp;When there are no Queue Threads active, then stage two immediately follows
+  stage one without further user action and the Server terminates quickly.</p>
+    <p>Quiesce means to quiet or calm. Shut down quiets by rejecting new requests and letting
+    those already in progress complete. When there is no more activity, the Server stops
+    gracefully.</p>
+    <p>There are three exceptions to in progress completion:<ol>
+      <li><p align="left">One is scheduling. Since shut down means stop, those requests in the
+        middle of being scheduled cannot complete. The logic here is that the Server may be under
+        stress and the shut down request is meant to quickly terminate the Server. Waiting for
+        each Queue to schedule may hold up the termination indefinitely.</p>
+      </li>
+      <li><p align="left">The second is recursive requests. Since the Server 
+      cannot know from where the request originates, a recursive request is 
+      simply a new request and it rejects.</p>
+      </li>
+      <li><p align="left">The third is forcing termination. We get into this when discussing stage
+        2.</p>
+      </li>
+    </ol>
+  <p align="left">There are two implementation methods for shut down:</p>
+  <ol>
+    <li><p align="left"><strong>public String shutRequest()</strong>; -- This is the same as the second with a boolean false.</p>
+    </li>
+    <li><p align="left"><strong><a name="kill"></a>public String shutRequest(boolean kill)</strong>; -- This
+      version supports compelling termination in the case when there are unresponsive Queue
+      Threads.</p>
+    </li>
+  </ol>
+  <blockquote>
+    <p align="left">For all normal shut down requests, you should set the boolean to false or
+    simply use version 1. If normal shutdown cannot progress and you need the Server down
+    quickly, then set the boolean to true.</p>
+  </blockquote>
+  <blockquote>
+    <p align="left">Killing the server still executes the shut down exits, statistics 
+    and <a href="#shuthread">shut down thread </a>(when chosen.) Killing only 
+    ignores the presents of active Queue Threads. If not using the shut down 
+    thread and a user exit Class is hanging, then killing has no effect.</p>
+  </blockquote>
+  <p><strong>The first stage:</strong>&nbsp; [the first <b>shutRequest()</b> 
+  received by the server]<ul>
+    <li>Blocks the acceptance of further requests into the system.&nbsp;Tymeac rejects any
+      further requests into the system and returns a <a href="Usage.html#broker">request
+      brokering error</a> or a <a href="Usage.html#schd">scheduling error </a>to the caller.</li>
+  </ul>
+  <blockquote>
+    <p><img src="Images/Caution.gif" alt="Caution.gif (1012 bytes)" width="20" height="20">&nbsp; Multiple Queue
+    requests currently in scheduling reject.</p>
+    <blockquote>
+      <p>For example, a request with three Queues enters the system.</p>
+      <blockquote>
+        <p>Queue 1 schedules.<br>
+        The shut down request enters.<br>
+        Queue 2 fails scheduling because of shut down.<br>
+        No further scheduling takes place, the request rejects.</p>
+      </blockquote>
+    </blockquote>
+    <p><img src="Images/Caution.gif" alt="Caution.gif (1012 bytes)" width="20" height="20">&nbsp; Nested processing
+    requests fail.</p>
+    <blockquote>
+      <p>For example, a request uses a Queue with a Processing Application Class that
+      recursively calls the Tymeac Server for a new request. (The&nbsp;<a href="ex1.html#complex">example section</a>, portfolio revaluation, describes
+      this.)&nbsp;When that Processing Application Class calls the Tymeac Server for the new
+      request, the new request rejects.</p>
+    </blockquote>
+  </blockquote>
+  <ul>
+    <li><p align="left">Instantiates the stage-1 shut down user exit Classes, if present.</p>
+    </li>
+    <li><p align="left">For non-Output Agent Queues:</p>
+    </li>
+  </ul>
+  <blockquote>
+    <p align="left">When there are Synchronous requests working, shut down informs the live
+    Queue Threads to terminate upon completion of all work in the Wait Lists.</p>
+    <p align="left">When no Synchronous requests are working, shut down terminates the Queue
+    Threads.</p>
+  </blockquote>
+  <ul>
+    <li><p align="left">For Output Agent Queues:</p>
+    </li>
+  </ul>
+  <blockquote>
+    <p>When there are Asynchronous requests working, the Output Agent Queue Threads remain
+    waiting for new work since they may schedule at any time.&nbsp;(Asynchronous requests may
+    schedule an Output Agent Queue. Therefore, the Output Agent Queue Threads must remain
+    active until all work finishes.)</p>
+    <p>When no Asynchronous requests are working, shut down terminates the Output Agent Queue
+    Threads.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>The second stage</strong>:&nbsp; [second <b>shutRequest() </b>
+  received by the server or when no Queue Threads are active.]</p>
+  <p>&nbsp;&nbsp; <img src="Images/Caution.gif" alt="Caution.gif (1012 bytes)" width="20" height="20">&nbsp; 
+  Stage 2 (and Stage 3 naturally) cannot begin until Stage 1 is complete.</p>
+  <blockquote>
+  <blockquote>
+  <p>Stage 1 may use Stage 1 user exits. If one thread is executing a 
+  Stage 1 <a href="UserExits.html">user exit Class</a> and a second thread 
+  starts a Stage 2 user exit Class the result could be disastrous. Since the 
+  shut down user exit Classes run as part of the main Tymeac structure (not as a 
+  separate thread), a stall in one of these Classes stalls the entire shut down 
+  sequence.</p>
+  </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li><p align="left">When there are Synchronous requests working, forces termination of all
+      live, non-Output Agent Queue Threads. The Queue Threads terminate without finishing
+      requests in the Wait Lists. This means that Synchronous request in progress time-out while
+      Asynchronous requests in progress stall.</p>
+    </li>
+    <li><p align="left">For Output Agent Queues:</p>
+    </li>
+    <p>When there were asynchronous requests working at the time of prior shut down, then this
+    stage informs the live Output Agent Queue Threads to terminate upon completion of all work
+    in the Wait Lists. (Just like the stage 1 shutdown for non-Output Agent Queue Threads.) In
+    order to force termination, one must request shut down again. (See the <a href="Shutdown.html#shutex">example</a>, below.)</p>
+    <p><strong>The third or Force stage</strong>&nbsp; [subsequent <b>shutRequest()
+    </b>received by the server]
+    (when requests were working in stage two and threads were active.)]</ul>
+  <blockquote>
+    <blockquote>
+      This stage forces termination of all live Output Agent Queue Threads. The Output Agent
+        Queue Threads terminate without finishing requests in the Wait Lists. This means that
+        Asynchronous requests in progress stall. (Just like the stage 2 shutdown for non-Output
+        Agent Queue Threads.)</blockquote>
+  </blockquote>
+  <ul>
+    <li>When all threads complete or in kill mode:<p> 
+    <img src="Images/Caution.gif" alt="Caution.gif (1012 bytes)" width="20" height="20">&nbsp; Single-threads subsequent 
+    processing (i.e. only one thread may continue, other threads return with a 
+    &quot;shut down in progress&quot; message.) (There is no way we could multi-thread the 
+    following steps.)</li>
+  </ul>
+  <blockquote>
+    <ul>
+      <li type="circle"><p align="left">Instantiates the stage-2 shut down user exit Classes, if present.</p>
+      </li>
+      <li type="circle"><p align="left">Writes the system <a href="RunTime.html#stats">statistics</a>.</p>
+      </li>
+      <li type="circle"><p align="left">Instantiates the
+      <a href="DBMS.html#embedShut">Embedded Shut Down Class</a>, if present.</p>
+      </li>
+      <li type="circle"><p align="left">Starts the shut down thread (see <a href="#shuthread">below</a>)
+        if this option was chosen in the Configuration Data Class <a href="TyCfg.html#sys">TyCfg</a>
+        or the <a href="UserVariables.html">TyUserVariables</a> Class.</p>
+      </li>
+    </ul>
+    <hr>
+    <p>There is no way to terminate a Java thread that is not responding.&nbsp;Three options
+    are available for unresponsive Queue Threads:<ol>
+      <li><p align="left">Use the Tymeac Queue Thread Class (<a href="TyQueThd.html">TyQueThd</a>)
+        to logically disable the thread.&nbsp;This does not kill the thread but marks the entry as
+        &quot;disabled&quot;. This permits the completion of shut down.</p>
+      </li>
+      <li><p align="left">Use a Java/operating system tool to kill the thread. Then use step one,
+        above, to logically disable the entry.</p>
+      </li>
+      <li>Use the shut down &quot;kill&quot; option. This is a shut request with a boolean true.
+        E.G.<br>
+        shutRequest(true);</li>
+    </ol>
+    <p>If the Server hangs due to a faulty exit class, then your only alternative is to
+    manually kill the Server.</p>
+  </blockquote>
+</blockquote>
+
+<hr width="20%" noshade size="3">
+
+<blockquote>
+  <p>Two methods for shutting down Tymeac Server are available. A Frame Class and a command
+  line Class.</p>
+  <blockquote>
+    <p><strong>Frame:</strong>&nbsp; <a href="TyShutdown.html">TyShutdown</a><strong> </strong></p>
+    <blockquote>
+      <p>Start the Class as a new process</p>
+    </blockquote>
+    <blockquote>
+      <p>Press the SHUT Button.<br>
+      &nbsp;&nbsp;&nbsp; Observer the message and if necessary<br>
+      Press the SHUT Button.<br>
+      &nbsp;&nbsp;&nbsp;&nbsp; Observer the message.</p>
+      <p>If the Server does not shut down because of a stall and you wish to force the shut
+      down, then Press the KILL Button.</p>
+    </blockquote>
+    <p><strong>Command Line:</strong>&nbsp; com.tymeac.demo.DemoClienShut</p>
+    <blockquote>
+      <p>See /<a href="Scripts.html#shut">Scripts/shut</a></p>
+      <p>Do this twice, if necessary.</p>
+      <p>If the Server does not shut down because of a stall and you wish to force the shut
+      down, then <br>
+      &nbsp;&nbsp;&nbsp; See /<a href="Scripts.html#kill">Scripts/shutforce</a></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Usually, threads are still active and shut down cannot complete fully.&nbsp;Press the
+  SHUT button again or run the command line Class again.</p>
+  <blockquote>
+    <p><a name="shutex"></a><strong>For example</strong>, assume there are working
+    asynchronous requests:</p>
+    <blockquote>
+      <p>Shut down requested, (stage one),</p>
+      <blockquote>
+        <p>The Tymeac message is that 35 threads are still active.</p>
+      </blockquote>
+      <p>Shut down requested, (stage two),</p>
+      <blockquote>
+        <p>The Tymeac message is that 8 threads are still active. [These are the Output Agent
+        Queue Threads]</p>
+      </blockquote>
+      <p>Shut down requested, (stage Force (three)),</p>
+      <blockquote>
+        <p>The Tymeac message is that the shut down is complete.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p><a name="shuthread"></a><strong>Shut Down Thread</strong></p>
+  <blockquote>
+  <p>RMI Servers start a thread that never ends. This is so that the Server is 
+  persistent until manually shut down. The Internal Server also has a few RMI 
+  threads since the TymeacInterface extends the Remote class.</p>
+  <p>All non-internal Tymeac Servers issue a never ending wait() in the start up Class so 
+  that necessary variables do not get garbage collected.</p>
+  <p>Tymeac includes an optional shut down
+  thread.&nbsp;This option is in the Configuration File Maintenance Class, <a href="TyCfg.html#sys">TyCfg</a>, or, for Stand-Alone mode, the <a href="UserVariables.html">TyUserVariables</a> 
+  Class.</p>
+  <p>The thread, after a two (2) second delay, calls System.exit(0) to end the 
+  Java Virtual Machine.&nbsp;The delay is so that messages from the Tymeac Server to 
+  the initiating Tymeac Client complete the journey.</p>
+  <p>You may dynamically alter the setting using the <a href="TyAltSvr.html">
+  Alter Server Options</a> GUI.</p>
+  </blockquote>
+  <hr>
+</blockquote>
+
+<blockquote>
+  <p><a name="q1"></a><big><strong><big>Q</big></strong></big>.&nbsp;&nbsp; So, how does one
+  know when there are requests working or when all activity ends?&nbsp;This is the purpose
+  of the Overall Status Display, <a href="TyOverall.html">TyOverall</a>, or the non-frame
+  alternative, <a href="TyOverall.html#non">TyOverallClient</a>.</p>
+  <blockquote>
+    <p>After requesting shut down the &quot;Top List&quot; shows pending requests, both
+    synchronous and asynchronous as well as any stalled asynchronous requests.</p>
+    <blockquote>
+      <p>Tymeac times synchronous requests (this is a <a href="TymeacParm.html">parameter</a>
+      for the request to Tymeac).&nbsp; Therefore, hanging requests should time out and purge
+      from the system.</p>
+      <p>The Tymeac Monitor <a href="Disabled.html#five">times</a> asynchronous requests.
+      Therefore, hanging requests stall.&nbsp; One may purge these stalled requests with the
+      frame Class, <a href="TyStalled.html">TyStalled</a>.</p>
+    </blockquote>
+    <p>When there are no further requests waiting to process (or it is irrelevant that some
+    are hanging) request shut down again. Now the Output Agent Queue Threads terminate when
+    all work finishes in the Wait Lists.&nbsp;The &quot;Bottom List&quot; shows only those
+    Queues with attendant [able to process] threads.</p>
+    <blockquote>
+      <p>For those Queue Threads that cannot end because of problems, use the Queue Thread
+      Display/Alter <a href="TyQueThd.html">frame Class</a> to disable those threads.</p>
+    </blockquote>
+    <p>When the &quot;Bottom List&quot; shows that there are no Queues with attendant threads,
+    then the system is halted.&nbsp; Requesting shut down again ends the Tymeac Server.</p>
+  </blockquote>
+  <hr>
+  <p><big><strong><big>Q</big></strong></big>.&nbsp; So, what if things get completely out
+  of hand?&nbsp;You just want to kill the Tymeac Server process quickly, but, you also want
+  the statistics that come from shut down?</p>
+  <blockquote>
+    <p>Request shut down several times to flush out all that can end smoothly.</p>
+    <p>Request an <a href="TyStats.html">On-Request</a> statistics.&nbsp;This writes the
+    current statistics, including stalled requests, to the Statistics repository (see <a href="Alternatives.html">alternatives</a>).</p>
+    <p>Then use an operating system tool to kill the Tymeac Server process.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>The messages are <a href="MsgTy02.html">here</a>.</p>
+  <p>The final message is that shut down is complete.</p>
+  <blockquote>
+    <p><a name="sdown"></a>&quot;Tymeac Server, Shut down complete for MilliTime= &quot;</p>
+    <p>MilliTime is the System time in milliseconds since 1970.&nbsp;MilliTime also appears on
+    the successful start up <a href="StartUp.html#sstart">message</a> and within all return
+    messages for Asynchronous Requests.&nbsp;It is the way to identify this session of Tymeac.</p>
+  </blockquote>
+  <p><strong><a name="NB"></a>N.B.</strong>&nbsp; <b>When using the Activation 
+  Framework:</b>&nbsp;</p>
+  <blockquote>
+  <p>Inactivation (after the inactivation time elapses (<a href="TyCfg.html#activate">DBMS 
+  mode</a>, <a href="UserVariables.html">Stand-A-Lone mode</a>) is performed by 
+  the Monitor. Part of the inactivation procedure is to shut down the Server 
+  before inactivating the process from the Activation Run Time. </p>
+  <p>As long as no requests for shut down are outstanding, then the Monitor runs 
+  through stage 1 and 2 as above, then inactivates:<br>
+&nbsp;&nbsp;&nbsp; java.rmi.activation.Activatable.inactive()</p>
+    <blockquote>
+  <p>and issues a System.exit().</p>
+    </blockquote>
+  <p>If a prior request for shut down is outstanding, then the Monitor waits 
+  respectfully for the shut down to complete. After a wait period, the Monitor 
+  completes the shut down when possible and un-registers the Server from the 
+  Activation System.<br>
+&nbsp;&nbsp;&nbsp; java.rmi.activation.Activatable.unregister()</p>
+    <blockquote>
+  <p>and issues a System.exit().</p>
+    </blockquote>
+  <p>Therefore, you must re-register the Tymeac Server to use it again.</p>
+  <p>As noted above, any procedure that stalls, will hang the shut down. When 
+  the Monitor believes a stalled shut down is preventing the process from 
+  ending, the Monitor logs and prints messages. The <a href="TyNotify.html">
+  Notification System</a> is no long alive since shut down prevents new requests 
+  from starting. A shutting down but stalled Server is of no use to anyone and 
+  it remains an active process in the computer system.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

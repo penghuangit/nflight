@@ -1,0 +1,757 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Release Notes</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Release Notes</h1>
+
+<blockquote>
+  <h2>Release 6.4 June 2013</h2>
+  <blockquote>
+    <p>Added the <a href="TymeacReturn.html">TymeacReturn</a> class for standard 
+    checking of the returned Object[] from sync and async calls. Updated all the 
+    demonstration classes to use this new class where applicable.</p>
+    <p>Various documentation enhancements.</p>
+    <p>Still no Java7 only code to keep the Java6 crew happy.</p>
+  </blockquote>
+  <h2>Release 6.3.3 April 2013</h2>
+  <blockquote>
+    <p>Added an Enabled Specific button to the Queue Threads Display/Alter.</p>
+    <blockquote>
+    <p>Minor modifications to base Classes to support the above.</p>
+    </blockquote>
+    <p>Various documentation enhancements.</p>
+  </blockquote>
+  <h2>Release 6.3.2 March 2013</h2>
+  <blockquote>
+    <p>Moved timing values out of several classes into the TyBase Class for 
+    consistency.</p>
+    <p>Various documentation enhancements.</p>
+    <p>Still no Java7 only code to keep the Java6 crew happy.</p>
+  </blockquote>
+  <h2>Release 6.3.1 September 2012</h2>
+  <blockquote>
+    <p>Minor restructuring of Queue initialization and start up procedure.</p>
+    <p>Cosmetic clean up of compiler warning&nbsp; messages.</p>
+    <p>That's all folks. It's running very well.</p>
+  </blockquote>
+  <h2>Release 6.3 September 2011</h2>
+  <blockquote>
+    <p>Added the Alter Server Options GUI. This gives users the ability to alter 
+    the shut down option, monitor interval and inactivation minutes at runtime.</p>
+    <p>You must reinstall the complete package since the TymeacInterface class 
+    changed. This also means re-compiling those classes that depend on that 
+    interface (the serial version id will be different.)</p>
+  </blockquote>
+  <h2>Release 6.2.2 June 2010</h2>
+  <blockquote>
+  <p>Yes, it's been awhile.</p>
+  <p>Two minor bugs fixed:</p>
+    <ol>
+      <li>The Wait List display and statistics Wait List detail were erroneous 
+      in that they skipped every other row.<br>
+      The iterator was updated twice instead of once.</li>
+      <li>The Post Processor thread (runs just after Tymeac initial start up) 
+      that verifies the Notification Function and <br>
+      executes the start up Functions very rarely got ahead of the finalization 
+      method in the main start up thread.<br>
+      The classic example of what thread gets execution time at any given 
+      instant. A slight delay in the Post<br>
+      Processor thread, when necessary, fixed that.</li>
+    </ol>
+  <p>Added server up-time duration on shutdown message and statistics.</p>
+  <p>This release makes the variables, &quot;final&quot;, in the base package that can be 
+  set so. There is a performance gain in <br>
+  using: <br>
+&nbsp;&nbsp;&nbsp; private final int max_threads; over<br>
+&nbsp;&nbsp;&nbsp; private int max_threads;</p>
+  <p>And the usual pretty-up for code and documentation.</p>
+  </blockquote>
+  <h2>Release 6.2.1 December 2008</h2>
+  <blockquote>
+  <p>This release is just a smooth-up for some of the classes. That is, making 
+  some protected fields private, streamlining some code, etc.</p>
+  <p>We removed support for the Jini version 1.x examples. Jini version 2.x has 
+  been available for many years now.</p>
+  </blockquote>
+  <h2>Release 6.2 November 2008</h2>
+  <blockquote>
+  <p>This release adds additional functionality for the Run Time Functions:<br>
+&nbsp;&nbsp;&nbsp; Notification<br>
+&nbsp;&nbsp;&nbsp; Logging<br>
+&nbsp;&nbsp;&nbsp; Statistics Repository</p>
+  <p>The run time functions load at Tymeac start up. We now provide three GUIs 
+  (and command line access) to reset, stop, display and update (change) these 
+  functions.</p>
+  <p>
+  <font color="#FF0000">Tymeac Interface (and all the implementation classes) 
+  changed to accommodate the above. You must recompile any affected modules.</font></p>
+  <p>
+  <font color="#008000">As of the next release, we are removing support for the 
+  Jini version 1.x examples. Jini version 2.x has been available for many years 
+  now.</font></p>
+  </blockquote>
+  <h2>Release  6.1 October 2008</h2>
+  <blockquote>
+  <p>This release is a cosmetic upgrade to the server. More of a pretty-up for 
+  the com.tymeac.base classes.</p>
+  <p>The original Java code started in 1998 for JDK1.1. Ten years later some of 
+  that code still functioned as-is (logging, statistics etc.) So we  brought 
+  that old code into line with newer techniques. We changed all public fields from public to private.</p>
+  <p>We added an uncaught exception handlers for the Monitor (to shut down Tymeac 
+  in case of fatal Monitor errors) and Queue Threads (to log messages.)</p>
+  <p>We fixed a potential bug is the server shut down logic when many requests 
+  for shut down happen concurrently.</p>
+  </blockquote>
+  <h2>Release  6.0 April 2008</h2>
+  <blockquote>
+  <p>This release is a major upgrade to the server. It's been awhile since the 
+  last upgrade. This release is based on JDK 1.6.</p>
+  <p>We added the timeout variable in the Processing Application Class as an updateable field in the
+  <a href="TyQueData.html">Queue Data</a> GUI/non-GUI. There was some minor 
+  restructuring to support this in the TyBase Class.</p>
+  <p>We added a high water mark field in the Wait Lists. This affects the
+  <a href="TyWlData.html">Wait List</a> GUI/non-GUI and the <a href="Stats.html">
+  statistics</a>.</p>
+  <p>We added logical number of entries to the Wait List structure. This 
+  requires alteration to both the <a href="DBMSQue.html">DBMS Queue Table</a> 
+  and the <a href="UserQueues.html">User Queues</a> structure.
+  <font color="#FF0000">You must alter these structures to use this release.</font></p>
+  <p>Eliminated printing the name of the rebinding variable in the RMI Registry 
+  and JNDI Rebinding message. It was causing some 
+  confusion.</p>
+  <p>When Queue Threads change status to &quot;Processing&quot; they reset the cancelled 
+  reason.</p>
+  <p>Removed the&nbsp;&quot;zero asynchronous requests possibly stalled&quot; message 
+  displaying all the time from the Overall display. The message only appears now when there are possibly 
+  stalled requests.</p>
+  <p>Changed most 'public' constructors and other methods to 'protected' in 
+  com.tymeac.base (for the Tymeac management Classes.) There is no reason 
+  outside packages should access these Classes. We provide access to execution 
+  information in the TymeacInfo and TymeacUserSingleton Classes as well as the 
+  com.tymeac.client and com.tymeac.client.jframe packages.</p>
+  <p>We added a demo/comparison between Tymeac and the new Fork-Join package 
+  coming in Java 7 for early adapters.</p>
+  <p>We include the complete source in the /Source directory as a zip file and 
+  eliminate one downloadable file (the product without full source.) Previously, 
+  we only supplied demonstration classes in the /Source. If users wanted the 
+  complete source, then they downloaded that zip file separately.</p>
+  <p>As with all software over time, we improved the readability, 
+  maintainability and performance of the product.</p>
+  </blockquote>
+  <h2>Release 5.5 August 2007</h2>
+  <blockquote>
+  <p>This release is the last minor internal restructuring to the server that 
+  was started in release 5.0.</p>
+  <p>We restructured the Start up Class into six related classes. This helps in 
+  maintaining and enhancing.</p>
+  <p>We restructured the command line start up for the Jini Server. Before, the 
+  command line arguments were in a configuration file. We moved these to the 
+  command line were they really belong. <font color="#FF0000">For the Jini 
+  Server, you need to make minor changes.</font></p>
+  <p>We renamed and cleaned up several Classes.</p>
+  <p>This is the last release using the Java5 (or 1.5) JDK. The next release 
+  will be based on JDK 1.6.</p>
+  </blockquote>
+  <h2>Release 5.4 July 2007</h2>
+  <blockquote>
+  <p>This release is a minor internal restructuring to the server.</p>
+  <p>We restructured the Tymeac Queue Area. We made the &quot;Area&quot; into a three 
+  level structure.</p>
+  <p>We restructure the Function Array Classes to be in line with the Collections 
+  Framework.</p>
+  <p>We're beginning the restructuring of the start-up Class. This beast will be 
+  tamed.</p>
+  </blockquote>
+  <h2>Release 5.3 June 2007</h2>
+  <blockquote>
+  <p>This release is a minor upgrade to the server.</p>
+  <p>We fixed a minor bug in the wait algorithm for Queue Threads to speed up 
+  de-allocation of the thread when no work was present.</p>
+  <p>We applied the patch that came out for release 5.2 for the NetBeans GUI 
+  Demonstration classes.</p>
+  <p>We restructured the way Request-Detail objects are created and maintained. 
+  These object hold data associated with each request. The Eden-Space of the 
+  garbage collector is so efficient, we take advantage of this.</p>
+  <p>We restructure the Stall Array Classes to be in line with the Concurrency 
+  Classes.</p>
+  </blockquote>
+  <h2>Release 5.2 March 2007</h2>
+  <blockquote>
+  <p>This release is a minor upgrade to the server.</p>
+  <p>We added the embedded database shutdown for the Activation system. We 
+  missed this in release 5.1.</p>
+  <p>We added error recovery to the cancel sync request using a callback. See
+  <a href="Cancel.html#sync">cancelSyncReq()</a>. The proper term should be that 
+  we trapped the errors and printed a message.</p>
+  <p>There can be no recovery from such errors. This functionality requires 
+  internal Tymeac classes and if something goes wrong, it means there is system 
+  damage.</p>
+  <p>We changed the start up configuration file from a home-grown format to xml. 
+  We said this was coming and here it is. Not to worry, we proved a conversion 
+  tool for the old format. See the <a href="TyCfg.html">TyCfg</a> document for 
+  the details. <font color="#FF0000">This means, naturally, that you must 
+  convert the old format to xml before running this release.</font></p>
+  <p>As stated in release 5.1, we're in the process of restructuring the GUI 
+  classes. In this release we provide three Demonstration GUI's: T1,&nbsp; T3&nbsp; 
+  and the Internal Server Test in 
+  this new format. If the yelling and screaming doesn't reach lethal levels, 
+  then we'll continue using this new format in future releases.</p>
+  </blockquote>
+  <h2>Release 5.1 January 2007</h2>
+  <blockquote>
+  <p>This release is a minor upgrade to the server.  </p>
+  <p>There are some bug fixes. As we mentioned below, using no-lock/no-wait 
+  logic is not as easy as it looks.</p>
+  <p>We added support for embedded databases. Derby and Hsql are the ones we 
+  concentrated on. Tymeac was first built with 
+  the DBMS mode only. Using the standalone mode came later. We only tested with 
+  DB2 and ran into some structure problems when adding Derby (DB2 allowed a 
+  semi-colon (;) after commands, YEAR was a valid column name, etc.)
+  <font color="#FF0000">Therefore, there are name changes to the Log and Stats 
+  tables.</font></p>
+  <p>We're in the process of restructuring the GUI classes. In the first release 
+  of Tymeac we used AWT and VisualAge-for-Java for building those. Next we used 
+  Swing and VisualCafe for the GUI's. Both those are no longer supported. We 
+  liked both those products since they generated java files that could be 
+  maintained without the products. We've decided on using NetBeans for 
+  maintaining the GUI's. Even though NetBeans requires an 
+  add-on jar file for execution, NetBeans is free and easily obtainable so there won't be a 
+  problem for other developers.</p>
+  <p>We're in the process of restructuring some of the base classes. Start-up is 
+  one for sure.</p>
+  </blockquote>
+  <h2>Release 5.0 September 2006</h2>
+  <blockquote>
+  <p>This release is a major upgrade to the server. From a functionality 
+  viewpoint, there is no difference. Tymeac looks the same. From an internal 
+  viewpoint there are major differences. This release incorporates the 
+  java.util.concurrent packages.</p>
+  <p>In prior releases, there was only course grained locking; i.e. 
+  synchronization. The volatile keyword did not work properly in releases prior 
+  to Java5. If multiple threads wanted access to a shared variable, then both 
+  the get() and put() methods needed to be synchronized.</p>
+  <p>With Java5, volatile works properly so get() functionality need not lock 
+  the variable in order to read the latest version. Tymeac uses volatile for 
+  variables that are set() by one thread but read by many threads.</p>
+  <p>The biggest boast in performance comes from the concurrency packages.</p>
+    <blockquote>
+  <p>All [RMI] Connection threads use CountDownLatch when waiting for Queue 
+  Threads to finish processing in the Synchronous Request&nbsp; method. This 
+  results in significant performance improvements.</p>
+  <p>Queue Threads use Lock.lock() and 
+  Condition.await()/signal() in place of wait()/notify() when waiting for work 
+  from the [RMI] Connection threads. </p>
+  <p>The Queue Wait Lists use ConcurrentLinkedQueue in place of a home-grown 
+  pop-up list. </p>
+  <p>All Synchronous/Asynchronous Request arrays and the Queue Threads 
+  use atomic variables in place of synchronization wherever possible. (Which is 
+  just about everywhere.)</p>
+  <p>The performance is significantly greater. However, testing of this new 
+  environment requires exhaustive work. We've done the best we can. Many strange 
+  things happen in multi-processing -- beyond the ability of mere mortals to 
+  envision. We look forward to your comments, corrections and suggestions.</p>
+    </blockquote>
+  <p>Added LoginServer: </p>
+    <blockquote>
+  <p>This is an example of how to use the RMI Server to front-end a login 
+  sequence before the client may use the server. For those who do not use Jini's 
+  extensible RMI (JERI) this is a way to easily do a login. </p>
+    </blockquote>
+  <p>Changed Monitor:</p>
+    <blockquote>
+  <p>Every iteration of the Monitor looked to compress the Tymeac internal 
+  tables used for synchronous/asynchronous processing. This was heavy overhead 
+  with very limited benefit. It also impacted the performance. We eliminated 
+  this compression. </p>
+    </blockquote>
+  <p>Changed CancelParm class:</p>
+    <blockquote>
+  <p>Added cancel word long integer. There is no difference to users. Before, on 
+  single param constructor, we used the request id to pass the cancel word. With 
+  restructuring on the Server, we separated the two fields.</p>
+    </blockquote>
+  </blockquote>
+  <h2>Release 4.0.5 November 2004</h2>
+  <blockquote>
+    <p>Added the User Singleton class to help applications using persistent storage.</p>
+    <p>Minor documentation enhancements.</p>
+    <p>Minor speed and cosmetic code changes.</p>
+  </blockquote>
+  <h2>Release 4.0.4 October 2004</h2>
+  <blockquote>
+    <p>Added a new shut down request method<br>
+    &nbsp;&nbsp;&nbsp; public String shutRequest(boolean force);</p>
+    <blockquote>
+      <p>There were times when the server would not shut down because of unresponsive Queue
+      Threads. This method forces a shutdown when the boolean is set to true.</p>
+    </blockquote>
+    <p>As started in release 4, a restructuring is taking place.</p>
+    <p>Changed/restructured TyBase</p>
+    <blockquote>
+      <p>Added <br>
+      public int shutOrigin = 0; // shutdown initiated by<br>
+      public int startType = 0; // type of Server</p>
+      <p>These were in TymeacInfo. From a pure user standpoint there is no change.</p>
+      <p>Changed structure from public instance fields to private and added getter/setter
+      methods.</p>
+    </blockquote>
+    <p>Changed TymeacInfo</p>
+    <blockquote>
+      <p>Removed getBase()<br>
+      Added getJoinManager() </p>
+    </blockquote>
+    <blockquote>
+      <p>Removed instance fields<br>
+      &nbsp;&nbsp;&nbsp; private int status = 0;<br>
+      &nbsp;&nbsp;&nbsp; private int shutOrigin = 0;</p>
+      <p>&nbsp;&nbsp;&nbsp; These were moved to TyBase.</p>
+      <p>Removed constant <br>
+      &nbsp;&nbsp;&nbsp; public final static int NOT_IN_SHUTDOWN = 0;</p>
+    </blockquote>
+    <blockquote>
+      <p>The above two instance fields worked together. Some replacement logic for getStatus():</p>
+      <blockquote>
+        <p>Where TymeacInfo info = TymeacInfo.getInstance();<br>
+        if (info == TymeacInfo.AVAILABLE ) // (not in shut down)<br>
+        if (info &gt; TymeacInfo.AVAILABLE ) // (in shut down)<br>
+        if (info == TymeacInfo.INITIALIZATION) // (not available)<br>
+        </p>
+      </blockquote>
+    </blockquote>
+    <p>Changed the Jini shutdown exit:<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; com.tymeac.serveruser.JiniShutDownExit <br>
+    by replacing getBase() with getJoinManager() see the change to TymeacInfo, above.</p>
+    <p>Changed shutThread<br>
+    &nbsp;&nbsp;&nbsp; no longer contains inactivate logic, that now is in
+    TymeacImpl.shutRequest()</p>
+    <p>Changed TymeacImpl.shutRequest() <br>
+    &nbsp;&nbsp;&nbsp; as above and streamlined<br>
+    <br>
+    Changed monitor<br>
+    &nbsp;&nbsp;&nbsp; added shut_count for handling a shut down in the inactivate logic</p>
+    <p>Minor documentation enhancements.</p>
+    <p>Minor speed and cosmetic code changes.</p>
+  </blockquote>
+  <h2>Release 4.0.3 July 2004</h2>
+  <blockquote>
+    <p>Changed the way Queue Threshold values are entered in both the Queue Maintenance and
+    Live Queue displays. Previously, one had to enter the zero and decimal place for the
+    floating point number (0.). Now only the fraction is necessary. 25% was 0.25, now is just
+    25.<br>
+    <strong>N.B. </strong>5% is 05, not 5.</p>
+    <p>Changed the Monitor to exit in the run() method at the completion of Tymeac shut down.
+    This only affects the internal server when not using the shut down thread.</p>
+    <p>Minor documentation enhancements.</p>
+    <p>Minor speed and cosmetic code changes.</p>
+  </blockquote>
+  <h2>Release 4.0.2 May 2004</h2>
+  <blockquote>
+    <p>Support for java.util.Preference data which may replace the configuration file (for
+    DBMS mode.)</p>
+    <p>Added JavaDoc for some Tymeac base classes to help in documentation.</p>
+  </blockquote>
+  <h2>Release 4.0.1 April 2004</h2>
+  <blockquote>
+    <p>Additional field in The Tymeac Parameter clients pass to the server to include the
+    cancel word for canceling synchronous requests.</p>
+    <p>Added support for Portable Object Adapter (IIOP).</p>
+  </blockquote>
+  <h2>Release 4.0&nbsp; March 2004</h2>
+  <blockquote>
+    <p>We support Jini2.0 and JDK1.4.2. This will be a major upgrade and policy shift.</p>
+    <p>Our policy was that the binary release of Tymeac supported two prior releases of the
+    JDK That is, when JDK1.3x was the current JDK. We supported backward to JDK1.1x. The
+    binary classes of Tymeac were compiled with the JDK1.1 compiler. Therefore, customers who
+    ran on prior releases of Java could still use the product.</p>
+    <p>Henceforth, we will release versions of Tymeac on the latest version of the JDK.</p>
+    <p>Those who are running on prior versions of the JDK can download prior versions of
+    Tymeac. In this way, we can stay on the cutting edge of technology.</p>
+    <p>This is mainly due to the Jini2.0 upgrade. Jini2.0 adds: <ul>
+      <li>Support for secure Jini technology-based programs (a greatly enhanced Security
+        infrastructure) </li>
+      <li>Mechanisms to configure applications at run-time (<code>Configuration</code>) </li>
+      <li>Unity of client-side and server-side programming models (<code>ProxyPreparer</code> and <code>Exporter</code>)
+      </li>
+      <li>An RMI implementation that supports pluggable invocation layer behavior and pluggable
+        transport providers (Jini ERI) </li>
+    </ul>
+    <p>Currently we have different front-ends for each [TCP, IIOP] transport provider. As RMI
+    supports more and more communication protocols using an exporter is the right way to go.</p>
+    <p>We add two directories:</p>
+    <blockquote>
+      <p style="TEXT-ALIGN: justify">com.tymeac.jini.base<br>
+      com.tymeac.jini.client</p>
+    </blockquote>
+    <p>It is our belief that Jeri, with its vast array of security options, is the best way to
+    use a backend server. With this release we focus on the Jini Architecture as an integral
+    part of the Tymeac System.</p>
+    <h2 style="TEXT-ALIGN: justify">Enhancements:</h2>
+    <blockquote>
+      <p>Additional method in TymeacInterface. In order to support the canceling of synchronous
+      requests we added a new method<br>
+      &nbsp;&nbsp;&nbsp; <a href="Cancel.html#sync">cancelSyncReq()</a>. (See the cancel
+      document for details.)</p>
+      <p>Altered method in TymeacInterface. In order to support the canceling of asynchronous
+      requests<br>
+      &nbsp;&nbsp;&nbsp; idStatus1Request(). By adding an integer, action to the parm. The
+      action is 1.is to return the status of a request. The action 2 is to cancel the request.
+      (See the <a href="Cancel.html">cancel document</a> for details.)</p>
+    </blockquote>
+    <blockquote>
+      <p>Addition of the TymeacInternalFunctions and Queues. This is to support the canceling of
+      synchronous requests and any further internal functionality.</p>
+      <p>Additional field in both the Tymeac <a href="TyCfg.html">Configuration File</a> (for
+      use with a DBMS) and the Tymeac <a href="UserVariables.html">User Variables Class</a> (for
+      stand alone mode.) The field is Login Context, for security checking.</p>
+      <p>Added security checking in the Tymeac Server driven by the above, login context. Added
+      security checking in the Tymeac Clients with a command line option. For both of these. see
+      the <a href="Security.html">security document</a>.</p>
+      <p>Jini is now part of the basic product. There is a JiniServer for both activatable and
+      non-activation.</p>
+      <p>Additional fields in the Tymeac Base Storage (TyBase) for security and Jini. The TyBase
+      fields were all static, they are now instance.</p>
+      <p>Additional field in The Tymeac Parameter clients pass to the server to include the
+      callback for canceling synchronous requests.</p>
+    </blockquote>
+    <h2 style="TEXT-ALIGN: justify">Bug fixes:</h2>
+    <blockquote>
+      <p>The bug in the Queue Thread when using an asynchronous request with no output agent
+      queue has been fixed. The thread tried to store the result of processing into an array
+      that was never initialized.</p>
+      <p>The bug in the Queue building class method() has been fixed. It never loaded the
+      PA_timeout value from the parameter.</p>
+    </blockquote>
+    <blockquote>
+      <p>The bug in the cfg file write() method has been fixed. It output comments in the wrong
+      order.</p>
+      <p>The bug in the _impl shutRequest() method has been fixed. It wrote statistics during
+      Stage 1 and Stage 2 shutdown. Should only be Stage 2.</p>
+      <p>Messages were restructured and wrong message/action were corrected.</p>
+    </blockquote>
+    <h2 style="TEXT-ALIGN: justify">Withdrawal of Support</h2>
+    <blockquote>
+      <p>Directories for the AWT frame classes has been removed. If you need JDK1.x AWT,
+      download a prior release </p>
+    </blockquote>
+  </blockquote>
+  <h2 style="TEXT-ALIGN: justify">Release 3.0.3.1&nbsp; December 2003 </h2>
+  <blockquote>
+    <p style="TEXT-ALIGN: justify">Bug fixes and cosmetic enhancements to the JFrame Help and
+    About dialogs.</p>
+  </blockquote>
+  <h2 style="TEXT-ALIGN: justify">December 2002</h2>
+  <blockquote>
+    <p style="TEXT-ALIGN: justify">Minor bug fixes.</p>
+  </blockquote>
+  <h2>Release 3.0.3 October, 2002</h2>
+  <blockquote>
+    <p>This is the Open Source release now available on SourceForge.net</p>
+    <blockquote>
+      <p>Project name for the standard edition is <strong>TymeacSE</strong></p>
+    </blockquote>
+  </blockquote>
+  <h2>Release 3.0.2 July, 2001</h2>
+  <blockquote>
+    <h2 style="TEXT-ALIGN: justify">Enhancements:</h2>
+    <blockquote>
+      <p style="TEXT-ALIGN: justify">For the Java2 environment <strong>ONLY</strong>.</p>
+      <p>The request for alternatives to the CLASSPATH for user-written classes has been
+      answered. This is by adding a URLClassLoader for loading classes when necessary.</p>
+      <p>Please read the <a href="ClassNameFormat.html">class naming and URL</a> document for
+      more information.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <h2 style="TEXT-ALIGN: justify">Withdrawal of Support</h2>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><big>As of Release 3.0.1, we no longer support the AWT version of the Configuration
+      File Maintenance Class. The new information no longer fits on a single window.</big></p>
+      <p><big>When Sun releases version 1.4 of the SDK, we will no longer support the AWT
+      versions, (i.e. JDK1.1), of the frame classes, (com.tymeac.client.frame and
+      com.tymeac.demo.frame).&nbsp; Support will only be for the Java2 JFrame classes.</big></p>
+    </blockquote>
+  </blockquote>
+  <h2>Release 3.0.1&nbsp; June, 2001</h2>
+  <blockquote>
+    <h2 style="TEXT-ALIGN: justify">Enhancements:</h2>
+    <blockquote>
+      <p>The request for &quot;we'd rather do it ourselves&quot; for the statistics and log
+      repositories has been answered.</p>
+      <p>Previously, if you used a DBMS for storing the Queue and Function data, then the only
+      option for the statistics and log was also a DBMS.&nbsp; If you used the user classes for
+      storing the Queue and Function data, then the only option for the statistics and log was a
+      file.</p>
+      <p>With this release, if you used a DBMS for storing the Queue and Function data, then the
+      you may use a DBMS, File, or do it yourself with a user exit class, for the statistics and
+      log repositories.&nbsp; If you used the user classes for storing the Queue and Function
+      data, then the you may use a File, or do it yourself with a user exit class, for the
+      statistics and log repositories.</p>
+      <p>Please read the <a href="Alternatives.html">alternatives documen</a>t for more
+      information.</p>
+    </blockquote>
+    <h2 style="TEXT-ALIGN: justify">Bug fixes:</h2>
+    <blockquote>
+      <p>The bug in the DBMS Statistics and Log writing thread has been fixed.</p>
+      <p>The bug in the Configuration file writing thread has been fixed.</p>
+    </blockquote>
+    <h2 style="TEXT-ALIGN: justify">Structure changes:</h2>
+    <blockquote>
+      <p><strong>Both these changes affect the starting of Tymeac. You must make these changes
+      for the new structure before running Tymeac. Failure to do so will result in the following
+      errors at Tymeac Start Up:</strong></p>
+      <blockquote>
+        <ol>
+          <li><p style="TEXT-ALIGN: justify"><strong>The Configuration File will fail with a
+            &quot;format&quot; error.</strong></p>
+          </li>
+          <li><p style="TEXT-ALIGN: justify"><strong>The User Variables Class will fail with a
+            &quot;NoSuchMethod&quot; Exception.</strong></p>
+          </li>
+        </ol>
+      </blockquote>
+    </blockquote>
+    <blockquote>
+      <p>The <a href="TyCfg.html">Configuration File</a> has been re-structured.&nbsp; The
+      [EXITS] Section was missing on the previous release. &nbsp; Additionally, the [ALTERNATES]
+      Section with several sub-sections were added. &nbsp; This means that you must alter this
+      file for the new structure before running Tymeac.</p>
+      <p>The <a href="UserVariables.html">UserVariables Class</a> has been re-structured to add
+      two Strings: The Statistics Alternatives Class and the Log Alternatives Class.&nbsp; This
+      means that you must alter this class for the new structure before running Tymeac.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <h2 style="TEXT-ALIGN: justify">Withdrawal of Support</h2>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><big>As of Release 3.0.1, we no longer support the AWT version of the Configuration
+      File Maintenance Class. The new information no longer fits on a single window.</big></p>
+      <p><big>When Sun releases version 1.4 of the SDK, we will no longer support the AWT
+      versions, (i.e. JDK1.1), of the frame classes, (com.tymeac.client.frame and
+      com.tymeac.demo.frame).&nbsp; Support will only be for the Java2 JFrame classes.</big></p>
+    </blockquote>
+  </blockquote>
+  <h2>Release 3.0&nbsp; May, 2001</h2>
+  <blockquote>
+    <h2>Re-Packaging:</h2>
+    <blockquote>
+      <p>The product was completely re-packaged. The following are the six packages:<ul>
+        <li>com.tymeac.base</li>
+        <li>com.tymeac.client</li>
+        <li>com.tymeac.client.frame</li>
+        <li>com.tymeac.client.jframe</li>
+        <li>com.tymeac.common</li>
+        <li>com.tymeac.serveruser</li>
+      </ul>
+      <p>Additionally, there are five packages for the demonstration system:<ul>
+        <li>com.tymeac.demo</li>
+        <li>com.tymeac.demo.frame</li>
+        <li>com.tymeac.demo.jframe</li>
+        <li>com.tymeac.demo.jini.base</li>
+        <li>com.tymeac.demo.jini.client</li>
+      </ul>
+      <p>See the <a href="Directories.html">directory</a> section for complete details.</p>
+    </blockquote>
+    <h2>IIOP support</h2>
+    <blockquote>
+      <p>Support for the CORBA IIOP requires SDK1.3, minimally.</p>
+      <p><strong>Start Up</strong> -- You may now use the JNDI Registry for IIOP.</p>
+      <p><strong>Scripts</strong> -- One additional directory was added for the IIOP support:
+      \Scripts\IIOP.</p>
+      <p><strong>Throughpu</strong>t -- Since there is significant overhead in the CORBA
+      Marshalling algorithms, performance is lower than when using a pure Java RMI.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <h2 style="TEXT-ALIGN: justify">Enhancements:</h2>
+    <blockquote>
+      <p>An additional field, milliseconds, is now part of the <a href="TymeacParm.html">Tymeac
+      Parameter</a> to the Tymeac Server. In this way you may specify the time to wait for
+      synchronous requests in full seconds, full seconds and milliseconds or just milliseconds,
+      (by setting the seconds to zero.)</p>
+    </blockquote>
+    <h2 style="TEXT-ALIGN: justify">Bug fixes:</h2>
+    <blockquote>
+      <p>The bug in starting all queue threads at Tymeac start up was fixed.</p>
+      <p>The periodic failure of Tymeac stage two shut down to end the JVM was fixed by making
+      the &quot;structure change&quot;, below.</p>
+    </blockquote>
+    <h2 style="TEXT-ALIGN: justify">Structure changes:</h2>
+    <blockquote>
+      <p>The shut down thread now starts at the end of stage two shut down.</p>
+      <p>Previously, the shut down thread started a stage one and was awakened at the end of
+      stage two.</p>
+    </blockquote>
+  </blockquote>
+  <h2>Release 2.1.1&nbsp; March, 2001 -- enhancement upgrade</h2>
+  <blockquote>
+    <p>Tymeac times several phases in the life of a Queue Thread.&nbsp; One of those events is
+    the time a Queue Thread invokes a Processing Application Class.&nbsp; The maximum
+    allowable time for this event is four times the Tymeac Monitor interval.&nbsp; Such that
+    if the Tymeac Monitor interval is 60 seconds, than the allowable time is 240 seconds. When
+    that time expires, Tymeac marks the status of the Queue Thread as
+    &quot;cancelled&quot;.&nbsp; If the Queue Thread resumes processing then this status code
+    is reset.</p>
+    <p>For a &quot;process now&quot; system, this allowable time is more than sufficient in
+    most cases.&nbsp; It is the other cases that customers require an alternative.&nbsp; This
+    is the enhancement upgrade.</p>
+    <p>To accommodate an alternative, each Queue may now have a timeout field.&nbsp; When this
+    field is zero, Tymeac uses the system default.&nbsp; When this field is greater than zero,
+    Tymeac uses the timeout field in place of the system default.</p>
+    <p>In order to accommodate an additional field in the Queue definition, it is necessary to
+    alter the basic structure of several classes in Tymeac.&nbsp; You may <strong>not</strong>
+    apply this enhancement by just overlaying the new Queue Classes over the old classes. You
+    must make changes to any Queue definitions <strong>currently in use</strong>.<ol>
+      <li>The DBMS Queue definition -- add integer field PA_TIMEOUT to the <strong>end</strong> of
+        the definition.&nbsp; You may optionally use a default value of zero, (0). Nullable may be
+        yes or no.<br>
+        <br>
+      </li>
+      <li>The internal Queue definition Classes:</li>
+    </ol>
+    <blockquote>
+      <blockquote>
+        <p><strong>TymeacIndividualQueue</strong> constructor 2, has a new parameter:&nbsp; <em>int
+        u_pa_timeout</em>&nbsp; This is a read-only class.&nbsp; We mention it here since, when
+        using the constructor, it contains an additional field.</p>
+        <blockquote>
+          <p>public TymeacIndividualQueue(<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String u_name,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String u_pa_name,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String u_que_type,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String u_start_threads,
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int u_pa_timeout,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int
+          u_nbr_threads,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int
+          u_nbr_waitlists,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int
+          u_nbr_entries,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int u_wait_time,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int u_kill_time, <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; float u_overall,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; float
+          u_individual,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; float u_factor,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; float u_average)</p>
+        </blockquote>
+        <p>There is also an accessor and mutator for this new field.</p>
+        <p><strong>TymeacUserQueues</strong> -- First, backup any current definition of this class
+        and source&nbsp; files.<br>
+        TymeacUserQueues.class in&nbsp; &lt;home&gt;/classes/server-user and TymeacUserQueues.java
+        in &lt;home&gt;/source.</p>
+        <p>When using the constructor 1 for TymeacIndividualQueue, then you must set the timeout
+        field to an integer value: tiq.setPa_timeout(0);</p>
+        <p>When using the constructor 2 for TymeacIndividualQueue, above, one must insert the
+        timeout value as the fifth parameter. &nbsp; For the demonstration Queue AAAA, the
+        following is the definition:</p>
+      </blockquote>
+    </blockquote>
+    <blockquote>
+      <blockquote>
+        <p>// *--- Demo Queue AAAA ---*<br>
+        &nbsp;&nbsp;&nbsp; temp.addElement( new TymeacIndividualQueue( &nbsp;&nbsp;
+        &quot;AAAA&quot;, <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &quot;Demo1&quot;,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &quot;no&quot;, <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &quot;no&quot;, <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <strong>new timeout field --&gt;</strong> 0, <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        3, <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        10, <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        30, <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        10, <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        20, <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        0.00F, <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        0.60F, <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        0.00F, <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        0.00F));</p>
+      </blockquote>
+    </blockquote>
+    <blockquote>
+      <blockquote>
+        <p>There is also an accessor and mutator for this new field.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p style="TEXT-ALIGN: justify">No other changes are necessary.</p>
+    <p style="TEXT-ALIGN: justify">You may overlay the other classes in the upgrade package.
+    &nbsp; Then recompile the TymeacUserQueues.java and place the TymeacUserQueues.class file
+    in &lt;home&gt;/classes/server-user.</p>
+  </blockquote>
+  <h2>Release 2.1&nbsp; March, 2000 -- minor upgrade</h2>
+  <blockquote>
+    <p>Support for the Java Look and Feel in the product GUI's, (Swing) is now part of the
+    product.&nbsp; The AWT interface is still available.</p>
+    <p><strong>Product GUI's</strong> -- Swing is the default.&nbsp; The GUI classes are now
+    in separate directories, \Swing for Swing, \AWT for AWT.&nbsp; In order to execute a frame
+    class, such as TyMenu, add the \Swing or \AWT directory to the -classpath, or the system
+    CLASSPATH.</p>
+    <blockquote>
+      <blockquote>
+        <p style="text-align: justify">For example, java
+        &lt;home&gt;\base;\&lt;home&gt;\swing;\&lt;home&gt;\common-user [or wherever the
+        TyVariable class resides] TyMenu</p>
+      </blockquote>
+    </blockquote>
+    <blockquote>
+      <p>The AWT windows easily fit on a 15 inch monitor with 640 x 480 pixel resolution.</p>
+      <p>The Swing windows, although most fit on a 15 inch monitor with 640 x 480 pixel
+      resolution, 800 x 600 pixel resolution looks much better.</p>
+      <p>It is the continuing goal of Cooperative Software Systems, Inc. to allow Tymeac to
+      exist with the smallest footprint.</p>
+    </blockquote>
+    <p><strong>Samples</strong> -- Two additional directories were added for the sample code:
+    \Swing and \AWT.</p>
+    <blockquote>
+      <p>The frame classes, TyDemoT1, TyDemoT3 and TyDemoJiniT1 are in both directories for
+      Swing and AWT.</p>
+    </blockquote>
+  </blockquote>
+  <h2>Release 2.0&nbsp; October, 1999 </h2>
+  <blockquote>
+    <p style="TEXT-ALIGN: justify">This release contains: <ul>
+      <li>Support for the Java 2 platform Activation Framework.</li>
+      <li>Sample code for using Tymeac with the Jini Framework.</li>
+      <li>Tighter code in thread handling algorithms.</li>
+      <li>A smaller footprint overall.</li>
+      <li>Enhanced GUI's.</li>
+      <li>Documentation enhancements.</li>
+      <li>JavaDoc in Frames/NoFrames.</li>
+      <li>Various code/documentation fixes/clarifications requested along the way.</li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

@@ -1,0 +1,355 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Benefits</title>
+<link REL="stylesheet" HREF="benestyl.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/wheat.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<p align="center">
+<img src="Images/Benefits.gif" alt="Benefits.gif (3593 bytes)" width="441" height="88"></p>
+
+<p align="center">&nbsp;</p>
+
+<h2 align="left"><a name="threads"></a>Thread Control</h2>
+
+<blockquote>
+  <p align="left">The standard method of <a href="faq.html#sync">synchronous threads</a> is
+  an environment without control.&nbsp;There is no control over the number of threads
+  started, the priority of request processing and the clearing, reallocating and purging of
+  stalled requests.</p>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p align="left">
+        <img src="Images/Bfig10y.gif" alt="Bfig10y.gif (2614 bytes)" width="324" height="104"></p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <h3>Tymeac<sup><small>&#153;</small></sup> is the solution.</h3>
+  </blockquote>
+  <blockquote>
+    <ul>
+      <li>
+      <p align="left">Tymeac<sup><small>&#153;</small></sup> analyzes four thresholds providing almost
+        unlimited control for the new thread algorithm. [ <a href="benex.html#thresholds">example</a>
+        ]</li>
+      <li>
+      <p align="left">Prioritized queues provide the means to properly schedule requests and to assure users
+        that the &quot;hot&quot; request gets immediate attention. [ <a href="benex.html#hot">example</a>
+        ]</li>
+      <li>
+      <p align="left">Optional timing of requests provides immediate notification of an abnormal event. [ <a href="benex.html#timing">example</a> ]</li>
+      <li>
+      <p align="left">Optional asynchronous processing provides for the &quot;background&quot; processing
+        necessary in Enterprise environments. [ <a href="benex.html#async">example</a> ]</li>
+      <li>
+      <p align="left">Automatic back out provides for intermediate component failure. [ <a href="benex.html#inter">example</a> ]</li>
+      <li>
+      <p align="left">A Monitor thread thoroughly examines the system at set intervals reallocating and
+        freeing resources, and, notifying the user&#146;s early warning system of potential
+        problems.</li>
+    </ul>
+    <blockquote>
+      <blockquote>
+        <p><img src="Images/Bfig11y.gif" alt="Bfig11y.gif (3729 bytes)" width="308" height="152"></p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="left">&nbsp;</p>
+
+<h2 align="left"><a name="overhead"></a>Reduced Processor Overhead</h2>
+
+<blockquote>
+  <font FACE="Arial" SIZE="2"><p></font>With Tymeac<sup><small>&#153;</small></sup>,
+  you pre-define your asynchronous processing environment (queues and threads) then activate
+  it with a remote/non-remote method call.&nbsp;The environment remains active only as long
+  as necessary. Tymeac<sup><small>&#153;</small></sup> creates threads only when necessary
+  and destroys those threads according to user requirements.&nbsp; This reduces the overall
+  storage footprint and diminishes the machine cycles necessary to manage threads. [ <a href="benex.html#flood">example</a> ]</p>
+  <p ALIGN="left">Tymeac<sup><small>&#153;</small></sup> stacks requests for processing
+  in Wait Lists when no thread is immediately available to process them.&nbsp;When
+  asynchronous threads finish processing a request, they look in the Wait Lists for the next
+  request.&nbsp;This reduces machine overhead by controlling the number of <a href="faq.html#limit">competing threads</a> and letting each thread process multiple
+  requests between a start/stop sequence. [ <a href="benex.html#multi">example</a> ]</p>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p ALIGN="JUSTIFY">
+        <img src="Images/Bfig04y.gif" alt="Bfig04y.gif (4766 bytes)" width="309" height="231"></p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="left">&nbsp;</p>
+
+<h2 align="left"><a name="scale"></a>Scalability</h2>
+
+<blockquote>
+  <p align="left">How many threads does a logical process need?&nbsp;The answer depends on
+  the number of outstanding requests (load). The higher the load, the more threads may be
+  needed to process requests.</p>
+  <p align="left">Tymeac<sup><small>&#153;</small></sup> provides four thresholds to give
+  designers control over this parameter. Tymeac<sup><small>&#153;</small></sup> only creates
+  a new thread when a threshold is met and destroys the thread after an idle period -- a
+  dynamic response to an ever changing environment. [ <a href="benex.html#thresholds">example</a>
+  ]</p>
+</blockquote>
+
+<p align="center"><img src="Images/Bfig12.gif" alt="Bfig12.gif (3496 bytes)" width="275" height="200"></p>
+
+<p align="left">&nbsp;</p>
+
+<h2 align="left"><a name="recursion"></a>Facilitated Recursion Processing</h2>
+
+<blockquote>
+  <font FACE="Arial" SIZE="2"><p ALIGN="left"></font>Asynchronous processes are a means
+  to isolate functions.</p>
+</blockquote>
+
+<blockquote>
+  <p>However, when the asynchronous process itself requires another
+  asynchronous process, the effort required in keeping track of allocated storage, time-out,
+  back out, etc., means that designers usually chose some other, less efficient method.</p>
+</blockquote>
+
+<blockquote>
+  <p ALIGN="left">Tymeac<sup><small>&#153;</small></sup> is the solution to the nested
+  processing problem.&nbsp;The Tymeac<sup><small>&#153;</small></sup> management facility
+  makes nested processing another option available to the system designer. [ <a href="benex.html#recursion">example</a> ]</p>
+  <blockquote>
+    <blockquote>
+      <p ALIGN="JUSTIFY">
+      <img src="Images/Bfig14y.gif" alt="Bfig14y.gif (3965 bytes)" width="373" height="241"></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p ALIGN="JUSTIFY">[Not familiar with recursion?&nbsp; See an <a href="recursion.html">example</a>.]</p>
+</blockquote>
+
+<p ALIGN="JUSTIFY">&nbsp;</p>
+
+<h2 ALIGN="JUSTIFY"><a name="repository"></a>Simplified Application Development</h2>
+
+<blockquote>
+  <p ALIGN="JUSTIFY" style="text-align: left">The most successful computer programs are
+  those that follow the Bauhaus principle; they are simple and tailored to specific, well
+  defined tasks.</p>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac<sup><small>&#153;</small></sup>
+  supports the construction of simple, single process objects. These objects run
+  under the control of Tymeac<sup><small>&#153;</small></sup>.&nbsp; The object gets the
+  input message from Tymeac<sup><small>&#153;</small></sup>, executes the process, and
+  returns the output message back to Tymeac<sup><small>&#153;</small></sup>.</p>
+</blockquote>
+
+<blockquote>
+  <p>The design, construction, and testing of objects in a
+  vacuum simplifies the entire process.&nbsp;Since Tymeac<sup><small>&#153;</small></sup>
+  allows objects to execute as separate threads, the vacuum development environment reflects
+  the real world environment.</p>
+  <blockquote>
+    <blockquote>
+      <p style="text-align: justify">
+      <img src="Images/Bfig08y.gif" alt="Bfig08y.gif (6221 bytes)" width="497" height="176"></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p ALIGN="JUSTIFY">&nbsp;</p>
+
+<h2 ALIGN="JUSTIFY"><a name="failure"></a>Failure Containment</h2>
+
+<blockquote>
+  <p>Asynchronous queue processing is a method of planning for a sequence of
+  events (the flux of events and processes.)&nbsp; The failure of one or more of those
+  processes is part of the plan.</p>
+  <p ALIGN="JUSTIFY"><strong>Tymeac<sup><small>&#153;</small></sup> provides the means to
+  isolate the failure.</strong></p>
+  <blockquote>
+    <p>The executing thread in each associated queue of the request may issue
+    roll backs or even terminate without affecting the requesting Client.&nbsp; Each queue is
+    in isolation, and has no affect on other queues or threads.</p>
+  </blockquote>
+  <blockquote>
+    <p>Event planning may take on a binary design.&nbsp; Did the process
+    complete as planned, yes or no.&nbsp; There is no need to handle every possibility in
+    relation to every other possibility.&nbsp; Asynchronous queues and threads handle their
+    own environment.</p>
+  </blockquote>
+  <p>Simple, straightforward and fault tolerant. [ <a href="benex.html#containment">example</a> ]</p>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p ALIGN="JUSTIFY">
+        <img src="Images/Bfig09y.gif" alt="Bfig09y.gif (3811 bytes)" width="337" height="247"></p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p ALIGN="JUSTIFY">&nbsp;</p>
+
+<h2 ALIGN="JUSTIFY"><a name="jini"></a>The Web Service Solution</h2>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>A major problem with Web Services (Jini<sup><small><strong>&#153;</strong></small></sup>
+      and eventually UDDI) is that the application proxy of the Service represents an
+      asynchronous process, (backend, [activatable] remote/non-remote object.)</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>The client passes a request to the application and receives
+  a reply.&nbsp;However, all the <a href="Bennies.html#problem">problems</a> of any
+  asynchronous process are applicable.</p>
+  <p>In addition, to be truly effective and to support load
+  balancing, the application should support Queuing and separate multi-threading within each
+  Queue.&nbsp;However, this introduces a completely new set of problems: <ul>
+    <li>The queues must be dynamically changeable.</li>
+    <li>There must be a &quot;thread limit&quot; to prevent thread overload on the JVM.</li>
+    <li>Threads must be managed to detect and recover from stalls.</li>
+    <li>There must be a standard way to monitor the entire environment, to notify administrators
+      of problems, to gather statistics for tuning and to view (GUI) the real-time system.</li>
+  </ul>
+  <p>When one uses asynchronous processes, one must also have an
+  asynchronous process manager.</p>
+  <p style="text-align: justify"><strong>Tymeac<sup><small>&#153;</small></sup></strong> is
+  that asynchronous process manager.</p>
+</blockquote>
+
+<blockquote>
+  <hr align="left" width="30%" noshade size="3">
+</blockquote>
+
+<blockquote>
+  <p><a name="problem"></a>An asynchronous process must be able to handle: <ul>
+    <li>The autonomous request with callback.</li>
+    <li>Recursion processing (when a request needs a new process itself.)</li>
+    <li>Intermediate back-out when encountering scheduling problems.</li>
+    <li>Status requests for the current and prior requests.</li>
+    <li>Congestion reports.</li>
+    <li>The ability to change parameters.</li>
+    <li>Deactivation during inactive periods.</li>
+  </ul>
+</blockquote>
+
+<p ALIGN="JUSTIFY">&nbsp;</p>
+
+<h2 ALIGN="JUSTIFY"><a name="parallel"></a>Reduced Response Times</h2>
+
+<blockquote>
+  <p>Today&#146;s software does not need construction by gurus to take
+  advantage of today&#146;s computer.</p>
+</blockquote>
+
+<blockquote>
+  <p>The requirement is for modularized, functionally isolated code so that
+  the hardware can function as designed.</p>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac<sup><small>&#153;</small></sup> breaks up the request into
+  concurrently active queues and threads enabling parallel processing to significantly
+  reduce the response time. [ <a href="benex.html#parallel">example</a> ]</p>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p ALIGN="JUSTIFY">
+        <img src="Images/Bfig03y.gif" alt="Bfig03y.gif (3425 bytes)" width="286" height="220"></p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p ALIGN="JUSTIFY">&nbsp;</p>
+
+<h2 ALIGN="JUSTIFY"><a name="tunable"></a>Separately Tunable JVM</h2>
+
+<blockquote>
+  <p ALIGN="JUSTIFY" style="text-align: left">Tymeac<sup><small>&#153;</small></sup> RMI
+  Server runs in its own Java<sup><small>&#153;</small></sup> Virtual Machine, separate from
+  your application Client, Data Base Management System, Jini<sup><small>&#153;</small></sup>
+  Service or other middle tier layer.</p>
+  <p ALIGN="JUSTIFY" style="text-align: left">This advantage lets you:</p>
+  <ul>
+    <li>Use separate security property and/or classpath options.</li>
+    <li>Personnel may quickly move the JVM to the most advantageous machine when needed.</li>
+    <li>Personnel may add a debugging interface or profiling option.</li>
+    <li>Personnel may change memory allocation or other non-standard start up options.</li>
+  </ul>
+  <blockquote>
+    <blockquote>
+      <p><img src="Images/Bfig17y.gif" alt="Bfig17y.gif (4759 bytes)" width="362" height="179"></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p ALIGN="JUSTIFY">&nbsp;</p>
+
+<h2 ALIGN="JUSTIFY"><a name="gateway"></a>Gateway to Distributed Computing</h2>
+
+<blockquote>
+  <p ALIGN="JUSTIFY" style="text-align: left">Tymeac<sup><small>&#153;</small></sup>
+  separates complex requests into component processes.&nbsp;Each component process executes
+  as a separate logical process. The communication and database interface
+  dependencies normally found in large, multi-function processes do not exist.</p>
+  <p>Not only are the asynchronous threads able to execute
+  concurrently, the component applications may interface with any network, legacy
+  application, message queuing facility, or database protocol without restraint to each
+  other or the requester. [<a href="benex.html#gateway"> example</a> ]</p>
+  <blockquote>
+    <blockquote>
+      <p style="text-align: justify">
+      <img src="Images/Bfig05y.gif" alt="Bfig05y.gif (5676 bytes)" width="337" height="348"></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p ALIGN="JUSTIFY">&nbsp;</p>
+
+<h2 ALIGN="JUSTIFY"><a name="multiprocess"></a>Ability to Multi-Process</h2>
+
+<blockquote>
+  <p>Today&#146;s machines are infinitely more
+  complex than yesterday's and require an inversely proportional base of knowledge for
+  application development with Tymeac<sup><small>&#153;</small></sup>.</p>
+</blockquote>
+
+<blockquote>
+  <p style="text-align: left">Tymeac<sup><small>&#153;</small></sup> lets the operating
+  system, Java<sup><small><strong>&#153;</strong></small></sup>, and access methods
+  schedule, monitor and control the use of resources by separating complex requests into
+  component threads.</p>
+  <p style="text-align: left">The application developer codes the method without concern
+  for the execution environment.</p>
+  <blockquote>
+    <blockquote>
+      <p style="text-align: justify">
+      <img src="Images/Bfig13y.gif" alt="Bfig13y.gif (3868 bytes)" width="244" height="191"></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p ALIGN="JUSTIFY">&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

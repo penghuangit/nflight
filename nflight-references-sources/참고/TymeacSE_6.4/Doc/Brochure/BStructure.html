@@ -1,0 +1,124 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>How it works</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/wheat.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1 align="center">How it works</h1>
+
+<blockquote>
+  <p ALIGN="center"><img src="Images/topbar.gif" alt="topbar.gif (1003 bytes)" WIDTH="345" HEIGHT="17"></p>
+  <div align="center"><center><table border="0" cellspacing="1" width="54%">
+    <tr>
+      <td width="170%">Tymeac<sup><small>&#153;</small></sup> Backend Server runs under Java<sup><small>&#153;</small></sup>
+      as a 100% pure application.</td>
+      <td width="67%"><img src="Images/pure_java_logo.gif" alt="pure_java_logo.gif (2424 bytes)" WIDTH="110" HEIGHT="103"></td>
+    </tr>
+  </table>
+  </center></div>
+</blockquote>
+
+<blockquote>
+  <p ALIGN="JUSTIFY" style="text-align: justify">The two main Tymeac<sup><small>&#153;</small></sup>
+  elements are Queues and Functions.</p>
+  <blockquote>
+    <p ALIGN="JUSTIFY" style="text-align: justify"><strong>Queues</strong> are:</p>
+    <ul>
+      <li>individual user-written application Classes that execute as Reflection invoked code from
+        a Tymeac<sup><small>&#153;</small></sup> Queue Thread. In this way application code is
+        decoupled from the thread code.&nbsp; (see also FAQ, <a href="FAQ.html#reflection">reflection</a>),
+      </li>
+      <li>the logical anchor points for Tymeac<sup><small>&#153;</small></sup> Queue Threads,</li>
+      <li>the Wait Lists of pending requests and</li>
+      <li>the threshold variables for activating a new thread.</li>
+    </ul>
+    <p ALIGN="JUSTIFY" style="text-align: justify"><strong>Functions</strong> are lists of
+    Queues.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p ALIGN="JUSTIFY" style="text-align: justify"><img src="Images/redarrow.gif" alt="redarrow.gif (74 bytes)" WIDTH="12" HEIGHT="12">&nbsp; The Client application passes a request to Tymeac<sup><small>&#153;</small></sup>
+  to get the job done, (a Tymeac<sup><small>&#153;</small></sup> Function).</p>
+  <blockquote>
+    <p ALIGN="JUSTIFY" style="text-align: justify">Communication between the user request and
+    Tymeac<sup><small>&#153;</small></sup> is through a reference to a remote object (RMI) or
+    directly when using the Server internally.</p>
+  </blockquote>
+  <p ALIGN="JUSTIFY" style="text-align: justify"><img src="Images/redarrow.gif" alt="redarrow.gif (74 bytes)" WIDTH="12" HEIGHT="12">&nbsp; Tymeac<sup><small>&#153;</small></sup> schedules the
+  request on the Tymeac<sup><small>&#153;</small></sup> Queues necessary to complete the
+  job.</p>
+  <blockquote>
+    <p ALIGN="JUSTIFY" style="text-align: justify">A thread on each Queue uses Reflection to
+    invoke the user-written application Class for the Queue.</p>
+    <p ALIGN="JUSTIFY" style="text-align: justify">For synchronous requests, Tymeac<sup><small>&#153;</small></sup>
+    waits until all processing completes and returns the results of all the processes to the
+    Client. [ <a href="benex.html#timing">example</a> ]</p>
+    <p ALIGN="JUSTIFY" style="text-align: justify">For asynchronous requests, Tymeac<sup><small>&#153;</small></sup>
+    returns immediately to the Client.&nbsp; (This is sometimes known as background or
+    back-end processing.) [ <a href="benex.html#async">example</a> ]</p>
+    <blockquote>
+      <p ALIGN="JUSTIFY" style="text-align: justify"><u>Optionally</u>, when the last Queue
+      Thread process completes, it schedules an Output Agent Queue that may further process the
+      results of all the prior processes or pass the results to the network. [ <a href="benex.html#agent">example</a> ]</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p ALIGN="JUSTIFY" style="text-align: justify">Many more requests may be active then there
+  are threads to process them.&nbsp; Tymeac<sup><small>&#153;</small></sup> provides a
+  system of prioritized Wait Lists for each Queue.</p>
+</blockquote>
+
+<blockquote>
+  <h3><a name="balance"></a>Balancing</h3>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p ALIGN="JUSTIFY" style="text-align: justify">Synchronous thread processing does not
+    provide any control over the queue of requests, the ability to view the queue, or to
+    change priority.&nbsp; Most importantly, there is no facility to control the number of
+    threads active at any one time.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>&nbsp;<strong>Tymeac<sup><small>&#153;</small></sup> provides designers the tools
+  necessary to balance the thread load.</strong></p>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li>Each Queue may have as many threads as are prudent and necessary as a maximum.</li>
+    <li>When to activate a new thread is always the major issue. Tymeac<sup><small>&#153;</small></sup>
+      analyzes four thresholds to give designers almost unlimited control over this parameter
+      for each Queue. [ <a href="benex.html#thresholds">example</a> ]</li>
+    <li>User parameters control when to create a physical thread, (at Tymeac<sup><small>&#153;</small></sup>
+      start up or when first needed), and when to destroy the physical thread, (after an idle
+      period or never.)</li>
+    <li>Threshold and Wait List variables are alterable during execution providing a dynamic
+      response to an ever changing environment<font FACE="Arial" SIZE="2">.</font></li>
+  </ul>
+</blockquote>
+
+<hr>
+
+<p><small><strong>Jini, Java, 100% Pure Java, and all Java-based</strong> trademarks and
+logos are trademarks or registered trademarks of Sun Microsystems, Inc. in the United
+States and other countries.</small></p>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

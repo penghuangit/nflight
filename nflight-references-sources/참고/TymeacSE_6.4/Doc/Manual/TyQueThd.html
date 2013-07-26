@@ -1,0 +1,329 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Queue Thread Display </title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Queue Thread Display, <br>
+&nbsp;&nbsp;&nbsp; com.tymeac.client.jframe.TyQueThd</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This frame class displays the status of a Queue's Threads.</p>
+    <p>The non-frame version of this class is <a href="#non">TyQueThdClient</a>, below.</p>
+    <hr noshade size="3">
+  </blockquote>
+</blockquote>
+
+<p align="center"><a href="Images/TyQueThd.jpg">
+<img border="2" src="Images/TyQueThd_small.jpg" xthumbnail-orig-image="Images/TyQueThd.jpg" width="100" height="81"></a>&nbsp; (click to link to full image)</p>
+
+<h3><strong>Elements</strong></h3>
+
+<blockquote>
+  <p><strong>Queue Name</strong> -- Enter the name of the Tymeac Queue.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>List</strong> -- This is a List of the Queue's Threads containing:</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>Id</strong> -&nbsp; A number beginning at zero.&nbsp;This Id is also found
+    suffixed to the Thread Name, <a href="TyQueMaint.html#thread">TyQueMaint</a>, 
+    and in the statistics for the Queue <a href="TyStats.html">TyStats</a></p>
+  </blockquote>
+  <blockquote>
+    <p><strong>(#_Proc'd)</strong> -&nbsp; The total number of requests processed.</p>
+  </blockquote>
+  <blockquote>
+    <p><a name="status"></a><strong>Status</strong> -&nbsp; The status of the Thread: (See
+    also the <a href="Tuning.html#cycle">life cycle</a> of a thread.)</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><b><u>Never used</u> </b>--&nbsp; Never activated.</p>
+      <blockquote>
+        <p>/ existent -- There is a physical java thread attached.<br>
+        / null&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --&nbsp; There is no physical java thread. Tymeac
+        must instantiate<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        a new thread when necessary.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><u><b>Inactive</b></u> --&nbsp; The Thread was active at one time, but no longer selectable. 
+      A threshold exception, wait-list overflow or if no thread is active in the 
+      Queue when new work comes in must take place before the thread is 
+      re-activated.</p>
+      <blockquote>
+        <p style="text-align: justify">/ existent -- There is a physical java thread attached.<br>
+        / null&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --&nbsp; There is no physical java
+        thread.&nbsp;Tymeac must instantiate<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        a new thread when necessary.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><b><u>Waiting for work</u></b> --&nbsp; The Thread is waiting for work and is selectable.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><b><u>Thread processing</u></b> --&nbsp; The Thread is executing code outside the application.
+      For instance, fetching a request from a Wait List, preparing to invoke the application
+      method or processing the output from the application.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p style="text-align: justify"><b><u>In application class</u></b> --&nbsp; The execution is
+      within the invoked application.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><b><u>Scheduling Output Agent</u></b> --&nbsp; This is an Asynchronous Request.&nbsp;The
+      Function has an Output Agent Queue.&nbsp;The last Queue Thread finished processing and is
+      now scheduling the Output Agent Queue.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><b><u>Notified, awaiting execution</u></b> --&nbsp; The status was <u>Waiting for work</u> ,
+      above. A request found this Thread, 'notified' it, but execution has not begun.&nbsp;This
+      is a small window.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><b><u>Reactivated, awaiting execution</u></b> --&nbsp; The status was <u>Inactive</u>, above.
+      A Threshold was exceeded, a wait-list overflow occurred or no thread was 
+      active when new work came in (<a href="TyQueMaint.html#activate">TyQueMaint</a>.)&nbsp;The Thread was awakened (when
+      necessary, a new instance acquired) but execution has not begun.&nbsp;This is a small
+      window.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><b><u>Cancelled</u></b> --&nbsp; The Tymeac Monitor determined that the Thread exceeded a
+      prudent time limit.&nbsp;This status has no effect on an executing Thread.&nbsp;When
+      processing is just slow, the Thread changes its own status for each event in its life.
+      This status effects scheduling. Reason for the cancel is:</p>
+      <blockquote>
+      <p>EXCESSIVE_PROCESSING: In a thread processing state for 
+    excessive time.<br>
+    <br>
+    EXCESSIVE_APPL_PROCESSING_DEFAULT: In the application class state for 
+    excessive time when no override in <a href="TyQueMaint.html#timeout">
+    time-out</a> in the Queue.<br>
+    <br>
+    EXCESSIVE_APPL_PROCESSING_SPECIFIC: In the application class state for 
+    excessive time when using the override <a href="TyQueMaint.html#timeout">
+    time-out</a> in the Queue.<br>
+    <br>
+    EXCESSIVE_SCHD_INTERVAL: The Queue Thread is scheduling the Output Agent. In 
+    this state for excessive time.<br>
+    <br>
+    EXCESSIVE_POSTING_INTERVAL: The thread wait waiting for work and was 
+    awakened. In this state for excessive time. <br>
+    <br>
+    EXCESSIVE_STARTED_INTERVAL: No thread was attached. A new thread was started 
+    but had not begun execution. In this state for excessive time.</p>
+      </blockquote>
+      <p>See also <a href="SchdFail.html">scheduling failures</a>.<br>
+      A Thread of this status cannot participate in scheduling. The <a href="Disabled.html">How
+      a Thread becomes disabled</a> document details the time limits.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><b><u>Disabled</u> </b>--&nbsp; See <a href="Disabled.html">How a Thread becomes disabled</a>.
+      </p>
+      <blockquote>
+        <p>reason is: Ty0nnnn&nbsp; See the Tymeac <a href="Messages.html">Messages</a>. 
+        The original cancel reason, if appropriate, is as above.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>REFRESH</strong> -- Refreshes the display.</p>
+</blockquote>
+
+<blockquote>
+  <p><a name="disable"></a><strong>DISABLE SELECTED</strong> -- Select a Thread.&nbsp;This
+  button:<ol>
+    <li>Informs the Thread to stop processing and terminate (issue a return in the run()
+      method.)<br>
+    </li>
+    <li>Changes the status to 'disabled'. However, this is only a logical disable.</li>
+  </ol>
+  <blockquote>
+    <p style="text-align: justify">If the Thread is &quot;hanging&quot;, then this has no
+    effect on the executing Thread. In order to kill a Thread, see how a Thread is named in <a href="TyQueMaint.html#naming">TyQueMaint</a>, and use a Java tool. </p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Three circumstances require disabling a Thread: </p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <ol>
+      <li><p align="left">During shut down, when a Thread finishes processing all pending
+        requests, it sets its status to &quot;Disabled&quot;.&nbsp;Shut down cannot complete
+        (writing statistics, etc.) until all Threads finish.&nbsp; Manually disabling a Thread
+        lets shut down complete.</p>
+      </li>
+      <li><p align="left">When a new instance of a Thread is necessary.&nbsp;Application
+        processing determines this situation. See the&quot;Enable All&quot; button, below.</p>
+      </li>
+      <li><p align="left">When an application class was faulty, was repaired and renamed, and, a
+        new copy obtained (<a href="TyNewCopy.html">TyNewCopy</a>).&nbsp;Now, when the actual
+        status of Threads is in doubt, purge all the Threads (with a java tool if necessary)
+        disable all Threads (here) then use the &quot;Enable All&quot; button, below.</p>
+      </li>
+    </ol>
+    <p><big><strong>Note:</strong></big>&nbsp; As above, this is a logical disable.&nbsp;If
+    the thread is scheduling an Output Agent Queue or executing within a Processing
+    Application Class, it may change its status at any time.&nbsp;Use the <strong>Refresh</strong>
+    button for the latest status of all threads. When the thread finishes with a request, it
+    then checks for a &quot;stop processing&quot; request.</p>
+  </blockquote>
+  <p><strong>ENABLE SELECTED</strong> -- Select a Thread.&nbsp;This
+  button:<blockquote>
+    <p>The disabled Thread is enabled. Unlike the Enable All button below, this 
+    button does not check for Asynchronous Requests pending.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="enable"></a><strong>ENABLE ALL</strong> -- All 'disabled' Threads are set to
+  'Inactive' and their instance reference is nulled.</p>
+  <blockquote>
+    <p>When all the Threads were 'disabled' and Asynchronous Requests are pending , one Thread
+    is 'activated' so that any Asynchronous Requests may continue.</p>
+    <p>This button also has an affect on timed-out threads (see Cancelled status 
+    above.) If a timed-out (Cancelled or Disabled) thread resumes processing, it 
+    resets its status and continues. The ENABLE ALL button sets the instance 
+    reference in the Thread Management Structure to null of all disabled threads. If the timed-out thread resumes 
+    processing, it checks this instance reference for null. If it finds a null 
+    reference, then the thread dies gracefully. A null reference simply means 
+    &quot;we've given up on you buddy and a new thread will shortly take 
+    your place.&quot;</p>
+  </blockquote>
+    <p>&nbsp;</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- This is an information message:</p>
+
+<blockquote>
+  <p><u>Connection failure</u> -- The RMI connection failed or the Tymeac Server returned an
+  invalid message.</p>
+  <p><u>Selected Thread Invalid</u> -- Cannot disable a disabled Thread.</p>
+  <p><u>Use Refresh First</u> -- Cannot Enable until the list is displayed.</p>
+  <p><u>Queue name invalid</u> -- As indicated. </p>
+  <p><u>OK</u> -- All Threads were Enabled.</p>
+</blockquote>
+
+<hr>
+
+<h3><a name="non"></a>com.tymeac.client.TyQueThdClient (<a href="../JavaDoc/com/tymeac/client/TyQueThdClient.html">JavaDoc</a>)</h3>
+
+<blockquote>
+  <blockquote>
+    <p>This is the Non-GUI equivalent of the GUI Class, above. An example of how to use this
+    class is: com.tymeac.demo.TyDemoClient_QueThd.java in the
+    &lt;TymeacHome&gt;source/com/tymeac/demo directory.</p>
+  </blockquote>
+  <p>Constructor 1 -- has no arguments. This is for the RMI Server. The constructor gets a
+  new instance of&nbsp; a Tymeac internal class that is similar to <a href="TySvrComm.html">TySvrComm</a></p>
+</blockquote>
+
+<blockquote>
+  <p>Constructor 2--&nbsp; is for the internal server. The single argument is the Tymeac
+  Server Interface, TymeacInterface.</p>
+</blockquote>
+
+<p><strong>Instance Methods</strong> --</p>
+
+<blockquote>
+  <p>public int disable(String que, int nbr) {</p>
+  <blockquote>
+    <p>Returns:</p>
+    <blockquote>
+      <p>3&nbsp; Connection failure<br>
+      0&nbsp; Invalid queue name<br>
+      1&nbsp; selected thread invalid<br>
+      4&nbsp; OK</p>
+    </blockquote>
+    <p>Parameters: the queue name, the thread number.</p>
+  </blockquote>
+  <p>public int enableSpecific(String que, int nbr) {</p>
+  <blockquote>
+    <p>Returns:</p>
+    <blockquote>
+      <p>3&nbsp; Connection failure<br>
+      0&nbsp; Invalid queue name<br>
+      1&nbsp; selected thread invalid<br>
+      4&nbsp; OK</p>
+    </blockquote>
+    <p>Parameters: the queue name, the thread number.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>public int enable(String que) {</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Returns:</p>
+    <blockquote>
+      <p>1&nbsp; Connection failure<br>
+      3&nbsp; Invalid queue name<br>
+      0&nbsp; OK</p>
+    </blockquote>
+    <p>Parameters: the queue name.</p>
+  </blockquote>
+  <p>public String[] refresh(String que) {</p>
+  <blockquote>
+    <p>Returns:</p>
+    <blockquote>
+      <p>String[]</p>
+      <blockquote>
+      <p>When the first element = &quot;N287&quot;, then the Queue Name was invalid.</p>
+      <p>Otherwise, a list of the Queue Threads in the above List format.</p>
+      </blockquote>
+    </blockquote>
+    <p>Parameters: the queue name</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

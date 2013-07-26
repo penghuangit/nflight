@@ -1,0 +1,80 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Custom Socket Factory Set Up</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Custom Socket Factory Set Up</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p style="text-align: justify">In this section we discuss the custom socket factory set up
+        procedures. If you used Tymeac CSF prior to Release 4.0 then you must upgrade.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <p>For the non-activatable server:</p>
+  <blockquote>
+    <p>Tymeac supports your custom socket factories by providing a method createFactory() in
+    the server class: <strong>com.tymeac.base.CSFServer. </strong></p>
+    <p>You must create a class that extends <strong>com.tymeac.base.CSFServer</strong> and
+    override the createFactory() method. We supply a demonstration for this in class:<br>
+    &nbsp;&nbsp;&nbsp; <strong>com.tymeac.demo.CSFServer</strong></p>
+    <blockquote>
+      <p>This demo class extends com.tymeac.base.CSFServer. Has the identical createFactory()
+      since this must be your code.</p>
+    </blockquote>
+  </blockquote>
+  <p>For the activatable server:</p>
+  <blockquote>
+    <p>You may create your custom socket factories in the constructor used during activation.
+    We supply a sample in module: <strong>com.tymeac.demo.TyDemoActivationCSFactory</strong>.
+    This class extends <strong>com.tymeac.base.TymeacActivationImp</strong>l. </p>
+    <blockquote>
+      <font SIZE="2" COLOR="#7f0055"><b><p>public</b></font><font SIZE="2">
+      TyDemoActivationCSFactory (ActivationID id, MarshalledObject data)<br>
+      <font SIZE="2" COLOR="#7f0055"><b>&nbsp;&nbsp; throws</b></font>&nbsp;
+      RemoteException,&nbsp; Throwable {</p>
+      <p></font><font SIZE="2" COLOR="#3f7f5f">// the parameters for TymeacActivationImpl<br>
+      </font><font SIZE="2" COLOR="#7f0055"><b>super</b></font><font SIZE="2">(id, <br>
+      <font SIZE="2" COLOR="#7f0055"><b>&nbsp;&nbsp; </b></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <font SIZE="2" COLOR="#7f0055"><b>new</b></font> TyDemoClientSocketFactory(),<br>
+      <font SIZE="2" COLOR="#7f0055"><b>&nbsp;&nbsp; </b></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <font SIZE="2" COLOR="#7f0055"><b>new</b></font> TyDemoServerSocketFactory(), <br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data); </p>
+      </font>
+    </blockquote>
+    <p>Alternatively, you may specify the custom socket factories in the setup at the export
+    step. Since this is custom code we do not provide an example. You must use: <br>
+    <b>&nbsp;&nbsp;&nbsp; java.rmi.activation.Activatable.exportObject</b>(<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Remote&nbsp;obj, <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    ActivationID&nbsp;id, <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    int&nbsp;port, <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    RMIClientSocketFactory&nbsp;csf,<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    RMIServerSocketFactory&nbsp;ssf) </p>
+    <p>in place of the <strong>Activatable.register()</strong> in Class <strong>com.tymeac.demo.TyDemoActivationBase</strong>,
+    method <strong>createBackend()</strong>.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

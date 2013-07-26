@@ -1,0 +1,933 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Queue Maintenance</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Queue Maintenance, <br>
+&nbsp;&nbsp;&nbsp; com.tymeac.client.jframe.TyQueMaint</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This is the means to add, change and delete Tymeac Queues.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>This Class requires a Data Base Management System and a Queue Table set up according to
+    <a href="DBMSQue.html">this</a>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>This Class requires the <a href="TyCfg.html">Configuration Data</a> so that it may find
+    the DBMS names.</p>
+    <hr noshade size="3">
+  </blockquote>
+</blockquote>
+
+<p align="center"><a href="Images/TyQueMaint.jpg">
+<img border="0" src="Images/TyQueMaint_small1.jpg" xthumbnail-orig-image="Images/TyQueMaint.jpg" width="100" height="64"></a>&nbsp; (click to link to full image)</p>
+
+<h3 style="text-align: justify"><strong>Elements</strong></h3>
+
+<blockquote>
+  <p><strong>Queue Name </strong>-- This is a String.&nbsp; Any unique sequence.</p>
+</blockquote>
+
+<blockquote>
+  <p><big><strong><font size="3">Processing&nbsp; Application</font> </strong></big><strong>Class</strong> <strong>Name</strong> -- The name of the user-written Processing
+  Application Class the Tymeac Queue Thread or Output Agent Thread invokes to process the
+  user request.&nbsp;For names with URL's, see the <a href="ClassNameFormat.html">naming and
+  URL</a> document.</p>
+  <p>This class must have a public static main() method that accepts an array of Objects and
+  returns an Object:</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>public static Object main(Object[] args)</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>This also means that other methods used by main() must be static.&nbsp;See the section
+    on classes in <a href="Develop.html#pap">Developing your System</a>.&nbsp;There are no
+    other restrictions for methods in this class or for inheritance.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>The <u>single</u> Object passed to this method is the input data in the parameter used
+    to remotely invoke Tymeac, <a href="TymeacParm.html">TymeacParm</a>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>The returning Object may be null.&nbsp;For an Output Agent Class, described next, the
+    return Type may be void.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>The <a href="Demo.html">Demonstration</a> classes (Demo*), are examples.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="timeout"></a><strong>Timeout Value</strong> --&nbsp; The time, in seconds
+  GREATER THAN ZERO, the Processing Application Class may execute before Tymeac believes the
+  Class may be stalled. ZERO is to use the <a href="Disabled.html#five">system default</a>.</p>
+  <blockquote>
+    <p>For the majority of cases, the system default is sufficient.&nbsp;If the need arises,
+    then this field is available to adjust the processing needs of individual Queues. 
+    This value is dynamically alterable in the <a href="TyQueData.html">QueData</a> 
+    GUI.</p>
+    <p>Tymeac is a process <a href="Develop.html#long">NOW</a> system. Tymeac keeps track of
+    the time this Class begins executing.&nbsp; When that time exceeds this value, then Tymeac
+    marks the thread in which this class is executing as &quot;cancelled&quot;.&nbsp;When next
+    the Monitor runs, it marks the thread as &quot;disabled.&quot;&nbsp;If the thread resumes
+    processing, the thread resets the entry, irrespective of any prior setting.&nbsp;These
+    status codes have to do with scheduling. A thread with a status of &quot;cancelled or
+    disabled&quot; may not participate in scheduling.</p>
+    <p>When all threads have a status of &quot;cancelled or disabled&quot;, then the Queue is
+    no longer functional (<a href="SchdFail.html">Scheduling failure</a>). One must determine
+    the cause of the stall, repair the faulty component and <a href="TyQueThd.html">enable</a>
+    the &quot;disabled&quot; threads.</p>
+    <blockquote>
+    <p>Enabling disabled threads brings up another issue. Perhaps the 
+    application is taking a really long time. Perhaps it will continue 
+    eventually. When an administrator &quot;enables&quot; the disabled threads in a Queue, 
+    that person is declaring the hanging threads expunged. If the thread 
+    eventually continues execution and determines it was expunged, it terminates 
+    immediately without completing the request. A terminating expunged thread does 
+    write a message to the log and console (<a href="MsgTy06.html">Normal</a>,
+    <a href="MsgTy07.html">Output Agent</a>.)</p>
+    </blockquote>
+  </blockquote>
+  <p><a name="agent"></a><strong>Output Agent - Not checked is No / Is checked is Yes</strong>
+  -- Yes - designates this an Output Agent Queue <u><em>for Asynchronous Requests</em></u>.</p>
+  <blockquote>
+    <p>Processing is much different for an Output Agent. This is the Queue that receives the
+    combined output of all the other Queue's in a Tymeac Function, <em>f</em>or <em>an
+    Asynchronous Request</em>.&nbsp;When the last Queue in the Function's List of Queues
+    finishes processing and there is an Output Agent Queue for this Function, then Tymeac
+    schedules that Agent passing it the concatenated output of the List of Queues.</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>To see this in action use the <a href="Demo.html">Demonstration System</a>.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Modify Class DemoAgent1 main() by un-commenting the System.out.println(S).&nbsp;Run a
+      command line Class, TymeacClient_7.&nbsp;The console output shows the result.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>This Queue does not receive input directly from a Tymeac Client Request. Therefore, an
+    Output Agent Queue cannot have prioritized Wait Lists.&nbsp;All requests go into Wait List
+    1.</p>
+  </blockquote>
+  <blockquote>
+    <p>A Tymeac Function <a href="TyFuncMaint.html">TyFuncMaint</a> cannot specify an Output
+    Agent Queue (set here with Yes) as part of the List of Queues associated with the
+    Function.&nbsp;A Tymeac Function may only specify an Output Agent Queue (set here with
+    Yes) as the Output Agent Queue for a Function.</p>
+  </blockquote>
+  <blockquote>
+    <p>There is no restriction on the Processing Application Class for the Queue, above. The
+    Class, Foo, may be the Processing Application Class for normal Queue &quot;Working 1&quot;
+    as well as the Output Agent Queue &quot;Dynamic Session 201&quot;. Classes do their work
+    irrelevant to the environment. They take an input Object, do that which is necessary, and
+    optionally return an Object.</p>
+  </blockquote>
+
+<p align="left"><u><big><strong><font size="5">Threads</font></strong></big></u></p>
+
+  <p><strong>Nbr of Threads</strong> -- The maximum number of threads for this Queue.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>This number is significant for the requirements of the Queue as well as the overall
+    system.&nbsp;See the section on <a href="Tuning.html">Tuning</a>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><a name="naming"></a>Threads within a Queue are named as follows:</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>&quot;TyQ-&quot;&nbsp; plus</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>When the Queue Name is &lt;= 36 characters, the full Queue Name. Otherwise, the first
+      32 characters of the Queue Name, an underscore, and the last 3 characters of the Queue
+      Name.&nbsp;(Certainly, this does not ensure total uniqueness for all situations. &nbsp;
+      However, totally unique Queue Thread names are not always necessary.)</p>
+    </blockquote>
+    <blockquote>
+      <p>Followed by a dash, and a sequence number (<strong>Id</strong>) beginning with zero.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>For the Demonstration System, Queue 'AAAA', with three Threads, the names are:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TyQ-AAAA-0<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TyQ-AAAA-1<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TyQ-AAAA-2</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>For a Queue Name,<br>
+      &quot;ThisQueueNameIsLongerThanThirySixxxxxxxxxxxxxx{...}xxAAA&quot;,<br>
+      with three Threads:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TyQ-ThisQueueNameIsLongerThanThirtySixxxxxxx
+      {...} xxxxxxxxxxx_AAA-0<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TyQ-ThisQueueNameIsLongerThanThirtySixxxxxxx
+      {...} xxxxxxxxxxx_AAA-1<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TyQ-ThisQueueNameIsLongerThanThirtySixxxxxxx
+      {...} xxxxxxxxxxx_AAA-2</p>
+    </blockquote>
+    <p>See also the section on all the <a href="ThreadNames.html">thread names</a>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>The Thread<strong> Id</strong> is also found in the Thread status display, <a href="TyQueThd.html">TyQueThd</a>, and in the statistics for the Queue, <a href="TyStats.html">TyStats</a>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="waitime"></a><strong>Idle Wait Time</strong> --&nbsp; The time, in seconds,
+  the Queue Thread remains waiting for work and selectable. When this time expires, the
+  Thread changes its status to 'inactive', that is, not directly selectable.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Tymeac will only activate this Thread again when:<ul>
+      <li>the Wait Lists exceed a Threshold limit (below), </li>
+      <li>on an overflow condition, or </li>
+      <li>when no Threads are active.</li>
+    </ul>
+    <p>This parameter is difficult to understand without an example.&nbsp;We provide such an
+    example in the section on Maximum Active Threads in <a href="Tuning.html#mat">Tuning</a>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="kill"></a><strong>Idle Thread Life</strong> --&nbsp; When <u>non-zero</u>, the
+  time, in seconds, a thread remains alive in an inactive state (see above Idle Wait
+  Time).&nbsp;When this time expires, the Tymeac Monitor informs the Thread to destroy
+  (return in the run() method). When <u>zero</u>, the Tymeac Monitor ignores this field.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Tymeac must instantiate a new thread and start() it when activating this
+    Thread.&nbsp;See the section on <a href="Tuning.html">Tuning</a>. </p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="start"></a><strong>Initially Start Threads - Not checked is No / Is checked is
+  Yes</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>No - Each thread is instantiated and started only when needed.<br>
+    Yes - <u>All</u> threads are started at Tymeac Startup.</p>
+  </blockquote>
+
+<p align="left"><a name="waitlist"></a><big><strong><font size="5">&nbsp;<u>Wait 
+Lists</u></font></strong></big></p>
+
+  <p><strong>Number of Wait Lists</strong> --&nbsp; Minimum one.&nbsp;This is the total number
+  of FIFO Wait Lists associated with this Queue. See the product article 
+  describing <a href="../Articles/PriQueArticle.html">Wait Lists</a>.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Waitlist 1, is priority 1.<br>
+    Waitlist 2, is priority 2, etc.<br>
+    The requestor specifies the priority of the request in the object passed to the Tymeac
+    Server, <a href="TymeacParm.html">TymeacParm</a>. The  request goes into the 
+    bounded Wait List
+    corresponding to the priority, unless that Wait List is <u>physically</u> full 
+    (much more on this below.)</p>
+    <blockquote>
+    <p><b>N.B.</b>&nbsp; Each wait lists is a ConcurrentLinkedQueue. There is no 
+    way to guarantee that 'a few more than the maximum' do not get added. In a 
+    heavily used asynchronous environment, many threads could get the current 
+    size as less than the maximum and then add requests that push the size over the 
+    maximum specified here.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>A no space available condition places the pending request into the next 
+    higher Wait List. This is an overflow. See the discussion below in
+    <a href="#example">examples</a>.</p>
+    <p>Invalid priorities resolve as follows:</p>
+    <ul>
+      <li>&lt; 1 resolves to 1</li>
+      <li>&gt; max resolves to max</li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong><a name="nbr_slots"></a>Number of <u>Physical</u> Entries in Each Wait List</strong> --&nbsp; Minimum one.&nbsp;This is
+  the total number of entries or slots in each Wait List.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>This is a fixed number for all Wait Lists in this Queue.&nbsp;Multiply this number by
+    the total number of Wait Lists for the total available entries for the Queue. 
+    This number is dynamically alterable in the <a href="TyQueData.html">Queue 
+    Data</a> GUI/non-GUI.</p>
+    <p>There are two problems with Wait Lists.</p>
+    <ol>
+      <li>
+      <p align="left">There is a FIFO problem. When an overflow occurs, Tymeac puts the 
+      request into the next Wait List that has a free slot. (E.G. Wait List 1 is 
+      full, the request goes into Wait List 2.) Tymeac processes requests in 
+      Wait Lists from the first onward. Therefore, when a slot opens in Wait 
+      List 1, a new priority 1 request goes in Wait List 1. That means this new request 
+      will process before the previous request that overflowed into Wait List 2.</li>
+      <li>
+      <p align="left">When the Wait Lists are used as priority lists, then the above FIFO 
+      problem may become a priority inversion problem if there were pending 
+      requests already in Wait List 2 (the new request goes in after the other 
+      requests in the list.)</li>
+    </ol>
+    <p>Tymeac's answer to the above problems is to have the <u>physical</u> 
+    number of elements in each Wait List as large as feasible. The Queue adds 
+    elements by chaining a new Node object to the list. Therefore, there is no 
+    memory overhead by specifying this number large. Making the number large 
+    avoids overflow exceptions. Bounding Wait Lists prevents an out of memory 
+    error.</p>
+    <blockquote>
+    <p>When there is a problem with processing, the number of pending requests 
+    back up. A 'no wait list available' condition is preferable to an out of 
+    memory error.</p>
+    </blockquote>
+    <p>Therefore, make this number as large as practical so that overflows only 
+    occur when there is truly a problem with processing.</p>
+    <p>A large number of <u>physical</u> slots would invalidate the use of 
+    thresholds. Therefore, we also have <u>logical</u> slots.</p>
+  </blockquote>
+    <p><strong><a name="nbr_slots_logical"></a>Number of <u>Logical</u> Entries in Each Wait List</strong> --&nbsp; Minimum one.&nbsp;This is
+  the number of entries or slots in each Wait List for Threshold processing.</p>
+  <blockquote>
+    <p><b>Default: </b>Same as <u>physical</u> entries. Therefore, you need to 
+    enter a number here.</p>
+    <p>This is a fixed number for all Wait Lists in this Queue. 
+    This number is dynamically alterable in the <a href="TyQueData.html">Queue 
+    Data</a> GUI/non-GUI.</p>
+    <p>As noted above, a large number of <u>physical</u> slots in Wait Lists 
+    helps overcome FIFO errors but makes thresholds unusable.</p>
+    <p><u>Logical</u> entries are the number of entries Tymeac considers for 
+    threshold processing only. Think of <u>logical</u> as the normal top load on 
+    a Queue.</p>
+    <p>For example:</p>
+    <blockquote>
+    <p>A Queue should not have more then 20 requests pending at any time. Make 
+    the <u>logical</u> size 20 and to be extra, extra safe, make the <u>physical</u> 
+    size 60.</p>
+    <p>When not using priority Wait Lists we could have two Wait Lists with a 
+    physical number of slots at what we believe to be the maximum number of 
+    pending requests on this Queue plus 20% more just in case. </p>
+    <p>If there is a temporary problem and requests back up more then this 
+    limit, then request overflow into the second Wait List. This may cause a 
+    FIFO error but it is better then rejecting new requests. If the problem is 
+    not temporary, then both Wait Lists fill up and new requests reject.</p>
+    <p>We can still use thresholds since we can set the <u>logical</u> entries 
+    at what we believe to be normal maximum number of pending requests.</p>
+    <p>We could have a single Wait List with double the physical slots but we 
+    would not get statistics for the number of times the pending requests 
+    exceeded a limit. Tymeac keeps a high water mark on each Wait List but that 
+    doesn't say how many times the pending requests got there. Tymeac keeps 
+    statistics on overflows.</p>
+    </blockquote>
+    <p>Total number of Wait Lists and number of <u>physical</u> and <u>logical</u> 
+    slots in each Wait List, are dependent upon the application.&nbsp;See the discussion
+    of Wait Lists in the <a href="#example">examples</a> below.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p align="left"><a name="threshold"></a><u><font color="#400040"><strong><big>
+  <font size="5">New Thread Thresholds</font></big></strong></font></u></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Tymeac provides every opportunity to ensure the system is fully tunable. The fields
+    below determine when to activate a new Thread. (See also the <a href="Tuning.html#scan">threshold
+    scan delay</a> in tuning.)</p>
+    <p>Thresholds depend on the number of <a href="#nbr_slots_logical">logical 
+    entries in a Wait List</a>. Physical entries play no part here.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>OVERALL %</strong>:
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Format as below.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>INDIVIDUAL %</strong>:&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Format as
+  below.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>WEIGHTED FACTOR</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Format as below.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>WEIGHTED AVERAGE</strong>:&nbsp;&nbsp; Format as below.</p>
+</blockquote>
+
+<blockquote>
+    <p><font color="#FF0000">This format changed in Release 4.0.3. Before you had to enter the
+    zero and decimal (0.) as part of the number.</font></p>
+    <p>The format is any number of digits as a percentage. Tymeac stores the number as a
+    fraction in a floating point number. E.G., for 25 percent, enter 25,&nbsp;Tymeac stores
+    the number as 0.25F, for 5 percent, enter 05, Tymeac stores the number as 0.05F.</p>
+    <blockquote>
+    <p><b>N.B.</b> The numbers are entered as decimal. Conversion from decimal 
+    fractions to binary is imprecise (the nature of the beast.) Precision is 
+    unimportant. It's very close, that's what's important.</p>
+    </blockquote>
+  <p>The basis of a <strong>Weighted Factor</strong> is that a priority 1 is more
+  significant than a priority 2, etc. Tymeac multiplies the <strong>Weighted Factor</strong>
+  by the reciprocal (i.e., 1/x) of the Wait List number and rounds up the product.&nbsp;When
+  there are three Wait Lists, with a <strong>Weighted Factor</strong> of five percent (05),
+  then the <strong>Weighted Factor</strong> assigned to each list is: <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; reciprocal * factor + .005 (rounding)</p>
+  <blockquote>
+    <blockquote>
+      <p>Wait List 1 reciprocal (1/1) is 1.000*.05 + .005=.055.&nbsp; <br>
+      Wait List 2 reciprocal (1/2) is 0.500*.05 + .005=.030.&nbsp; <br>
+      Wait List 3 reciprocal (1/3) is 0.333*.05 + .005=.021</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="activate"></a>Tymeac activates a new Thread when a Thread is available and the
+  condition, described below, occurs: </p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>1. No Thread is actively processing or about to process the Queue. About to process is
+    a Queue Thread status of 'activated' or 'notified'.&nbsp;See display, <a href="TyQueThd.html">TyQueThd</a>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>2. The entry of a request into the Wait List results in an overflow.&nbsp;When the
+    requesting Wait List is full, the request goes into the next available Wait List. This is
+    an overflow.</p>
+    <p align="center"><b>This brings us into Threshold Processing</b></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>3. When the percentage of active entries in all Wait Lists, to total Wait List 
+    <u>logical</u> entries,
+    exceeds the <strong>Overall Percent</strong>.&nbsp;The total number of entries is 
+    the total Wait Lists multiplied by the <u>logical</u> number of entries in a list (all Wait 
+    List for the Queue have the same number of <u>logical</u> entries.)</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>4. When not specifying a <strong>Weighted Factor</strong> -- only considering the
+    intended Wait List. When the percentage of busy Wait List entries to <u>
+    logical</u> number in list
+    entries exceeds the <strong>Individual Percent</strong>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>5. When specifying a <strong>Weighted Factor</strong> -- only considering the intended
+    Wait List.&nbsp;When the percentage of busy Wait List entries to <u>logical</u> number in list entries,
+    plus the <strong>Weighted Factor</strong> for that Wait List, exceeds the <strong>Individual
+    Percent</strong>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>6. When specifying a <strong>Weighted Average</strong> -- Tymeac makes a detailed
+    calculation (described below) considering all Wait Lists from the first to the current and
+    the number of currently active Threads processing the Queue.&nbsp;When this calculation
+    exceeds the <strong>Weighted Average</strong>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac ignores zero value variables.&nbsp;Therefore, if you wish to bypass a threshold,
+  enter 0.</p>
+</blockquote>
+
+<blockquote>
+  <p>Specifying 99 for <strong>Overall</strong>, <strong>Individual</strong>, and <strong>Weighted
+  Average</strong> results in a new thread for 1 and 2 above, and only when all Wait Lists
+  are <b><u>logically</u></b> full.</p>
+  <p>Tymeac looks at each threshold in order:&nbsp;<strong>Overall</strong>, 
+  followed by <strong>
+  Individual</strong>, and 
+  then <strong>Weighted
+  Average.</strong>&nbsp; If any threshold results in a&nbsp; new thread, then 
+  the others are not checked.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong><a name="example"></a>Examples</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Tymeac supports requests overflowing from one Wait List to the next as 
+    the best way <u><i>not</i></u> to reject a request. If it doesn't fit exactly where you 
+    want it and there is a place anywhere to put it, then put it there. It may 
+    not be exactly where you want it, but it's close. The alternative is to 
+    reject any request that tries to put a request in a full Wait List. And 
+    since Tymeac is an open source product, you can alter the code to your 
+    satisfaction.</p>
+    <p>With overflows FIFO errors are possible but FIFO errors are inherent with 
+    all priority queues. Tymeac tries to limit this possibility with the large 
+    number of <a href="#nbr_slots">physical Wait List slots</a>.</p>
+    <p>However, overflows should not regularly 
+    occur. They are <u>handled</u> <u>exceptions</u>. Tymeac keeps track of the high water mark 
+    for each Wait List. The high water mark statistic is available on the
+    <a href="TyWlData.html">Wait List Display GUI</a> and on the 
+    <a href="Stats.html">Statistics</a>. The high water 
+    mark statistic should help you keep overflows low. There is a balance 
+    between the number of <u>physical</u> slots in each Wait List 
+    and how you wish to use Thresholds -- the number of <u>
+    <a href="#nbr_slots_logical">logical</a></u><a href="#nbr_slots_logical"> 
+    slots in each Wait List</a>.</p>
+    <p>We think Wait Lists are a 
+    far better choice over packaged classes. Usually standard Priority Queues 
+    need to lock the Queue for processing (Tymeac is lock-free) and they resolve duplicate priority elements arbitrarily. Dealing with the FIFO error 
+    is difficult and sometimes messy (see the FIFO example in java.util.concurrent.PriorityBlockingQueue.)</p>
+    <p align="center">
+    <img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+    <p>One may not consider Wait Lists priority Wait Lists. You may use only two Wait Lists.
+    One as a primary and a second in the event the primary is <u>physically</u> full.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>If an overflow occurs, Tymeac activates a new Thread.&nbsp;However, when using <strong>Overall
+    Percent</strong>, you must factor the entries in subsequent Wait Lists into the
+    calculation.</p>
+  </blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>E.G.&nbsp; For two Wait Lists, when only considering the first -- 50% is the first Wait
+    List <u>logically</u> full (that is, all <u>logical</u> entries in the first Wait List are in use and no entry
+    in the second Wait List is in use).&nbsp;25% is the first Wait List half <u>
+    logically</u> full.&nbsp;For
+    this example, when one desires a new Thread activated when the primary Wait List exceeds
+    <u>logically</u> half full, then the following values accomplish this purpose:</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Overall %&nbsp;&nbsp;&nbsp;&nbsp; 25&nbsp;&nbsp;&nbsp;&nbsp; | Overall %
+      &nbsp;&nbsp;&nbsp;&nbsp;00 <br>
+      Individual % 00&nbsp;&nbsp;&nbsp;&nbsp; | Individual %&nbsp; 50 <br>
+      Factor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 00&nbsp;&nbsp;&nbsp;&nbsp; |
+      Factor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 00</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+  <blockquote>
+    <p>For priority Wait Lists, <strong>Overall Percent</strong>, is more
+    significant.&nbsp;Consider a situation with four Wait Lists used as follows:</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>1.&nbsp; The hot request, process immediately.<br>
+      2.&nbsp; The normal request. <br>
+      3.&nbsp; The overflow for Wait List two (2).<br>
+      4.&nbsp; The background request, defer until the load is light.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Irrespective of the number of Threads currently processing this Queue, when the overall
+      <u>logical</u> load becomes thirty percent, start a new Thread.&nbsp;Specifying <strong>Overall Percent</strong>
+      at 30 accomplishes this goal.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <blockquote>
+    <p>When the <strong>Overall Percent</strong> does not start a new Thread, then Tymeac
+    considers<strong> Individual Percent</strong>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>Individual Percent</strong>, without a <strong>Weighted Factor</strong> only
+    considers the intended Wait List. That is, the Wait List into which the 
+    request went (the priority.) Using the above example, when the <u>
+    logical</u> load, overall, is
+    greater than thirty percent or when the <u>logical</u> load on the desired Wait List is greater than
+    fifty percent, then start a new thread.&nbsp;The following accomplishes this goal.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Overall %:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30 <br>
+      Individual %:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 50 <br>
+      Weighted Factor: 00</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Priority Wait Lists are infinitely tunable.&nbsp;This is where the <strong>Weighted
+    Factor</strong> can be significant.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>Individual Percent, </strong>with a<strong> Weighted Factor</strong> only
+    considers the intended Wait List (i.e. the Wait List into which the request 
+    went (the priority.)), plus the <strong>Weighted Factor</strong> for that Wait
+    List.&nbsp;Using the above example, when the <u>logical</u> load, overall, is greater than thirty percent
+    or when the <u>logical</u> load on the desired Wait List is greater than fifty percent, plus a <strong>Weighted
+    Factor</strong> of five [times the reciprocal of the Wait List number], then activate a
+    new Thread.&nbsp;The following accomplishes this goal.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Overall %:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30 <br>
+      Individual %:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 50 <br>
+      Weighted Factor: 05</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>The <strong>Weighted Factor</strong> is totally dependent on the application and
+    whether the Wait Lists are priority or non-priority.&nbsp;Therefore, specific examples
+    would be misleading and tend to limit the usefulness of this parameter.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"><font color="#0000FF"> </font></p>
+
+<blockquote>
+  <blockquote>
+    <p>When the <strong>Individual Percent</strong> does not activate a new thread, then
+    Tymeac considers the <strong>Weighted Average</strong>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>Weighted Average:</strong> &nbsp; [<a href="TyQueMaint.html#theory">Theory</a>]</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Tymeac multiplies the <strong>Weighted Factor</strong> by the reciprocal of the Wait
+      List number (when zero, the product is zero).</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Tymeac adds each <strong>Weighted Factor</strong> product to the calculated percentage
+      of: <br>
+      number busy, to number of <u>logical</u> entries, for each Wait List from one to the current (the
+      intended Wait List).</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Tymeac divides the sum of the percentages by the number of Wait Lists participating in
+      the calculation (ignoring those with zero busy).</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Tymeac divides this percentage by the number of active Threads for the Queue, not to
+      exceed the number of Wait Lists participating in the calculation.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>When the result is greater than the <strong>Weighted Average</strong>, Tymeac activates
+      a new Thread.</p>
+      <p>That defies understanding. An example brings it
+      into focus.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>The following is an <strong>example</strong> of the algorithm for <strong>Weighted
+    Average</strong>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>For this example:</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>There are 10 Wait Lists with 10 <u>logical</u> entries each.</p>
+      <p>The Weighted Factor is 5% (05).<br>
+      The new request is for priority 4 (goes into Wait List 4.) <br>
+      There are 2 active threads processing the Queue.</p>
+      <p>Wait List 1 has 3 busy entries. <br>
+      Wait List 2 has 0 busy entries. (therefore, it will not participate in the calculation)<br>
+      Wait List 3 has 5 busy entries. <br>
+      Wait List 4 has 7 busy entries.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The Weighted Factors for the four lists are 05, 03, 02, 01 respectively.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <u>% busy&nbsp; +&nbsp; factor = total</u></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Wait List 1 -- 30%&nbsp;&nbsp;&nbsp;&nbsp; + 05&nbsp;&nbsp; = 35% <br>
+      Wait List 2 -- 0 <br>
+      Wait List 3 -- 50%&nbsp;&nbsp;&nbsp;&nbsp; + 02&nbsp;&nbsp; = 52% <br>
+      Wait List 4 -- 70%&nbsp;&nbsp;&nbsp;&nbsp; + 01&nbsp;&nbsp; = <u>71%</u> </p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+158 / 3 (participating) = 51&nbsp; / 2 (active Threads) = 25</p>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>When 25 is greater than <strong>Weighted Average</strong>, Tymeac activates a new
+      Thread.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>The Queue Elements display <a href="TyQueData.html">TyQueData</a> is available for
+  experimentation.</p>
+</blockquote>
+
+<h3 style="text-align: justify"><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>IMPORT</strong> -- The button brings up the FileDialog Menu for the
+  Configuration File. Once this file is accessed, the current Queue is read from the DBMS
+  and the elements are filled in.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>DELETE</strong> -- This button deletes the current Queue. When there is no
+  current Queue, it brings up the FileDialog Menu for the Configuration File, verifies the
+  existence of the Queue, and deletes it.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>FINISH</strong> -- This button applies the changes to the DBMS Queue Table.</p>
+</blockquote>
+
+<hr color="#000000">
+
+<p><strong>Message Block at bottom :</strong>&nbsp; This is an information message.</p>
+
+<p><br>
+<u>Make changes</u> -- The Queue imported, make necessary changes.</p>
+
+<p><u>Configuration File not found</u> --&nbsp; The FileDialog chosen file did not exist
+or was not in the proper format.</p>
+
+<p><u>Import Queue first</u> --&nbsp; The Queue, for deletion, must be imported first.</p>
+
+<p><u>Invalid Queue for import</u> --&nbsp; The Queue name was not found in the DBMS Queue
+Table.</p>
+
+<p><u>Data Base error </u>--&nbsp; A DBMS error occurred.&nbsp; Check the console for
+additional information.</p>
+
+<p><u>Queue Deleted</u> --&nbsp; The Queue was deleted from the DBMS Queue Table.</p>
+
+<p><u>Invalid Queue Name</u> -- An existing Queue must be imported before applying
+changes. </p>
+
+<p><u>Successful</u> -- Request accomplished. </p>
+
+<p><u>Invalid nbr of Wait Lists</u> --&nbsp; Less than 1.</p>
+
+<p><u>Invalid nbr in Wait Lists</u> --&nbsp; Less than 1.</p>
+
+<p><u>Invalid nbr Threads</u> --&nbsp; Less than 1.</p>
+
+<p><u>Invalid Overall %</u> --&nbsp; Not a Float.</p>
+
+<p><u>Invalid Individual %</u> --&nbsp; Not a Float.</p>
+
+<p><u>Invalid Weighted Factor %</u> --&nbsp; Not a Float.</p>
+
+<p><u>Invalid Weighted Average</u> --&nbsp; Not a Float.</p>
+
+<p><u>Queue Name cannot be changed</u> --&nbsp; A Queue Name cannot be changed after
+importing.&nbsp; Use Import to import a new Queue Name.</p>
+
+<hr color="#000000">
+
+<p><a name="theory"></a>Theory of the Weighted Average:</p>
+
+<blockquote>
+  <p>Priority Wait Lists requirements are not always obvious. Consider the requirement that
+  the Queue requires Wait Lists for High, Medium and Low priorities. Using:</p>
+  <blockquote>
+    <p>Wait List 1 for High,<br>
+    Wait List 2 for Medium,<br>
+    Wait List 3 for Low,<br>
+    Wait List 4 for Just in case.</p>
+  </blockquote>
+  <p>seems like a workable solution. However, for this situation, the reality is 
+  that requests come into this Queue in bursts.&nbsp;High requests may overflow into 
+  Medium. Tymeac processes the High Wait List first making slots available. Then 
+  more High requests come in. The new High requests go into the High Wait List 
+  and will process before the old High requests that spilled into the Medium 
+  Wait List. This is a priority inversion error.</p>
+  <p>Therefore, the structure could be the following:</p>
+  <blockquote>
+    <p>Wait List 1 for High, with 2 and 3 for overflow,<br>
+    Wait List 4 for Medium, with 5 and 6 for overflow,<br>
+    Wait List 7 for Low, with 8 and 9 for overflow,<br>
+    Wait List 10 and 11 for Just in case.</p>
+  </blockquote>
+  <p>The multiple overflow Wait Lists are for keeping detail account of the load on each
+  group.&nbsp;Instead of having the High Wait List overflow into a Medium Wait List, or,
+  having a single overflow Wait List for each group, multiple overflow Wait Lists, with a
+  smaller number of <u>physical</u> Wait List entries in each, provide more detail on usage. It&nbsp; 
+  doesn't solve the FIFO error, but it helps. The best solution is to make the 
+  number of <u>physical</u> slots in Wait Lists high enough to avoid overflows.</p>
+  <p>With this structure:</p>
+  <blockquote>
+  <p>
+  <strong>Overall Percent</strong> considers all the Wait Lists and is not usable.</p>
+  <p>
+  <strong>Individual Percent</strong> has limited usability; the logical and 
+  physical number of slots needs to be close.&nbsp;With the smaller number of <u>
+  physical</u> entries in each Wait List, an overflow activates a new thread too 
+  often.</p>
+  <p> <strong>Weighted Average</strong> considers only those Wait Lists that are
+  currently in use, with a <strong>Weighted Factor</strong>, and, the number of threads
+  currently working the Queue.</p>
+  </blockquote>
+</blockquote>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

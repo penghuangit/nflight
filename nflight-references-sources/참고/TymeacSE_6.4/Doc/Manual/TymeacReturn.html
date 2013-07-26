@@ -1,0 +1,92 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Server Return values</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg" style="border-left-width: 1; border-right-width: 1; border-top-width: 1; border-bottom-style: solid; border-bottom-width: 1"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Server Return Values</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <blockquote>
+    <p>This version of Tymeac 
+    goes back to JDK1.1. This class should have been part of the original 
+    release, but better now than never.</p>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+    <p align="left">
+    Tymeac returns an Object[] from both the syncRequest() and the asyncRequest(). 
+    The details are <a href="Develop.html#returned">here</a>. Working with those 
+    Objects is sometimes tedious and prone to error. Therefore, this class 
+    extracts necessary information from those Objects and puts it into this 
+    class for easy reference. Changing the server to return this class instead 
+    of the Object[] would make users very unhappy.</p>
+    <p align="left">
+    The class has one public static method, <b>formatCallReturn(Object[])</b>. 
+    <br>
+&nbsp;&nbsp;&nbsp; Simply pass the 
+    return Object[] from a Tymeac call and receive a formatted class in return.</p>
+  <blockquote>
+    <p align="left">
+    TymeacReturn value = TymeacReturn.formatCallReturn(back); // where back is the Object[] 
+    from the Tymeac call.</p>
+  </blockquote>
+    <p align="left">
+    The class has five getter methods for data from the call:</p>
+  <blockquote>
+    <font SIZE="2" COLOR="#7f0055"><b>
+    <p ALIGN="LEFT">public</b></font><font SIZE="2"> </font>
+    <font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2"> 
+    getReturnCode() </font>The return code as found <a href="Usage.html">here</a>. 
+    The formatting errors are part of that document detailed
+    <a href="Usage.html#return">here</a>. </p>
+    <blockquote>
+    <p ALIGN="LEFT">The significant formatting error number is <b>9001</b> - 
+    indicating that the return object from Tymeac is null. This can happen when 
+    the communication link breaks in a remote environment. </p>
+    <p ALIGN="LEFT">Numbers greater than <b>9001</b> indicate some type of 
+    formatting error which is probably system damage on the part of the server 
+    or corruption of the returned objects in the network. The exact detail of 
+    such may be irrelevant for most applications.</p>
+    </blockquote>
+    <p ALIGN="LEFT"><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2"> 
+    String getTyMessage()&nbsp; </font>The String from the first Object in the 
+    Object[]. This may be useful for error recovery routines.</p>
+    <p ALIGN="LEFT"><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>long</b></font><font SIZE="2"> 
+    getSessionId()&nbsp; </font>For async calls, the session id for use in 
+    canceling a call.</p>
+    <p ALIGN="LEFT"><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>long</b></font><font SIZE="2"> 
+    getRequestId()&nbsp; </font>For async calls, the unique id for use in 
+    canceling a call.</p>
+    <p ALIGN="LEFT"><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2"> 
+    Object getUserData()&nbsp; </font>For sync calls, the user data from the 
+    user processing.</p>
+  </blockquote>
+    <p align="left">
+    See 
+    for example: com.tymeac.demo.TyDemoInternal </p>
+</blockquote>
+
+<h3 align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></h3>
+
+<h3><a href="../JavaDoc/com/tymeac/base/TymeacReturn.html">JavaDoc</a> for The Class</h3>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

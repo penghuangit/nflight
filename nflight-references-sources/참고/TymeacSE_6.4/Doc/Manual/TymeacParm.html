@@ -1,0 +1,338 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Server Parameters</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg" style="border-left-width: 1; border-right-width: 1; border-top-width: 1; border-bottom-style: solid; border-bottom-width: 1"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Server Parameters</h1>
+
+<blockquote>
+  <blockquote>
+    <p>Tymeac functions as a client/server pair. The Tymeac Client requests a Function and the
+    Tymeac Server services the request.</p>
+    <p align="center">
+    <img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  </blockquote>
+</blockquote>
+
+<p style="text-align: justify">The parameters for the Tymeac Server, filled in by the
+Client application follow the scenario: </p>
+
+<p><b>Execute this Function,</b> <strong>A</strong>, 
+
+<dl type="a">
+  <dd>using this <u>optional</u> input Object, <strong>B</strong>,<br>
+    at this priority, <strong>C</strong>,<br>
+    returning a Tymeac return code, <strong>D</strong>, and for:<br>
+    <br>
+    <div align="left">
+      <table cellpadding="0" cellspacing="0" width="424" style="border-collapse: collapse" bordercolor="#111111" height="132">
+      <tr>
+        <td valign="top" align="left" width="100" style="border-top: 3px none rgb(128,128,0)" height="75"><a href="Definitions.html#sync">Synchronous Requests</a></td>
+        <td valign="top" align="left" style="border-top: 3px none" height="75">Wait for completion no longer
+        than this interval,<strong> E</strong>,<br>
+        <u>Optionally</u>&nbsp; prime for a subsequent cancel with this<br>
+        &nbsp; cancel&nbsp; word or callback to this object,<strong> F</strong><br>
+        Returning an <u>optiona</u>l result, <strong>G </strong></td>
+      </tr>
+      <tr>
+        <td align="left" width="100" style="border-top: 3px none rgb(128,128,0)">
+        ----------------</td>
+        <td align="left" style="border-top: 3px none"><strong>
+        ----------------------------------------------------------------</strong></td>
+      </tr>
+      <tr>
+        <td width="100" height="57"><br>
+        <a href="Definitions.html#async">Asynchronous Requests</a></td>
+        <td valign="top" align="left" height="57"><br>
+        Return Data, <strong>H</strong></td>
+      </tr>
+    </table>
+    </div></dd>
+</dl>
+
+<h3 style="text-align: justify">Where: </h3>
+
+<blockquote>
+  <p><a name="func"></a><strong>A: Function:</strong>&nbsp; (String)&nbsp; The
+  name of the Function previously defined in the Function Maintenance Class (<a href="TyFuncMaint.html">TyFuncMaint</a>) or User Class (<a href="UserFunctions.html">TymeacUserFunctions</a>.)</p>
+</blockquote>
+
+<blockquote>
+  <p><a name="input"></a><strong>B: Input:</strong>&nbsp; (Object)&nbsp; Is an optional
+  Object the Tymeac Queue Thread passes to each Queue's Processing Application Class. <u>One</u>
+  Object to <u>All</u> Classes.&nbsp;Each Class must cast the Object to the expected Class
+  and either parse the Class looking for keywords or use positional processing.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>The <a href="Demo.html">Demonstration System</a> Classes, Demo1-3, use positional
+    processing.&nbsp;The input String is a set of eighteen digits.&nbsp;Demo1 uses the first
+    group of six digits. Demo2 uses the second group of six digits.&nbsp; Demo3 uses the third
+    group of six digits.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="pri"></a><strong>C: Priority: </strong>(integer)&nbsp; Is the Wait List into
+  which Tymeac places the request.&nbsp;An invalid (&lt;1 or NaN) priority defaults to
+  1.&nbsp;A priority greater than that which is valid on a Queue defaults to the maximum
+  priority on that Queue.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Priority 1 goes into the first Wait List. Priority 2 goes into the second Wait List,
+    etc. The Tymeac Thread processes Wait Lists from the first to the last, always exhausting
+    all entries in the first before moving on to the next.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+  <p>For a through explanation of a priority queue using Wait Lists, see the 
+  product article: <a href="../Articles/PriQueArticle.html">High Performance 
+  Priority Queues in Java SE</a></p>
+  </blockquote>
+  <p><a name="rc"></a><strong>D: Return Code: </strong>(String) cast to an Object
+  and placed in the first occurrence (index 0) of the return Object array. [See below, <strong>G:Result</strong>
+  for a picture of this]</p>
+  <blockquote>
+    <p>This String is in the format: &quot;<strong>Tymeac XX(yyyy)</strong>&quot;, where:</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>Tymeac</strong> is a constant.</p>
+    <p><strong>XX</strong> is the type of request that was passed to the Tymeac Server.&nbsp;<strong>SR</strong>
+    for Synchronous Request, <strong>AR</strong> for Asynchronous Request and <strong>SD</strong>
+    for Shutdown Request.&nbsp;This type aids in parsing what may follow.</p>
+    <p><strong>(yyyy)</strong> is the parentheses enclosed, Tymeac Return Code detailed in the
+    <a href="Usage.html">Usage document</a>.&nbsp;Zero (four digits -- 0000) is normal.
+    However, this is the result of the Tymeac Server brokering/scheduling, not the result of
+    application processing.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>For Synchronous Requests, the output message of each Processing Application Class (<strong>G:Result</strong>
+    below) may contain the completion result for application processing.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="interval"></a><strong>E: Interval:</strong> (see below)&nbsp; For Synchronous
+  Requests, only.</p>
+  <blockquote>
+    <blockquote>
+    <p>This is the maximum time the Tymeac Server waits for <u>all</u> Queues to finish
+    processing the request <u>after scheduling all Queues</u>.&nbsp;The Tymeac Server gives
+    Queue Threads every opportunity to complete.&nbsp;If overall timing is important than do
+    so in the requesting Client, at the higher level.&nbsp;The higher level times the lower
+    level. Lower levels cannot know the purpose of timing.</p>
+    </blockquote>
+    <p><strong>Seconds</strong>: (integer)&nbsp; This number is multiplied by 1000 to get the
+    wait time in milliseconds. To use a time less than a full second, specify zero and fill in
+    a number of milliseconds, below.</p>
+    <p><strong>Milliseconds</strong>: (integer)&nbsp;This number is added to the above seconds
+    to achieve the total wait time in milliseconds.</p>
+  </blockquote>
+  <p><a name="callback"></a><strong>F: Cancel Word or Callback. </strong>These are optional
+  parameters.For Synchronous Requests, only.</p>
+  <blockquote>
+    <blockquote>
+    <p>These fields are for use in canceling a Synchronous Request with the cancelSyncReq()
+    method. Please read the documentation on <a href="Cancel.html#sync">canceling requests</a>
+    for the details.</p>
+    </blockquote>
+    <p><strong>Cancel Word</strong> (long integer)&nbsp; This is a unique number supplied by the
+    Client to associate this synchronous request. If the Client later wishes to cancel this
+    synchronous request, it passes this number to the Server in a cancelSyncReq() method. The
+    default is zero.</p>
+    <blockquote>
+    <p>The Server checks the cancel word against all current, working 
+    synchronous requests and rejects any duplicates with a
+    <a href="Usage.html#broker">Request Brokering return code</a>.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p><strong>Callback:</strong> (InterruptionReady Class)&nbsp; This is an alternate means for the
+    Client to cancel a synchronous request. The default is null. When used, it must be an
+    instance of the InterruptionReady interface.</p>
+    <blockquote>
+    <p>Tymeac does callbacks in a new, Asynchronous Request using an internal 
+    Function. This requires substantial work in the Server to call back the 
+    Client. If there is any problem at the server, then the server returns 
+    immediately to the Client with a <a href="Usage.html#broker">Request 
+    Brokering return code</a>.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="result"></a><strong>G: Result:</strong>&nbsp; (Object[]) For Synchronous
+  Requests, the concatenated output Objects from each Queue's Processing Application Class,
+  if any.&nbsp;These are appended to the above, <strong>D: Return Code</strong>.</p>
+  <blockquote>
+    <p>For example using a Function with two Queues: Object[] back:</p>
+    <blockquote>
+      <p>back[0] (is a String cast to an Object) &quot;Tymeac SR(0000)&quot;<br>
+      back[1] (may be any Object) Queue1 data<br>
+      back[2] (may be any Object) Queue2 data ...</p>
+      <p>The Return Code (<strong>D</strong>) and this Result is for every Synchronous Request
+      including recursive requests.</p>
+    </blockquote>
+      <p>The order of the result array Objects from the second to the end is the order that <u>each
+      Queue finished processing</u>. You may have a Function with three Queues named A, B, C.
+      The result array order may be B, A, C. It is the order of completion not the order within
+      the Function. Therefore, each returned Object should have its own identification contained
+      therein.</p>
+      <p>The length of the result array is one greater than the number of Queues in the Function
+      <u>that had return data</u>.&nbsp;(The first being the Tymeac Return code data.) Tymeac
+      does not pass back null Objects in the Object array.</p>
+      <p>For synchronous requests that time out or are cancelled, partial results are possible.
+      In such a case the length of the result array is still one greater than the number of
+      Queues in the Function <strong>that executed</strong> and <u>that had return data</u>.</p>
+      <p>For example, using the above Function with three Queues, A, B, C. When a time out or
+      cancel occurs with only one Queue complete and that Queue had return data, the array
+      appears as follows:</p>
+      <blockquote>
+        <p>back[0] (is a String cast to an Object) &quot;Tymeac SR(4120)&quot; [time-out]<br>
+        back[1] Object from Queue A [or B or C] </p>
+      </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><a name="async"></a>For Asynchronous Requests, when there is an Output Agent Queue,
+    Tymeac holds the individual result Object from each Queue's Processing Application Class.
+    When all Queues finish processing, Tymeac passes the results Objects concatenated in an
+    Object array to the Output Agent Queue. This looks like what is <a href="#result">passed
+    back to a synchronous request</a>, but without the Return Code (<strong>D</strong>).</p>
+    <p>An example is the <a href="Demo.html">Demonstration System</a>, DemoAgent1, Processing
+    Application Class.&nbsp;This Output Agent Class receives the concatenated Objects of other
+    Classes in the Function.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="return"></a><strong>H: Return Data:</strong>&nbsp; (String) cast to
+  an Object and placed in the first occurrence (index 0) of the return Object[].)</p>
+  <blockquote>
+    <p>Since there are no output Objects from each Queue's Processing Application Class for an
+    asynchronous request, the length of the array is one (1).</p>
+    <p>For Asynchronous Requests, the information necessary to track the request in the Tymeac
+    system, only. This information is necessary when using the Request Status GUI Class, <a href="TyReqStatus.html">TyReqStatus</a>, or instantiated Class, <a href="TyReqStatus.html#user">TyUserStatus</a>. The information is only valid for a single
+    affinity of Tymeac and only for a single session (the time from Tymeac Start Up and before
+    Tymeac Shut Down.)</p>
+    <p>The format, enclosed in brackets, is: [<strong>MilliTime</strong>,<strong> Request Id</strong>].&nbsp;
+    This immediately follows the Tymeac Return Code (<strong>D</strong>:, above).&nbsp; For
+    example, Tymeac AR(0000)[9001234567,5] </p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p><strong>MilliTime:</strong>&nbsp; This is the time Tymeac started in milliseconds from
+      1970. (System.currentTimeMillis())<br>
+      The MilliTime, here, is the same as the MilliTime on the Tymeac successful <a href="MsgTy00.html">Start up</a> message and final <a href="MsgTy02.html">Shut down</a>
+      message.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <dl>
+        <dt><strong>Request Id:</strong> This is a sequential number starting at one (1), for each
+          Asynchronous Request in the <u>current</u> <u>session</u> of the Tymeac Server. When using
+          the Activation Framework, the Tymeac Sever may inactivate and reactivate many
+          times.&nbsp;At each reactivation, the Activation Framework creates a new Java Virtual
+          Machine and instantiates a new Tymeac Server, therefore, this sequence number restarts at
+          one (1).</dt>
+      </dl>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h3 align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></h3>
+
+<h3><a href="../JavaDoc/com/tymeac/base/TymeacParm.html">JavaDoc for The Class</a></h3>
+
+<h3><strong>EXAMPLES</strong></h3>
+
+<blockquote>
+  <blockquote>
+    <p>// A String for the Tymeac Demonstration Function desired:<br>
+    String func = &quot;Function_2&quot;;</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>// A String for the input data needed by the application classes:<br>
+    String x&nbsp; = &quot;112233445566778899&quot;;<br>
+    Object data = (Object) x;</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>// A Priority for the request:<br>
+    int priority = 1;</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>// A maximum time to wait for completion, in seconds:<br>
+    int wait_time = 10;</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>// The Parameter:<br>
+  com.tymeac.base.TymeacParm TP = new com.tymeac.base.TymeacParm(data, func, wait_time,
+  priority);</p>
+</blockquote>
+
+<blockquote>
+  <p>/* The Request, using the Tymeac Server Communication Class, <a href="TySvrComm.html">TySvrComm</a>,
+  and returning a String: */</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>// synchronous request:<br>
+    Object[] R = new com.tymeac.demo.TySvrComm().syncRequest(TP);</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>// asynchronous request:<br>
+    Object[] R = new com.tymeac.demo.TySvrComm().asyncRequest(TP); </p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>The <a href="Samples.html">sample classes</a> in the Source library are available for
+  your use.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

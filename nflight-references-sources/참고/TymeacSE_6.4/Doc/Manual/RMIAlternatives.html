@@ -1,0 +1,162 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac RMI Registry Alternatives</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>RMI Registry Alternatives</h1>
+
+<blockquote>
+  <blockquote>
+    <p>Tymeac uses the Remote Method Invocation facility of Java.&nbsp;We discuss several
+    alternative ways to structure your systems using this facility.</p>
+  </blockquote>
+</blockquote>
+
+<h2 style="text-align: justify">Preface</h2>
+
+<blockquote>
+  <p>Tymeac was envisioned to be an accompaniment for you applications.&nbsp;That is, to
+  reside with them on the same machine.</p>
+</blockquote>
+
+<blockquote>
+  <p>However, there is no limitation on how one may use Tymeac. Here, there and any step
+  along the way.&nbsp;Tymeac is simply a single affinity service that multi-threads a
+  request.</p>
+</blockquote>
+
+<h2 style="text-align: justify">Restrictions</h2>
+
+<blockquote>
+  <p><strong>1</strong>.&nbsp; For the RMI Registry, there is one major restriction
+  [depending on you operating system] the CLASSPATH must point to the top level directory
+  (&quot;your directory&quot;\Classes as &lt;home&gt;) in which the stubs reside. For
+  Tymeac, the TymeacStandardImpl_Stub and TymeacActivationImpl_Stub reside in the
+  &lt;home&gt;\com.tymeac.base directory. See also the RMI <a href="RMIBackground.html">background</a>
+  document.&nbsp;<strong>This is not applicable when downloading via HTTP.&nbsp;In this case
+  you need to specify the <code>java.rmi.server.codebase</code> property, where the server's
+  classes will be made available, as &lt;home&gt;. </strong></p>
+  <p><strong>2.</strong>&nbsp; The <u>non-activatable</u> Tymeac Server uses the String
+  variables, <a href="TyVariables.html">TyVariables</a>, for binding, (tymeac_name), at
+  start up.&nbsp;Therefore, the <u>non-activatable</u> Tymeac Server must have access to
+  this Class either in the directory, (&lt;home&gt;\com.tymeac.common).</p>
+  <p><strong>3.</strong>&nbsp; The Tymeac Clients, GUI and command line Classes, need to
+  find the Tymeac Server.&nbsp;Both the non-activatable and activatable Systems use the
+  String variables, <a href="TyVariables.html">TyVariables</a>, for lookup() and an
+  alternate procedure.&nbsp;Therefore, these Clients must have access to this Class either
+  in the directory (&lt;home&gt;\com.tymeac.client[.jframe]).</p>
+  <p><strong>4.</strong> Your user Processing Application Classes need to accessabiltiy by
+  the Tymeac Server.&nbsp;Therefore, these classes must be in a directory under the
+  &lt;home&gt; directory, (&lt;home&gt;\com.tymeac.serveruser).</p>
+</blockquote>
+
+<h2 style="text-align: justify">Alternatives</h2>
+
+<blockquote>
+  <p>You may have several Tymeac Client Spaces<sup>*</sup> using a single Tymeac
+  Server.&nbsp;Please note the restriction on tymeac_name when using an activatable remote
+  object, <a href="TyVariables.html">TyVariables</a>.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p style="text-align: justify">Two <u>TyVariable</u> Classes with String variables:</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p style="text-align: justify">1.&nbsp; tymeac_name = <font color="#400040">&quot;</font><font color="#FF0000">Tymeac_Red</font><font color="#400040">&quot;, <br>
+      url_name = </font>&quot;rmi:///&quot;</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>2.&nbsp; tymeac_name = &quot;<font color="#FF0000">Tymeac_Red</font>&quot;,<br>
+      url_name = &quot;rmi://your-location.org/&quot; or &quot;rmi://192.168.42.1/&quot;</p>
+      <blockquote>
+        <p><strong>Note</strong> the three slashes (///) for a local URL.&nbsp; This is not a
+        typo.&nbsp;That third slash is a trailing slash. In order to set this to a remote name,
+        you put that remote name between the second and third slashes.&nbsp;Such as:<br>
+        rmi://your-company.org/&nbsp; or&nbsp; rmi://192.168.42.1/</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><u>TyVariable</u> (1) must go into the directory for use by the <u>TymeacServer</u>. <u>TyVariable</u>
+    (2) may go into each Space<sup>*</sup> for each Tymeac Client.</p>
+  </blockquote>
+  <blockquote>
+    <p>For User Clients, you are free to use any home grown Class that better suits your
+    needs.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>You may have several Tymeac Client Spaces<sup>*</sup> using multiple Tymeac Servers.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Multiple <u>TyVariable</u> Classes with String variables:</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>1.&nbsp; tymeac_name = <font color="#400040">&quot;</font><font color="#FF0000">Tymeac_Red</font><font color="#400040">&quot;, url_name = </font>&quot;rmi:///&quot;</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>2.&nbsp; tymeac_name = &quot;<font color="#008000">Tymeac_Green</font>&quot;, url_name
+      = &quot;rmi:///&quot;</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>3.&nbsp; tymeac_name = &quot;<font color="#0000FF">Tymeac_Blue</font>&quot;, url_name =
+      &quot;rmi:///&quot; </p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><u>TyVariable</u> (1, 2, 3) must go into the directory for each <u>TymeacServer</u>.
+    &nbsp; <u>TyVariable</u> (1, 2, 3) go into each Space<sup>*</sup> for use by each Tymeac
+    Client.</p>
+    <p>For User Clients, you are free to use any home grown Class that better suits your
+    needs.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p align="left">&nbsp;We supply an RMI communication Class, <a href="TySvrComm.html">TySvrComm</a>.&nbsp;This
+  is a sample of how you may communicate with the Tymeac Server.&nbsp; The <a href="Demo.html">Demonstration System</a> uses this Class.</p>
+</blockquote>
+
+<blockquote>
+  <p style="text-align: justify">There are no restrictions for this Class. Please note that
+  the Class uses the above <u>TyVariable</u> Class.</p>
+</blockquote>
+
+<hr>
+
+<p style="text-align: justify"><sup>*</sup> A space may be anything from a Java name space
+within a single machine to an address space on another machine at another location.</p>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

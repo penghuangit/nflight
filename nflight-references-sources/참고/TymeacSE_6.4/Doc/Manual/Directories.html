@@ -1,0 +1,320 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>File Directories</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>File Directories</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This section details the Tymeac System use of packages and file directories.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<h2><a name="top"></a>Tymeac uses packages and file directories.</h2>
+
+<blockquote>
+  <p>The following are the packages:<ul>
+    <li><a href="#base">com.tymeac.base</a></li>
+    <li><a href="#client">com.tymeac.client</a></li>
+    <li><a href="#clientjframe">com.tymeac.client.jframe</a></li>
+    <li><a href="#common">com.tymeac.common</a></li>
+    <li><a href="#serveruser">com.tymeac.serveruser</a></li>
+    <li><a href="#jbase">com.tymeac.jini.base</a></li>
+    <li><a href="#jclient">com.tymeac.jini.client</a></li>
+  </ul>
+  <p>Additionally, there are packages for the <a href="#demo">demonstration</a> system:<ul>
+    <li>com.tymeac.demo</li>
+    <li>com.tymeac.demo.jframe</li>
+    <li>com.tymeac.demo.jini.base</li>
+    <li>com.tymeac.demo.jini.client</li>
+    <li>com.tymeac.demo.jini2.base</li>
+    <li>com.tymeac.demo.jini2.client</li>
+  </ul>
+  <p>And never forget testing:</p>
+  <ul>
+    <li>com.tymeac.test -- See the <a href="Testing.html">testing document</a> 
+    for usage. These classes are mainly for those who develop Tymeac code.</li>
+  </ul>
+  <p>The file directories into which the product unzips is &quot;your name&quot;\classes\
+  plus the above format. We refer to the &quot;your name&quot;\classes as &lt;home&gt;.</p>
+  <p>Tymeac is a client/server pair. You may run Tymeac on a single machine.&nbsp;This is
+  the way most applications use Tymeac. Tymeac is a service for applications. Therefore, it <u>usually</u>
+  runs within an application environment.</p>
+  <p>However, you may put the Tymeac Server on a separate machine than the Tymeac Client.
+  Because of this option, we segregate the classes to facilitate separate
+  machines.&nbsp;However, your CLASSPATH, for use with the RMI/JNDI Registry, must point to
+  the &lt;home&gt; directory in any case so that it may find the _stub classes.</p>
+</blockquote>
+
+<blockquote>
+  <p>As part of the shipment are additional directories<ol>
+    <li><a href="Directories.html#source">Source</a> -- These are the source java files we
+      provide.<br>
+      JFrame&nbsp; These are the source demonstration system Frame classes that use the Swing
+      interface.</li>
+    <li><a href="Directories.html#utility">Utility</a>&nbsp; -- These are the non-production
+      classes for checking Queues and Functions.</li>
+    <li><a href="Directories.html#script">Script</a> -- These are source scripts for starting
+      Tymeac Server.</li>
+    <li><a href="#config">Config</a> -- The configuration files for security and Jini.</li>
+  </ol>
+</blockquote>
+
+<blockquote>
+  <h3><a name="base"></a>The Base Directory:</h3>
+  <blockquote>
+    <p>This directory contains all the Tymeac Server classes.&nbsp;This includes the RMI stub
+    classes. See also the RMI <a href="RMIBackground.html">background</a> document.</p>
+    <p><strong>This is the codebase, (<code>java.rmi.server.codebase</code> property),
+    directory where the server's classes will be made available, when downloading via
+    HTTP.&nbsp;</strong></p>
+    <p><map name="FPMap0">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap0" width="32" height="22"></p>
+  </blockquote>
+  <h3><a name="client"></a>The Client Directory:</h3>
+  <blockquote>
+    <p>This directory contains all the Tymeac non GUI classes.</p>
+  </blockquote>
+  <blockquote>
+    <p><map name="FPMap1">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap1" width="32" height="22"></p>
+  </blockquote>
+  <h3><a name="clientjframe"></a>The Client\JFrame Directory:</h3>
+  <blockquote>
+    <p>This directory contains all the Tymeac GUI classes that use the Swing interface.
+    &nbsp;The subdirectories contain the Help html files and the Image files.</p>
+  </blockquote>
+  <blockquote>
+    <p><map name="FPMap2">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap2" width="32" height="22"></p>
+  </blockquote>
+  <h3><a name="common"></a>The Common Directory:</h3>
+  <blockquote>
+    <p>This directory contains the user-maintained application classes used on both the Tymeac
+    Server and Clients.&nbsp;You may put this directory (with any naming convention) anywhere
+    you wish.</p>
+    <p>We include the Tymeac Variables class, <a href="TyVariables.html">TyVariable</a>.
+    &nbsp;The non-activatable Tymeac Server, the activatable object, setup class (for the
+    activatable Tymeac Server) and Tymeac Clients use this class.</p>
+  </blockquote>
+  <p><map name="FPMap3">
+  <area href="#top" shape="rect" coords="1, 2, 31, 21">
+  </map>
+  <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap3" width="32" height="22"></p>
+</blockquote>
+
+<blockquote>
+  <h3><a name="serveruser"></a>The \ServerUser Directory:</h3>
+  <blockquote>
+    <p>This directory contains all the USER Processing Application Classes.&nbsp;You may put
+    this directory, (with any naming convention), anywhere you wish.<ol>
+      <li>This is the place where all user Processing Application Classes belong.&nbsp;However,
+        for the Java2 platform, you may place these classes in a directory outside the classpath
+        and use a URL to locate the classes. See the <a href="ClassNameFormat.html">class naming
+        document</a>.<br>
+        <br>
+      </li>
+      <li>This is where the base security class, <strong>TyServerRMISecMgr</strong>, resides. See
+        also <a href="Security.html">security issues</a>.<br>
+        <br>
+      </li>
+      <li>We include the <a href="UserClass.html">User Classes</a>.&nbsp;If you are only using a <a href="DBMS.html">DBMS</a> for storing Function, Queue and Variables information, then you
+        may delete these classes.</li>
+    </ol>
+    <p><map name="FPMap4">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap4" width="32" height="22"></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h3><a name="jbase"></a>The \Jini\base Directory</h3>
+  <blockquote>
+    <p>This directory contains all the Sever code for Jini2.x.</p>
+  </blockquote>
+  <blockquote>
+    <p><map name="FPMap5">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap5" width="32" height="22"></p>
+  </blockquote>
+  <h3><a name="jclient"></a>The \Jini\client Directory</h3>
+  <blockquote>
+    <p>This directory contains all the client code for Jini2.x</p>
+  </blockquote>
+  <blockquote>
+    <p><map name="FPMap6">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap6" width="32" height="22"></p>
+  </blockquote>
+  <h3><a name="security"></a>The \Security Directory:</h3>
+  <blockquote>
+    <p>This directory contains two files: policy.all and rmid_policy.all. These grants all permissions for
+    the security manager and for using rmid for the activation version. You certainly may
+    alter these to any value necessary for your installation.&nbsp;See also <a href="Security.html">security issues</a>.</p>
+    <p><map name="FPMap7">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap7" width="32" height="22"></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h3><a name="source"></a>The \Source Directory:</h3>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>This directory contains the <a href="Samples.html">source code</a> we supply with the
+    Tymeac Product. <font color="#FF0000">As of release 6.0 this is a zip file 
+    containing the full product source code.</font></p>
+    <p>The \com sub directories conform to the packaging standard.</p>
+    <p>\ForkJoin is the source file for the Fork-join example.</p>
+    <p>\NetBeans sub directories contain form files for development with 
+    NetBeans.</p>
+    <p>\OldDempGUI contains the old source files for the frame demo classes 
+    without using NetBeans.</p>
+    <p>\Utility contains utility source files.</p>
+    <p><map name="FPMap8">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap8" width="32" height="22"></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h3><a name="utility"></a>The \Utility Directory:</h3>
+  <blockquote>
+    <p>This directory contains the classes for checking Queue names and <a href="FuncNaming.html">Function names</a>.</p>
+    <p><map name="FPMap9">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap9" width="32" height="22"></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h3><a name="script"></a>The \<a href="Scripts.html">Scripts</a> Directory:</h3>
+  <blockquote>
+    <p>These directories contains source code scripts for starting the Tymeac Server as well
+    as running the demonstration system.&nbsp;They are .bat files and some.sh files. 
+    (We haven't been able to add the Unix .sh files since release 4.x) You must
+    edit these files for your environment.</p>
+    <p>The top level directory, \Scripts, contains the <a href="Scripts.html">base files</a>.</p>
+    <p>subdirectories&nbsp; --</p>
+    <p><strong>&nbsp;&nbsp;&nbsp; /Jini</strong>, contains the Jini files for Jini1.x.</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /<strong>META-INF</strong>/PREFERRED.LIST -- For Jini dynamic
+    policies.</p>
+    <p>&nbsp;&nbsp;&nbsp; /<b>SQL </b>-- SQL statements for the DBMS mode</p>
+    <p>&nbsp;&nbsp;&nbsp; /<b>Test</b> -- scripts associated with the diagnose() 
+    function, see the <a href="Testing.html">testing document</a>.</p>
+  </blockquote>
+  <blockquote>
+    <p><map name="FPMap10">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap10" width="32" height="22"></p>
+  </blockquote>
+  <h3><a name="config"></a>The Config Directory:</h3>
+  <blockquote>
+    <p>This contains the configuration files for <a href="Security.html">security</a> and <a href="SetUpJini2.html">Jini</a>.</p>
+    <p><map name="FPMap11">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap11" width="32" height="22"></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <hr>
+</blockquote>
+
+<blockquote>
+  <p><a name="demo"></a>Packages and directories for the Demonstration System:</p>
+  <blockquote>
+    <h3>The Demo Directory:</h3>
+    <blockquote>
+      <p>These are the Tymeac non-frame Client classes for the Demonstration System.&nbsp; Once
+      you finish the demonstration series you may move these classes to a test machine.</p>
+      <p><map name="FPMap12">
+      <area href="#top" shape="rect" coords="1, 2, 31, 21">
+      </map>
+      <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap12" width="32" height="22"></p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <h3>The Demo\JFrame Directory:</h3>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>This directory contains all the Demonstration System Tymeac GUI classes that use the
+      Swing interface.</p>
+    </blockquote>
+    <p><map name="FPMap13">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap13" width="32" height="22"></p>
+  </blockquote>
+  <blockquote>
+    <h3>The Demo\Jini\Base Directory: (Jini1.x)</h3>
+    <blockquote>
+      <p>This directory contains all the Demonstration System Tymeac Jini Server classes.</p>
+    </blockquote>
+    <p><map name="FPMap14">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap14" width="32" height="22"></p>
+    <h3>The Demo\Jini\Client Directory: (Jini1.x)</h3>
+    <blockquote>
+      <p>This directory contains all the Demonstration System Tymeac Jini Client classes.</p>
+    </blockquote>
+    <p><map name="FPMap15">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap15" width="32" height="22"></p>
+    <h3>The Demo\Jini2\Base Directory: (Jini2.x)</h3>
+    <blockquote>
+      <p>This directory contains all the Demonstration System Jini Document Service for Jini2.x
+      Server classes.</p>
+    </blockquote>
+    <p><map name="FPMap16">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap16" width="32" height="22"></p>
+    <h3>The Demo\Jini2\Client Directory: (Jini2.x)</h3>
+    <blockquote>
+      <p>This directory contains all the Demonstration System&nbsp; Jini&nbsp; Document Service
+      for Jini2.x Client classes.</p>
+    </blockquote>
+    <p><map name="FPMap17">
+    <area href="#top" shape="rect" coords="1, 2, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap17" width="32" height="22"></p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

@@ -1,0 +1,270 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Server RMI Variables</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Server RMI Variables</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+    <p>This Class contains the String names by which Tymeac Server and Clients communicate.</p>
+    <p>We supply the <a href="Samples.html#run">source code</a> for this Class in the
+    &quot;Source Directory&quot; the installation creates.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+
+<p><img src="Images/Caution.gif" alt="Caution.gif (1012 bytes)" width="20" height="20">&nbsp; If you change any
+of the instance fields, then you must recompile this Class into the &lt;home&gt;\Common <a href="Directories.html">directory</a>. Both the Tymeac Server and Tymeac GUI and non-GUI
+Clients use this class. Your clients may also use this class when communicating with the
+Tymeac Server (see <a href="TySvrComm.html">TySvrComm</a>). Naturally, both the Server and
+Clients must use the same values for communication.</p>
+
+<blockquote>
+  <p>However, when you develop your own systems, you may have several of these classes in
+  use as well as <a href="RMIAlternatives.html">alternatives</a>.</p>
+</blockquote>
+
+<p>Tymeac Server uses the accessor methods, below, therefore, these may not
+change.&nbsp;We do not recommend adding any methods.</p>
+
+  <blockquote>
+    <blockquote>
+      <p>Since maintaining this class by hand can result in errors, we provide a GUI with which
+      you may maintain this class. This is a binary &quot;use the GUI or do it by hand&quot;. If
+      you use the GUI, then you should not try to edit the resulting java file. The GUI is very
+      simple -- it reads a java file without comments or formatting.</p>
+      <p>In either case, once you create the TyVariables.java file, you must compile it into the
+      com/tymeac/common directory.</p>
+      <p>The GUI class is <strong>com.tymeac.jframe.TyVariables</strong>.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p align="left"><a href="Images/TyVariable1.jpg">
+      <img src="Images/TyVariable1_small.jpg" alt="TyVariable1.jpg (27668 bytes)" border="2" width="100" height="70"></a>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="Images/TyVariable2.jpg">
+      <img src="Images/TyVariable2_small.jpg" alt="TyVariable2.jpg (24861 bytes)" border="2" width="100" height="70"></a>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="Images/TyVariable3.jpg">
+      <img src="Images/TyVariable3_small.jpg" alt="TyVariable3.jpg (25032 bytes)" border="2" width="100" height="70"></a><br>
+      Basic RMI
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      IIOP
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Alternate<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      (Click for full image)</p>
+    </blockquote>
+  </blockquote>
+
+<p><b>Buttons:</b></p>
+
+  <blockquote>
+
+<p>Each tab has its own Import and Finish button. Pick the tab you want before 
+pressing the buttons. That may be a little confusing, but this GUI is rarely 
+used so making it pretty is not high on the to do list.</p>
+
+<p><b>Import</b></p>
+
+    <blockquote>
+
+<p>Brings up the standard dialog where you fill in the directory where the 
+TyVariables.java file is stored.</p>
+
+    </blockquote>
+
+<p><b>Finish</b></p>
+
+    <blockquote>
+
+<p>Brings up the standard dialog where you fill in the directory where the 
+TyVariables.java file is to </p>
+
+    </blockquote>
+  </blockquote>
+
+<p>The rest of this document explains the java file format.</p>
+
+<p><strong>Fields:</strong></p>
+
+<blockquote>
+  <p>These fields are indicators for which method to use:<ul>
+    <li>the RMI Registry</li>
+    <li>the JNDI Registry (CosNaming server for RMI-IIOP or ORBd for the Portable Object
+      Adapter)</li>
+    <li>a user defined alternate method</li>
+  </ul>
+  <blockquote>
+    <p><strong>private static boolean tymeac_use_rmi</strong></p>
+    <blockquote>
+      <p><strong>By default</strong>:&nbsp; true</p>
+    </blockquote>
+    <blockquote>
+      <p>Use the RMI Registry to locate the remote reference to the Tymeac Server.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p><strong>private static boolean tymeac_use_iiop</strong></p>
+    <blockquote>
+      <p><strong>By default</strong>:&nbsp; false</p>
+    </blockquote>
+    <blockquote>
+      <p>Use the JNDI Registry (CosNaming server/ORBd) to locate the remote reference to the
+      Tymeac Server.</p>
+    </blockquote>
+    <p><strong>private static boolean tymeac_use_alternate</strong></p>
+    <blockquote>
+      <p><strong>By default</strong>:&nbsp; false</p>
+    </blockquote>
+    <blockquote>
+      <p>Use an alternate method to locate the remote reference to the Tymeac Server.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<p><strong>Basic RMI:</strong></p>
+
+<blockquote>
+  <p>These two fields are for RMI Registry Communication.</p>
+  <blockquote>
+    <p><strong>private static String tymeac_name</strong> -- </p>
+    <blockquote>
+      <p><strong>By default </strong>the name is mixed case
+      &quot;com.tymeac.demo.TyDemoActivation&quot;.</p>
+      <p>For non-activatable remote objects:</p>
+    </blockquote>
+    <blockquote>
+      <blockquote>
+        <p>The RMI Naming.rebind() name used by Tymeac Server at start up and by all Tymeac
+        Clients in RMI Naming.lookup().&nbsp;You may change this to your installation
+        requirements.&nbsp;This class ships with the name set as above.&nbsp;For <u>non-activatable</u>
+        remote objects there is no requirement for the String value.&nbsp;The Server binds to the
+        RMI Registry using this String value and Clients lookup using this same String value.</p>
+      </blockquote>
+    </blockquote>
+    <blockquote>
+      <p>For activatable remote objects:</p>
+      <blockquote>
+        <p>The name of the Activatable Object Class. This is the Class that extends
+        TymeacActivationImpl.&nbsp;This name is used by the Java Activation System (rmid) to
+        activate the Tymeac Server and by the Tymeac Clients to request a Tymeac Server
+        function.&nbsp;See the activation system <a href="SetUpAct.html">set up instructions</a>.&nbsp;This
+        class ships with the name set as above. This is for the demonstration system Activatable
+        Object Class.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p><strong>private static String tymeac_url_name</strong> -- This is the URL for RMI
+    calls.</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><strong>By default</strong> the name is for local calls &quot;rmi:///&quot;. </p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p><strong>Note</strong> the three slashes (///).&nbsp;This is not a typo.&nbsp;That third
+        slash is a trailing slash.&nbsp;In order to set this to a remote name, you put that remote
+        name between the second and third slashes.&nbsp; Such as:<br>
+        rmi://your-company.org/&nbsp; or&nbsp; rmi://192.168.42.1/</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p><strong>IIOP:</strong></p>
+
+<blockquote>
+  <p>This field is for the JNDI Registry (CosNaming server/ORBd) Communication (RMI-IIOP).</p>
+  <blockquote>
+    <p><strong>private static String tymeac_iiop_name</strong> -- </p>
+    <blockquote>
+      <p><strong>By default </strong>null.</p>
+    </blockquote>
+    <blockquote>
+      <p>The JDNI Naming.rebind() name used by Tymeac Server at start up
+      (InitialContext().rebind() ) and by all Tymeac Clients in CosNaming.lookup()
+      (javax.naming.lookup() ).&nbsp;You may change this to your installation requirements.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p><strong>Alternate:</strong></p>
+
+<blockquote>
+  <p>This field is for non standard Communication.&nbsp;</p>
+  <blockquote>
+    <p><strong>private static String tymeac_alternate_class_name</strong> -- The name of the
+    non standard communication protocol class.</p>
+    <blockquote>
+      <p><strong>By default </strong>null.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Jini is such a protocol. Since there is no way to package such a method, the execution
+      is up to the user. You must write a class that implements your way of communication.&nbsp;
+      Place the name in the String <strong>tymeac_alternate_class_name</strong>.&nbsp;Set <strong>tymeac_use_alternate</strong>
+      to <strong>true</strong>.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>When both these fields are set as such, the user-maintained class <a href="TySvrComm.html">TySvrComm </a>loads the alternate class and invokes the
+      getTymeacInterface() method to retrieve a reference to the remote object.&nbsp;The
+      internal Tymeac Client&nbsp;class that uses the GUI and command line classes also uses
+      this identical procedure.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>We provide an example of how to do this in the samples, (<a href="Samples.html#jini-base"><strong>TyDemoJiniAlternate</strong></a>).</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p><strong>Instance Methods:</strong></p>
+
+<blockquote>
+  <p><strong>public String getTymeac() </strong>-- Accessor, returns String tymeac_name.</p>
+  <p><strong>public String getUrl()</strong> -- Accessor, returns String tymeac_url_name.</p>
+  <p><strong>public String getIIOPName()</strong> -- Accessor, returns String
+  tymeac_iiop_name.</p>
+  <p><strong>public String getAltName()</strong>&nbsp; -- Accessor, returns String
+  tymeac_alternate_class_name.</p>
+  <p><strong>public boolean useAlt()</strong> -- Accessor, returns boolean
+  tymeac_use_alternate.</p>
+  <p><strong>public boolean useIIOP()</strong> -- Accessor, returns boolean tymeac_use_iiop.</p>
+  <p><strong>public boolean useRMI()</strong> -- Accessor, returns boolean tymeac_use_rmi.</p>
+</blockquote>
+
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

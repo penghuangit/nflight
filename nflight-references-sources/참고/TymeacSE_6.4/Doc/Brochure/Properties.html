@@ -1,0 +1,123 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Properties</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/wheat.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1 align="center">Tymeac<sup><small>&#153;</small></sup> Properties</h1>
+
+<p align="center"><big><a href="Properties.html#secure">secure</a><strong><big> |</big></strong></big>
+<a href="Properties.html#reliable"><big>reliable</big></a> <strong><big><big>|</big></big></strong>
+<big><a href="Properties.html#manageable">manageable</a><strong><big> |</big></strong></big>
+<big><a href="Properties.html#fault">fault tolerant</a></big>&nbsp; <strong><big><big>|</big></big></strong>
+<a href="#trans"><big>transparent</big></a></p>
+
+<blockquote>
+  <h2 ALIGN="JUSTIFY"><a name="secure"></a>Secure</h2>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Tymeac<sup><small>&#153;</small></sup> Server and Clients support Java Authentication
+    and Authorization Service (JAAS). Turning on support is as simple as providing a login
+    context String at start up.</p>
+    <p>Tymeac<sup><small>&#153;</small></sup> Server runs without direct connections to any
+    other Tymeac<sup><small>&#153;</small></sup> Server [single affinity].</p>
+    <p>Tymeac<sup><small>&#153;</small></sup> has no communication facilities. The
+    communication facilities (RMI, IIOP, Jini, etc) are front-end or top layer. The Server
+    itself runs as a middle layer with DBMS and local file layers underneath.</p>
+    <p>Class loading within Tymeac&#153; may be for local resources only, (findSystemClass()),
+    or with a URLClassLoader.</p>
+    <p>This ensures that no unauthorized modules enter the system.</p>
+    <p>While it is true that your user-written Classes may violate encapsulation, Tymeac<sup><small>&#153;</small></sup>
+    itself is secure.&nbsp; </p>
+  </blockquote>
+  <h2 style="text-align: justify"><a name="reliable"></a>Reliable</h2>
+  <blockquote>
+    <p>Tymeac<sup><small>&#153;</small></sup> was originally designed to manage asynchronous
+    tasks in the transaction processing environment; the 24/7 arena of mission-critical
+    applications.</p>
+    <p>Today, all the features that make Tymeac<sup><small>&#153;</small></sup> a highly
+    reliable, fully mission-critical software product are available for the Java<sup><small>&#153;</small></sup>
+    Virtual Machine.<ul>
+      <li>total number of 'threads per Queue' limits to prevent thread overload,</li>
+      <li>thread creation / destruction as necessary,</li>
+      <li>thread activation according to thresholds, not chance,</li>
+      <li>prioritized Queues for requests,</li>
+      <li>extensive monitoring of the thread environment to pinpoint stalls,</li>
+      <li>integrated recovery and re-scheduling for stalled requests,</li>
+      <li>interfacing with user-controlled notification systems when problems arise,</li>
+      <li>intermediate back-out for scheduling failures,</li>
+      <li>support for synchronous (timed) requests as well as asynchronous (background) requests,</li>
+      <li>GUI support to monitor and alter the environment for system personnel,</li>
+      <li>logging of statistics at shutdown and on request,</li>
+      <li>support for any DBMS through JDBC, to optionally store parameters and logs,</li>
+      <li>support for non-DBMS parameters for a minimal footprint.</li>
+    </ul>
+  </blockquote>
+  <h2 style="text-align: justify"><a name="manageable"></a><strong>Manageable</strong></h2>
+  <blockquote>
+    <p>Tymeac<sup><small>&#153;</small></sup> is a table driven system.</p>
+    <blockquote>
+      <p>Adding or removing a Function or Queue from your system is only a matter of a table
+      change.</p>
+    </blockquote>
+    <blockquote>
+      <p>Changing the user-written application class that executes within a thread is only a
+      matter of a table change.</p>
+    </blockquote>
+    <blockquote>
+      <p>Adding or removing threads from a Queue is only a matter of a table change.</p>
+    </blockquote>
+    <p>Debugging the user-written application class is simple since it may be done by
+    simulating a threading environment, with a single thread environment and with a multiple
+    thread environment.</p>
+    <p>Tymeac<sup><small>&#153;</small></sup> provides almost unlimited control for managing
+    the new thread algorithm.&nbsp; This assures that only those threads that are immediately
+    necessary to process requests are active, saving valuable processor resources.</p>
+    <p>Prioritized Wait Lists provide the means to properly schedule requests and to assure
+    users that the hot request gets immediate attention.</p>
+  </blockquote>
+  <blockquote>
+    <p>The entire execution environment is viewable through Tymeac<sup><small>&#153;</small></sup>
+    GUI Classes. &nbsp;Thread status is alterable.&nbsp; Queue data including the number
+    of&nbsp; Wait List entries is alterable.</p>
+    <p>System statistics log at shut down and on request.</p>
+  </blockquote>
+  <h2 style="text-align: justify"><strong><a name="fault" href="Bennies.html#failure">Fault
+  tolerant</a> </strong></h2>
+  <blockquote>
+    <p>Optional timing of user requests provides immediate notification of an abnormal
+    event.&nbsp; </p>
+    <p>Automatic back out provides for intermediate component failure.</p>
+    <p>A Monitor thread thoroughly examines the system at set intervals reallocating and
+    freeing resources, and, notifying the user&#146;s early warning system of potential
+    problems.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h2><a name="trans"></a>Transparent</h2>
+  <blockquote>
+    <p>While the concept of queuing and threading is simple -- put requests in queues for
+    processing by asynchronous threads -- the underlying Tymeac structure with its massive
+    error recovery and control is completely hidden from the application developer.</p>
+    <p>Tymeac enhances location transparency normally found in networks (RMI, IIOP, Jini) with
+    the internal server. Applications can make the same structured call to Tymeac whether
+    Tymeac is local or remote.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

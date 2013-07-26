@@ -1,0 +1,171 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="../manual/h1.css" TYPE="text/css">
+<title>Separate Connection from Application </title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="../manual/Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Separate Connection/Application</h1>
+
+<blockquote>
+  <h2>Why separate the Endpoint Connection thread from the Application?</h2>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>(The Endpoint Connection thread may be TCP, HTTP, HTTPS, IIOP or even a local thread.)</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <ul>
+    <li>What if the Endpoint Connection thread hangs in a never-ending loop? </li>
+  </ul>
+  <blockquote>
+    <blockquote>
+      <p>The calling thread would also hang and require intervention.</p>
+    </blockquote>
+  </blockquote>
+  <ul>
+    <li>What if the Endpoint Connection thread needs a new thread itself? </li>
+  </ul>
+  <blockquote>
+    <table cellSpacing="0" cellPadding="5" width="30%" align="right" border="1" background="Images/bg-gold.gif">
+      <tr>
+        <td style="FONT-SIZE: smaller; FONT-FAMILY: Arial, sans-serif" vAlign="top" align="left">This
+        is the thread overload problem (i.e. where so many threads are executing that the System
+        cannot sustain anymore threads or these threads cause so much competition for resources
+        that the environment effectively stalls.)</td>
+      </tr>
+    </table>
+    <blockquote>
+      <p>The thread create/destroy overhead may bog down<br>
+      the application processing.</p>
+      <p>The System may not be able to handle any more<br>
+      threads. (see sidebar) </p>
+    </blockquote>
+  </blockquote>
+  <ul>
+    <li>What if the Endpoint Connection thread needs timing? </li>
+  </ul>
+  <blockquote>
+    <blockquote>
+      <p>Threads cannot time themselves at the same level. If they hang in a never-ending loop
+      or block then there would be no way to interrupt them. By creating a new timer thread, we
+      run into the problem mentioned above.</p>
+    </blockquote>
+  </blockquote>
+  <ul>
+    <li>What is the status of the current request? </li>
+  </ul>
+  <blockquote>
+    <blockquote>
+      <p>An outside inquiry into the status of a particular request would be very difficult at
+      best. Just trying to locate the thread associated with a particular request would be a
+      major undertaking. Then trying to determine the status thereof would require a mountain of
+      code.</p>
+    </blockquote>
+  </blockquote>
+  <ul>
+    <li>What is the status of a prior request? </li>
+  </ul>
+  <blockquote>
+    <blockquote>
+      <p>If you thought the above current request was difficult, now add a history.</p>
+    </blockquote>
+  </blockquote>
+  <ul>
+    <li>How can others inquire about the overall health of the environment? </li>
+  </ul>
+  <blockquote>
+    <blockquote>
+      <p>This means getting the status of each current request (see above). Then looking at
+      every resource in the system for loading. Then analyzing requests/loading and generating a
+      report.</p>
+    </blockquote>
+  </blockquote>
+  <ul>
+    <li>Where is the congestion?</li>
+  </ul>
+  <blockquote>
+    <blockquote>
+      <p>What if an application is hitting on some resource beyond what that resource can handle
+      and there is a backlog? The only way to know where the congestion lies is to look at every
+      connection and analyze the processing. That means getting the status of each current
+      request, see above.</p>
+    </blockquote>
+  </blockquote>
+  <ul>
+    <li>How to detect and recover from stalls with autonomous requests (a situation in which a
+      request is unable to complete)? </li>
+  </ul>
+  <blockquote>
+    <blockquote>
+      <p>Timing a request (see above) is the best method to catch the stall except when the
+      request is autonomous. Now there is no Endpoint Connection thread to time. So, here we go
+      again trying to get the status of each current request and determine whether it is able to
+      complete.</p>
+    </blockquote>
+  </blockquote>
+  <ul>
+    <li>How to tune this multi-threading environment?</li>
+  </ul>
+  <blockquote>
+    <blockquote>
+      <p>You must be kidding. How would you limit the number of threads for each application?
+      How would you put your resources exactly where they are needed depending on the current
+      load? Perhaps you have the time and energy to tackle these issues.</p>
+    </blockquote>
+  </blockquote>
+  <ul>
+    <li>How may the threading environment quiesce and shut down gracefully? </li>
+  </ul>
+  <blockquote>
+    <blockquote>
+      <p>If you have no effective control over what comes into the system and you have no
+      effective control over the threading environment itself, then your only option for shut
+      down is to end the Java Virtual Machine.</p>
+    </blockquote>
+  </blockquote>
+  <p><strong>By separating the Endpoint Connection thread from the application processing
+  with Tymeac all these questions have a simple answer.</strong><ul>
+    <li><p align="left">The Endpoint thread can never hang since it is not doing the work.</p>
+    </li>
+    <li><p align="left">The Endpoint thread can never need a new thread itself since it is not
+      doing the work.</p>
+    </li>
+    <li><p align="left">The Endpoint thread is already timed.</p>
+    </li>
+    <li><p align="left">The Endpoint thread doesn't have a status. It is the application that
+      has a status and Tymeac keeps the status of each request both synchronous and autonomous.
+      This means that there is a history for prior requests.</p>
+    </li>
+    <li><p align="left">Tymeac keeps a log. Requests for the status of prior autonomous requests
+      is easy.</p>
+    </li>
+    <li><p align="left">Tymeac provides over a dozen GUI and non-GUI methods for users to
+      inquire about the health of their system and to pinpoint congestion.</p>
+    </li>
+    <li><p align="left">Tymeac times the autonomous request so that stalls are detectable and
+      recoverable.</p>
+    </li>
+    <li><p align="left">Tymeac provides administrators the tools necessary to finely tune their
+      systems.</p>
+    </li>
+    <li><p align="left">Tymeac provides a two stage shut down with user exits for individual
+      needs.</p>
+    </li>
+  </ul>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

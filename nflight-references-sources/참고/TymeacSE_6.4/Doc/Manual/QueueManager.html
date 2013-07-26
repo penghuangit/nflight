@@ -1,0 +1,202 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<title>Queue Manager</title>
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Queue Manager</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+
+<p>Normally you think of a Queue as a list of pending requests with methods like 
+add() and remove(). Priority Queues, Blocking Queues etc are supported in the 
+java.util package.</p>
+
+<p>Article: <a href="../Articles/PriQueArticle.html">High Performance Priority 
+Queues in Java SE</a></p>
+
+<p>Tymeac Queues are all that and more. Tymeac Queues are actually a Queue 
+framework. That is, the list and everything else needed to sustain it. Tymeac Queues 
+support :</p>
+      <ul>
+        <li><a href="#pri">Priority</a></li>
+        <li><a href="#thresh">Thresholds</a></li>
+        <li><a href="#pool">Thread pools</a></li>
+        <li><a href="#user">The User Code</a></li>
+        <li><a href="#error">Error recover</a></li>
+        <li><a href="#control">Control</a></li>
+      </ul>
+    </blockquote>
+  </blockquote>
+
+<h3><a name="pri"></a>Priority</h3>
+  <blockquote>
+
+<p>A priority queue usually relies on some internal field for sorting. Every request 
+that goes into the queue needs to compare to other requests already in the queue 
+to see where it should go. Duplicate priorities generally resolve arbitrarily. 
+That's slow, very limited and subject to FIFO errors.</p>
+
+<p>Tymeac does not use the standard priority queue.</p>
+    <blockquote>
+
+<p>Tymeac uses separate Wait Lists. Each Wait List (ConcurrentLinkedQueue) is 
+the priority. If supporting ten priorities, then we have ten Wait Lists. 
+Priority 1, goes into Wait List 1, etc. By separating the work in this way we 
+can do <a href="TyQueMaint.html#example">amazing things</a>. And you can support your own priority 
+structure in the caller. (E.G. incoming comparators aaa - azz resolve to priority 1, etc.)</p>
+
+<p>Both adding and removing are fast. Inquiry for each priority is fast. Tymeac 
+handles the FIFO problem.</p>
+
+<p>The Wait Lists are bounded. Having an unbounded entity means that we run out 
+of memory before we know there is a problem. With Tymeac, a 'no Wait List 
+available' condition&nbsp; is a recoverable exception. The easiest solution is 
+to dynamically <a href="TyQueData.html">add more elements </a>to each Wait List.</p>
+    </blockquote>
+  </blockquote>
+
+<h3><a name="thresh"></a>Thresholds</h3>
+  <blockquote>
+
+<p>By having Wait Lists, we can easily support thresholds for controlling the 
+number of threads executing at any given time.</p>
+
+<p>Threads consume resources. They eat memory voraciously. Unless you have many, many free 
+CPU's just waiting for work, threads compete for CPU cycles. They compete with 
+each other for locks. The list goes on and on.</p>
+
+<p>When a thread can process a request in a short time period, then using more 
+than the minimum number of threads for a lightly loaded Queue is a waste of 
+resources and may even slow down overall processing.</p>
+
+<p>Tymeac supports <a href="TyQueMaint.html#threshold">thresholds</a> for 
+keeping the number of competing threads under control. The <a href="Tuning.html">Tuning Document</a> discusses this in detail and 
+gives many examples.</p>
+
+  </blockquote>
+
+<h3><a name="pool"></a>Thread Pools</h3>
+  <blockquote>
+
+<p>Traditional thread pools are like pools of sharks. You certainly wouldn't 
+want to venture in there.</p>
+
+<p><a href="ThreadMgmt.html">Managed threads</a> are the answer.</p>
+  </blockquote>
+
+<h3><a name="user"></a>User Class</h3>
+  <blockquote>
+
+<p>In Tymeac we call this the Processing Application Class.
+<a href="Develop.html#pap">Developing Your Applications</a> discusses this in 
+detail.</p>
+
+<p>A Processing Application Class is the code you write to process the specifics 
+of the application. A Tymeac managed thread uses reflection to invoke the main() 
+method of your class.</p>
+
+<p>This is the decoupling that is so important in good application design. You 
+supply the application logic in a Processing Application Class. Tymeac handles 
+the threading logic.</p>
+  </blockquote>
+
+<h3><a name="error"></a>Error Recovery</h3>
+  <blockquote>
+
+<p>This is the part that separates the men from the boys.</p>
+
+<p>Tymeac separates your request&nbsp; (Tymeac Function) into its components (Tymeac Queue) and 
+schedules each Tymeac Queue. If <a href="SchdFail.html">scheduling fails</a> on 
+any Tymeac Queue, then Tymeac tries to back out the already scheduled Tymeac 
+Queues.</p>
+    <ul>
+      <li>Back out tries to remove the request from a Tymeac Queue Wait List if 
+      the request hasn't started executing.</li>
+      <li>If the request is already executing, Tymeac informs the managed thread 
+      to ignore any returned objects from the application.</li>
+      <li>If an asynchronous request, Tymeac informs the managed thread not to 
+      start the Output Agent processing.</li>
+      <li>The calling Client is informed of the <a href="Usage.html#broker">
+      specific reason</a> for the failure.</li>
+    </ul>
+
+<p>Tymeac supports the timed request (syncRequest()). If the time expires before the request 
+completes, Tymeac tries to back out the request, as above.</p>
+
+<p>Tymeac supports the asynchronous or autonomous request (asyncRequest()). You call the Tymeac 
+Server for a request and receive a &quot;was scheduled&quot; message in response. The 
+actual processing takes place asynchronously.</p>
+
+<blockquote>
+
+<p>What if something goes wrong in an asynchronous request? How would anyone 
+know? Unlike the synchronous request where the Client gets the return data from 
+the processing, the asynchronous request is on its own. When things go wrong in 
+asynchronous requests, Tymeac puts the request into a <a href="Stalled.html">
+Stall Array</a>. An administrator may then deal intelligently with the request.</p>
+
+</blockquote>
+
+<p>When exceptions occur, Tymeac doesn't just let the system print an ugly 
+message and die. Tymeac catches exceptions, prints and
+<a href="RunTime.html#log">logs</a> meaningful messages with
+<a href="Messages.html">full documentation</a>, <a href="RunTime.html#notify">
+notifies</a> administrators of the problem and tries recovery.</p>
+
+<p>What if something goes wrong on the Client side and that Client needs to 
+cancel an in-progress request? No problem. Tymeac supports <a href="Cancel.html">
+cancelling requests</a>.</p>
+
+<p>Tymeac uses a <a href="Monitor.html">Monitor</a> (daemon) that scans the 
+environment periodically looking for problems, notifying administrators when 
+problems (real or potential) exist and recovering resources.</p>
+  </blockquote>
+
+<h3><a name="control"></a>Control</h3>
+  <blockquote>
+
+<p>Tymeac provides seventeen <a href="Manual.html#frame">GUI's</a> (and 
+programming access) to the server environment so users may view and alter 
+parameters dynamically.</p>
+    <blockquote>
+
+<p>Need to track the request during it's life cycle? What stage of processing is 
+that asynchronous request you sent? No problem.</p>
+
+<p>Are any asynchronous requests stalled and can you view, reschedule or purge a 
+request? No problem.</p>
+
+<p>What is the load on each thread in the Queue? No problem.</p>
+
+<p>Need to alter thread parameters? No Problem</p>
+
+<p>What is the load on each Wait List in the Queue? No problem.</p>
+
+<p>Need more Wait List elements? No problem.</p>
+
+<p>Need to alter the Processing Application Class? No problem.</p>
+    </blockquote>
+
+<p>Tymeac is a professional product. Professionals know how important it is to 
+provide total control over the Queue.</p>
+  </blockquote>
+
+<p><b><font size="4">Tymeac</font></b> manages Queues.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

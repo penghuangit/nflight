@@ -1,0 +1,67 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Data Base Management System List Table</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>DBMS Tymeac List Table</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This table contains the List of Queue Names for each
+    Function in the Tymeac system.&nbsp;All column names are UPPER CASE, must be in the order
+    presented here, and must be spelled as presented here. Variable Character columns
+    convert into Java Strings, therefore, lengths are the same as the DBMS <a href="DBMSFunc.html">Function Table</a> and DBMS <a href="DBMSQue.html">Queue Table</a>.&nbsp;
+    </p>
+  </blockquote>
+  <blockquote>
+    <p>The purpose of this table is to associate Tymeac Queues
+    with a Tymeac Function. Each Tymeac Function has from one to many Queues.
+    This is where the List of Queues resides.&nbsp; </p>
+  </blockquote>
+  <blockquote>
+    <p>There is no separate Tymeac Maintenance Class, the Function
+    Maintenance Class, (<a href="TyFuncMaint.html">TyFuncMaint</a>), maintains this
+    Table. For each Queue associated with this Function, the Class adds a row with a key
+    of Function Name and a sequence number incremented from 1.</p>
+  </blockquote>
+    <p>There is a pre-built definition in the <b>
+    /scripts/sql</b> directory for this table to make your life a little easier.</p>
+</blockquote>
+
+<h3><strong>Keys:&nbsp;&nbsp; </strong></h3>
+
+<blockquote>
+  <p>Dual key-- FUNC_NAME, and SEQ_NBR.</p>
+</blockquote>
+
+<h3><strong>Columns:</strong></h3>
+
+<blockquote>
+  <p><strong>FUNC_NAME</strong>&nbsp;&nbsp;&nbsp; Var Char.&nbsp;&nbsp;&nbsp; The name of
+  the Tymeac Function.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>SEQ_NBR&nbsp;&nbsp;&nbsp; </strong>Integer.&nbsp;&nbsp; An increment starting
+  from 1, used to keep the keys unique.<strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+</blockquote>
+
+<blockquote>
+  <p><strong>QUEUE_NAME&nbsp;&nbsp; </strong>Var Char.&nbsp;&nbsp;&nbsp; A single Tymeac
+  Queue associated with this Tymeac Function. </p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

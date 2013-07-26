@@ -1,0 +1,123 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Callback</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Callback</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>In RMI there is no such thing as a &quot;callback&quot;.&nbsp;A callback is really just
+        an RMI invocation in the other direction.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p><strong>N.B.</strong> <strong>Callback, when your client is behind a firewall, usually
+  does not work.</strong> There are ways around this that involve the client opening a port
+  outside the firewall. There are many discussions on how to do a callback behind a firewall
+  on the Sun Developer RMI forum. Go to the forums at Sun Developer and choose, RMI. </p>
+  <p>The Tymeac Server is an RMI Server.&nbsp;It does not communicate with any other RMI,
+  CORBA, etc. Servers. For ways to do this you may see our discussion on <a href="LoadBalance.html">load balancing</a>.</p>
+  <p>Tymeac Clients communicate with the Tymeac Server using RMI.&nbsp;If it is necessary
+  for a Processing Application Class, running within the Tymeac Server, to communicate with
+  another RMI Server, than that Processing Application Class must have a reference to the
+  other RMI Server, (remote object.)</p>
+  <p>This reference to a remote object is the key to RMI communication.&nbsp;How the
+  Processing Application Class obtains the reference is application dependent. <ol>
+    <li>The client may pass the name of the other RMI Server to the Processing Application Class
+      and the Class may use the RMI or JNDI registry to &quot;lookup&quot; the name.</li>
+    <li>On a local system where the client and server are within the same machine, the client
+      may serialize the reference to the remote object, write it to a file and pass the file
+      name to the Processing Application Class which then reads the file.</li>
+    <li>The client may pass the reference to the remote object within a serialized class to the
+      Processing Application Class and the Class may use RMI method invocation directly.</li>
+    <li>Other methods may come from your imagination.</li>
+  </ol>
+  <p>It is the third way that we demonstrate with the following source code.</p>
+  <blockquote>
+    <blockquote>
+      <p>The java.io.Serializable class that contains the reference to the remote object is: <strong>TyDemoCallbackParm</strong>.</p>
+      <p>The Tymeac Client that becomes an RMI Server is:&nbsp; <strong>TyDemoClient_Callback</strong>.</p>
+      <p>The Interface is:&nbsp; <strong>TyDemoCallback</strong>.</p>
+      <p>The implementation of the interface is:&nbsp; <strong>TyDemoCallbackImpl</strong>.</p>
+      <p>The Processing Application Classes are similar to the other, non-callback, classes in
+      the demonstration package, these are:&nbsp; <strong>DemoCallback1-3</strong> and <strong>DemoAgentCallback</strong>
+      .</p>
+    </blockquote>
+    <p>The Tymeac Client that becomes an RMI Server, <strong>TyDemoClient_Callback</strong>,
+    is the only significantly different code in the group.</p>
+    <blockquote>
+      <p>// new object of the Callback implementation Class<em><br>
+      TyDemoCallbackImpl impl = new TyDemoCallbackImpl();</em></p>
+      <blockquote>
+        <p>TyDemoClient_Callback is started on the command line. Therefore, its main() method is
+        static. In order to get a reference to a remote object, (TyDemoCallbackImpl), this
+        statement is necessary.</p>
+      </blockquote>
+      <p><em>try {<br>
+      &nbsp;&nbsp;&nbsp; </em>// make me an RMI Server<em><br>
+      &nbsp;&nbsp;&nbsp; UnicastRemoteObject.exportObject(impl);<br>
+      } <br>
+      <br>
+      catch (java.rmi.RemoteException e) {<br>
+      &nbsp;&nbsp;&nbsp;</em> // say error<em><br>
+      &nbsp;&nbsp;&nbsp; System.out.println(&quot;caught RemoteException from
+      exportObject&quot;);<br>
+      <br>
+      &nbsp;&nbsp;&nbsp; </em>// done<em><br>
+      &nbsp;&nbsp;&nbsp; return;<br>
+      } </em></p>
+      <blockquote>
+        <p>The export() makes this JVM an RMI Server.&nbsp;That is --- One that may execute code
+        from the request of a client.&nbsp;This single line starts many threads necessary to
+        accomplish this. Of some concern is a thread known as &quot;keep alive&quot;.&nbsp;The
+        purpose of this thread is to never end and in so doing, it keeps the RMI Server running
+        forever.&nbsp;Therefore, to end this process, one must use System.exit(0) instead of
+        &quot;return&quot;.</p>
+      </blockquote>
+      <p>// new pass parm<em><br>
+      TyDemoCallbackParm parm =&nbsp; new TyDemoCallbackParm( impl,&nbsp; pass);</em></p>
+      <blockquote>
+        <p>In addition to the data necessary for the Processing Application Classes to do the
+        work, this class also contains a reference to the remote object so that the Output Agent
+        Class, <strong>DemoAgentCallback</strong>, may send the result back to the Tymeac Client.</p>
+      </blockquote>
+    </blockquote>
+    <p>Compile all eight of these classes and place the classes in proper <a href="Directories.html">directories</a>.</p>
+    <p>Run RMIC on the <strong>TyDemoCallbackImpl</strong>. &nbsp;Place the _Stub class in a
+    directory where both the Tymeac Client, Tymeac Server and RMI Registry may find it. If you
+    use the codebase option, then place the class in that directory.</p>
+    <p>Update the TymeacUserQueues and Functions with data from the <strong>&lt;home&gt;/source/callData.txt</strong>
+    file, recompile these source java files and place the classes in proper <a href="Directories.html">directories</a>.</p>
+    <p>Start the RMI Registry.</p>
+    <p>Start the Tymeac Server.</p>
+    <p>Open a command line window.&nbsp; Execute java [-Djava -cp that which is necessary] <strong>TyDemoClient_Callback</strong>.</p>
+    <p>The result should be, (not necessarily in this order):<ol>
+      <li>The normal return from a Tymeac asyncRequest(),</li>
+      <li>The String:&nbsp; &quot;DemoAgentCallback ==&gt; plus the normal Tymeac return
+        data&quot;</li>
+    </ol>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

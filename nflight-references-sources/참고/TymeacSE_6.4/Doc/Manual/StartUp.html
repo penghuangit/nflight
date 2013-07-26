@@ -1,0 +1,292 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Tymeac Start Up</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Start Up</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+        <p>If all you need is a simple RMI Server, then look at the non-activatable, Basic RMI
+        Server and use stand-alone mode. You can pick up the rest as you need it.</p>
+    </blockquote>
+  </blockquote>
+  <p>Tymeac supports a <a href="UserExits.html">user exit</a> for start up as well as <a href="StartUpFunctions.html">user functions</a>. This is in order to provide additional
+  functionality.</p>
+  <p>Tymeac reads system variables (Monitor interval, Notify Class, etc.) at start up from
+  either the <a href="TyCfg.html">Tymeac Configuration Data</a>&nbsp;(preferences or file)
+  for a DBMS mode start up or from the <a href="UserVariables.html">TymeacUserVariables</a>
+  class for stand alone mode.</p>
+  <p>We supply several <a href="Scripts.html">script files</a> for starting the Tymeac
+  Server. You must edit these for your environment.</p>
+  <p><b><a href="#options"><font size="4">Command line options:</font></a></b></p>
+  <p>Tymeac Start Up may be for </p>
+  <blockquote>
+    <p>a <big><a href="#non">non-activatable remote object</a></big>,</p>
+  </blockquote>
+  <blockquote>
+    <p>an <big><a href="StartUp.html#active">activatable remote object</a></big></p>
+  </blockquote>
+  <blockquote>
+    <p>or as an <big><a href="SetUpInternal.html">internal Server</a></big>.</p>
+  </blockquote>
+</blockquote>
+
+<hr>
+
+<blockquote>
+  <p><a name="options"></a><strong>Command Line Options:</strong><br>
+  Tymeac Server accepts six, non case sensitive options with values from the command line. <br>
+  &nbsp;&nbsp;&nbsp; (<strong>-dir</strong>, <strong>-file</strong>, <strong>-edbsd, -port</strong>,
+  <strong>-no</strong>, <strong>-s</strong>),</p>
+  <blockquote>
+  <p>Plus one other required command line option with two values for Jini:<br>
+&nbsp; (<b>-config</b>)</p>
+  </blockquote>
+  <p>Although the options are not case sensitive, the directory and filename may 
+  be case sensitive depending on your operating system.</p>
+</blockquote>
+
+<blockquote>
+  <ol>
+    <li>Option <strong>-dir:</strong>&nbsp; [When using a DBMS, <a href="#dbms">see below</a>]<br>
+      The File Directory where the Tymeac Configuration File resides.<br>
+      <strong>-dir</strong> followed by&nbsp;the directory.<br>
+      &nbsp;&nbsp;&nbsp;&nbsp; (e.g. <strong>-dir</strong> usr/local/&nbsp; or <strong>-dir</strong>
+      x:\)<br>
+      When not present, Tymeac uses the current directory.</li>
+  </ol>
+  <blockquote>
+    <blockquote>
+          <p>By default the classes in the java.io package always resolve relative pathnames against
+          the current user directory. This directory is named by the system property user.dir, and
+          is typically the directory in which the Java virtual machine was invoked</p>
+    </blockquote>
+  </blockquote>
+  <ol start="2">
+    <li>Option <strong>-file:</strong>&nbsp; [When using a DBMS, <a href="#dbms">see below</a>]<br>
+      The File FileName of the Tymeac Configuration File. <br>
+      <strong>-file</strong> followed by the filename.<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (e.g. <strong>-file</strong> our_config.txt)<br>
+      When not present, Tymeac uses the default filename: &quot;tymeac.xml&quot;.<br>
+&nbsp;</li>
+    <li>Option <b>-edbsd&nbsp; </b>&nbsp;[When using a DBMS, <a href="#dbms">see below</a>]<br>
+    Embedded Data Base Shut Down<br>
+    This is for shutting down the database when it is embedded in Tymeac.<br>
+    <b>-edbsd</b> followed by your Class name for shut down. <br>
+    <a href="DBMS.html#embedShut">See here</a> for detailed instructions for 
+    using this option.<br>
+      <br>
+    </li>
+    <li>Option <strong>-port: </strong>&nbsp;<br>
+      The TCP port on which to export the RMI remote object. See the
+    <a href="Scripts.html#env">Scripts document</a> (TYMEAC_RMI_PORT) for a 
+    number you should use.<br>
+      This is not used for IIOP or for Jini. <br>
+      &nbsp;&nbsp;&nbsp; (e.g. <strong>-port</strong> 51000)<br>
+      When not present, Tymeac uses the anonymous port (either zero or not specified)<br>
+      <br>
+    </li>
+    <li>Option <strong>-no</strong><br>
+      This is to suppress <u>printing</u> of messages in Tymeac to the console, not logging to
+      the <a href="RunTime.html#log">log</a>&nbsp;Table.<br>
+      &nbsp;&nbsp;&nbsp;&nbsp; (-no is short for -noverbose)<br>
+      The default (verbose) is to send any information/error message to
+      System.out.println().&nbsp;This is similar to using the Java interpreter without a console
+      window, (javaw in some implementations).&nbsp;However, some fatal error messages still
+      print, such as those from an SQL Error.<br>
+      <br>
+    </li>
+    <li>Option <strong>-s</strong><br>
+      This is for Stand-Alone mode.&nbsp;This option suppresses the [File] attempt to find the
+      file name in the current directory (see Option 1, above.)&nbsp;This is useful when there
+      is no file system or to eliminate an unnecessary I/O.&nbsp;Naturally, this option is
+      mutually exclusive with options 1 and 2, above.<br>
+&nbsp;</li>
+    <li>Option <b>-config</b> [When using Jini] <font color="#FF0000">This 
+    changed in release 5.5 (was inside a configuration file before.) </font><br>
+    The configuration file for Jini.<br>
+    -config followed by two additional agruments:<br>
+&nbsp; 1. The location and name of the configuration file (E.G. config\tymeac-jini-ssl-server.config)<br>
+&nbsp; 2. The the component name:&nbsp;(<strong style="font-weight: 400">com.tymeac.TymeacServer 
+    is the default)<br>
+    See the <a href="SetUpJini2.html">Jini setup</a> for details.</strong></li>
+  </ol>
+</blockquote>
+
+<blockquote>
+  <p><a name="dbms"></a><a href="DBMS.html">DBMS</a> mode is when the Queues and Functions, 
+  and optionally, Log
+  and Statistics values are kept in a DBMS. The names of the DBMS Url, DataManager etc are
+  kept in <a href="TyCfg.html">configuration data</a>. The configuration data may be kept in
+  preferences or a file.</p>
+  <p>The sequence of events for finding the configuration data is:</p>
+  <blockquote>
+    <p>When a directory and/or filename is present, Tymeac tries to read the configuration
+    file by:<ul>
+      <li>Using the directory and filename or</li>
+      <li>Using the directory and default filename (Option 2) or</li>
+      <li>Using the current directory (Option 1) and filename.</li>
+    </ul>
+    <p>&nbsp;&nbsp;&nbsp; Any error is fatal.</p>
+    <p>When neither a directory nor filename is present, Tymeac looks for preference data (see
+    Java API java.util.prefs.Preferences) in system node com/tymeac/base.</p>
+    <p>When Tymeac does not find preference data, Tymeac tries to read the default filename
+    (Option 2) in the current directory.</p>
+    <p>When Tymeac does not find preference data and no default file exists in the current
+    directory, then Tymeac sets Stand-Alone mode.</p>
+  </blockquote>
+  <p>Tymeac uses the <a href="UserClass.html">Stand-Alone</a> mode when:<ul>
+    <li>Option 5, (<strong>-s</strong>), is present or</li>
+    <li>When Tymeac cannot find preference data or the default configuration file in the current
+      directory.</li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p>Simply:<ol>
+    <li>When the argument <strong>-s</strong> is present, Tymeac uses the Stand-Alone mode.</li>
+    <li>When not using the DBMS arguments (Options 1 and 2) and <br>
+      when no preference data exists and <br>
+      when no configuration file exists in the current directory, <br>
+      Tymeac uses the Stand-Alone mode.</li>
+  </ol>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac Server writes fatal errors to the console, when possible to the <a href="RunTime.html#log">log</a> and aborts the Start Up.</p>
+</blockquote>
+
+<blockquote>
+  <p>The messages are <a href="MsgTy00.html">here</a>.</p>
+</blockquote>
+
+<blockquote>
+  <p>The message you need is that the start up is successful.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><a name="sstart"></a>&quot;Tymeac Server initialized successfully, MilliTime=&quot;</p>
+  </blockquote>
+  <blockquote>
+    <p>MilliTime is the System time in milliseconds since 1970. MilliTime also appears on the <a href="Shutdown.html">shut down</a> message and within all return messages for <a href="Develop.html#async">Asynchronous Requests</a>.&nbsp;It is the way to identify this
+    session of Tymeac.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Missing Classes or &quot;something not found&quot; usually means that the path to
+    Tymeac Classes is not proper or a spelling or case sensitive error.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong><big>Note:</big></strong>&nbsp; Tymeac starts various threads during start up
+  to perform necessary functions.&nbsp;Each of these threads writes its own messages.
+  Therefore, the order of these messages is unpredictable.</p>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <blockquote>
+          <hr>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <p>Tymeac Server requires access to classes for itself, the user Processing Application
+  Classes and several common classes between the Server and Clients.&nbsp;We explain these
+  in the <a href="Directories.html">directories</a> structure.</p>
+  <blockquote>
+    <p>Basically, three (four for Jini) directories are necessary:<ol>
+      <li><strong>&lt;home&gt;/com/tymeac/base</strong> -- Contains Tymeac Server classes,</li>
+      <li><strong>&lt;home&gt;/com/tymeac/jini/base</strong> -- Contains Jini classes,</li>
+      <li><strong>&lt;home&gt;/com/tymeac/common</strong> -- Contains the Tymeac variables class,
+        com.tymeac.common.TyVariable,</li>
+      <li><strong>&lt;home&gt;/com/tymeac/serveuser</strong> -- Contains the User Processing
+        Application Classes.</li>
+    </ol>
+  </blockquote>
+  <p>You must address all <a href="Security.html">security</a> issues before starting the
+  Tymeac Server.</p>
+  <blockquote>
+    <p>A policy file is required:</p>
+    <blockquote>
+      <blockquote>
+        <p>-Djava.security.policy=&lt;home&gt;/Security/policy.all</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<hr>
+
+<blockquote>
+  <p><a name="non"></a><strong>Non-Activatable Remote Object</strong></p>
+  <blockquote>
+    <p><strong>Basic RMI</strong><br>
+    Start the RMI Registry.<br>
+    Then start Tymeac.&nbsp;The Class is <strong>com.tymeac.base.RMIServer</strong>.<br>
+    See the /<a href="Scripts.html#rmi">Scripts/RMIServer</a>.[bat or sh] file.</p>
+    <p><strong>RMI with Custom Socket Factories</strong> <br>
+    Requires user written custom socket factories.</p>
+    <blockquote>
+      <p>See the custom socket factory <a href="SetUpCSF.html">set up</a>.</p>
+    </blockquote>
+    <p>Start the RMI Registry.<br>
+    Then start Tymeac with custom socket factories: <strong>com.tymeac.base.CSFServer</strong>.<br>
+    See the /<a href="Scripts.html#csf">Scripts/CSFServer</a>.[bat or sh] file.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>Basic IIOP</strong><br>
+    Start the CosNaming server (tnameserv).<br>
+    Then start Tymeac.&nbsp;The Class is <strong>com.tymeac.base.IIOPServer</strong>.<br>
+    See the /<a href="Scripts.html#iiop">Scripts/IIOPServer</a>.[bat or sh] file.</p>
+    <p><strong>IIOP (Portable Object Adapter)<br>
+    </strong>Requires user written Adapter.</p>
+    <blockquote>
+      <p>See the POA IIOP <a href="SetUpPoaIIOP.html">set up</a>.</p>
+    </blockquote>
+    <p>Start the ORB Daemon (orbd).<br>
+    Then start Tymeac.&nbsp;The Demonstration Class is <strong>com.tymeac.demo.POAServer</strong>.<br>
+    See the /<a href="Scripts.html#poa">Scripts/POAServer</a>.[bat or sh] file.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>Jini</strong><br>
+    The Jini Server requires a Jini environment.<ul>
+      <li>An http server for codebase</li>
+      <li>A lookup service</li>
+    </ul>
+    <p>Start the service as: <strong>com.tymeac.jini.base.JiniServer</strong>.<br>
+    See the /<a href="Scripts.html#jserver">Scripts/JiniServer</a>.[bat or sh] file.</p>
+  </blockquote>
+  <hr>
+  <p><a name="active"></a><strong>Activatable Remote Object</strong></p>
+  <blockquote>
+    <p>The use of the activation framework requires a user-written Class to define the remote
+    object environment.</p>
+    <p>We supply a sample, general how-to of a Class that defines the Tymeac Server remote
+    object and registers that remote object with the RMI Registry (see the <a href="SetUpAct.html">Set Up</a> instructions for the RMI Server details and <a href="SetUpJini2.html#activatable">Jini2.x set up</a> for the Jini details.)&nbsp;</p>
+    <p>Depending on your underlying operating system, there may not be a Java console window
+    for the activated JVM.&nbsp;Therefore, printing of most messages, mentioned above, is
+    unsupported.&nbsp;Errors <a href="RunTime.html#log">log</a> and throw a Throwable
+    Exception instead.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

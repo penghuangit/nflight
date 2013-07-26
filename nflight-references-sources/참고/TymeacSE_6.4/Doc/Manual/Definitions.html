@@ -1,0 +1,173 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Product Glossary</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Product Glossary</h1>
+
+<blockquote>
+  <blockquote>
+    <p>Definitions herein are the Tymeac terms used throughout this manual. There is no
+    separate glossary of computer, operating system, and Java terms.</p>
+  </blockquote>
+</blockquote>
+
+<h4><a name="sync"></a>Synchronous Request</h4>
+
+<blockquote>
+  <p>The Tymeac Server returns the response (Object array) to the Tymeac Client Application
+  Class that initiated the request.</p>
+  <p>This is a request_with_wait for completion.<ul>
+    <li>The initiating Client Application Class uses a direct call or RMI to invoke the
+      Synchronous Request method of the Tymeac Server to perform a Function. The Client waits
+      for the Function to complete.</li>
+    <li>Part of the parameter passed to the Tymeac Server is the maximum time the Client can
+      wait.</li>
+    <li>The Tymeac Server returns a reply indicating whether the request scheduled properly and
+      completed within the time allocated, along with the response (Object array) of all the
+      Queues in the Function.</li>
+  </ul>
+</blockquote>
+
+<h4><a name="async"></a>Asynchronous Request</h4>
+
+<blockquote>
+  <p>The Tymeac Server does <strong>not</strong> return the response (Object array) to the
+  Tymeac Client Application Class that initiated the request. (However, the response may be
+  passed to an <u>Output Agent</u> Queue, see below.) </p>
+  <p>This is a request_without_wait for completion. <ul>
+    <li>The initiating Client Application Class uses RMI to invoke the Asynchronous Request
+      method of the Tymeac Server to perform a Function. </li>
+    <li>The reply from the Tymeac Server indicates whether the request scheduled properly and
+      contains data useful for tracing the request. There is no time correlation between the
+      Client request and the final processing reply.</li>
+  </ul>
+</blockquote>
+
+<h4>Asynchronous Thread</h4>
+
+<blockquote>
+  <p>There is no time correlation between the initiating Client and the processing Server
+  thread.&nbsp;There is <u><em>no</em> <em>contact</em></u> between Client and
+  thread.&nbsp;Tymeac manages the threads, on the RMI Server, that process the Client's
+  request.</p>
+  <p>As opposed to a synchronous thread that a Client may start itself, control itself, and
+  terminate itself.</p>
+</blockquote>
+
+<h4 ALIGN="JUSTIFY"><a name="client"></a>Client Application Class</h4>
+
+<blockquote>
+  <p>The user-written Class that develops a need for Tymeac processing either internally or
+  through interfacing with the network and requests a Tymeac Function through the Internal
+  or RMI Tymeac Server.</p>
+</blockquote>
+
+<h4 ALIGN="JUSTIFY"><a name="broker"></a>Tymeac Server Request Broker</h4>
+
+<blockquote>
+  <p>That part of the Tymeac Server that separates a complex request from the Client
+  Application Class into its component processes (Queues) for scheduling.</p>
+  <p>For Synchronous Requests, it waits for all Queues to complete. Then it combines the
+  output of the component processes into an Object array and passes that array back to the
+  Client Application Class.</p>
+  <p>For Asynchronous Requests, it passes data useful for tracing the request back to the
+  Client Application Class.</p>
+</blockquote>
+
+<h4 ALIGN="JUSTIFY"><a name="sched"></a>Tymeac Server Scheduling</h4>
+
+<blockquote>
+  <p>That part of the Tymeac Server that receives Tymeac Queue scheduling requests from the
+  Request Brokering section of the Server, or, from the last Queue Thread to finish an
+  asynchronous request (to schedule the <u>Output Agent</u> Queue, see below).&nbsp;The
+  Scheduler physically schedules those requests on the Queue by placing the request into a
+  Wait List according to the requests' priority and notifying any waiting Queue Thread.</p>
+</blockquote>
+
+<h4 ALIGN="JUSTIFY"><a name="queue"></a>Tymeac Queue</h4>
+
+<blockquote>
+  <p>A Queue consists of :<ol>
+    <li>The instance of the Processing Application Class that performs the user's component work
+      as a Reflect invoked Class.&nbsp;This Class executes inside a Tymeac Queue Thread.</li>
+    <li>A logical anchor point for the Queue's Threads.</li>
+    <li>A group of prioritized lists (Wait Lists) where the Tymeac Server stacks client
+      component requests that are subsequently fetched by the Queue Threads.</li>
+    <li>Four thresholds variables (associated with the Wait Lists) to determine when to activate
+      a new Queue Thread.</li>
+  </ol>
+</blockquote>
+
+<h4><a name="lists"></a>Wait Lists</h4>
+
+<blockquote>
+  <p>A group of prioritized lists, for each Queue, where the Tymeac Server stacks client
+  requests.&nbsp;The Queue Threads then fetch each request starting at the first list
+  (priority one.)</p>
+  <p>Each Queue must have at least one Wait List. The user defines the number of Wait Lists
+  and number of buckets in each Wait List. All Wait Lists use FIFO processing.</p>
+</blockquote>
+
+<h4><a name="function"></a>Tymeac Function</h4>
+
+<blockquote>
+  <p>A list of Tymeac Queues needed to accomplish the final result.</p>
+</blockquote>
+
+<h4 ALIGN="JUSTIFY"><a name="quethread"></a>Queue Thread</h4>
+
+<blockquote>
+  <p>The Tymeac asynchronous thread, associated with a Tymeac Queue, that handles direct
+  requests from the Scheduler, indirect requests by way of Wait Lists, timed suspensions
+  when no work is pending, and manages the invocation to the Processing Application Class.</p>
+  <p>For Synchronous Requests, the Queue Thread passes the return Object of the user-written
+  Processing Application Class back to the Request Brokering section of the Tymeac Server. </p>
+  <p>For Asynchronous Requests, the Queue Thread holds the return Object of the user-written
+  Processing Application Classes until all associated Queue Threads finish.&nbsp;Then it
+  Schedules the <u>Output Agent</u> (see below) Queue, if any, passing the Agent the
+  concatenated return Objects [array] of all the Queues.</p>
+</blockquote>
+
+<h4 ALIGN="JUSTIFY"><a name="pap"></a>Processing Application Class</h4>
+
+<blockquote>
+  <p>The user-written Class that executes the component process of the request.&nbsp;The
+  Queue Thread invokes this Class using Reflection, (java.lang.reflect.Method invoke()
+  ).&nbsp;The single parameter to the main() method of this Class is the Object from the
+  original request (parameter passed either directly or by RMI .)&nbsp;The method returns an
+  optional Object.</p>
+  <blockquote>
+    <p ALIGN="JUSTIFY">public static Object main(Object[] args) {}</p>
+  </blockquote>
+</blockquote>
+
+<h4 ALIGN="JUSTIFY"><a name="oa"></a>Output Agent </h4>
+
+<blockquote>
+  <p>The Tymeac Queue Thread that concatenates the return Objects of the asynchronous
+  component processes for Asynchronous Requests into an input message (Object[]) and invokes
+  the Processing Application Class for further user-determined processing.</p>
+</blockquote>
+
+<h4 ALIGN="JUSTIFY">Monitoring</h4>
+
+<blockquote>
+  <p>The Tymeac Thread that scans the internal Tymeac system looking for potential problems.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

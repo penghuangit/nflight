@@ -1,0 +1,878 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta name="generator" content=
+"Microsoft FrontPage 5.0" />
+<meta http-equiv="Content-Language" content="en-us" />
+<meta name="ProgId" content="FrontPage.Editor.Document" />
+<meta name="description" content=
+"Java Standard Edition Thread Container" />
+<meta name="keywords" content=
+"Java, edward harned, threads, thread container, expunge thread, multi-threading, concurrency, concurrency API, queuing, fork join, Tymeac, Tymeacse, Tymeacme, software developer, RMI" />
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii" />
+<meta name="ROBOTS" content="index, follow" />
+<title>Managing Threads in Java SE</title>
+</head>
+<body>
+<p align="center"><font face=
+"Arial, Helvetica"><big><big><big><strong><span class=
+"atitle"><font size="5">Managing Threads in
+Java SE</font></span></strong></big></big></big></font></p>
+<h2 align="center"><font face="Arial, Helvetica"><font size="4">The
+Java</font><sup><font size="3">&#8482;</font></sup><font size="4"> Standard 
+Edition Thread Container</font></font></h2>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Since the dawn
+of third-generation computers, legions of successful
+multi-threading applications have run inside containers. Because
+there is no way to control a thread of execution at the operating
+system level, knowledgeable developers have built containers to
+house the elusive threads at the application level.</font></p>
+<p><font face="Verdana, Arial, Helvetica"><font size="2">This
+article expounds Open Source
+Tymeac</font><sup><small>&#8482;</small></sup><font size="2">, a
+container for managing Java SE and Java ME application threads. (3100
+words)</font></font></p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><a href=
+"#author">Edward Harned</a> (<a href="mailto:eh%20at%20coopsoft%20dot%20com">eh at
+coopsoft dot com</a>)<br />
+Senior Developer, Cooperative Software Systems, Inc.<br />
+April, 2009</font></p>
+<h3><font face="Arial, Helvetica" size=
+"3">Preface</font></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">It is often
+imperceptible why we house application threads inside a container.
+After all, anyone can create a thread anywhere, so what's the
+point? Exactly the enigma. Once you understand the problem, then
+the solution makes perfect sense. Therefore, we start at the
+beginning.</font></p>
+<h3><font face="Arial, Helvetica" size="3">The problem
+arises</font></h3>
+<table width="128" align="right" border="0" cellpadding="0"
+cellspacing="0" summary="spacer">
+<tbody>
+<tr>
+<td><font face="Verdana, Arial, Helvetica" size="2">
+<img alt="."
+src="i/space1.gif" width="1" height="1" /></font></td>
+<td width="118">
+<table border="0" cellpadding="5" cellspacing="0" style=
+"border-collapse: collapse" bordercolor="#111111" summary=
+"360 picture">
+<tbody>
+<tr>
+<td align="center">
+<p><font face="Verdana, Arial, Helvetica" size="2">
+<img border="0"
+src="i/360s.jpg" alt="System/360" width="106" height="133" /><br />
+(mother)</font></p>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p><font face="Verdana, Arial, Helvetica"><b><font size=
+"2">Mainframes</font></b> <font size="2"><br />
+In the beginning (of third generation computers) came the  IBM</font><sup><small>&#174;</small></sup> <font size=
+"2">System/360</font><sup><small>&#174;</small></sup> <font size=
+"2">series of computers. These audacious machines could have
+multiple computer programs (called tasks or processes) memory
+resident and switch execution between them.</font></font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">An early
+innovation was the idea that a task itself could be divided into
+sub-tasks so procedures within a task could run
+independently. The thinking here was that if each part, task or
+sub-task, was defined to the operating system as an executable
+entity, then the operating system could easily switch between those
+entities.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Thus was born
+the ability of software developers to create their own sub-tasks,
+child processes, lightweight processes or as they are now commonly
+called, threads of execution. Just as Dr. Frankenstein was
+delighted with his aggregate creation, software developers then
+were enthralled with all the new possible compositions.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">The ability to
+create a sub-task was burdensome. It required writing the program
+or at least the sub-program in assembler language using the ATTACH
+macro and eventually the program executing this macro required
+"authorization."</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2"><a name=
+"trouble"></a>The rational with making it difficult to create
+sub-tasks is:</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">There is no
+facility to <u>control</u> these sub-tasks. Each main task must
+control its own sub-tasks.</font>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">What if a
+sub-task hangs in a never-ending loop?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">What if a
+sub-task abnormally terminates?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">What if the
+sub-task create/destroy overhead bogs down the overall
+processing?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">What if a
+sub-task needs timing?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">What if a
+sub-task needs canceling?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">What is the
+status of a sub-task?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How to detect
+and recover from dead/live locks?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How to tune
+this sub-tasking environment?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How can we
+inquire about the overall health of the environment?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How may the
+sub-tasking environment quiesce and shut down gracefully?<br />
+&nbsp;</font></li>
+</ul>
+</li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Since sub-tasks
+share the execution context (address space, I/O buffers, save
+areas, handles) with the main task, a misbehaving sub-task
+can irreparably damage an application</font> <font face="Verdana"
+size="2">&#8212;</font> <font face="Verdana, Arial, Helvetica"
+size="2">just as one bad apple can ruin the entire barrel.<br />
+&nbsp;</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Declaring too
+many of these sub-tasks can easily impact other tasks in other
+address spaces. This is often called not playing nice with others
+in the box.</font>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">What can happen
+is that the dispatcher's list of active tasks can become
+excessively long making other tasks wait for CPU cycles when the
+number of tasks/sub-tasks exceeds the number of CPU's.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">The overhead to
+manage the list goes up exponentially with the length of the
+list.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Sub-tasks eat memory 
+ravenously leaving less for other tasks.<br />
+&nbsp;</font></li>
+</ul>
+</li>
+<li><font face="Verdana, Arial, Helvetica" size="2">When starting a sub-task 
+what you are really doing is starting a backend-process. (The main-task 
+relinquishes control to the backend-process; often called an inversion of 
+control.)</font><ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">Think of a
+backend-process as something taking place in another room of your
+house. You're sitting in the den and the new sub-task is working in
+the basement. What is it doing down there? Is it still alive? What
+happened to the last request I asked it to work on?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Think of a
+backend-process as a child [process]. Would you want young children
+running around without direct supervision or would you favor the
+bounds of a play pen?</font></li>
+</ul>
+</li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size="2">The list goes on
+and on but the main point is <u>control</u>. <i>In a
+multi-tasking/threading application it is critical to be able to
+control both the main task/process and the sub-tasks/threads as
+well.</i></font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">There are
+infinite products from vendors
+to monitor and control the main task/process inside its container
+(address space.)</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">There are no products that 
+can know the purpose of a sub-task/thread just by looking at its properties. 
+There is no way to kill a sub-task/thread without endangering the execution 
+context and/or risking inconsistent states in shared objects. Because there are 
+no definitive means for controlling sub-tasks/threads, the main task 
+itself must containerize and control its own sub-tasks/threads.</font></p>
+<h3><font face="Arial, Helvetica" size="3">The container
+as a solution</font></h3>
+<table width="40%" align="right" border="0" cellpadding="0"
+cellspacing="0" summary="spacer">
+<tbody>
+<tr>
+<td width="10"><font face="Verdana, Arial, Helvetica" size="2">
+<img alt="."
+src="i/space1.gif" width="1" height="1" /></font></td>
+<td>
+<table border="1" cellpadding="5" cellspacing="0" summary=
+"CICS historical note" align="right">
+<tbody>
+<tr>
+<td bgcolor="#EEEEEE"><font face=
+"Verdana, Arial, Helvetica"><font size="2">As an historical note,
+CICS</font><sup><small>&#174;</small></sup><font size="2"> was
+originally built based on the
+System/360</font><sup><small>&#174;</small></sup><font size="2"> Operating System OS/MVT (Multi programming with a Variable
+number of Tasks.) That should give you a hint of just how difficult
+it is to properly control tasks/threads.</font></font></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<font face="Verdana, Arial, Helvetica"><font size="2">The first
+successful application multi-tasking container was the CICS</font><sup><small>&#174;</small></sup><font size="2"> transaction
+processor.
+CICS</font><sup><small>&#174;</small></sup> <font size=
+"2">used pseudo-tasks to let application software developers
+multi-task their applications in a professional framework. Others have followed IBM</font><small><sup>&#174;</sup><font size="2">'s</font></small>
+<font size="2">lead
+(Encina</font><sup><small>&#174;</small></sup><font size="2">,
+Tuxedo</font><sup><small>&#174;</small></sup><font size="2">) but
+none have been so popular.</font></font>
+<p><font face="Verdana, Arial, Helvetica"><b><font size=
+"2">UNIX</font></b><sup><small>&#174;</small></sup> <font size=
+"2"><br />
+POSIX threads are a little easier to create then the mainframe
+model. All you need is the #include &lt;pthread.h&gt; and
+pthread_create(). No need for assembler routines or
+"authorization."</font></font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">What POSIX
+threads also offer is the same opportunity for the threads to get
+into as much trouble as the mainframe sub-tasks. Therefore the only
+effective way to control these threads is inside a container such
+as</font> <font face="Verdana, Arial, Helvetica"><font size="2">the
+Tuxedo</font><sup><small>&#174;</small></sup> <font size=
+"2">Application Server.</font></font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Java</b><br />
+Java threads are the easiest to create. Either define a class that
+extends Thread or define a class that implements the Runnable
+Interface.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Without access
+to memory, the stack or other computer internals, there are  few methods in Java to control thread functionality. Naturally,
+Java also provides the same potential for threads to get into as
+much mischief as the mainframe sub-tasks or C language threads.
+Therefore the only effective way to control these threads is inside
+a container.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Java EE</b><br />
+Two of the most popular multi-threading J2EE containers are for
+Enterprise Java Beans and Servlets.</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica"><font size="2">The EJB
+containers are called Application Servers
+(Glassfish</font><sup><small>&#174;</small></sup><font size="2">,
+JBoss</font><sup><small>&#174;</small></sup><font size="2">,
+WebLogic</font><sup><small>&#174;</small></sup><font size="2">,
+WebSphere</font><sup><small>&#174;</small></sup><font size=
+"2">)</font></font></li>
+<li><font face="Verdana, Arial, Helvetica"><font size="2">The
+Servlets run under a Servlet Container
+(Jetty</font><sup><small>&#174;</small></sup><font size="2">,
+Apache Tomcat</font><sup><small>&#174;</small></sup><font size=
+"2">)</font></font></li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Java SE</b><br />
+Multi-threading in Java SE generally comes in two flavors:</font></p>
+<ol>
+<li><font face="Verdana, Arial, Helvetica" size="2">Plain vanilla.
+(Such as those used for listeners or for message
+writing.)</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">New York double
+Dutch extra fudge chocolate. (Such as those used in application
+thread pools.)</font></li>
+</ol>
+<p><font face="Verdana, Arial, Helvetica" size="2">For many years
+it was evident the standard edition Java threads were mostly for
+the plain vanilla, simple tasks. Creating a thread was so easy
+anybody could do it. Controlling a simple thread was easy;
+basically there was no need to do anything.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">After the
+wonderful folks at the <a href="#resources">JCP JSR-166 Expert
+Group</a> published the Concurrency API, unseasoned application
+developers started building complex, server-side threading
+environments with Futures and Thread Pools. Very soon thereafter
+and very much like the early developers before them, many of those
+
+developers found their compositions were the equivalent
+of Frankenstein monsters. Why?</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2"><a href=
+"#trouble">Go back</a> and take a look at what can happen with
+uncontrolled sub-tasks/threads.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Java SE threads
+have two major issues: Concurrency and Control.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Just as there
+are two similar issues with juggling balls.</font></p>
+<ol>
+<li><font face="Verdana, Arial, Helvetica" size="2">When the balls
+are in the air, the balls may try to occupy the same space at the
+same time. A concurrency issue.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">When launching
+and catching the balls one needs to tightly coordinate the
+throw/catch so a hand is free when a ball needs catching. A control
+issue.</font></li>
+</ol>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Failure to
+address <u>both</u> these issues means the endeavor will fail
+sooner or later.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">The Concurrency
+API contains three packages:<br />
+&nbsp; java.util.concurrent.atomic<br />
+&nbsp; java.util.concurrent.locks<br />
+&nbsp; java.util.concurrent</font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Concurrency</b><br />
+The atomic and locks packages have to do with concurrency.&nbsp;The
+brilliant scientists at the <a href="#resources">JCP JSR-166 Expert
+Group</a> are making a blue-ribbon contribution to&nbsp;solving
+this issue, we are everlastingly grateful and concurrency needs no
+further discussion.</font></p>
+<table width="40%" align="right" border="0" cellpadding="0"
+cellspacing="0" summary="spacer">
+<tbody>
+<tr>
+<td width="10"><font face="Verdana, Arial, Helvetica" size="2">
+<img alt="."
+src="i/space1.gif" width="1" height="1" /></font></td>
+<td>
+<table border="1" cellpadding="5" cellspacing="0" summary=
+"basic package">
+<tbody>
+<tr>
+<td bgcolor="#EEEEEE"><font face="Verdana, Arial, Helvetica" size=
+"2">The basic package contains extraordinarily beneficial Classes,
+some of which we might compare to the deadliest weapons in an
+arsenal. Using these weapons outside the confines of a war, even by
+experts, opens the door to disastrous consequences.</font></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Control</b><br />
+Concurrent programming is complicated and error-prone because it 
+involves an inversion of control. The basic java.util.concurrent package's treatment of threads (Executors, 
+Futures, ThreadPool and others) is a superior vision and
+represents many years of effort by exceptional computer scientists,
+but it cannot adequately address the control issue. Since we know
+things can go wrong with threads (<a href="#trouble">those pesky
+problems again</a>) and there is&nbsp;no way on this great, green planet an API alone 
+can control a multi-threading environment, Java SE threads need a container.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Now that you understand the 
+problem, it's time to meet the solution.</font></p>
+<h3><font face="Arial, Helvetica" size="3">The Java SE
+Solution</font></h3>
+<p><font face="Verdana, Arial, Helvetica"><font size="2">Welcome to
+Tymeac</font><sup><small>&#8482;</small></sup> <font size=
+"2">(pronounced <i>Tie-Mack</i>) Tymeac is an acronym for
+as<u>Y</u>nchronous <u>T</u>ask <u>M</u>anager and <u>E</u>asy
+<u>A</u>ssembly of <u>C</u>omponents.</font></font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2"><span style=
+"font-weight: 400">Tymeac is a superb implementation of a  simple concept:</span></font></p>
+<blockquote>
+<p><font color="#000080" size="2" face=
+"Verdana, Arial, Helvetica">Put requests in queues for processing
+by asynchronous threads.</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Since Tymeac
+deals with threads, Tymeac controls those threads very, very
+well.</font></p>
+<table border="0" cellspacing="0" style="border-collapse: collapse"
+bordercolor="#111111" id="AutoNumber8" summary="Tymeac">
+<tr>
+<td><font face="Verdana, Arial, Helvetica" size="2">Tymeac for the Java Standard 
+Edition and Micro Edition&nbsp; <br>
+are Open Source Software products maintained on<br />
+and you can download the <a href="#resources">latest editions
+there</a>.</font></td>
+<td><font face="Verdana, Arial, Helvetica" size="2">
+<img border="0"
+src="i/space1.gif" alt="." width="1" height="1" /></font></td>
+<td><font face=
+"Verdana, Arial, Helvetica" size="2">
+<a href="http://www.sourceforge.net/projects/tymeacse/">
+<img border="0" src=
+"i/sflogo1.jpg" alt="SourceForge.Net" width="125" height="37" /></a></font></td>
+</tr>
+</table>
+<p align="left"><font face="Verdana, Arial, Helvetica" size=
+"2">&nbsp;<b>Overview</b><br />
+Just how does Tymeac work?</font></p>
+<blockquote>
+<table style="border-collapse: collapse;" id="AutoNumber3" border=
+"0" bordercolor="#111111" cellpadding="0" cellspacing="0" summary=
+"Tymeac">
+<tr>
+<td align="left"><font face="Verdana, Arial, Helvetica" size=
+"2">Tymeac places your simple request into a Queue<img border="0"
+src="i/space1.gif" alt="." width="1" height="1" />&nbsp;<br />
+&nbsp;</font></td>
+<td align="left" valign="top"><font face=
+"Verdana, Arial, Helvetica" size="2">
+<img src="i/24sx24s.gif" border=
+"0" alt="Single Request" width="24" height="24" /></font></td>
+</tr>
+</table>
+<table style="border-collapse: collapse;" id="AutoNumber4" border=
+"0" bordercolor="#111111" cellpadding="0" cellspacing="0" summary=
+"Tymeac" width="409">
+<tr>
+<td align="left" width="319"><font face="Verdana, Arial, Helvetica" size="2">or
+uses fork-join logic to  fork your
+multi-part<br>
+request into its components and
+places each<br>
+component into its respective Queue.<br>
+(see here: <a href="#resources">Fork-Join Development in Java SE)</a></font></td>
+<td align="left" width="90"><font face="Verdana, Arial, Helvetica" size=
+"2"><img src="i/m1-3.gif" border="0" alt=
+"Multi Request" width="72" height="63" /></font></td>
+</tr>
+</table>
+<p>&nbsp;</p>
+<blockquote>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">
+<img src=
+"i/Process.gif" border="0" alt=
+"Logical Processes" width="256" height="220" /></font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">A thread, in the
+thread pool of each Queue:</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">fetches the
+request,</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">executes the
+request by using reflection to call your logic module (user-written
+class),</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">and returns any
+return data from your logic module to you or on to another
+process.</font></li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size="2">For the simple
+request, Tymeac passes back the return data to the
+caller.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">
+<img src=
+"i/24sx24sBack.gif" border="0" alt=
+"Single back" width="89" height="50" /></font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">For the
+multi-part request, Tymeac concatenates the return data from all
+the components into an Object array (joins) and returns the array
+to the caller.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">
+<img src=
+"i/m1-3Final.gif" border="0" alt=
+"Multi back" width="284" height="154" /></font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">And there's
+more.&nbsp;Autonomous requests;&nbsp; Futures;&nbsp; Extensive
+error recovery;&nbsp; Lots, lots more.</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">By always
+separating the request from the requester (either embedded within
+an application or remotely using Remote Method Invocation), Tymeac
+can manage the Queues and Threads no matter where the requester
+lives. Tymeac handles those <a href="#trouble">vexing issues
+mentioned above</a> as well as:</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size=
+"2"><u>components</u> (a request with multiple parts),</font></li>
+<li><font face="Verdana, Arial, Helvetica" size=
+"2"><u>recursion</u> (when nested levels of access are
+necessary),</font></li>
+<li><font face="Verdana, Arial, Helvetica" size=
+"2"><u>persistence</u> (for shared objects between
+threads),</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2"><u>run-time
+alteration</u> (to provide a dynamic response to an ever changing
+environment.),</font></li>
+<li><font face="Verdana, Arial, Helvetica" size=
+"2"><u>extensions</u> to the base logic (start-up/shutdown&nbsp;
+hooks and exits),</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2"><u>logging</u>
+(of errors and events),</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">and, never
+forget <u>debugging</u>.</font></li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size="2">Thread
+management is the keynote of this article so we now examine how
+Tymeac manages threads.</font></p>
+<h3><font face="Arial, Helvetica" size="3">Thread
+Management</font></h3>
+<blockquote>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Tymeac comprises
+queues with each queue having its own pool of threads. Every Queue
+Thread has its own management structure. Tymeac times each event in
+the life of a Queue Thread. Although there is no way to stop a
+thread, Tymeac handles the run-a-way or blocking-forever thread
+problems as best as can be handled at the application
+level.</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Decoupling</b><br />
+Threading logic is  difficult; not the mainstay of most
+application developers. Tymeac decouples the threading logic from
+the application logic. Tymeac Queue Threads use reflection to
+"call" the application logic (user written Class.) Tymeac Queue
+Threads are part of the Tymeac management
+structure so application developers may concentrate on application logic.
+User Classes simply plug into a well managed multi-threading
+environment as components.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b><a name="interrupt"></a>Interrupt</b><br />
+The original Java architects certainly envisioned developers would want to 
+interrupt an executing thread, but they never perfected that concept.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Today, Thread.interrupt() is 
+a disaster. Threads are interrupting themselves as well as other threads 
+sometimes with erroneous results.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Let's say you
+create thread &#8220;A&#8221; and you expect the thread to complete
+some work within a time limit.</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">You execute a
+timed wait for thread &#8220;A&#8221;.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Thread
+&#8220;A&#8221; continues past the time limit,</font>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">the wait time
+expires and</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">you regain
+control.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Your code
+continues with other work.</font></li>
+</ul>
+</li>
+<li><font face="Verdana, Arial, Helvetica" size="2">You have a second timed wait 
+for another thread “B”.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">If thread
+&#8220;A&#8221; then issues interrupt(), it interrupts the caller
+at the second wait.</font></li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size="2">If you have a
+multi-threading environment (i.e. thread &#8220;C&#8221;,
+&#8220;D&#8221;), then using interrupt() only exacerbates the
+problem.</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">interrupt() is
+like getting kicked at a crowded party</font> <font face="Verdana"
+size="2">&#8212;</font> <font face="Verdana, Arial, Helvetica"
+size="2">you know you&#8217;ve been kicked but you don&#8217;t know
+who did it, when or why.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">interrupt()
+plays no part in Tymeac. All communication with Tymeac Queue
+Threads is through the thread's management structure.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>NotifyAll</b><br />
+Both NotifyAll() and SignalAll() are shotgun methods. When the
+group awakens every thread must do some work to find out if it is
+needed. Even if each thread is running on a separate CPU it still
+requires operating system CPU cycles to get the threads running and
+put the unnecessary threads back into a blocking state.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Tymeac notifies
+each thread individually</font> <font face="Verdana" size="2">&#8212;</font>
+<font face="Verdana, Arial, Helvetica" size="2"> only when it is necessary. By having
+a management structure for each Queue Thread, Tymeac knows the
+exact status of each Queue Thread so there are no wasted context
+switches notifying unnecessary threads.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Thread
+pool</b><br />
+Tymeac's approach to the thread pool is to have only the minimum
+number of threads active at any given time so Tymeac plays nice
+with other applications.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">When a thread
+can process a request in a short time period, then using more than
+the minimum number of threads for a lightly loaded Queue is a waste
+of resources and may even slow down overall processing due to
+contention for memory, cycles and other assets. Tymeac supports Wait List thresholds for
+keeping the number of competing threads under control. (see <a href="#resources">
+High Performance Priority Queues in Java SE</a>)</font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Speed</b><br />
+Tymeac is fast (thanks to the concurrency packages.) Access to
+threads and queues is with lock-free logic. Since there is no need
+for a thread to wait for another thread to release a resource,
+threads can run at full throttle. Naturally, when a thread has no
+work it enters a waiting state so it doesn't consume unnecessary
+cycles from others (another example of playing nice.)</font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Monitoring</b><br />
+Since Java threads execute at the application level there is no
+high level manager to supervise the environment. Tymeac uses a
+Monitor (daemon) at the application level that periodically scans
+the environment looking for problems, notifying administrators when
+problems (real or potential) exist and recovering
+resources.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2">&nbsp;<b>Exceptions</b><br />
+When thread exceptions occur, Tymeac doesn't just let the system
+print an ugly message and kill the thread. Tymeac catches
+exceptions (including with an uncaught exception handler), prints
+and logs meaningful messages with full documentation, and notifies
+administrators of the problem.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Since most
+errors are with the user-written Classes, Tymeac allows dynamic
+repair and reload of those Classes with/without a GUI and
+restarting of the disabled threads with/without a GUI.</font></p>
+</blockquote>
+<table width="40%" align="right" border="0" cellpadding="0"
+cellspacing="0" summary="spacer">
+<tbody>
+<tr>
+<td width="10"><font face="Verdana, Arial, Helvetica" size=
+"2"><img alt="." src="i/space1.gif" width="1" height="1" /></font></td>
+<td>
+<table width="100%" border="1" cellpadding="5" cellspacing="0"
+summary="hint">
+<tbody>
+<tr>
+<td bgcolor="#EEEEEE"><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Hint</b><br />
+By timing events in the life of a thread, this becomes
+possible.</font></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Expunged
+threads</b><br />
+If code becomes stuck forever (such as waiting for a resource that
+failed in another system or trapped in a never ending loop) then
+Tymeac permits administrators to expunge the thread and replace it
+with a fresh copy. The original thread recognizes it was expunged
+when it executes and terminates quickly.</font></p>
+<p><font face="Verdana, Arial, Helvetica"><b><font size=
+"2">Tuning</font></b><font size="2"><br />
+Tymeac is tunable. Trying to manage traditional pool threads is
+like trying to herd cats. The Java SE version of Tymeac was built
+from the  first release to be tunable since it was first
+modeled on the Tymeac</font> <small><font size=
+"2">version</font></small> <font size="2">that ran on the
+CICS</font><sup><small>&#174;</small></sup> <font size=
+"2">Transaction Server. (When you're running in a very high volume,
+recoverable and secure environment, you're either tunable or you're
+history.)</font></font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Statistics<br /></b> Statistics are the base for performance
+analysis and tuning.</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many times
+were threads instantiated?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many
+requests did each thread process?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many times
+was a thread notified?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many waits
+[for work] expired?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many
+problems were caught?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many times
+was expunging necessary?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How did the
+thread thresholds perform?</font></li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size="2">Tymeac
+professionalism reports statistics on request and at shut
+down.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Shut
+down</b><br />
+Every multi-threading application needs to shut down sometime. It
+can go kicking and screaming or it may quiesce and terminate
+gracefully. Quiesce means to quiet or calm. Tymeac multi-stage shut
+down quiets by rejecting new requests and letting those already in
+progress complete. When there is no more activity, Tymeac stops
+gracefully.</font></p>
+<table border="0" cellspacing="0" style="border-collapse: collapse"
+bordercolor="#111111" id="AutoNumber9" summary="Tymeac">
+<tr>
+<td valign="top" width="309"><font face="Verdana, Arial, Helvetica"
+size="2"><b>A picture is worth a thousand words</b><br />
+Tymeac provides GUI's (and programming access) to the server
+environment so users may view and alter parameters
+dynamically.</font></td>
+<td width="10"><font face="Verdana, Arial, Helvetica" size=
+"2"><img border="0" src="i/space1.gif" alt="." width="1" height="1" /></font></td>
+<td align="left" width="247"><font face="Verdana, Arial, Helvetica"
+size="2"><a href="i/TyMenu.jpg">
+<img border="0" src=
+"i/TyMenu_small.jpg" alt="Tymeac Menu" width="100" height="84" /></a> (click for full
+view)</font></td>
+</tr>
+</table>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Tymeac</b>
+controls threads the best threads can be controlled.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Structures</b><br />
+So, what is a Thread Management structure?</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>The Tymeac
+Thread Management Class Structure:</b></font></p>
+<table style="border-collapse: collapse;" id="AutoNumber1"
+bordercolorlight="#C0C0C0" width="539" border="1" bordercolor=
+"#111111" cellpadding="0" cellspacing="0" summary=
+"Thread structure">
+<tr>
+<td valign="top" width="201" align="left" height="57"><font face=
+"Verdana, Arial, Helvetica" size="2">AreaThreadsAnchor</font></td>
+<td width="335" height="57"><font face="Verdana, Arial, Helvetica"
+size="2">The anchor point for the Queue's thread Classes.<br />
+This anchor contains the methods for accessing &nbsp;the threads in
+the pool. The pool is simply an
+ArrayList&lt;AreaThreadMgmt&gt;.</font>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="201" align="left" height="57"><font face=
+"Verdana, Arial, Helvetica" size="2">AreaThreadMgmt</font></td>
+<td width="335" height="57"><font face="Verdana, Arial, Helvetica"
+size="2">The management class for a Queue's thread.<br />
+This class contains the methods for accessing and manipulating the
+individual thread as well as a reference to the thread
+itself.</font>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="201" align="left" height="19"><font face=
+"Verdana, Arial, Helvetica" size="2">AreaBasicThread</font></td>
+<td width="335" height="19"><font face="Verdana, Arial, Helvetica"
+size="2">Queue Thread basic logic (Abstract) Class. It<br />
+contains variables and methods common to all<br />
+threads.</font>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="201" align="left" height="19"><font face=
+"Verdana, Arial, Helvetica" size=
+"2">AreaThreadExceptionHandler</font></td>
+<td width="335" height="19"><font face="Verdana, Arial, Helvetica"
+size="2">The uncaught exception handler for the threads.</font>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="201" align="left" height="19"><font face=
+"Verdana, Arial, Helvetica" size="2">AreaQueueThread</font></td>
+<td width="335" height="19"><font face="Verdana, Arial, Helvetica"
+size="2">Queue Thread to process normal Queues.</font>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="201" align="left" height="19"><font face=
+"Verdana, Arial, Helvetica" size="2">AreaAgentThread</font></td>
+<td width="335" height="19"><font face="Verdana, Arial, Helvetica"
+size="2">Queue Thread to process Output Agent Queues. (The Futures
+from autonomous requests.)</font>
+<p>&nbsp;</p>
+</td>
+</tr>
+</table>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>The
+Code</b><br />
+As with all software, the proof is in the code. Simply <a href=
+"#resources">download</a> the Open Source product (SE and/or ME) with all the
+source and extensive documentation and see for yourself. After all,
+the price is right.</font></p>
+<h2><font face="Arial, Helvetica" size=
+"3">Conclusion</font></h2>
+<p><font face="Verdana, Arial, Helvetica" size="2">If you don't
+control the application threads, then the threads will
+overwhelm</font><span style=
+"font-family: Verdana, Arial, Helvetica"><font size="2"> your
+application</font></span><font face="Verdana, Arial, Helvetica"
+size="2">.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">As it was in the
+beginning</font> <font face="Verdana" size="2">&#8212;</font>
+<font face="Verdana, Arial, Helvetica" size="2">It remains true
+today: The best way to control a multi-threading application is
+inside a container.</font></p>
+<p><font face="Verdana, Arial, Helvetica"><font size="2">If it is
+too time-consuming to privately develop a
+multi-threading</font><big><font size="2"> management
+framework</font></big><font size="2">, then download the best
+thread manager for the Java Standard/Micro Editions that money can't
+buy.</font></font></p>
+<h2><a name="resources"></a> <font face="Arial, Helvetica"
+size="3">Resources</font></h2>
+<p><font face="Verdana, Arial, Helvetica" size="2">Download the
+latest <b>SE</b> edition of <a href=
+"http://sourceforge.net/projects/tymeacse/">Tymeac here</a>. With all the documentation,
+scripts, classes and source.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Download the
+latest <b>ME</b> edition of <a href="http://sourceforge.net/projects/tymeacme/">Tymeac here</a>. 
+With all the documentation,
+scripts, classes and source.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Fork-Join Development in Java 
+SE<br>
+<a href="http://coopsoft.com/ar/ForkJoinArticle.html">
+http://coopsoft.com/ar/ForkJoinArticle.html</a></font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">High Performance Priority 
+Queues in Java 
+SE<br>
+<a href="http://coopsoft.com/ar/ForkJoinArticle.html">
+http://coopsoft.com/ar/PriQueArticle.html</a></font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">The JSR-166
+Interest Site<br />
+<a href=
+"http://gee.cs.oswego.edu/dl/concurrency-interest/">http://gee.cs.oswego.edu/dl/concurrency-interest/</a></font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Sun's Threading
+Tutorial:<br />
+<a href=
+"http://java.sun.com/docs/books/tutorial/essential/concurrency/index.html">
+http://java.sun.com/docs/books/tutorial/essential/concurrency/index.html</a></font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Threading
+articles on the Internet. This is just a partial list.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Java theory and
+practice: Thread pools and work queues<br />
+<a href=
+"http://www.ibm.com/developerworks/java/library/j-jtp0730.html">http://www.ibm.com/developerworks/java/library/j-jtp0730.html</a></font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Introduction to
+Java threads<br />
+<a href=
+"http://www.ibm.com/developerworks/edu/j-dw-javathread-i.html">http://www.ibm.com/developerworks/edu/j-dw-javathread-i.html</a></font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Java theory and
+practice: Characterizing thread safety<br />
+<a href=
+"http://www.ibm.com/developerworks/java/library/j-jtp09263.html">http://www.ibm.com/developerworks/java/library/j-jtp09263.html</a></font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Taming Tiger:
+Default exception handling in threads<br />
+<a href=
+"http://www.ibm.com/developerworks/java/library/j-tiger08104/">http://www.ibm.com/developerworks/java/library/j-tiger08104/</a></font></p>
+</blockquote>
+<h2><a name="author"></a> <font face="Arial, Helvetica"
+size="3">About the Author</font></h2>
+<p><font face="Verdana, Arial, Helvetica" size="2"><a href=
+"mailto:eh%20at%20coopsoft%20dot%20com">Edward Harned</a> is a software developer
+with over thirty years industry experience. He first led projects
+as an employee in major industries and then worked as an
+independent consultant. Today, Ed is a senior developer at <a href=
+"http://www.coopsoft.com/">Cooperative Software Systems, Inc</a>.,
+where, for the last ten years, he has used Java programming to
+bring multi-threading solutions to a wide range of
+tasks.</font></p>
+</blockquote>
+</body>
+</html>

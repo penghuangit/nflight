@@ -1,0 +1,106 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Shut down the Tymeac Server</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Shut down the Tymeac Server, <br>
+&nbsp;&nbsp;&nbsp; com.tymeac.client.jframe.TyShutdown</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This frame class requests a shut down of the Tymeac Server.</p>
+    <p>The non-frame version of this class is <a href="#non">TyShutdownClient</a>, below.</p>
+    <hr noshade size="3">
+  </blockquote>
+</blockquote>
+
+<p align="center"><a href="Images/TyShutdown.jpg">
+<img src="Images/TyShutdown_small.jpg" alt="TyShutdown.jpg (19015 bytes)" border="2" width="100" height="53"></a>&nbsp; (click to link to full image)</p>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>Shut Down</strong> -- Press to request a shut down of the Tymeac Server.</p>
+  <p><strong>Kill</strong> -- Press to request a forced shut down of the Tymeac Server.</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- This is an information message:</p>
+
+<blockquote>
+  <p><u>Tymeac SD(0000)</u> -- The request completed successfully.&nbsp;The remainder of the
+  message is release dependent but always contains the Tymeac Server MilliTime (start up
+  time in milliseconds.)</p>
+  <p><u>Tymeac SD(2010)</u> -- &quot;Shutdown forced past active threads, awaiting
+  termination.&quot; This is the same as return code 0000 except there were active threads
+  and a force shutdown was requested.</p>
+  <p><u>Tymeac SD(2020)</u> -- The request did not complete successfully.&nbsp;Some Threads
+  are still active.&nbsp;The remainder of the message is release dependent but always
+  includes the number of Threads remaining.</p>
+  <p><u>Tymeac SD(2030)</u> -- &quot;Prior shutdown completed normal, awaiting
+  termination&quot;. The server request processing function terminated. A subsequent request
+  was made for shutdown. The request was ignored. If the shut down thread was not part of
+  the Server then the Server only ends when the main JVM ends.</p>
+</blockquote>
+
+<p>Having a way of shutting down automatically, without a frame class, is useful.&nbsp;
+This requires using the shutRequest(boolean force) Method of the Tymeac Server
+Communication Class, <a href="TySvrComm.html">TySvrComm</a>.&nbsp; This is demonstrated in
+the <a href="Samples.html">sample</a> Class, <strong>com.tymeac.demo.TymeacClient_Shutdown</strong></p>
+
+<p>On the command line enter the Class.&nbsp;The Console displays the result, as above.
+Run this Class at least twice.</p>
+
+<hr>
+
+<h3><a name="non"></a>com.tymeac.client.TyShutdownClient (<a href="../JavaDoc/com/tymeac/client/TyShutdownClient.html">JavaDoc</a>)</h3>
+
+<blockquote>
+  <blockquote>
+    <p>This is the Non-GUI equivalent of the GUI Class, above. An example of how to use this
+    class is: com.tymeac.demo.TyDemoClient_ShutDownClient.java in the
+    &lt;TymeacHome&gt;source/com/tymeac/demo directory.</p>
+  </blockquote>
+  <p>Constructor 1 -- has no arguments. This is for the RMI Server. The constructor gets a
+  new instance of&nbsp; a Tymeac internal class that is similar to <a href="TySvrComm.html">TySvrComm</a></p>
+</blockquote>
+
+<blockquote>
+  <p>Constructor 2--&nbsp; is for the internal server. The single argument is the Tymeac
+  Server Interface, TymeacInterface.</p>
+</blockquote>
+
+<p><strong>Instance Methods</strong> --</p>
+
+<blockquote>
+  <p>public String shut() {</p>
+  <blockquote>
+    <p>Returns a String, as above.</p>
+    <p>Parameters: None</p>
+  </blockquote>
+  <p>public String kill() {</p>
+  <blockquote>
+    <p>Returns a String, as above.</p>
+    <p>Parameters: None</p>
+  </blockquote>
+  <blockquote>
+    <p>This is to force a shut down. See the <a href="Shutdown.html">shut down</a> document
+    for a full explanation.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

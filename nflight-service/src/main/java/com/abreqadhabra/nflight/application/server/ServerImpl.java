@@ -4,7 +4,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Profile;
-import com.abreqadhabra.nflight.application.server.concurrent.executors.ServiceExecutor;
+import com.abreqadhabra.nflight.application.server.concurrent.executors.ServiceExecutorForkJoin;
+import com.abreqadhabra.nflight.application.server.concurrent.executors.ServiceExecutorThread;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 //Strategy Context
@@ -23,8 +24,15 @@ public class ServerImpl implements IServer {
 	}
 
 	private void init() {
-		ServiceExecutor excutor = new ServiceExecutor();
-		excutor.execute();
+		
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+		
+		//ServiceExecutorThread threadExcutor = new ServiceExecutorThread();
+//		threadExcutor.execute();
+		
+		ServiceExecutorForkJoin forkJoinExcutor = new ServiceExecutorForkJoin();
+		forkJoinExcutor.execute();
 	}
 
 	@Override

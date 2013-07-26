@@ -1,0 +1,48 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Shut down the Tymeac Server</title>
+
+</head>
+
+<body>
+
+<h1>Shut down the Tymeac Server</h1>
+
+<blockquote>
+  <p>This frame class requests a shut down of the Tymeac Server.</p>
+</blockquote>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>Shut Down</strong> -- Press to request a shut down of the Tymeac Server. </p>
+  <p><strong>Kill</strong> -- Press to request a forced shut down of the Tymeac Server. </p>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- This is an information message:</p>
+
+<blockquote>
+  <p><u>Tymeac SD(0000)</u> -- The request completed successfully.&nbsp;The remainder of the
+  message is release dependent but always contains the Tymeac Server MilliTime (start up
+  time in milliseconds.)</p>
+</blockquote>
+
+<blockquote>
+  <p><u>Tymeac SD(2010)</u> -- &quot;Shutdown forced past active threads, awaiting
+  termination.&quot; This is the same as return code 0000 except there were active threads
+  and a force shutdown was requested.</p>
+  <p><u>Tymeac SD(2020)</u> -- The request did not complete successfully.&nbsp;Some Threads
+  are still active.&nbsp;The remainder of the message is release dependent but always
+  includes the number of Threads remaining.</p>
+  <p><u>Tymeac SD(2030)</u> -- &quot;Prior shutdown completed normal, awaiting
+  termination&quot;. The server request processing function terminated. A subsequent request
+  was made for shutdown. The request was ignored. If the shut down thread was not part of
+  the Server then the Server only ends when the main JVM ends.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;</body></html>

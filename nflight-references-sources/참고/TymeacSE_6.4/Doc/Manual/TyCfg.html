@@ -1,0 +1,336 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Tymeac Configuration Data</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Configuration Data</h1>
+
+<blockquote>
+  <blockquote>
+    <p>The Configuration Data is necessary so that the Tymeac Server may find the Data Base
+    Management System for your installation and for several general variables, described
+    below.</p>
+    <p>There are two places you may place this data:<ol>
+      <li>The system preference node com/tymeac/base</li>
+      <li>A configuration file.</li>
+    </ol>
+  </blockquote>
+</blockquote>
+
+<hr>
+
+<p><big><strong>Preferences:</strong></big><br>
+For a description of how preferences work, see the API documentation for java.util.prefs.</p>
+
+<p>Tymeac uses the system node name <strong>com/tymeac/base</strong>. The key-values are
+in <a href="../JavaDoc/com/tymeac/base/TyBase.html">com.tymeac.base.TyBase</a>. You must
+use the TyCfg panels to set these key-values by filling in the data on each panel and
+using the Put Button, below.</p>
+
+<p>In the absence of <a href="StartUp.html#options">start up options</a> (for stand-alone
+or directory/file), Tymeac start up looks first for the preference data. When start up
+does not find preference data, it then looks for the configuration file in the current
+directory.</p>
+
+<p><big><strong>Configuration File:</strong></big></p>
+
+<p><font color="#FF0000">The old cfg file was replaced by an xml file in release 
+5.2</font></p>
+
+<blockquote>
+  <blockquote>
+
+<p>If you need to convert the old format to xml, use the supplied conversion 
+Class, ConvertCfg.class. This class (the source as well) are in the default 
+directory. Use the script, <a href="Scripts.html#cfg">CfgToXml in the Scripts 
+directory</a>.</p>
+
+  </blockquote>
+</blockquote>
+
+<p>This Class produces a simple xml based file. You should <b>not</b> edit this 
+file manually.</p>
+
+<p>You must use the TyCfg panels to set these Element/attribute values by filling in the data on each panel and
+using the Finish Button, below.</p>
+
+<hr noshade size="3">
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <blockquote>
+          <p align="left">Click to see a full image on any of these thumbnails.</p>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p align="left"><a href="Images/TyCfg1.jpg">
+  <img src="Images/TyCfg1_small.jpg" alt="TyCfg1.jpg (40634 bytes)" border="2" width="100" height="71"></a>&nbsp;&nbsp; &nbsp;&nbsp; <a href="Images/TyCfg5.jpg">
+  <img src="Images/TyCfg5_small.jpg" alt="TyCfg5.jpg (28549 bytes)" border="2" width="100" height="71"></a>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<a href="Images/TyCfg2.jpg"><img src="Images/TyCfg2_small.jpg" alt="TyCfg2.jpg (45416 bytes)" border="2" width="100" height="71"></a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="Images/TyCfg3.jpg">
+  <img src="Images/TyCfg3_small.jpg" alt="TyCfg3.jpg (64125 bytes)" border="2" width="100" height="71"></a>
+  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<a href="Images/TyCfg4.jpg"><img src="Images/TyCfg4_small.jpg" alt="TyCfg4.jpg (39091 bytes)" border="2" width="100" height="71"></a><br>
+  &nbsp;&nbsp; GENERAL &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SECURITY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp; EXITS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DBMS
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ALTERNATES</p>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<h3><big><strong>Preface:</strong></big></h3>
+
+<blockquote>
+  <p>Tymeac has alternatives for the statistics and logging repositories. Please read <a href="Alternatives.html">this document</a>.</p>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac inserts all Strings directly into commands at run time without prefix or suffix.</p>
+</blockquote>
+
+<h2>General Section:</h2>
+
+<blockquote>
+  <p><big><big>Elements:</big></big></p>
+  <blockquote>
+    <p><a name="sys"></a><strong>Sys.exit():</strong>&nbsp; This Checkbox is<br>
+    <strong>&nbsp;&nbsp;&nbsp; <u>Not Checked</u></strong> for <strong>no</strong> shut down
+    thread, <br>
+    <strong>&nbsp;&nbsp;&nbsp; <u>Is Checked</u></strong> for <strong>yes</strong>. Yes is the
+    default</p>
+    <blockquote>
+      <p>The RMI server is keep alive by a thread that never ends.Tymeac Server also issues a
+      never ending wait() so that the garbage collector does not eat necessary variables </p>
+      <p>In order to end Tymeac Server after a normal shut down, Tymeac starts a thread at shut
+      down.&nbsp;This thread calls System.exit(0) which ends the Java Virtual Machine. <strong>Not
+      Checked</strong> for this option does not start this thread.&nbsp;The name of this thread
+      is found <a href="ThreadNames.html">here</a>.&nbsp;The file line is either the String
+      &quot;yes&quot; or &quot;no&quot;.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p><a name="interval"></a><strong>Monitor Interval:</strong>&nbsp;&nbsp;The interval, <u>in
+    seconds</u>, that the Tymeac Monitor sleeps.&nbsp; Another way of saying this is the delay
+    between running of the Monitor.&nbsp;When <strong>zero</strong>, Tymeac does not start the
+    Monitor.&nbsp;Tymeac also uses this interval for <a href="Disabled.html#five">timing</a>
+    of how long requests are in the system.&nbsp;When over this (interval (times a factor)) a
+    request may be marked as possibly <a href="Stalled.html">stalled</a>. A good place to
+    start is 60 seconds.</p>
+  </blockquote>
+  <blockquote>
+    <p><a name="activate"></a><strong>Inactivation Minutes:</strong>&nbsp; This is the time, <u>in
+    minutes</u>, to inactivate the Tymeac Server when no activity (<a href="#activity">see
+    below</a>) takes place for this interval.&nbsp;This is only valid for the Remote Object
+    Activation System and when specifying a Monitor Interval, above.</p>
+    <blockquote>
+      <p>It is the Monitor that checks for time of activity.&nbsp;Therefore, there is a close
+      correlation between the Monitor interval and the Inactivation Minutes. If one specifies an
+      Inactivation time of one (1) minute and a Monitor interval of ten minutes (600 seconds),
+      then the Inactivation time in effect becomes ten minutes.</p>
+    </blockquote>
+    <p>The three above are alterable at runtime with the <a href="TyAltSvr.html">
+    Alter Server Options</a> GUI</p>
+    <p><a name="notify"></a><strong>Notification Function:</strong>&nbsp;&nbsp;This is the
+    Tymeac Function the Monitor executes when it finds a potential problem.&nbsp;The Monitor
+    sends a message to this Function. This is a customer responsibility.&nbsp; Tymeac supplies
+    a <a href="TyNotify.html">sample</a> for your perusal.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h3><strong>Buttons</strong></h3>
+  <blockquote>
+    <p><strong>Configuration File</strong></p>
+    <blockquote>
+      <p><strong>Import:&nbsp;&nbsp;</strong>This button brings up the standard FileDialog
+      Menu.&nbsp;The default FileName is tymeac.xml.&nbsp;When no file already exists, bypass
+      this button.This is to import an existing file.</p>
+    </blockquote>
+    <blockquote>
+      <p><strong>Finish:&nbsp;&nbsp;</strong>This button brings up the standard FileDialog
+      Menu.&nbsp;The default FileName is tymeac.xml.&nbsp;See the section on <a href="StartUp.html">Start Up</a> for Tymeac Server before changing this name.&nbsp;This is
+      to update the file, or add a new file.</p>
+    </blockquote>
+    <p><strong>Preferences:</strong></p>
+    <blockquote>
+      <p><strong>Get:</strong> This button fetches the preferences data from system node
+      com/tymeac/base.</p>
+      <p><strong>Put</strong>: This button saves the preferences data to system node
+      com/tymeac/base.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h2>SECURITY Section:</h2>
+
+<blockquote>
+  <p><big><big>Elements:</big></big></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><a name="login"></a><strong>Login Context</strong>:&nbsp; This is the String field for
+    a login context or null.</p>
+  </blockquote>
+</blockquote>
+
+<h2>EXITS Section:</h2>
+
+<blockquote>
+  <p><big><big>Elements:</big></big></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><a name="startup"></a><strong>Startup Classes List</strong>:&nbsp;&nbsp;These are the
+    classes Tymeac instantiates at startup.See the sections on <a href="UserExits.html">user
+    exits</a> and <a href="ClassNameFormat.html">class naming and URL's</a>.</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><strong>Startup Classes TextField</strong>:&nbsp; This is the TextField for adding a
+      String to the above start up list.</p>
+    </blockquote>
+    <p><a name="startFunc"></a><strong>Startup Functions List</strong>:&nbsp;These are the
+    Functions Tymeac starts at startup.&nbsp;See the section on <a href="StartUpFunctions.html">start up functions</a>.</p>
+    <blockquote>
+      <p><strong>Startup Functions TextField</strong>:&nbsp; This is the TextField for adding a
+      String to the above start up Functions list.</p>
+    </blockquote>
+    <p><a name="shut1"></a><strong>Stage 1 shut down Classes</strong> <strong>List</strong>:
+    &nbsp;These are the classes Tymeac instantiates at stage 1 of shut down.&nbsp;See the
+    sections on <a href="UserExits.html">user exits</a> and <a href="ClassNameFormat.html">class
+    naming and URL's</a>.</p>
+    <blockquote>
+      <p><strong>Stage 1 shutdown TextField</strong>:&nbsp; This is the TextField for adding a
+      String to the above stage 1 shut down list.</p>
+    </blockquote>
+    <p><a name="shut2"></a><strong>Stage 2 shut down Classes</strong> <strong>List</strong>:
+    &nbsp;These are the classes Tymeac instantiates at stage 2 of shut down.&nbsp;See the
+    sections on <a href="UserExits.html">user exits</a> and <a href="ClassNameFormat.html">class
+    naming and URL's</a>.</p>
+    <blockquote>
+      <p><strong>Stage 2 shutdown TextField</strong>:&nbsp; This is the TextField for adding a
+      String to the above stage 2 shut down list.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h3><strong>Buttons</strong></h3>
+  <blockquote>
+    <p><strong>ADD:</strong>&nbsp; This button adds the TextField to the associated List.</p>
+    <p><strong>REMOVE:</strong>&nbsp; This button removes the selected String from the
+    associated List</p>
+  </blockquote>
+</blockquote>
+
+<h2><a name="dbms"></a>DBMS Section:</h2>
+
+<blockquote>
+  <p><big><big>Elements:</big></big></p>
+  <blockquote>
+    <p>Tymeac inserts all Strings directly into commands at run time without prefix or suffix</p>
+    <p><strong>Data Base URL:&nbsp;&nbsp;&nbsp; </strong>This is the URL used by Tymeac in the
+    JDBC method:<br>
+    DriverManager.getConnection().<br>
+    &nbsp;&nbsp;&nbsp; (See Name/PassWord, below.)</p>
+    <p><strong>Drive Manager:</strong>&nbsp;&nbsp; This is the name of any drive manager for
+    your installation used by Tymeac in the JDBC method: <br>
+    DriverManager.registerDriver((Driver)Class.forName( This String ).newInstance());</p>
+    <p><strong>User Name / Pass Word:</strong>&nbsp;&nbsp;These two elements go together.
+    These are the elements used by Tymeac in the JDBC method: <br>
+    DriverManager.getConnection().</p>
+    <blockquote>
+      <p>When this two elements are present, Tymeac uses them when getting the connection,
+      Constructor (URL, Name, PassWord).&nbsp;However, when not present, Tymeac uses the single
+      Constructor (URL).<br>
+      (See URL, above.)</p>
+    </blockquote>
+    <p><strong>Queue Table:</strong>&nbsp;&nbsp;This is the name of the Table of Queues used
+    by your installation. The format of the DBMS Table is described in <a href="DBMSQue.html">DBMS
+    Queue Table</a>.</p>
+    <p><strong>Function Table:</strong>&nbsp;&nbsp;This is the name of the Table of Functions
+    used by your installation. The format of the DBMS Table is described in <a href="DBMSFunc.html">DBMS Function Table</a>.</p>
+    <p><strong>List Table:</strong>&nbsp;&nbsp;This is the name of the Table of Queues within
+    each Function used by your installation. The format of the DBMS Table is described in <a href="DBMSList.html">DBMS List Table</a>.</p>
+    <p><strong>Statistics Table:</strong>&nbsp;&nbsp;This is the name of the Table of
+    Statistics used by your installation. The format of the DBMS Table is described in <a href="DBMSStats.html">DBMS Statistics Table</a>. </p>
+    <p><strong>Log Table:</strong>&nbsp;&nbsp;This is the name of the Log Table used by your
+    installation.&nbsp;The format of the DBMS Table is described in <a href="DBMSLog.html">DBMS
+    Log Table</a>.</p>
+  </blockquote>
+</blockquote>
+
+<h2><a name="alt"></a>ALTERNATES Section:</h2>
+
+<blockquote>
+  <p><big><big>Elements:</big></big></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h4>Files</h4>
+    <blockquote>
+      <p><strong>Statistics Directory:</strong>&nbsp; This is the TextField for using a file
+      directory.&nbsp;When using a file to store the statistics, this is optional.</p>
+      <p><strong>Statistics File:</strong>&nbsp; This is the TextField for using a file name.
+      When using a file to store the statistics, this is required.</p>
+      <p><strong>Log Directory</strong>:&nbsp; This is the TextField for using a file directory.
+      When using a file to store the log, this is optional.</p>
+      <p><strong>Log File</strong>:&nbsp; This is the TextField for using a file name. When
+      using a file to store the log, this is required.</p>
+    </blockquote>
+    <h4>Classes</h4>
+    <blockquote>
+      <p><strong>Statistics Classes:</strong>&nbsp; This is the TextField for using an
+      alternative class for the statistics repository.&nbsp;See the section on <a href="ClassNameFormat.html">class naming and URL's</a>.</p>
+    </blockquote>
+    <blockquote>
+      <p><strong>Log Classes</strong>:&nbsp; This is the TextField for using an alternative
+      class for the log repository. See the section on <a href="ClassNameFormat.html">class
+      naming and URL's</a>.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<hr align="left" width="60%" noshade size="4">
+
+<h3><a name="activity"></a>Activity:</h3>
+
+<blockquote>
+  <p>An inactive Tymeac Server has no currently executing synchronous or asynchronous
+  requests.<ul>
+    <li>Requests in the Stall Array are active asynchronous requests.</li>
+    <li>Timed-out synchronous requests are active until the Monitor frees the request.</li>
+    <li>Recursive requests, whether synchronous or asynchronous, are active.</li>
+    <li><a href="TyNotify.html">Notification</a> requests from the Monitor are active.</li>
+  </ul>
+  <p>The inactivation time is irrelevant to the Server's Distributed Garbage Collector's
+  Lease Value (java.rmi.dgc.leaseValue). Tymeac does not use the unreferenced notification
+  of the java.rmi.server.Unreferenced&nbsp; interface.</p>
+  <p>When there are no executing requests and there has been no request activity for this
+  time interval, the Monitor executes the shut down <a href="UserExits.html">user exits</a>,
+  if present, and calls: java.rmi.activation.Activatable.inactive().</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

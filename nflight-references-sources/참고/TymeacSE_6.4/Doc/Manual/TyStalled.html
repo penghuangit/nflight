@@ -1,0 +1,213 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Display Stalled Asynchronous Requests</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Display Stalled Async Requests, <br>
+&nbsp;&nbsp;&nbsp; com.tymeac.client.jframe.TyStalled</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This frame class displays any <a href="Stalled.html">stalled</a> Asynchronous Requests
+    and provides a way of dealing with them.</p>
+    <p>The non-frame version of this class is <a href="#non">TyStalledClient</a>, below.</p>
+    <hr noshade size="3">
+  </blockquote>
+</blockquote>
+
+<p align="center"><a href="Images/TyStalled.jpg">
+<img src="Images/TyStalled_small.jpg" alt="TyStalled.jpg (36881 bytes)" border="2" width="100" height="79"></a>&nbsp; (click to link to full image)</p>
+
+<h3><strong>Elements</strong></h3>
+
+<blockquote>
+  <h3><strong>List</strong> -- This is a List of any stalled requests:</h3>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>reason</strong> -- This is the reason why a request stalled.&nbsp;This may be
+    the result of a scheduling failure or an excessive time in the system.<br>
+    See <a href="Usage.html">return codes</a>.<br>
+    See also the <a href="Stalled.html">section</a> on when requests may stall.</p>
+    <p><strong>(Id)</strong> -- This is the Request Id returned as part of the original AR
+    request, <br>
+    Tymeac AR(0000)[MilliTime, Id]. <br>
+    see <a href="TymeacParm.html#return">Usage</a> and <a href="TyReqStatus.html">TyReqStatus</a>.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>Entered</strong> -- The date and time entered into the system.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>Function Name</strong> -- The Tymeac Function associated with the request.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Queues Not Responding </strong>-- This is a List of the names of the Tymeac
+  Queues that have not finished processing.&nbsp; When there is an Output Agent Queue, then
+  that Queue name is first in the list. The list is loaded with the Details Button, below.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Usually, after correcting the problem with the non-performing Queue and <a href="TyQueThd.html">enabling</a> all the Threads, the request will continue. However,
+    since the request has been in the system for an excessive length of time, the entry
+    remains, here, until finished.&nbsp;When necessary, the Purge Button can purge the
+    request.</p>
+  </blockquote>
+</blockquote>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>REFRESH</strong> -- Refreshes the display.</p>
+  <p><strong>ReSCHD OA</strong> -- Re-schedule the output agent queue.</p>
+  <blockquote>
+    <blockquote>
+      <p>When a request stalls due to the Output Agent Queue <a href="Stalled.html#third">failing
+      scheduling</a>, then this button may re-schedule the Output Agent Queue.</p>
+      <p>This button is only valid when all normal Queues finished processing and the Output
+      Agent is the only remaining Queue in the request.</p>
+      <p>Why the original schedule failed must be investigated and settled.</p>
+      <blockquote>
+        <p>A failure to schedule due to insufficient Wait List Entries is one common reason for a
+        failure to schedule.&nbsp; <a href="TyQueData.html">Adding more entries</a> or waiting
+        until the Queue is under a lesser load may solve this problem.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>PURGE</strong> -- Select a line[s] and press.&nbsp;The stalled request[s] is
+  purged from the Tymeac System.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>DETAILS</strong> -- Select a line and press.&nbsp;This loads the List of Queues
+  not Responding.</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- This is an information message:</p>
+
+<blockquote>
+  <p><u>Connection failure</u> -- The RMI connection failed or the Tymeac Server returned an
+  invalid message.</p>
+  <p><u>No requests are stalled</u> -- As stated.</p>
+  <p><u>Make a selection</u> -- Select a line for Details or Purge.</p>
+  <p><u>Selected item is no longer active</u> -- The request finished or was purged by
+  another.&nbsp; Use the Refresh Button.</p>
+  <p><u>Use refresh button first</u> -- Use the Refresh button before the others.</p>
+  <p><u>Selected item is not an Output Agent</u> -- The request does not contain an Output
+  Agent Queue.</p>
+  <p><u>All normal Queues have not finished</u> -- The request has pending normal Queues.</p>
+  <p><u>Output Agent is a bad Queue</u> -- This is an internal error.&nbsp; The Output Agent
+  Queue is damaged.</p>
+  <p><u>Output Agent is already scheduled</u> -- The request is in a Wait List on the Output
+  Agent Queue.</p>
+  <p><u>Scheduling failed with return code=(nnnn)</u> -- See the list of <a href="Usage.html#schd">reasons</a> why the request failed.</p>
+</blockquote>
+
+<hr>
+
+<h3><a name="non"></a>com.tymeac.client.TyStalledClient (<a href="../JavaDoc/com/tymeac/client/TyStalledClient.html">JavaDoc</a>)</h3>
+
+<blockquote>
+  <blockquote>
+    <p>This is the Non-GUI equivalent of the GUI Class, above. An example of how to use this
+    class is: com.tymeac.demo.TyDemoClient_Stalled.java in the
+    &lt;TymeacHome&gt;source/com/tymeac/demo directory.</p>
+  </blockquote>
+  <p>Constructor 1 -- has no arguments. This is for the RMI Server. The constructor gets a
+  new instance of&nbsp; a Tymeac internal class that is similar to <a href="TySvrComm.html">TySvrComm</a></p>
+</blockquote>
+
+<blockquote>
+  <p>Constructor 2--&nbsp; is for the internal server. The single argument is the Tymeac
+  Server Interface, TymeacInterface.</p>
+</blockquote>
+
+<p><strong>Instance Methods</strong> --</p>
+
+<blockquote>
+  <p>public String[] detail(long id) {</p>
+  <blockquote>
+    <p>Returns:</p>
+    <blockquote>
+      <p>String[]</p>
+      <blockquote>
+      <p>When the first element = &quot;N287&quot;, then none are stalled.</p>
+      <p>Otherwise, a list of the Stalled requests in the above List format.</p>
+      </blockquote>
+    </blockquote>
+    <p>Parameters: the stalled request id number.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>public int purge(long id) {</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Returns:</p>
+    <blockquote>
+      <p>2&nbsp; completed. Do a refresh to see the new List</p>
+    </blockquote>
+    <p>Parameters: he stalled request id number.</p>
+  </blockquote>
+  <p>public String[] refresh() {</p>
+  <blockquote>
+    <p>Returns:</p>
+    <blockquote>
+      <p>String[]</p>
+      <blockquote>
+      <p>When the first element = &quot;N287&quot;, then none are stalled.</p>
+      <p>Otherwise, a list of the Stalled requests in the above List format.</p>
+      </blockquote>
+    </blockquote>
+    <p>Parameters: the queue name</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>public int reSchd(long id) {</p>
+  <blockquote>
+    <p>Returns:</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>0&nbsp; OK<br>
+      1&nbsp; Selected item no longer stalled<br>
+      2&nbsp; Selected item is not an Output Agent<br>
+      3&nbsp; All normal Queues have not finished<br>
+      4&nbsp; Output Agent is a bad Queue<br>
+      5 Output Agent is already scheduled<br>
+      6&nbsp; Nothing selected<br>
+      7&nbsp; Selected item was not found<br>
+      8&nbsp;&nbsp; Invalid ID on selected item<br>
+      10 Communication error <br>
+      11 No Requests Stalled<br>
+      Other = Scheduling failed with this return code</p>
+    </blockquote>
+    <p>Parameters: the stalled request id number.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

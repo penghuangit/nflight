@@ -1,0 +1,115 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<title>New Run Time Statistics</title>
+</head>
+
+<body background="../Manual/Images/texture.jpg">
+
+<h1>New Run Time Statistics</h1>
+
+<blockquote>
+  <blockquote>
+
+<p>The Statistics Repository is dynamically alterable with the New Run Time 
+Stats GUI/Non-GUI. During the session, if Tymeac finds a problem writing 
+statistics, then Tymeac sets statistics writing as unavailable. You may fix the 
+problem and reset statistics, stop all statistics or set new statistics 
+repository parameters below.</p>
+
+  </blockquote>
+</blockquote>
+
+<h3><strong>Elements - each is mutually exclusive</strong></h3>
+
+<blockquote>
+  <p><strong>DBMS Table </strong>&nbsp;-- Enter the name of the New DBMS Table.</p>
+  <p><strong>Dir and/or File Name </strong>&nbsp;-- When using a local file 
+  instead of a DBMS Table, then enter the name of the file. A directory is 
+  optional</p>
+  <p><strong>Alt </strong>&nbsp;-- When using an alternate class instead of the 
+  above, enter that fully qualified class name.</p>
+</blockquote>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>Reset</strong> -- Re-verifies the existing Statistics Repository on 
+  the Server. If all goes well, then the Statistics Repository is restored.</p>
+  <p><strong>Stop</strong> -- Stops all statistics writing on the Server.</p>
+  <p><strong>Import</strong> -- Fetches the current Statistics Repository parameters from 
+  the Server.</p>
+  <p><strong>Update</strong> -- Fill in a new Statistics Repository parameters and press to 
+  update on the Server. If you never had a Statistics Repository at Server start-up, then 
+  you can add it now.</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- (xx) is the return code for the non-gui
+class. This is an information message:</p>
+
+<blockquote>
+  <p>(-1)&nbsp; <u>Connection failure</u> -- The RMI connection failed or the Tymeac Server
+  returned an invalid message.</p>
+  <p>Since Tymeac is fully open-source now, you must go to the source code to 
+  find the return codes. All codes are <font color="#0000FF">public static final 
+  int</font> values in Class com.tymeac.base.SetUpStats.java. As of Release 6.2 
+  they are as follows: </p>
+  <blockquote>
+    <font SIZE="2" COLOR="#7f0055"><b>
+    <p ALIGN="LEFT">public</b></font><font SIZE="2"> </font>
+    <font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2"> </font>
+    <font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2"> </font>
+    <font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2"> </font>
+    <font SIZE="2" COLOR="#0000c0"><i>StatsSuccess</i></font><font SIZE="2"> = 
+    0; </font><font SIZE="2" COLOR="#3f7f5f">// success<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>StatsNoCurr</i></font><font SIZE="2"> 
+    = 40; </font><font SIZE="2" COLOR="#3f7f5f">// no current stats<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>StatsNotNec</i></font><font SIZE="2"> 
+    = 41; </font><font SIZE="2" COLOR="#3f7f5f">// stats doesn't need resetting<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>StatsFailVeryOld</i></font><font SIZE="2"> 
+    = 42; </font><font SIZE="2" COLOR="#3f7f5f">// failed to verify<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>StatsCreateFail</i></font><font SIZE="2"> 
+    = 43; </font><font SIZE="2" COLOR="#3f7f5f">// New stats failed to create<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>StatsFailVeryNew</i></font><font SIZE="2"> 
+    = 44; </font><font SIZE="2" COLOR="#3f7f5f">// failed to verify<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>StatsNotInUse</i></font><font SIZE="2"> 
+    = 45; </font><font SIZE="2" COLOR="#3f7f5f">// stats not in use<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>StatsStopped</i></font><font SIZE="2"> 
+    = 46; </font><font SIZE="2" COLOR="#3f7f5f">// stats service stopped</font></p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;</body></html>

@@ -1,0 +1,241 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Basic RMI Set Up</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Basic RMI Set Up</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>After installing the product several steps <u>may</u> <u>be</u> necessary to make
+        Tymeac Server compatible with your installation.&nbsp;The key words are &quot;<u>may</u> <u>be</u>&quot;.
+        Tymeac should work, as is, right out of the box. However, with RMI Servers there
+        are two areas of concern.&nbsp;There is also the directory structure.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <ol>
+    <li>For simplicity, you should run the Installation Verification Procedure and Demonstration
+      System with Tymeac Server and Tymeac Clients on the same machine.&nbsp;The user-maintained
+      Classes we supply are set up for local RMI communication.</li>
+  </ol>
+  <blockquote>
+    <blockquote>
+    <p>If you altered the RMI Variables during other set up procedures and need to
+    re-establish a non-activatable RMI Server environment or you wish to use remote RMI
+    communications, then <a href="setupbasic.html#rmi">note below</a>:</p>
+    </blockquote>
+  </blockquote>
+  <ol>
+    <li type="disc" value="2">With communication software, sometimes different environments
+      produce unique situations.&nbsp;It is for this reason that we supply a user-maintained
+      Class for calling the remote methods on the Tymeac Server, <a href="TySvrComm.html">TySvrComm</a>.&nbsp;
+      If you encounter RMI errors (such as Connection Failure) then you may add exception
+      handling code within this class and recompile into the &lt;home&gt;\com\tymeac\demo
+      directory.<br>
+      <br>
+    </li>
+    <li type="disc" value="3">The directory structure for Tymeac assures that Tymeac may reside
+      on a different machine than the clients that use it and that user defined classes may
+      easily plug-in.</li>
+  </ol>
+  <blockquote>
+    <blockquote>
+    <p>When you unzipped the package, Tymeac Classes were put into several
+    directories:&nbsp;For this discussion, we use the Windows format of a back slash, (\), and
+    a &lt;home&gt; directory of:: c:\TymeacServer\Classes.&nbsp;When you develop your own
+    systems, there are alternative <a href="Directories.html">directory</a> structures.</p>
+    <blockquote>
+      <p><strong>&lt;home&gt;\com\tymeac\base</strong> -- is where the Tymeac classes for Tymeac
+      Server reside as well as the _Stub and common classes shared between Tymeac Server and
+      Tymeac Clients, (GUI and non-GUI), classes.</p>
+      <p><strong>&lt;home&gt;\com\tymeac\serveruser</strong> -- is where the user Processing
+      Application Classes for the Demonstration system for use by the Tymeac Server reside.</p>
+      <p><strong>&lt;home&gt;\com\tymeac\common</strong> -- is where the user classes common to
+      the non-activatable Tymeac Server, Tymeac Clients and User Clients for the Demonstration
+      system reside.</p>
+      <p><strong>&lt;home&gt;\Security</strong> -- is where a &quot;full permission&quot; policy
+      file resides.</p>
+    </blockquote>
+    </blockquote>
+  </blockquote>
+  <ol>
+    <li value="4">Your CLASSPATH must point to the &lt;home&gt; directory or you must move the Tymeac
+    Classes to a directory on your CLASSPATH, when necessary. We supply scripts 
+    for running all aspects of Tymeac. These scripts use -cp so that a general 
+    CLASSPATH is not necessary, <b>except for the RMI Registry.</b></li>
+  </ol>
+  <blockquote>
+    <blockquote>
+    <p>
+    <strong>Usually, </strong>the CLASSPATH must have at least the <strong>&lt;home&gt;</strong>
+    directory so that the RMI Registry may find the stub class for marshaling.&nbsp; (If you
+    are new to RMI, we provide a brief <a href="RMIBackground.html">background</a>.)&nbsp;
+    (For more on RMI, <a href="#RMIFAQ">see below</a>.)</p>
+    <p>You may include the -classpath option on all commands (see below For
+    Windows...).&nbsp;The &quot;&lt;home&gt; directory must appear on all commands.&nbsp;The
+    Demonstration Clients and Processing Application Classes both use the classes therein,
+    therefore both must have access to these directories.</p>
+    <blockquote>
+      <p>If you need to specify a policy file, then do so on the command line or in one of the
+      supplied scripts.We supply a general <a href="Directories.html#security">policy file</a>
+      that you may use for all permissions.</p>
+    </blockquote>
+    <blockquote>
+      <blockquote>
+        <p>-Djava.security.policy=&lt;home&gt;\security\policy.all</p>
+      </blockquote>
+    </blockquote>
+    </blockquote>
+  </blockquote>
+  <ol>
+    <li value="5">We supply <a href="Scripts.html">script files</a> for starting the Tymeac Server. You<b>
+    must edit </b>the environment file <b>SET_ENV</b> for your environment or you may simply use the command line.</li>
+  </ol>
+  <h3>Do the <a href="IVP.html">Installation Verification Procedure</a>.</h3>
+  <p align="center">
+  <img src="../Brochure/Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  <p>Now that Tymeac is fully installed and functioning properly you can see how this system
+  performs under a load.&nbsp; (If Tymeac is not running, then you must <a href="IVP.html#startup">start it</a>.)</p>
+  <p>GUI Class <a href="TyDemoT3.html">com.tymeac.demo.jframe.TyDemoT3</a> performs multiple
+  event processes.</p>
+  <blockquote>
+    <p>If you do not have a CLASSPATH set then you must use the -cp with the &lt;home&gt;
+    directory</p>
+    <p>We supply a script file for this, <a href="Scripts.html#t3">T3.bat [sh]</a>.</p>
+    <p>Since Tymeac is middleware, nothing &quot;shows&quot;.&nbsp;Therefore, we supply
+    several Classes that display what is going on with the Queue Threads and the Queue Wait
+    Lists.</p>
+  </blockquote>
+  <p>The easiest way to run these classes is from the main process menu, <a href="TyMenu.html">com.tymeac.client.jframe.TyMenu</a>,</p>
+  <blockquote>
+    <p>We supply a script file for this, <a href="Scripts.html#menu">menu.bat [sh]</a>.</p>
+    <p>If you do not have a CLASSPATH set then you must use the -cp with the &lt;home&gt;
+    directory:</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><a href="TyQueThd.html">TyQueThd</a> displays the status of Queue Threads.<br>
+      <a href="TyWlData.html">TyWlData</a>&nbsp; displays the status of Queue Wait Lists.</p>
+    </blockquote>
+  </blockquote>
+  <p>The <a href="Demo.html">Demonstration System</a> Queue's are four characters, UPPER
+  CASE from &quot;AAAA&quot; to &quot;DDDD&quot;. Queue &quot;AAAA&quot; receives the
+  heaviest usage while Queue &quot;DDDD&quot; receives the lightest usage as an Output Agent
+  Queue.</p>
+</blockquote>
+
+<hr noshade size="3">
+
+<h2><a name="rmi"></a>RMI Variables</h2>
+
+<blockquote>
+  <blockquote>
+    <p>Please see the documentation on the RMI Variables, <a href="TyVariables.html">TyVariables</a>.
+    This Class contains instance fields for which registry to use, (RMI, JNDI or user
+    defined), URL name, and, Tymeac name for RMI binding and lookup.</p>
+    <p>It is easier to use a GUI to manipulate this class. Simply set the URL and Associated
+    Name to your requirements. However, if you wish to code the class yourself:</p>
+    <blockquote>
+      <p align="left" style="text-align: justify">To use the basic, (RMI Registry), <br>
+      &nbsp;&nbsp;&nbsp; set boolean <strong>tymeac_use_rmi</strong> to <strong>true</strong>, <br>
+      &nbsp;&nbsp;&nbsp; set boolean <strong>tymeac_use_iiop</strong> to <strong>false</strong>,
+      <br>
+      &nbsp;&nbsp;&nbsp; set boolean <strong>tymeac_use_alternate</strong> to <strong>false</strong>,
+      <br>
+      &nbsp;&nbsp;&nbsp; set String <strong>tymeac_name</strong> to any value you wish<br>
+      &nbsp;&nbsp;&nbsp; set String <strong>tymeac_url_name </strong>to rmi:///<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; To use remote communications, (not in the
+      localhost), <br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set String <strong>tymeac_url_name</strong>
+      &nbsp; to the URL for the remote machine,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (i.e.
+      rmi://your-company.org/&nbsp; or&nbsp; rmi://192.168.42.1/).</p>
+    </blockquote>
+    <p>Make any changes to the instance fields in the supplied source code for this Class and
+    recompile into the &lt;home&gt;\common directory. Tymeac Server and Clients both use these
+    variables.</p>
+  </blockquote>
+</blockquote>
+
+<h2><a name="RMIFAQ"></a>RMI FAQ</h2>
+
+<blockquote>
+  <blockquote>
+    <p>This was taken from the Sun site on Frequently Asked Questions on RMI,
+    (http://www.javasoft.com/products/jdk/1.2/docs/guide/rmi/faq.html)</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>A.2</strong> Do I have to install the _Stub file in the client's CLASSPATH? I
+  thought it could be downloaded.</p>
+  <p>A stub class can be downloaded, if the server that is exporting the remote object
+  annotates the marshaled stub instance with the java.rmi.server.codebase property, which
+  indicates the location from where the stub class can be loaded. You should set the
+  java.rmi.server.codebase property on the server exporting a remote object. While remote
+  clients could set this property, they would then be limited to only getting remote objects
+  from the specified codebase.You should not assume that any client VM will have specified a
+  codebase that resolves to the location of your object. </p>
+  <p>When a remote object is marshaled by RMI (whether as an argument to a remote call or as
+  a return value), the codebase for the stub class is retrieved by RMI and used to annotate
+  the serialized stub. When the stub is unmarshalled, the codebase is used to load the stub
+  classfile using the RMIClassLoader, unless the class can already be found in the CLASSPATH
+  or by the context classloader for the receiving object, such as an applet codebase.</p>
+  <p>If the _Stub class was loaded by an RMIClassLoader, then RMI already knows which
+  codebase to use for its annotation. If the _Stub class was loaded from the CLASSPATH, then
+  there is no obvious codebase, and RMI consults the java.rmi.server.codebase system
+  property to find the codebase. If the system property is not set, then the stub is
+  marshaled with a null codebase, which means that it cannot be used unless the client has a
+  matching copy of the _Stub classfile in the client's CLASSPATH.</p>
+  <p>It is easy to forget to specify the codebase property. One way to detect this error is
+  to start the rmiregistry separately and without access to the application classes. This
+  will force Naming.rebind to fail if the codebase is omitted.</p>
+  <p>For more information on the java.rmi.server.codebase property, please take a look at
+  our tutorial, Dynamic code downloading using RMI (Using the java.rmi.server.codebase
+  Property). </p>
+  <blockquote>
+    <blockquote>
+      <p style="text-align: justify">(This was taken from that tutorial.)</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>Before starting the compute engine, you need to start RMI's registry, using the <code>rmiregistry</code>
+    command.&nbsp; As discussed earlier, the RMI registry is a simple server-side bootstrap
+    naming facility that allows remote clients to get a reference to a remote object.&nbsp;
+    Note that before you start the <code>rmiregistry</code>, you must make sure that the shell
+    or window in which you will run <code>rmiregistry</code> either has no <code>CLASSPATH</code>
+    environment variable set or has a <code>CLASSPATH</code> environment variable that does
+    not include the path to any classes, including the stubs for your remote object
+    implementation classes, that you want downloaded to clients of your remote objects. </p>
+    <p style="text-align: justify">If you <em>do</em> start the <code>rmiregistry</code> and
+    it <em>can</em> find your stub classes in <code>CLASSPATH</code>, it will not remember
+    that the loaded stub class can be loaded from your server's code base, specified by the <code>java.rmi.server.codebase</code>
+    property when you started up your server application.&nbsp; Therefore, the <code>rmiregistry</code>
+    will not convey to clients the true code base associated with the stub class and,
+    consequently, your clients will not be able to locate and to load the stub class or other
+    server-side classes.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

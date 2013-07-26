@@ -1,0 +1,641 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Run Time Return Codes</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Run Time Return Codes</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>This section details the return codes the Tymeac Server passes back to a Tymeac Client
+      for Synchronous Requests.The error codes logged by the Agent Thread for Asynchronous
+      Requests. The Monitor error codes.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p>These are the four digit codes (plus Queue number for Scheduling errors) returned from
+  a Tymeac Request, <a href="Definitions.html#sync">Synchronous</a> or <a href="Definitions.html#async">Asynchronous</a> as well as <a href="TyShutdown.html">Shut
+  Down</a>.</p>
+  <p><a name="top"></a>Numbers beginning with the digit</p>
+  <blockquote>
+  <p>zero (0) [will be four zeros (0000)] - request (sync, async and shutdown) completed normally, all went 
+  well.</p>
+  <p>two (2) relate to <a href="Usage.html#shut">shut down</a> errors.</p>
+  <p>three (3) relate to the <a href="Usage.html#monitor">monitor</a> functions.</p>
+  <p>four (4) relate to <a href="Usage.html#broker">request brokering</a> errors.</p>
+  <p>five (5) relate to <a href="Usage.html#schd">scheduling</a> errors.&nbsp; See also <a href="SchdFail.html">scheduling failures</a>.</p>
+  <p>six (6) relate to <a href="Usage.html#threads">thread completion</a> errors in
+  Synchronous Requests.</p>
+  <p>seven (7) relate to <a href="#agent">thread completion</a> errors in Asynchronous
+  Requests.</p>
+  <p>nine (9) relates to <a href="#return">parsing</a> by the
+  <a href="TymeacReturn.html">TymeacReturn</a> class.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>For Synchronous Requests, Tymeac passes the concatenated output of each component of
+  the request back to the client, <u>in the order that each Queue finishes processing</u>.&nbsp;When
+  the request fails, partial results are possible.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Common return codes:</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>0000 - Normal </p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <dl>
+    <dd>4030 - Shut Down in progress.</dd>
+    <dd>4120 - Time-out occurred.</dd>
+    <dd>5020nn - No thread available to process request.</dd>
+    <dd>5025nn - No Wait List available.</dd>
+  </dl>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <h4><a name="shut"></a><strong>RETURN CODES: Tymeac Server, Shut Down:</strong></h4>
+  <blockquote>
+    <p><strong>0000</strong>&nbsp; Shut Down complete with all Queue Threads inactive.</p>
+    <blockquote>
+      <p>The Server stopped. When using the <a href="Shutdown.html#shuthread">shut down thread</a>,
+      the JVM ends when Tymeac calls system.exit(). When not using the shut down thread, you may
+      have to kill the process yourself.</p>
+      <p>This return code does not start with a 2. It is the normal return code 
+      for a shut down request.</p>
+    </blockquote>
+    <p><strong>2010</strong>&nbsp; Shut Down completed, however there were Queue Threads
+    active.</p>
+    <blockquote>
+      <p>The shutdown with force request completed successfully.&nbsp;Some Queue Threads were
+      still active. </p>
+      <p>When using the <a href="Shutdown.html#shuthread">shut down thread</a>, the JVM ends
+      when Tymeac calls system.exit(). When not using the shut down thread, you may have to kill
+      the process yourself.</p>
+    </blockquote>
+    <p><strong>2020</strong>&nbsp; Shut Down incomplete</p>
+    <blockquote>
+      <p>The request did not complete successfully.&nbsp;Some Threads are still active. The
+      remainder of the message is release dependent but always includes the number of Threads
+      remaining.</p>
+      <p>You may wait for the Queue Threads to finish and try to shut down again.</p>
+      <p>If some Queue Threads are hanging and will never complete, you may use the shutdown
+      with force request, shutRequest(true). That request, when successful, produces message
+      2010, above.</p>
+    </blockquote>
+    <p><strong>2030</strong>&nbsp; Prior Shut Down completed, awaiting termination</p>
+    <blockquote>
+      <p>The Server is shut down. However, the JVM is still alive.</p>
+      <p>The JVM ends<ul>
+        <li>When using the <a href="Shutdown.html#shuthread">shut down thread</a>, Tymeac calls
+          system.exit().</li>
+        <li>When the monitor thread wakes up (this is the monitor interval) and exits in the run()
+          method.</li>
+        <li>You kill the process.</li>
+      </ul>
+      <p>For the RMI Servers, if you do not use the shut down thread then the RMI &quot;keep
+      alive&quot; threads keep the JVM active. You must kill the process yourself.</p>
+      <p>For the Internal Server,  </p>
+      <blockquote>
+      <p>If you do not use the shut down thread and you keep the JVM
+      alive, then repeated calls for shut down produce this message.</p>
+      <p>The Monitor Thread is a daemon thread. If there are no non-daemon threads
+      alive, the JVM terminates. However, since the TymeacInterface extends 
+      java.rmi.Remote there may be RMI threads active.</p>
+      <p>The caveat is no non-daemon threads alive. When Tymeac is completely shut down,
+      including the Monitor Thread, there should be no more <u>Tymeac</u> threads of any kind
+      alive. However, there are three instances where threads may persists.<ol>
+        <li><p align="left">There may be a Tymeac thread &quot;hanging&quot;. This may be a Queue Thread that is stuck in a Processing Application
+          Class or an internal Tymeac thread such as a logging or statistics
+          thread that is blocking on I/O or in a user alternatives function.</p>
+        </li>
+        <li>
+        <p align="left">Since Tymeac provides user exits, you may have private threads that did not terminate in
+          the shut down exits.</li>
+        <li>
+        <p align="left">Some persistent RMI threads as mentioned above.</li>
+      </ol>
+      <p>Once again, you must kill the process yourself.</p>
+      </blockquote>
+    </blockquote>
+    <p><strong>2040</strong>&nbsp; Shut Down Stage 1 incomplete, try again later</p>
+    <blockquote>
+      <p>The request could not be processed. Shut down proceeds in stages. Each 
+      stage must complete before the next stage may begin. Stage 1 executes the 
+      optional Stage 1 shut down exits, therefore, these exits must run to 
+      completion before the next stage begins.</p>
+      <p>You may wait for the Stage 1 shut down to finish and try to shut down again.</p>
+      <p>Since <a href="UserExits.html">shut down exits</a> run within the main 
+      Tymeac system (not as separate threads) they may hang the shut down.</p>
+    </blockquote>
+    <p><strong>2050</strong>&nbsp; Shut Down Stage 2 incomplete, should complete 
+    shortly</p>
+    <blockquote>
+      <p>The request could not be processed. Either there are no Queue Threads 
+      active or the shut down is by force and another thread is completing Stage 
+      2 shut down.</p>
+      <p>You must wait for the Stage 2 shut down to finish. Stage 2 may only 
+      execute once.</p>
+      <p>Since <a href="UserExits.html">shut down exits</a> run within the main 
+      Tymeac system (not as separate threads) they may hang the shut down.</p>
+    </blockquote>
+    <p><map name="FPMap0">
+    <area href="#top" shape="rect" coords="1, 0, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap0" width="32" height="22"></p>
+  </blockquote>
+  <h4><a name="monitor"></a><strong>RETURN CODES: (stall array reason codes). Tymeac Server,
+  Monitor:</strong></h4>
+  <blockquote>
+    <p><strong>3010</strong>&nbsp; Request purged due to excessive time.</p>
+    <blockquote>
+      <p>The request was found in a Queue Wait List where the Queue exceeded the maximum allowed
+      time to be working in a thread and the thread is marked as &quot;disabled&quot;. That is,
+      the status of a queue thread was &quot;cancelled&quot;, because of excessive time in a
+      status of:&nbsp; &quot;in link to application, or scheduler&quot;.&nbsp;Now on the next
+      pass of the Monitor the status is set as &quot;disabled&quot;.&nbsp;Disabled queues cannot
+      process any requests. Therefore, Synchronous Requests are flushed, and Asynchronous
+      Request are placed in the stall array with this reason code.</p>
+    </blockquote>
+    <p><strong>3020</strong>&nbsp; All threads are disabled.</p>
+    <blockquote>
+      <p>All the threads in the queue are disabled. Since there is no way to selectively restart
+      a request, an entry is placed in the stall array. When the problem is solved, the <a href="TyStalled.html">Stalled Display</a> may re-schedule an Asynchronous Request Output
+      agent queue, or purge the Asynchronous Request from the system.</p>
+    </blockquote>
+    <p><strong>3030</strong>&nbsp; Request flagged due to excessive time.</p>
+    <blockquote>
+      <p>The Asynchronous request exceeded the maximum allowed time to be in the system.&nbsp;
+      The request was placed in the stalled array.&nbsp;If the request finishes normally, the
+      system removes this entry.</p>
+    </blockquote>
+    <p><map name="FPMap1">
+    <area href="#top" shape="rect" coords="1, 0, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap1" width="32" height="22"></p>
+  </blockquote>
+  <h4><a name="broker"></a><strong>RETURN CODES: Tymeac Server,&nbsp; Request Brokering:</strong></h4>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>4020</strong>&nbsp; Internal Error.</p>
+    <blockquote>
+      <p>The system was unable to allocate a new-request object. This is 
+      probably an out-of-memory condition or may signify system damage.</p>
+    </blockquote>
+    <p><strong>4025</strong>&nbsp; Internal Error.</p>
+    <blockquote>
+      <p>The system was unable to allocate a new-request object for a callback 
+      request. This is probably an out-of-memory condition or may signify system 
+      damage.</p>
+    </blockquote>
+    <p><strong>4030</strong>&nbsp; Shut Down in progress.</p>
+    <blockquote>
+      <p>The system is in Shut Down mode. The request rejects before any Queues schedule.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>4040</strong>&nbsp; Invalid Function name.</p>
+    <blockquote>
+      <p>The Function name passed is not valid.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>4050</strong>&nbsp; The Cancel Word already exists in the system.</p>
+    <blockquote>
+      <p>A synchronous request supplied a cancel word in the TymeacParm. Another synchronous
+      request is in the system with the same cancel word.</p>
+    </blockquote>
+    <p><strong>4060</strong>&nbsp; The Callback functionality failed at the 
+    Server, internal Function missing.</p>
+    <blockquote>
+      <p>A synchronous request supplied a callback object in the 
+      <a href="TymeacParm.html#callback">TymeacParm</a>.</p>
+      <p>Tymeac does callbacks in new, Asynchronous Requests using an internal 
+      Function. The internal Function name is missing. The reason for the failure is written to 
+      the system console, the Tymeac Log and a message is sent to the 
+      Notification Function. See the message for details on the error.</p>
+      <p>Since this was checked at start up, there is system damage. Recovery is 
+      probably not possible.</p>
+    </blockquote>
+    <p><strong>4070</strong>&nbsp; The Callback functionality failed at the 
+    Server, internal Queue error.</p>
+    <blockquote>
+      <p>A synchronous request supplied a callback object in the 
+      <a href="TymeacParm.html#callback">TymeacParm</a>.</p>
+      <p>Tymeac does callbacks in new, Asynchronous Requests using an internal 
+      Function. A Queue within that Function failed to schedule. The reason for 
+      the failure is written to the system console, the Tymeac Log and a message 
+      is sent to the Notification Function. See the message for details on the 
+      error.</p>
+      <p>Since this was checked at start up, there is system damage. Recovery is 
+      probably not possible.</p>
+      <p>When a Queue failed scheduling because of thread 
+      disablement, then use the <a href="TyQueThd.html">Queue Display</a> to possibly restore the threads. 
+      Although the internal Processing Application Classes catch Exceptions, 
+      they do not catch Errors.</p>
+    </blockquote>
+    <p><strong><a name="timeout"></a>4120</strong>&nbsp; A syncRequest()&nbsp; <a href="SchdFail.html#timeout">Time-out</a>
+    occurred.&nbsp; <b>Please read below.</b></p>
+    <blockquote>
+      <p>For Synchronous Requests, the wait interval expired before all Queue Threads
+      finished.&nbsp;The return Object array is unpredictable, it contains only the output of those
+      Tymeac Queues that finished processing.</p>
+      <p>You must parse your return objects to determine the actual state of the 
+      request. Tymeac uses  lock-fee logic. There is the possibility 
+      that the request completed successfully but Tymeac could not determine 
+      that state.</p>
+      <p>Tymeac gets the count of the number of threads that did not complete. Then,
+      <u>in the next method,</u> Tymeac gets the array of outputs from all 
+      the threads that finished. </p>
+      <blockquote>
+      <p>If the above count is greater than zero, meaning some threads did not 
+      complete, and those threads complete before Tymeac gets the array of 
+      outputs from all the threads that finished, then the array of outputs will 
+      be complete but Tymeac will return a time-out to your application.</p>
+      </blockquote>
+      <p>Simply put: time-out means the wait time, that you passed in the TymeacParm(), 
+      expired. Whether the request completed to your satisfaction, is your call.</p>
+    </blockquote>
+    <p><strong>4130</strong>&nbsp; The syncRequest() was purged by the System.</p>
+    <blockquote>
+      <p>For Synchronous Requests. This can happen when the request exceeds the wait interval
+      (above) by such an excessive value that the <a href="Monitor.html#sync">Tymeac Monitor</a>
+      purges the request. This could be an indication of something wrong since the request
+      should have failed with the above time-out. If this happens outside of a testing
+      environment where requests are trapped, then you may need to look for system damage. There
+      are no return Objects from any of the Queues.</p>
+    </blockquote>
+    <p><strong>4140</strong>&nbsp; The syncRequest() was cancelled by a user.</p>
+    <blockquote>
+      <p>For Synchronous Requests, a user cancelled the request (using the c<a href="Cancel.html#sync">ancelSyncReq()</a>
+      method) before all Queue Threads finished. The return Object array is unpredictable, it contains
+      only the output of those Tymeac Queues that finished processing.</p>
+    </blockquote>
+    <p><map name="FPMap2">
+    <area href="#top" shape="rect" coords="1, 0, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap2" width="32" height="22"></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>&nbsp;<a name="schd"></a><strong>RETURN CODES: Tymeac Server,&nbsp; Scheduling:</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The return code is four digits.&nbsp;Appended to the return code is the 
+      Queue in error starting at one (1).</p>
+      <blockquote>
+      <p>For example:&nbsp;The <a href="Demo.html">Demonstration System</a>
+      uses three Queues, &quot;AAAA&quot;, &quot;BBBB&quot;, and &quot;CCCC&quot; for 
+      Function_7.</p>
+      <p>When Queue, &quot;BBBB&quot;, fails scheduling, this is Queue number two
+      (2).&nbsp;The return code is the four digits, below, plus digit 2.&nbsp; (i.e. 50202)</p>
+      </blockquote>
+      <p>If an Output Agent Queue is in error, then the digit is one higher than 
+      the number of Queues in the Function.</p>
+      <blockquote>
+      <p>For example:&nbsp;The <a href="Demo.html">Demonstration System</a>
+      uses three Queues, &quot;AAAA&quot;, &quot;BBBB&quot;, and &quot;CCCC&quot; for 
+      Function_7.</p>
+      <p>When the Output Agent Queue, &quot;DDDD&quot;, fails scheduling, this is Queue number 
+      four
+      (4).&nbsp;The return code is the four digits, below, plus digit 4.&nbsp; (i.e. 50204)</p>
+      </blockquote>
+    </blockquote>
+    <blockquote>
+      <p>In order to determine the name of the Queue in error, look at the Function definition,
+      list of Queues, in either the DBMS Function Maintenance Class, (<a href="TyFuncMaint.html">TyFuncMaint</a>),
+      or the User Class, (<a href="UserFunctions.html">TyUserFunctions</a>).</p>
+    </blockquote>
+    <p><strong>5005</strong>&nbsp; Shut Down in progress.</p>
+    <blockquote>
+      <p>The system is being Shut Down.</p>
+      <p>However, the shut down request came after scheduling began for this request. The system
+      rejects this request.</p>
+    </blockquote>
+    <p><strong>5010</strong>&nbsp; Queue Name is invalid.</p>
+    <blockquote>
+      <p>The Name is not in main memory. Since all Queues and Functions are verified at start
+      up, there is probably system damage.</p>
+      <p>When the Output Agent Queue Name is invalid the suffix (nn) is one greater than the
+      number of Queues in the Function..</p>
+    </blockquote>
+    <p><strong>5015</strong>&nbsp; Queue is not an Output Agent.</p>
+    <blockquote>
+      <p>The Output Agent Queue for scheduling, is not an Output Agent Queue.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>5020</strong>&nbsp; No thread is available to process the request.</p>
+    <blockquote>
+      <p>No threads are processing the Queue (busy) or are about to process the Queue
+      (activated, notified) and no thread is available to activate or notify.&nbsp;See also, <a href="SchdFail.html#thread">scheduling failures</a>.</p>
+      <p>All threads are either 'cancelled' or 'disabled'. Determine the reason for the disable. 
+      See <a href="Disabled.html">how threads get disabled</a>.</p>
+      <blockquote>
+        <p>'Cancelled' is a temporary condition when the Monitor believes the thread is taking too
+        long:</p>
+        <p>When the work is just lengthy, the thread resets its status, otherwise, the Monitor
+        sets the status to 'disabled'.</p>
+      </blockquote>
+      <blockquote>
+        <p>When all threads are 'disabled', correct the problem, and reset the disabled threads
+        with the Queue Thread Display Class, (<a href="TyQueThd.html">TyQueThd</a>).</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>5025</strong>&nbsp; No Wait List entry is available .</p>
+    <blockquote>
+      <p>For non-priority Wait Lists: There is no available Wait List entry in any Wait List.</p>
+      <p>For priority Wait Lists: There is no available Wait List entry in the requesting Wait
+      List, nor in any Wait List subsequent to the requesting Wait List.&nbsp;See also <a href="SchdFail.html#wait">scheduling failures</a>.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>5030</strong>&nbsp; Similar to 5020, above.</p>
+    <blockquote>
+      <p>However, an attempt was made to activate a thread and this failed. Check for system
+      damage.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>5035</strong>&nbsp; An attempt to schedule a normal Queue found an 
+    Output Agent Queue.</p>
+    <blockquote>
+      <p>The Queue for scheduling is an&nbsp;Output Agent Queue, not a normal 
+      Queue.</p>
+      <p>The only thread that can schedule an Output Agent Queue is the Queue 
+      Thread when all normal Queues have finished processing.</p>
+      <p>Start up checks all Functions so there may be system damage. The list 
+      of Queues for the Function must all be Normal Queues. The Output Agent 
+      must be an Agent Queue.</p>
+    </blockquote>
+    <p><strong>5040</strong>&nbsp; An attempt to schedule an Output Agent Queue 
+    found a normal Queue.</p>
+    <blockquote>
+      <p>The Queue for scheduling is a normal Queue, not an&nbsp; Output Agent 
+      Queue.</p>
+      <p>The Queue Thread tried to schedule an Output Agent Queue when all 
+      normal Queues had finished processing. The Queue type is in error.</p>
+      <p>Start up checks all Functions so there may be system damage. The list 
+      of Queues for the Function must all be Normal Queues. The Output Agent 
+      must be an Agent Queue.</p>
+    </blockquote>
+    <p><strong>5060</strong>&nbsp; No Output Agent thread is available to process the request.</p>
+    <blockquote>
+      <p>This is the fail-fast version of 5020, above. However, the Queue is the Output
+      Agent.&nbsp; Even though this Queue may become available at the time it requires
+      scheduling, the possibility exists, <u>now</u>, that the Asynchronous Request will stall.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>5065</strong>&nbsp; No Output Agent Wait List entry is available.</p>
+    <blockquote>
+      <p>This is the fail-fast version of 5025, above. However, the Queue is the Output Agent.
+      Even though a Wait List entry may become available at the time it requires scheduling, the
+      possibility exists, <u>now</u>, that the Asynchronous Request will stall.</p>
+    </blockquote>
+    <p><strong>5070</strong>&nbsp; An attempt to schedule an Output Agent Queue 
+    found a normal Queue.</p>
+    <blockquote>
+      <p>This is the fail-fast version of 5040, above. The Asynchronous Request will 
+      fail when Tymeac attempts to schedule the agent queue so it is flagged 
+      here.</p>
+      <p>There is probably system damage. Tymeac checks all Functions on start 
+      up. Each Queue declared to be an Output Agent Queue is verified and start 
+      up aborts when there is a conflict.</p>
+    </blockquote>
+    <p><map name="FPMap3">
+    <area href="#top" shape="rect" coords="1, 0, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap3" width="32" height="22"></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="threads"></a><strong>RETURN CODES: Tymeac Server, Queue Threads:</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>These return codes are for Synchronous Requests only.&nbsp;These return codes indicate
+      an exception in a Processing Application Class. Tymeac's response to an exception is to
+      log the error, print the error, disable the Queue Thread, terminate the thread and for
+      Synchronous Requests, return a two digit error code.</p>
+      <p>It is the designers responsibility to handle all exceptions in Processing Application
+      Classes.&nbsp;In a multi-threading application it is often difficult to pin point the
+      cause of the crash without a record. This is like an airplane's &quot;black box&quot;
+      after a crash. If there is no Tymeac Log in use and no Tymeac error printing (console
+      window) then user logging is vital.&nbsp;Tymeac cannot diagnose application errors.</p>
+      <p>Queue Thread return codes are four digits. The first two digits are, <strong>60</strong>.
+      The second two digits depend on the type of exception caught by the Queue Thread.</p>
+    </blockquote>
+    <p><strong>6010&nbsp; </strong>Thrown exception</p>
+    <blockquote>
+      <p>The Processing Application Class threw a &quot;java.lang.Throwable&quot;.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p><strong>6015&nbsp; </strong>IllegalAccessException</p>
+    <blockquote>
+      <p>The Processing Application Class terminated with an IllegalAccessException.&nbsp;This
+      is a security issue.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>6020&nbsp; </strong>InvocationTargetException</p>
+    <blockquote>
+      <p>The Processing Application Class terminated with an InvocationTargetException. This
+      could be anything from a null pointer to an arithmetic error.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>6025&nbsp; </strong>IllegalArgumentException</p>
+    <blockquote>
+      <p>The Processing Application Class terminated with an IllegalArgumentException. This is a
+      Tymeac programming error.</p>
+    </blockquote>
+    <p><strong>6030&nbsp; </strong>UnCaughtException</p>
+    <blockquote>
+      <p>The thread terminated with an Exception. The thread's un-caught 
+      Exception Handler terminated the thread. This is a
+      Tymeac programming error.</p>
+      <p>The log and notify function both contain the exact exception cause.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="agent"></a><strong>RETURN CODES: Tymeac Server, Agent Threads:</strong></p>
+  <blockquote>
+    <blockquote>
+      <p>These codes are for Asynchronous Requests only.&nbsp;These codes indicate an exception
+      in an Output Agent Processing Application Class. Tymeac's response to an exception is to
+      log the error, print the error, disable the Queue Thread, terminate the thread.</p>
+      <p>It is the designers responsibility to handle all exceptions in Processing Application
+      Classes.&nbsp;In a multi-threading application it is often difficult to pin point the
+      cause of the crash without a record. This is like an airplane's &quot;black box&quot;
+      after a crash.&nbsp;If there is no Tymeac Log in use and no Tymeac error printing (console
+      window) then user logging is vital.&nbsp;Tymeac cannot diagnose application errors.</p>
+      <p>Agent Thread error codes are four digits. The first two digits are, <strong>70</strong>.
+      The second two digits depend on the type of exception caught by the Agent Thread.</p>
+    </blockquote>
+    <p><strong>7010&nbsp; </strong>Thrown exception</p>
+    <blockquote>
+      <p>The Processing Application Class threw a &quot;java.lang.Throwable&quot;.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p><strong>7015&nbsp; </strong>IllegalAccessException</p>
+    <blockquote>
+      <p>The Processing Application Class terminated with an IllegalAccessException.&nbsp;This
+      is a security issue.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p><strong>7020&nbsp; </strong>InvocationTargetException</p>
+    <blockquote>
+      <p>The Processing Application Class terminated with an InvocationTargetException. This
+      could be anything from a null pointer to an arithmetic error.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p><strong>7025&nbsp; </strong>IllegalArgumentException</p>
+    <blockquote>
+      <p>The Processing Application Class terminated with an IllegalArgumentException. This is a
+      Tymeac programming error.</p>
+    </blockquote>
+    <p><strong>7030&nbsp; </strong>UnCaughtException</p>
+    <blockquote>
+      <p>The thread terminated with an Exception. The thread's un-caught 
+      Exception Handler terminated the thread. This is a
+      Tymeac programming error.</p>
+      <p>The log and notify function both contain the exact exception cause.</p>
+    </blockquote>
+  </blockquote>
+  <p><strong><a name="return"></a>RETURN CODES: TymeacReturn parsing:</strong></p>
+  <blockquote>
+    <p><strong>9001&nbsp; </strong>The Object[] returned from a Tymeac call is null.</p>
+    <blockquote>
+      <p>This could be a communication error where the network crashed or some 
+      damage along the path.</p>
+    </blockquote>
+    <p>Numbers greater than 9001 indicate some type of formatting error which is 
+    probably system damage on the part of the server or corruption of the 
+    returned objects in the network.</p>
+    <p><strong>9002&nbsp; </strong>The first Object is not a String.</p>
+    <blockquote>
+      <p>The first Object is the result of Tymeac processing. Not being there is 
+      probably some damage in the server.</p>
+    </blockquote>
+    <p><strong>9003&nbsp; </strong>The first Object String length is less than 14.</p>
+    <blockquote>
+      <p>The message should be in the format .Tymeac SR(nnnn) or AR(nnnn) Not 
+      being at least 14 characters is probably some damage in the server.</p>
+    </blockquote>
+    <p><strong>9004&nbsp; </strong>The second Object is missing (sync request only.)</p>
+    <blockquote>
+      <p>The second object is the result of user processing. Even if no value is 
+      returned, Tymeac passes a null so there is always a second Object. Not 
+      being there is probably some damage in the server.</p>
+    </blockquote>
+    <p><strong>9011&nbsp; </strong>The first Object is missing a left bracket (async 
+    request only.)</p>
+    <blockquote>
+      <p>The first object format is: Tymeac AR(nnnn)[session id, request id]</p>
+      <p>Not being there is probably some damage in the server.</p>
+    </blockquote>
+    <p><strong>9012&nbsp; </strong>The first Object is missing a comma (async request 
+    only.)</p>
+    <blockquote>
+      <p>The first object format is: Tymeac AR(nnnn)[session id, request id]</p>
+      <p>Not being there is probably some damage in the server.</p>
+    </blockquote>
+    <p><strong>9013&nbsp; </strong>The first Object session id is non-numeric (async 
+    request only.)</p>
+    <blockquote>
+      <p>The first object format is: Tymeac AR(nnnn)[session id, request id]</p>
+      <p>Not being a number is probably some damage in the server.</p>
+    </blockquote>
+    <p><strong>9014&nbsp; </strong>The first Object user id is missing (async request 
+    only.)</p>
+    <blockquote>
+      <p>The first object format is: Tymeac AR(nnnn)[session id, request id]</p>
+      <p>Not being there is probably some damage in the server.</p>
+    </blockquote>
+    <p><strong>9015&nbsp; </strong>The first Object is missing a right bracket (async 
+    request only.)</p>
+    <blockquote>
+      <p>The first object format is: Tymeac AR(nnnn)[session id, request id]</p>
+      <p>Not being there is probably some damage in the server.</p>
+    </blockquote>
+    <p><strong>9016&nbsp; </strong>The first Object user id is non-numeric (async 
+    request only.)</p>
+    <blockquote>
+      <p>The first object format is: Tymeac AR(nnnn)[session id, request id]</p>
+      <p>Not being a number is probably some damage in the server.</p>
+    </blockquote>
+  </blockquote>
+      <p>&nbsp;</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

@@ -1,0 +1,9 @@
+create table FUNCTION_TABLE (
+FUNC_NAME varchar(80) not null,
+AGENT_NAME    Varchar(80),
+NBR_QUEUES int
+);
+
+ALTER TABLE FUNCTION_TABLE
+   ADD CONSTRAINT FUNCTIONTABLE_PK Primary Key (
+      FUNC_NAME);

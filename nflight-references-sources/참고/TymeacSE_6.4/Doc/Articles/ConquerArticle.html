@@ -1,0 +1,491 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta name="generator" content=
+"HTML Tidy for Windows (vers 14 February 2006), see www.w3.org" />
+<meta http-equiv="Content-Language" content="en-us" />
+<meta name="ProgId" content="FrontPage.Editor.Document" />
+<meta name="Abstract" content=
+"TymeacDSE is a Divide-and-Conquer Fork-Join framework for splitting the workload into multiple tasks for parallel processing" />
+<meta name="description" content=
+"TymeacDSE is a Divide-and-Conquer Fork-Join framework for splitting the workload into multiple tasks for parallel processing" />
+<meta name="keywords" content=
+"java, edward harned, threads, fork join, multi-core, divide and conquer, scatter-gather, multi threading, embarrassingly parallel, Tymeac, Tymeacse, Tymeacme, Tymeacdse, software developer" />
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii" />
+<meta name="ROBOTS" content="index, follow" />
+<title>A Java Fork-Join Conqueror</title>
+
+<style type="text/css">
+/*<![CDATA[*/
+<!--
+h1
+        {margin-top:12.0pt;
+        margin-right:0in;
+        margin-bottom:3.0pt;
+        margin-left:0in;
+        page-break-after:avoid;
+        font-size:16.0pt;
+        font-family:Arial;
+        }
+-->
+/*]]>*/
+</style>
+</head>
+<body>
+<p align="center"><span class="atitle"><strong><font face=
+"Arial, Helvetica" size="5">A Java</font><sup><font face="Arial"
+size="4">&#8482;</font></sup> <font face="Arial, Helvetica" size=
+"5">Fork-Join Conqueror</font></strong></span></p>
+<h3 align="center"><span class="atitle"><strong><font face=
+"Arial, Helvetica" size="3">Parallel processing with
+multi-core</font></strong></span> <font face="Arial" size=
+"3">Java&#8482;</font> <span class="atitle"><strong><font face=
+"Arial, Helvetica" size=
+"3">applications</font></strong></span></h3>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Fork-Join
+development in Java&#8482; today comes in two
+flavors:&nbsp;</font></p>
+<ol>
+<li><font face="Verdana, Arial, Helvetica" size="2">an
+Embarrassingly-Parallel Fork-Join technique that works well for
+everyday, multi-core applications</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">a
+Divide-and-Conquer Fork-Join technique for splitting the workload
+into multiple tasks for parallel processing</font></li>
+</ol>
+<p><font face="Verdana, Arial, Helvetica" size="2">This article
+expounds the Conqueror method (1700 words)</font></p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><a href=
+"#author">Edward Harned</a> (<a href=
+"mailto:eh%20at%20site=coopsoft%20followed%20by%20dot%20and%20then%20com">eh</a>)<br />
+
+Senior Developer, Cooperative Software Systems, Inc.<br />
+November, 2010</font></p>
+<h3><font face="Arial, Helvetica">What is Fork-Join?</font></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">Think of a fork
+in the road where each path eventually comes back together &#8212;
+joins.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Fork-Join breaks
+an application into several parts for parallel processing and joins
+the results at the end.</font></p>
+<p align="center"><b><font face="Arial, Helvetica" size="2">Figure
+1: Fork-Join Structure</font></b></p>
+<p align="center"><img border="0" src="i/f-j.jpg" width="250"
+height="97" alt="Fork-Join Structure" /></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Let&#8217;s say
+we have an array of one thousand numbers. We need to do a procedure
+on each of these numbers and add the total.</font></p>
+<p align="left"><b><font face="Arial, Helvetica" size="2">Listing
+1:</font> <font face="Arial" size="2">Array
+Processing</font></b></p>
+<div align="left">
+<table bgcolor="#CCCCCC" border="1" cellpadding="5" cellspacing="0"
+width="502" height="20" style="border-collapse: collapse" summary=
+"Array Processing" bordercolor="#111111">
+<tr>
+<td style="font-family: Verdana" height="8" width="488" align=
+"center">
+<p align="left"><font size="2">&nbsp;<br />
+&nbsp;</font> <font size="2" color="#7F0055"><b>for</b></font>
+<font size="2">(</font><font size="2" color=
+"#7F0055"><b>int</b></font> <font size="2">i = 0; i &lt; 1000; i++)
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; total +=
+doProcedure(array[i]);<br />
+&nbsp; }</font></p>
+</td>
+</tr>
+</table>
+</div>
+<p><font face="Verdana, Arial, Helvetica" size="2">If the procedure
+takes one second (wall-clock time) to complete, then it is going to
+take one thousand seconds (over 16&#189; minutes) to complete this
+task.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Fork-Join
+could</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">separate (fork)
+the large array into ten arrays of one hundred elements
+each,</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">processes each
+array on a separate CPU, and</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">join the
+results when finished.</font></li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size="2">That would take
+one hundred seconds (just over 1&#189; minutes), one tenth of the
+original time. The more CPU's available, the faster the
+result.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">This abstraction
+closely resembles the standard scientific model of
+Divide-and-Conquer.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Divide-and-Conquer</b> is a natural paradigm for parallel
+algorithms. After dividing a problem into two or more sub-problems,
+the method solves the sub-problems in parallel. Typically, the
+sub-problems are solved recursively and thus the next divide step
+yields even more sub-problems for solving in parallel.</font></p>
+<p align="center"><b><font face="Arial, Helvetica" size="2">Figure
+2: Divide-and-Conquer</font></b></p>
+<p align="center"><img border="0" src="i/dac.jpg" width="400"
+height="252" alt="Divide and Conquer" /></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">This is what
+high performance computing is all about &#8212; simultaneously
+processing humongous amounts of data on as many CPU&#8217;s as
+available. Map/Reduce, sorting, and countless array processing
+applications all can use Divide-and-Conquer to solve their
+problems.</font></p>
+<h3><font face="Arial, Helvetica">Fork-Join in</font> <font face=
+"Arial">Java&#8482;</font></h3>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">There are four
+commercial-grade Fork-Join frameworks available today:</font></p>
+<ol>
+<li><font face="Verdana, Arial, Helvetica" size="2"><a href=
+"#references">TymeacSE / ME / AND</a> &#8212; These are the
+Embarrassingly-Parallel Fork-Join frameworks that split the work
+into components for independent execution on multiple
+threads.</font></li>
+<li value="4"><font face="Verdana, Arial, Helvetica" size="2"><a href=
+"#references">TymeacDSE</a> &#8212; This is the Divide-and-Conquer
+Fork-Join framework (sometimes called "scatter-gather") that
+dynamically decomposes the work into identical tasks for execution
+on multiple threads.</font></li>
+</ol>
+<table border="0" cellspacing="1" style="border-collapse: collapse"
+bordercolor="#111111" width="776" id="AutoNumber10">
+<tr>
+<td width="292" valign="top"><font face="Verdana, Arial, Helvetica"
+size="2">The Conqueror is the subject of this article.</font></td>
+<td width="20" valign="top"><font face="Verdana, Arial, Helvetica"
+size="2">&nbsp;</font><font face="Verdana, Arial, Helvetica" size=
+"5" color="#808080">|</font></td>
+<td width="454"><font face="Verdana, Arial, Helvetica" size=
+"2">There is a Fork-Join collection from the <a href=
+"#references">JCP JSR-166 Expert Group</a>.<br />
+&nbsp;&nbsp; This is a <a href="#references">scholarly
+package</a>.</font></td>
+</tr>
+</table>
+</blockquote>
+<h3><font face="Arial, Helvetica">The Conqueror
+Attributes</font></h3>
+<blockquote>
+<h4><font face="Arial, Helvetica">Ease of use</font></h4>
+<blockquote><font face="Verdana, Arial, Helvetica" size="2"><b>The
+server itself</b> &#8212; has various options for execution in both
+an embedded mode as well as using RMI (standard/activatable, IIOP,
+etc.), logging, statistics gathering, error detection/recovery and
+many other aspects of a professional, commercial grade server. The
+professional documentation (80 page html style manual) makes the
+learning curve easier.</font>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>The user
+class the server calls to do the work</b> &#8212; is
+straightforward. You either do the procedure now or you fork new
+tasks.</font></p>
+<font face="Verdana, Arial, Helvetica" size="2"><b>The client that
+calls the server to run the user class</b> &#8212; is
+straightforward and simple. You either wait for a response
+(synchronous request) or not wait (asynchronous
+request.)</font></blockquote>
+<h4><font face="Arial, Helvetica">Independence</font></h4>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>The
+server</b> is completely separate from the calling client and the
+user class. The server is able to function as an embedded entity
+within any Class or as a Remote Object (RMI.)</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>The user
+class</b> may reside locally to the server class path or be
+accessed by a URL Class Loader.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>The calling
+client</b> may reside anywhere, including within the user class
+(when using recursion.)</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Code
+independence</b> means simplicity of design, enhancement and
+debugging; no spaghetti code here.</font></p>
+</blockquote>
+<h4><font face="Arial, Helvetica">Design structure / work-stealing
+vs. work-sharing</font></h4>
+<blockquote>
+<table border="0" cellspacing="1" style="border-collapse: collapse"
+bordercolor="#111111" id="AutoNumber9" width="753">
+<tr>
+<td width="109" valign="top"><font face="Verdana, Arial, Helvetica"
+size="2"><b>Work-Stealing</b></font></td>
+<td width="634"><font face="Verdana, Arial, Helvetica" size=
+"2">Underutilized possessors take the initiative; they tend to
+steal work from other processors.</font>
+<p><font face="Verdana, Arial, Helvetica" size="2">Tasks are put
+into, and worker threads fetch Tasks from, the bottom of a deque
+(double ended queue.)&nbsp; When worker threads have no work in
+their own deque, they fetch Tasks from the top of another thread's
+deque. When a Tasks needs to sub-Task the work, it puts all the new
+Tasks into the same deque from which they came.&nbsp;</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">This design may
+limit cache misses and thread contention since stealing threads
+only fetch from the top of the deque. At least that's the way it's
+supposed to be. Work-Stealing works beautifully in operating
+systems and near operating systems (<a href=
+"#references">Cilk</a>.) But the assumptions hold little weight in
+Java&#8482;.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Java&#8482;
+applications run under a virtual machine. Sometimes under two
+virtual machines (mainframes run Linux under VM and Linux runs the
+JVM.) Therefore, Java&#8482; applications can make no assumptions
+about any cache.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Since all new
+Tasks go into the same deque, work-stealing threads have a very
+high potential for conflict with each other when they fetch Tasks
+from the top of this deque. Picture 32 threads/deques and 8 client
+requests. All the tasks for the 8 requests go into 8 deques only.
+Now 8 threads fetch Tasks from their own deque while the other 24
+threads have to fight each other for work.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Work-Stealing
+threads need to wake up periodically and go looking for work. There
+is a poor correlation between timing in Java&#8482; and timing on
+the hardware. A <i>n</i>-nanosecond sleep in Java&#8482; doesn't
+always translate accurately to the underlying system. Tasks may
+wait unprocessed until the thread finally runs.</font></p>
+</blockquote>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="109" valign="top"><font face="Verdana, Arial, Helvetica"
+size="2"><b>Work-Sharing</b></font></td>
+<td width="634"><font face="Verdana, Arial, Helvetica" size="2">The
+scheduler tries to spread the work among possessors in hopes of
+distributing the work to underutilized processors</font>
+<p><font face="Verdana, Arial, Helvetica" size="2">The Conqueror
+uses Work-Sharing. Or more accurately, scatter-gather. The
+scheduler places each Task into the bottom of the first empty FIFO
+queue it finds; threads fetch from the top. When all queues have
+work, the scheduler balances the task placement evenly throughout
+the system. The Conqueror doesn't depend on threads periodically
+waking up to look for work, the scheduler physically wakes up each
+thread when adding a Task to it's queue. For the Conqueror, when
+the application spawns Tasks, it's all hands on deck &#8212; we're
+not paying you to rest &#8212; every thread helps to finish the
+work as quickly as possible.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">When a queue
+becomes empty, the owner thread&nbsp; goes looking for work in
+other queues. Since the queues contain a balanced load, the
+potential for contention is light. Also, if a wondering thread's
+queue suddenly has work, the thread stops its snooping and
+immediately goes back to it's own queue.</font></p>
+</td>
+</tr>
+</table>
+<p><font face="Verdana, Arial, Helvetica" size="2">Maximum
+efficiency. Maximum speed. Maximum throughput.</font></p>
+</blockquote>
+<h4><font face="Arial, Helvetica">Scaling</font></h4>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">For very large
+processor environments (hundreds/thousands CPU/cores), the
+Conqueror provides the ability to use indexes over the
+threads/queues to speed up scheduling and retrieving Tasks. This is
+the scalability feature critical to truly parallel
+applications.</font></p>
+</blockquote>
+<h4><font face="Arial, Helvetica">User Class
+Restrictions</font></h4>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>None</b>.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Unlike some
+other software that strongly restricts access to outside resources
+(DBMS, Queuing systems, etc.) and cannot permit inter-task
+communication (volatile fields), the Conqueror has strong error and
+stall detection so any algorithm is a good algorithm.</font></p>
+</blockquote>
+<h4><font face="Arial, Helvetica">Error detection/recovery, Stall
+detection/recovery</font></h4>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">User Class
+exceptions restart threads, errors disable threads. The Conqueror
+prints/logs the exception in a detailed message and notifies an
+administrator of the problem. User Classes may be re-loaded during
+execution without bringing down the server. After a failure the
+Conqueror tries to back out any Tasks already scheduled. Since the
+request is a failure, stopping work in progress or before it
+starts, leaves threads free to pursue useful work.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">The Conqueror
+times <u>seven</u> events in the life of a thread. This way the
+run-a-way or waiting-forever problem is detectable by a Monitor
+daemon. When an asynchronous request exceeds a prudent time limit,
+The Conqueror adds an entry to a "possibly stalled" list and
+notifies an administrator. The list is viewable and alterable by
+administrators. Truly lost threads (a User Class waiting on a
+resource that will never free) may be expunged and replaced by a
+fresh copy.</font></p>
+</blockquote>
+<h4><font face="Arial, Helvetica">Statistics gathering /
+repository</font></h4>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">The Conqueror
+keeps detailed usage statistics for threads, queues, stalled
+requests, and User Classes. The Conqueror provides writing to a
+repository both on request and at shut down.</font></p>
+</blockquote>
+<h4><font face="Arial, Helvetica">Security</font></h4>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">SSL security was
+built into the Conqueror from the beginning. There was no need to
+use the Native Interface and especially no need to use the Unsafe
+Class to bypasses all the managed runtime safety guarantees and
+security features. The Conqueror was built as a 100% pure
+application by application developers with other application
+developers in mind.</font></p>
+</blockquote>
+<h4><font face="Arial, Helvetica">Tuning</font></h4>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">100% pure also
+means 100% tunable. The application runs the same on every JVM.
+With no hooks into the VM (the Unsafe Class), there are no
+surprises when porting to other operating systems and VM providers.
+It works the same, only faster or slower.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">The Conqueror
+provides seven statistics useful for analyzing thread performance, four statistics useful for analyzing 
+queue performance, and four statistics useful for analyzing the performance of 
+the optional indexes. (And naturally, a chapter in the user manual on
+tuning.)</font></p>
+</blockquote>
+<h4><font face="Arial, Helvetica">Administration</font></h4>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">It isn't much
+good if nobody knows what it's doing. And if you know what it's
+doing, you surely want to change it.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">The Conqueror
+comes with fourteen GUI's (and non-GUI access) to view and alter the
+executing server and three GUI's for managing the setup and
+operational variables.</font></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p align="left"><b><font face="Arial, Helvetica" size="2">Figure 3:
+Menu<br />
+&nbsp;&nbsp;</font></b><br />
+<a href="i/DSEMenu.jpg">
+<img border="2" src="i/DSEMenu_small.jpg" xthumbnail-orig-image="i/DSEMenu.jpg" width="100" height="103"></a></p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<p align="left"><font face="Verdana, Arial, Helvetica" size="2">The
+Conqueror provides a dynamic response to an ever changing
+environment.</font></p>
+</blockquote>
+</blockquote>
+<h3><b><font face="Arial" size="4">Conclusion</font></b></h3>
+<blockquote>
+<p><font face="Verdana" size="2">Using a Fork-Join framework to
+develop compute-intensive applications is a no-brainer.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Happily, there
+is general-purpose, Fork-Join framework supporting the properties
+mentioned above for multi-core applications in Java&#8482; SE
+available today.</font></p>
+<table border="0" cellspacing="0" style="border-collapse: collapse"
+bordercolor="#111111" id="AutoNumber11" summary="Tymeac">
+<tr>
+<td><font face="Verdana, Arial, Helvetica" size=
+"2">Tymeac</font><font face="Verdana" size="2">&#8482;</font>
+<font face="Verdana, Arial, Helvetica" size="2">Divide-and-Conquer
+for the Java&#8482; Standard Edition<br />
+is an Open Source Software project maintained on<br />
+and you can download the latest edition there.</font></td>
+<td><font face="Verdana, Arial, Helvetica" size="2"><img border="0"
+src="i/space1.gif" alt="." width="1" height="1" /></font></td>
+<td align="left" width="125"><a href=
+"http://www.sourceforge.net/projects/tymeacdse/"><font face=
+"Verdana, Arial, Helvetica" size="2"><img border="0" src=
+"i/sflogo1.jpg" width="125" height="37" alt=
+"SourceForge.net" /></font></a></td>
+</tr>
+</table>
+</blockquote>
+<h3><b><font face="Arial" size="4"><a name=
+"references"></a>References</font></b></h3>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Download the
+latest <b>DSE</b> edition of <a href=
+"http://www.sourceforge.net/projects/tymeacdse/">Tymeac here</a>.
+The version described in this article.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Download the
+latest <b>SE</b> edition of <a href=
+"http://www.sourceforge.net/projects/tymeacse/">Tymeac here</a>.
+The embarrassingly-parallel Fork-Join product for the Java&#8482;
+SE environment.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Download the
+latest <b>ME</b> edition of <a href=
+"http://www.sourceforge.net/projects/tymeacme/">Tymeac here</a>.
+The embarrassingly-parallel Fork-Join product for the Java&#8482;
+ME environment.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Download the
+latest <b>AND</b> edition of
+<a href="http://www.sourceforge.net/projects/tymeacand/">Tymeac here</a>.
+The embarrassingly-parallel Fork-Join product for the Android&#8482;
+environment.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Other Fork-Join
+articles in this series:</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Why the JCP
+JSR-166 Expert Group collection is a <a href=
+"http://coopsoft.com/ar/CalamityArticle.html">scholarly
+package</a>.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">An
+&#8220;embarrassingly parallel&#8221; Fork-Join model</font>
+<font face="Verdana" size="2">&#8212;</font> <font face=
+"Verdana, Arial, Helvetica" size="2">&nbsp;<a href=
+"http://coopsoft.com/ar/ForkJoinArticle.html">Fork-Join Development
+in Java SE</a></font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Using Wait Lists
+for Efficiency</font> <font face="Verdana" size="2">&#8212;</font>
+<a href="http://coopsoft.com/ar/PriQueArticle.html"><font face=
+"Verdana, Arial, Helvetica" size="2">High Performance Priority
+Queues in Java SE</font></a></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">The Java&#8482;
+SE Thread Container</font> <font face="Verdana" size=
+"2">&#8212;</font> <a href=
+"http://coopsoft.com/ar/j2searticle.html"><font face=
+"Verdana, Arial, Helvetica" size="2">Managing Threads in Java
+SE</font></a></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">The JSR-166
+Interest Site</font> <font face="Verdana" size="2">&#8212;</font>
+<a href=
+"http://gee.cs.oswego.edu/dl/concurrency-interest/"><font face=
+"Verdana, Arial, Helvetica" size=
+"2">http://gee.cs.oswego.edu/dl/concurrency-interest/</font></a></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">The Cilk
+Site</font> <font face="Verdana" size="2">&#8212;</font> <a href=
+"http://supertech.csail.mit.edu/cilk/">http://supertech.csail.mit.edu/cilk/</a></p>
+</blockquote>
+<h3><a name="author"></a><font face="Arial, Helvetica">About the
+Author</font></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2"><a href=
+"mailto:eh%20at%20coopsoft%20dot%20com">Edward Harned</a> is a
+software developer with over thirty years industry experience. He
+first led projects as an employee in major industries and then
+worked as an independent consultant. Today, Ed is a senior
+developer at <a href="http://www.coopsoft.com/">Cooperative
+Software Systems, Inc</a>., where, for the last twelve years, he
+has used Java&#8482; programming to bring multi-threading solutions
+to a wide range of tasks.</font></p>
+<p>&nbsp;</p>
+</blockquote>
+</body>
+</html>

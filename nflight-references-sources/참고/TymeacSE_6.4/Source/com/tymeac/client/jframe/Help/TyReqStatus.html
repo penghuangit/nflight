@@ -1,0 +1,89 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Status of an Asynchronous Request</title>
+
+</head>
+
+<body>
+
+<h1>Status of an Async Request</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This frame class displays the status of an Asynchronous Request.&nbsp; See also the <u>Stalled</u>
+    display for ways to deal with those requests that are stalled.</p>
+    <p>The non-frame version of this class is <u>TyUserStatus</u>, below.</p>
+  </blockquote>
+</blockquote>
+
+<h3><strong>Elements</strong></h3>
+
+<blockquote>
+  <p><strong>Tymeac MilliTime</strong> -- MilliTime is the time in milliseconds since 1970
+  when the Tymeac Server started.&nbsp; This value is printed/logged at Tymeac start up and
+  shut down.&nbsp; This value is returned to the requestor of an Asynchronous Request along
+  with the request id, below.&nbsp; This element is necessary to insure that the Tymeac
+  Client and&nbsp;Server are coordinated.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Request Id</strong> --&nbsp; This value is returned to the requestor of an
+  Asynchronous Request along with the MilliTime, above.&nbsp; This is a sequential number,
+  from 1, incremented for each request since Tymeac start up.</p>
+</blockquote>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>GET</strong> -- Passes the request to the Tymeac Server and displays the Msg,
+  below.</p>
+  <p><strong>CANCEL</strong> -- Passes the request to the Tymeac Server and displays the
+  Msg, below.</p>
+  <blockquote>
+    <p>A cancel request may only succeed when either no Queue Threads have started to process
+    the Function or the Function is in-progress. There is no way to interrupt the Output Agent
+    processing.</p>
+  </blockquote>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- This is an information message.&nbsp; The
+Bold number in parenthesis does not appear in the message.&nbsp; It is the return integer
+from the Class, TyUserStatus, below:</p>
+
+<blockquote>
+  <p><u>Connection failure</u> -- <strong>(-1) </strong>The RMI connection failed or the
+  Tymeac Server returned an invalid message.</p>
+  <p><u>Tymeac shutting down</u> -- <strong>(4) </strong>Tymeac Server is in shut down mode.</p>
+  <p><u>Tymeac MilliTime is not a valid number</u> -- Not a number.</p>
+  <p><u>Request Id is not a valid number</u> -- Not a number.</p>
+  <p><u>Request Id is invalid this session</u> -- <strong>(3) </strong>The request is
+  greater than the highest used number so far.</p>
+  <p><u>Tymeac MilliTime mismatch with current session</u> -- <strong>(5) </strong>The
+  MilliTime does not match the current Tymeac start up time.</p>
+  <p><u>Request is stalled</u> -- <strong>(6) </strong>As indicated.&nbsp; Use the <u>Stalled</u>
+  display for more information and ways to deal with this request..</p>
+  <p><u>Request is not in the system</u> -- <strong>(7)</strong>&nbsp; The request finished.
+  &nbsp; This does not imply success or otherwise.</p>
+  <p><u>Request is awaiting execu</u>tion -- <strong>(8)</strong> The request was found in a
+  Wait List with no Queue's finished processing.</p>
+  <p><u>Request is executing at OA stage</u> -- <strong>(9)</strong>&nbsp;The request
+  finished processing in all the Queues for the Function.&nbsp; The last Tymeac Queue Thread
+  to finish schedules the Output Agent Queue.&nbsp; It is at this stage: scheduling or
+  executing.</p>
+  <p><u>Request is executing</u> -- <strong>(10)</strong> The request is executing in at
+  least one of the Queues for the Function.</p>
+  <p><u>Request cancelled. No processing took place.</u> -- <strong>(11)</strong> The cancel
+  request was successful. All the pending requests were removed from the waitlists before
+  any Queue Thread could process them.</p>
+  <p><u>Request cancelled. Was in progress</u>.&quot; -- <strong>(12)</strong> The cancel
+  request was successful. At least one Queue Thread picked up the request before it could be
+  flushed. This request may show up in the Stalled Array List since the resources could not
+  be freed.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;</body></html>

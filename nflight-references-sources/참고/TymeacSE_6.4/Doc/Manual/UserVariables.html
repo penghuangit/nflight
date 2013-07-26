@@ -1,0 +1,190 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac User Variables</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac User Variables</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>The purpose of this Class is a replacement for the variables section of the Tymeac <a href="TyCfg.html">Configuration File</a>.&nbsp; These variables load at Tymeac start up.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>We ship this Class filled in for the Demonstration System.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Since maintaining this class by hand can result in errors, we provide a GUI with which
+      you may maintain this class. This is a binary &quot;use the GUI or do it by hand&quot;. If
+      you use the GUI, then you should not try to edit the resulting java file. The GUI is very
+      simple -- it reads a java file without comments or formatting.</p>
+      <p>In either case, once you create the TymeacUserVariables.java file, you must compile it
+      into the com/tymeac/serveruser directory.</p>
+      <p>The GUI class is <strong>com.tymeac.jframe.TyUserVariables</strong>.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><a href="Images/TyUserVarGen.jpg">
+<img src="Images/TyUserVarGen_small.jpg" alt="TyUserVarGen.jpg (35927 bytes)" border="2" width="100" height="71"></a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="Images/TyUserVarSec.jpg">
+<img src="Images/TyUserVarSec_small.jpg" alt="TyUserVarSec.jpg (28024 bytes)" border="2" width="100" height="71"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="Images/TyUserVarExits.jpg">
+<img src="Images/TyUserVarExits_small.jpg" alt="TyUserVarExits.jpg (44529 bytes)" border="2" width="100" height="71"></a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="Images/TyUserVarAlt.jpg">
+<img src="Images/TyUserVarAlt_small.jpg" alt="TyUserVarAlt.jpg (38493 bytes)" border="2" width="100" height="71"></a><br>
+(Click for full image)</p>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>It require access to the java file, TymeacUserVariables.java. You may not substitute
+      another file name in the dialog box.  </p>
+      <p>The editing for the fields is the same as the
+      Configuration GUI, <a href="TyCfg.html">TyCfg</a>.</p>
+      <p>The rest of this document explains the java file format.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h3>Instance Fields</h3>
+
+<blockquote>
+  <p><strong>General Pane</strong></p>
+  <blockquote>
+    <p>String <a href="TyCfg.html#notify">notify</a>&nbsp; --&nbsp; The name of the
+    user-maintained Notification Class.&nbsp; </p>
+    <blockquote>
+    <p>The three below are alterable at runtime with the <a href="TyAltSvr.html">
+    Alter Server Options</a> GUI</p>
+    </blockquote>
+    <p>Int <a href="TyCfg.html#sys">sys_exit</a>&nbsp; --&nbsp; End the java virtual machine
+    when Tymeac shuts down.</p>
+    <p>Int <a href="TyCfg.html#interval">mon_interval</a>&nbsp; --&nbsp; The Tymeac Monitor
+    interval.</p>
+    <p>Int <a href="TyCfg.html#activate">Inactivate Minutes</a>&nbsp; --&nbsp; The
+    Inactivation System, inactivate time.</p>
+  </blockquote>
+  <p><strong>Security Pane</strong></p>
+  <blockquote>
+    <p><font color="#FF0000">* --- Optional&nbsp; ---*</font></p>
+    <p>String <a href="TyCfg.html#login">login context</a> -- When using a security start up.</p>
+  </blockquote>
+  <p><strong>Exits Pane</strong></p>
+  <blockquote>
+    <p><font color="#FF0000">* --- Optional Start Up and Shut Down User Exit Strings ---*</font></p>
+    <p>When the array is null, Tymeac ignores the field&nbsp; For names with URL's, see the<a href="ClassNameFormat.html"> naming and URL</a> document.</p>
+    <p>// Start up user exit classes<br>
+    private String[] startup_classes = null;</p>
+    <p>// Start up Functions<br>
+    private String[] startup_functions = null;</p>
+    <p>// Shut down user exit, stage one classes<br>
+    private String[] shutdown_stage1_classes = null;</p>
+    <p>// Shut down user exit, stage two classes<br>
+    private String[] shutdown_stage2_classes = null;</p>
+  </blockquote>
+  <p><strong>Alternates Pane</strong></p>
+  <blockquote>
+    <p><font color="#FF0000">* --- Optional Alternate Log and Statistics files ---*</font></p>
+    <p>Both logging and statistics are optional.</p>
+    <p>When the <strong>use_log</strong> or <strong>use_stats</strong> boolean is false,
+    Tymeac ignores the option.</p>
+    <p>When the <u>filename</u> is null, Tymeac ignores the File option.</p>
+    <blockquote>
+      <p>When the <u>filename</u> is not null and the <strong>dir</strong> is null, Tymeac uses
+      the current directory.</p>
+    </blockquote>
+    <p>When the <u>filename</u> is null, Tymeac checks for the Alternate Class option.</p>
+    <p>What this means:</p>
+    <blockquote>
+      <p>If logging is desirable than both the use_log must be true and either the log_file or
+      the alt_log_class must be a String value.</p>
+      <p>When using a file, if log_dir is null, Tymeac puts the file in the current directory
+      otherwise Tymeac puts the file in the directory specified by log_dir.&nbsp; Tymeac opens
+      the file with &quot;append&quot;.</p>
+      <p>The same is true for the statistics repository.</p>
+    </blockquote>
+    <p>private boolean use_log = false;</p>
+    <blockquote>
+      <p>private String log_dir = null;</p>
+      <p>private String log_file = null;</p>
+      <p>private String alt_log_class = null:&nbsp; <font color="#FF0000">new in release 3.0.1<br>
+      &nbsp;&nbsp;&nbsp; </font>For names with URL's, see the<a href="ClassNameFormat.html">
+      naming and URL</a> document.</p>
+    </blockquote>
+    <p>private boolean use_stats = false;</p>
+    <blockquote>
+      <p>private String stats_dir = null;</p>
+      <p>private String stats_file = null;</p>
+      <p>private String alt_stats_class = null:&nbsp; <font color="#FF0000">new in release 3.0.1<br>
+      &nbsp;&nbsp;&nbsp; </font>For names with URL's, see the<a href="ClassNameFormat.html">
+      naming and URL</a> document.</p>
+      <p>&nbsp;</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h3>Instance Methods</h3>
+
+<blockquote>
+  <p>Constructor -- This is where you set the values for the above instance variables.</p>
+  <p>public int getMonInterval -- Accessor.&nbsp; Returns the value of the instance field,
+  mon_interval.</p>
+  <p>public int getSysExit -- Accessor.&nbsp; Returns the value of the instance field,
+  sys_exit.</p>
+  <p>public int getNotify&nbsp; -- Accessor.&nbsp; Returns the value of the instance field,
+  notify.</p>
+  <p>public int getLoginContext&nbsp; -- Accessor.&nbsp; Returns the value of the instance
+  field, login_context.</p>
+  <p>public String getLogDir() -- Accessor.&nbsp; Returns the value of the instance field,
+  log_dir.</p>
+  <p>public String getLogFile() -- Accessor.&nbsp; Returns the value of the instance field,
+  log_file.</p>
+  <p>public String getLogAlt() -- Accessor.&nbsp; Returns the value of the instance field,
+  alt_log_class. <font color="#FF0000">new in release 3.0.1</font></p>
+  <p>public boolean getLogUse() -- Accessor.&nbsp; Returns the value of the instance field,
+  use_log.</p>
+  <p>public String getStatsDir() -- Accessor.&nbsp; Returns the value of the instance field,
+  stats_dir.</p>
+  <p>public String getStatsFile() -- Accessor.&nbsp; Returns the value of the instance
+  field, stats_file.</p>
+  <p>public String getStatsAlt() -- Accessor.&nbsp; Returns the value of the instance field,
+  alt_stats_class.&nbsp; <font color="#FF0000">new in release 3.0.1</font></p>
+  <p>public boolean getStatsUse() -- Accessor.&nbsp; Returns the value of the instance
+  field, use_stats.</p>
+  <p>public String[] getStartupClasses() -- Accessor.&nbsp; Returns the value of the
+  instance field, startup_classes.</p>
+  <p>public String[] getStartUpFunctions() --&nbsp; Accessor.&nbsp; Returns the value of the
+  instance field, startup_functions.</p>
+  <p>public String[] getShut1Classes() -- Accessor.&nbsp; Returns the value of the instance
+  field, shutdown_stage1_classes.</p>
+  <p>public String[] getShut2Classes() -- Accessor.&nbsp; Returns the value of the instance
+  field, shutdown_stage2_classes.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

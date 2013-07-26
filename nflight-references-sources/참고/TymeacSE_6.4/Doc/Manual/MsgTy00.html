@@ -1,0 +1,1070 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Messages, Start up Ty00</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Messages: Start Up Ty00</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This section details the Start Up messages.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>(<strong>P</strong>) Printed to System.out.println(), (this is <a href="TyCfg.html">optional</a>).<br>
+    (<strong>L</strong>) Sent to the Tymeac <a href="RunTime.html#log">Log</a>.<br>
+    (<strong>N</strong>) Sent to the Tymeac <a href="RunTime.html#notify">Notification</a>
+    Function.</p>
+  </blockquote>
+</blockquote>
+
+<hr>
+
+<p align="left">001 I (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Initializing in [DBMS][Stand Alone] mode.</p>
+  <blockquote>
+    <p align="left">The server is starting either in DBMS or Stand Alone mode.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">003 I (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, no Configuration File found for start up.</p>
+  <blockquote>
+    <p align="left">DBMS mode is the default for the Server.</p>
+    <p align="left">The Server requires a <a href="TyCfg.html">Configuration File</a> 
+    (or the command line option <b>-s</b> for stand-alone mode.)
+    The command line parameters specify the Directory [Filename] for the location
+    of this file.</p>
+    <p align="left">DBMS execution cannot proceed.&nbsp;Tymeac loads the Stand-Alone version
+    (User Classes.)</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">004 I (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">The Message Log&nbsp; for this session is TTT.</p>
+  <blockquote>
+    <p align="left">Purely informational. TTT is the DBMS Log Table, local file name, or Not
+    in use message.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">005 C (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Logging is disabled for this session.</p>
+  <blockquote>
+    <p align="left">A Log was specified in the Configuration File / TymeacUserVariable and
+    there was a DBMS / file error. Errors are printed previously.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">006 I (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">The Statistics repository for this session is SSS.</p>
+  <blockquote>
+    <p align="left">Purely informational.&nbsp; SSS is the DBMS Statistics Table, local file
+    name, Alternate Class name or Not in use message.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">007 C (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Statistics are disabled for this session.</p>
+  <blockquote>
+    <p align="left">A Statistics repository was specified in the Configuration File /
+    TymeacUserVariables and there was a DBMS / file error.&nbsp;Errors are printed previously.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">008 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Class Loader Security Exception</p>
+  <blockquote>
+    <p align="left">Tymeac uses a class loader for all Tymeac management 
+    classes. You must allow this in the security policy file.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">009 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, RMI [JNDI] rebinding failure</p>
+  <blockquote>
+    <p align="left">The RMI [JNDI] Naming.rebind() failed. Errors are printed.&nbsp;An
+    unMarshaling error for the class: Tymeac[Standard][IIOP]Impl_Stub indicates the RMI [JNDI]
+    Registry cannot find this class. You must set a CLASSPATH or CodeBase for this class. See
+    the RMI <a href="RMIBackground.html">background</a> document.</p>
+    <p align="left">Execution stops</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">011 I (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">The Notification Function for this session is NNN.</p>
+  <blockquote>
+    <p align="left">Purely informational.&nbsp;NNN is the Notification Function name.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">012 C (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Notification is disabled this session.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p align="left">There was an RMI error, or, the Tymeac Function could not compete. Errors
+    are printed for RMI, previously.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">014 C (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">The Monitor is not in use.</p>
+  <blockquote>
+    <p align="left">The Monitor <a href="Monitor.html">interva</a>l was specified as zero.
+    Since the monitor is an integral part of Tymeac, not using it requires a conditional
+    notice.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">015 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, User Singleton getInstance() failure=xxxx</p>
+  <blockquote>
+    <p align="left">The class, com.tymeac.serveruser.TymeacUserSingleton is optional. However,
+    if you use it, then it must instantiate correctly. xxxx is the exception.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">016 S (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Invalid argument for start up: xxx</p>
+  <blockquote>
+    <p align="left">An argument, xxxx, is invalid at start up.This is the first argument found
+    in error.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">017 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, Security Manager failure: xxxx</p>
+  <blockquote>
+    <p align="left">The class, TyServerRMISecMgr; did not execute properly.&nbsp; xxxx is the
+    failure reason.&nbsp;See also the <a href="Security.html">Security section</a>.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">018 I (<strong>P</strong>),(<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server, Security Manager not in use.</p>
+  <blockquote>
+    <p align="left">The class, TyServerRMISecMgr; does not exist.&nbsp;Tymeac attempts to
+    load this class.&nbsp;This message is the result of NoClassDefFoundError.&nbsp;See also
+    the <a href="Security.html">Security section</a>.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">019 S (<strong>P</strong>),(<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server, failure opening configuration file. Error=xxxx</p>
+  <blockquote>
+    <p align="left">The open for the Configuration File failed with a reason of xxxx. </p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">020 S (<strong>P</strong>),(<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server, failure reading configuration file.&nbsp;Error=xxxx</p>
+  <blockquote>
+    <p align="left">A dataInStream.readLine() failed with a reason of xxxx</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">021 S (<strong>P</strong>),(<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server, failure closing configuration file.&nbsp;Error=xxxx</p>
+  <blockquote>
+    <p align="left">A dataInStream.close() failed with a reason of xxxx.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">022 S (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server failure on [local][Alternate Class] log file:.Error=xxxx</p>
+  <blockquote>
+    <p align="left">An access failed with a reason of xxxx. </p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">023 S (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server SQL Exception on DBMS Log Table.&nbsp; Error=xxxx</p>
+  <blockquote>
+    <p align="left">An SQL access failed with a reason of xxxx.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">024 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server failure on [local][Alternate Class] statistics repository:
+  Error=xxxx</p>
+  <blockquote>
+    <p align="left">An access failed with a reason of xxxx. </p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">025 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server SQL Exception on DBMS Statistics Table.&nbsp; Error=xxxx</p>
+  <blockquote>
+    <p align="left">An SQL access failed with a reason of xxxx. </p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">026 S (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server,Configuration File data is in error.</p>
+  <blockquote>
+    <p align="left">The <a href="TyCfg.html">Configuration File</a> data, [sections] and
+    {sub-sections} are faulty.&nbsp;This is a Tymeac maintained file, however, users may
+    manually maintain this file.&nbsp;In such a case either a section or sub-section was not
+    in the proper sequence or a premature end-of-file was encountered.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">027 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server Internal Queue index position= [value of index starting at
+  0] has no value. Startup cannot continue.</p>
+  <blockquote>
+    <p align="left">The Internal Queue position is null.&nbsp;This is a result of damage to
+    the<br>
+    com.tymeac.base.TymeacInternalQueues Class.<br>
+    This class ships filled in and tested. You need to restore this class from the original
+    distribution.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">028 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server Internal Queue, [Internal Queue name] is a
+  duplicate.&nbsp;Cannot continue</p>
+  <blockquote>
+    <p align="left">The Internal Queue is a duplicate of another.&nbsp;This is a result of
+    damage to the<br>
+    com.tymeac.base.TymeacInternalQueues Class.<br>
+    This class ships filled in and tested. You need to restore this class from the original
+    distribution.</p>
+  </blockquote>
+  <blockquote>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">029 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server Queue index position= [value of index starting at 0] has no
+  value. Startup cannot continue.</p>
+  <blockquote>
+    <p align="left">The Queue position is null.&nbsp;This usually is the result of Class -
+    TymeacUserQueues constructor, queues array, not having a value entered into it.&nbsp;For
+    example, when adding a new Queue, it is easy to copy and paste one that already exists and
+    then simply make changes.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">030 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server User Queue, [User Queue name] is a duplicate.&nbsp; Cannot
+  continue.</p>
+  <blockquote>
+    <p align="left">The named Queue is a duplicate of another.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">031 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, [User Class name] failed to load.</p>
+  <blockquote>
+    <p align="left">A Class.forName() failed for one of the User Class Processing Application
+    Classes.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">032 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, TymeacUserVariable Class not found, cannot continue.</p>
+  <blockquote>
+    <p align="left">Tymeac failed to load this Class.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">033 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, Tymeac[User][Internal]Queues Class not found, cannot
+  continue.</p>
+  <blockquote>
+    <p align="left">Tymeac failed to load this Class. Both are required for Stand Alone mode.
+    Internal is required even for DBMS mode.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">034 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, Tymeac[User][Internal]Queues Class, number of queues is
+  zero, cannot continue. </p>
+  <blockquote>
+    <p align="left">This User class has zero queues.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">035 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, Tymeac[User][Internal]Functions Class not found, cannot
+  continue. </p>
+  <blockquote>
+    <p align="left">Tymeac failed to load this Class. Both are required for Stand Alone mode.
+    Internal is required even for DBMS mode.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">036 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, Tymeac[User][Internal]Functions Class, number of functions
+  is zero, cannot continue. </p>
+  <blockquote>
+    <p align="left">The User Class has zero functions.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">037 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, Function (xxx), number of Queues is zero, cannot continue. </p>
+  <blockquote>
+    <p align="left">The Function, xxx, has zero Queues.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">038 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, Function (xxx) Queue(yyy) not found, cannot continue. </p>
+  <blockquote>
+    <p align="left">The User Class Function, xxx, has a Queue, yyy, that does not exist.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">039 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, Queue (xxx) number of threads invalid, cannot continue. </p>
+  <blockquote>
+    <p align="left">The User Class Queue, xxx, has the number of threads &lt; 1.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">040 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, Queue (xxx) number of waitlists invalid, cannot continue. </p>
+  <blockquote>
+    <p align="left">The User Class Queue, xxx, has the number of waitlists &lt; 1.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">041 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, Queue (xxx) number of waitlist entries invalid, cannot
+  continue. </p>
+  <blockquote>
+    <p align="left">The User Class Queue, xxx, has the number of waitlist entries &lt; 1.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">042 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, Function (xxx), Queue (yyyy) is not an Output Agent 
+  | Normal, cannot
+  continue. </p>
+  <blockquote>
+    <p align="left">The User Class Function xxx, designates Queue, yyy, as an Output Agent
+    Queue, however, the Queue is a normal Queue.</p>
+    <p align="left">Or, the User Class Function xxx, designates Queue, yyy, as a 
+    Normal
+    Queue, however, the Queue is an Output Agent Queue.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">043 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server Function, [User][Internal] Function name is a
+  duplicate.&nbsp; Cannot continue.</p>
+  <blockquote>
+    <p align="left">The named Function is a duplicate of another.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">044 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server Function index position= [value of index starting at 0] has
+  no value.&nbsp; Startup cannot continue.</p>
+  <blockquote>
+    <p align="left">The Function position is null.&nbsp; This usually is the result of Class -
+    Tymeac[User][Internal]Functions constructor, functions array, not having a value entered
+    into it. &nbsp; For example, when adding a new Function, it is easy to copy and paste one
+    that already exists and then simply make changes.&nbsp; However, the index value must be
+    incremented along with the other changes.&nbsp; When this later step is left out, two
+    Functions occupy the same array position and the subsequent array position is null:&nbsp; <br>
+    functions[0] = new TymeacIndividualFunction(&quot;old values ...)<br>
+    functions[0] = new TymeacIndividualFunction(&quot;new values ...)</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">045 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, an error occurred in TymeacUserVariable Class, Error=xxx. </p>
+  <blockquote>
+    <p align="left">This class is user maintained.&nbsp;Make sure all the methods are present,
+    (See the <a href="UserVariables.html">documentation</a> for this class), and/or correct
+    the problem identified by the error message, xxx</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">046 I (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, at least one Function generated a duplicate 
+  hash code. Using a String compare algorithm.</p>
+  <blockquote>
+    <p align="left">Tymeac tries to use&nbsp; a hash code algorithm for Function 
+    name look up. If two Function names generate the same hash code then Tymeac 
+    is forced to use a String compare algorithm. Strings are slow compared to 
+    hash codes. See the <a href="FuncNaming.html">Function naming document </a>
+    for further insight and solutions.</p>
+    <p align="left">Execution continues.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">047 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, an error occurred in Tymeac[User][Internal]Functions Class,
+  Error=xxx. </p>
+  <blockquote>
+    <p align="left">This class is user maintained.&nbsp;Make sure all the methods are present,
+    (See the <a href="UserFunctions.html">documentation</a> for this class), and/or correct
+    the problem identified by the error message, xxx</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">048 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server Queue &lt;a_name&gt;, Class&nbsp; &lt;a_class&gt; , Invalid
+  format, Cannot continue.</p>
+  <blockquote>
+    <p align="left">The name of the Class -- a_class in Queue -- a_name, contains invalid
+    characters, see the <a href="ClassNameFormat.html">Class Name</a> document.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">049 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server Queue &lt;a_name&gt;, Class::URL&nbsp; &lt;a_class&gt; ,
+  Invalid URL format, Cannot continue.</p>
+  <blockquote>
+    <p align="left">The URL for the Class -- a_class in Queue -- a_name, contains invalid
+    characters, see the <a href="ClassNameFormat.html">Class Name</a> document.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">050 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server Queue a_name, Class&nbsp; a_class , Security Exception
+  &nbsp;Cannot continue.</p>
+  <blockquote>
+    <p align="left">A load of the Class -- a_class in Queue -- a_name, threw a Security
+    Exception.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">051 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server Queue &lt;a_name&gt;, Class&nbsp;&lt;a_class&gt; , <br>
+  [No valid PAC signature, &nbsp; Cannot continue]<br>
+  [Exception=xxxx.]</p>
+  <blockquote>
+    <p align="left">A Class.getMethod() of the Class -- a_class in Queue -- a_name, &nbsp;
+    threw a</p>
+    <p align="left"> NoSuchMethodException.&nbsp; The method required is ... main(Object[]
+    args)</p>
+    <p align="left">Exception=xxxx where xxxx is the exception.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">052 C (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server User Exit Startup Class &lt;class name&gt; Error=xxx</p>
+  <blockquote>
+    <p align="left">A User Exit Start Up Class &lt;the name of the class&gt; had an error
+    defined as xxx.</p>
+    <p align="left">Execution continues.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">053 S (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server Alternatives Log Class &lt;class name&gt; Error=xxx</p>
+  <blockquote>
+    <p align="left">A User Alternatives Log Class at Start Up &lt;the name of the class&gt;
+    had an error defined as xxx.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">055 S (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server Alternatives Statistics Class &lt;class name&gt; Error=xxx</p>
+  <blockquote>
+    <p align="left">A User Alternatives Statistics Class at Start Up &lt;the name of the
+    class&gt; had an error defined as xxx.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">056 S (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server User Exit Startup Class &lt;class name&gt; Invalid Format</p>
+  <blockquote>
+    <p align="left">A User Exit Start Up Class &lt;the name of the class&gt; Name had an
+    invalid Class::URL Format, see the <a href="ClassNameFormat.html">Class Name</a> document.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">057 C (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server User Exit Startup Class &lt;class name&gt; Invalid URL
+  Format</p>
+  <blockquote>
+    <p align="left">A User Exit Start Up Class &lt;the name of the class&gt; Name had an
+    invalid URL Format, see the <a href="ClassNameFormat.html">Class Name</a> document.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">058 C (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server Activation start up and invalid inactivation 
+  minutes=xxx</p>
+  <blockquote>
+    <p align="left">This is an activatable server. How long to wait before 
+    inactivation is critical. The inactivation minutes (xxx) are not an integer.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">060 S (<strong>P</strong>), (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server illogical data in TyVariables class, Cannot continue.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p align="left">You are requesting a non-activatable start-up using the RMI Registry and
+    the following fields are not as required:</p>
+    <blockquote>
+      <p align="left">tymeac_use_registry = true<br>
+      tymeac_name = not null</p>
+    </blockquote>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">061 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server illogical data in TyVariables class, Cannot continue.</p>
+  <blockquote>
+    <p align="left">You are requesting an iiop start-up using the JNDI Registry and the
+    following fields are not as required:</p>
+    <blockquote>
+      <p align="left">tymeac_use_iiop = true<br>
+      tymeac_iiop_name = not null</p>
+    </blockquote>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">062 C (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server User Exit Startup Function return code=xxx, for 
+  Function=yyyy</p>
+  <blockquote>
+    <p align="left">A User Exit Start Up Function caused a Tymeac
+    <a href="Usage.html">return code</a> (xxxx). The Function is yyyy.</p>
+    <p align="left">Execution continues.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">063 C (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server Start-up Function call failed with invalid 
+  return object, Function=yyyy</p>
+  <blockquote>
+    <p align="left">A call to the Server failed with either a null return object 
+    or the first object in the array was not a String.</p>
+    <p align="left">The Function is yyyy.</p>
+    <p align="left">Execution continues but the Server is probably fatally 
+    flawed.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">070 I (<strong>P</strong>), (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server RMI rebinding variables: tymeac_name [on port=xxxx]</p>
+  <blockquote>
+    <p align="left">Tymeac Server is attempting an RMI Registry rebind with the field from the
+    TyVariables Class: tymeac_name The main reason this name prints here is for 
+    the log file. It's a way of identifying the particular start up. This 
+    becomes important when the same file/table is used for many start ups.</p>
+    <p align="left">When a -port command line option was specified, then that 
+    port number prints here.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">071 I (<strong>P</strong>), (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server JNDI rebinding variable: iiop_name</p>
+  <blockquote>
+    <p align="left">Tymeac Server is attempting a JNDI rebind with the field from the
+    TyVariables Class:&nbsp; iiop_name The main reason this name prints here is 
+    for the log file. It's a way of identifying the particular start up. This 
+    becomes important when the same file/table is used for many start ups.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">072 C (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server Alternatives Log Class &lt;class name&gt; Invalid Format</p>
+  <blockquote>
+    <p align="left">A User Exit Alternatives Log Class &lt;the name of the class&gt; Name had
+    an invalid Class::URL Format, see the <a href="ClassNameFormat.html">Class Name</a>
+    document.</p>
+    <p align="left">Execution continues.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">073 C (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server Alternatives Statistics Class &lt;class name&gt; Invalid URL
+  Format</p>
+  <blockquote>
+    <p align="left">A User Exit Alternatives Statistics Class &lt;the name of the class&gt;
+    Name had an invalid URL Format, see the <a href="ClassNameFormat.html">Class Name</a>
+    document.</p>
+    <p align="left">Execution continues.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">080 I (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server using INSECURE start up.</p>
+  <blockquote>
+    <p align="left">No login context was specified. The Server is starting without a security
+    login.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">081 I (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server using secure start up.</p>
+  <blockquote>
+    <p align="left">A login context was specified and a login was successful. The Server is
+    starting as privileged code.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">082 S (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server loginContext, LoginException=xxx</p>
+  <blockquote>
+    <p align="left">A loginContext threw the exception. xxx is the reason.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">083 S (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server loginContext, SecurityException=xxx</p>
+  <blockquote>
+    <p align="left">A loginContext threw the exception. xxx is the reason.</p>
+    <p align="left">Execution stops</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">084 S (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server loginContext, Exception=xxx</p>
+  <blockquote>
+    <p align="left">A loginContext threw the exception. xxx is the reason.</p>
+    <p align="left">Execution stops</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">085 S (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server loginException=xxx</p>
+  <blockquote>
+    <p align="left">A login threw the exception. xxx is the reason.</p>
+    <p align="left">Execution stops</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">086 S (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server PrivilegedActionException=xxx</p>
+  <blockquote>
+    <p align="left">Code execution as privileged broke the rule. xxx is the reason.</p>
+    <p align="left">Execution stops</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">088 S (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server getEntry for exporter, error=xxx</p>
+  <blockquote>
+    <p align="left">Jini -- attempt to access a configuration file failed with:. xxx is the
+    reason.</p>
+    <p align="left">Execution stops</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">089 S (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server exporting error=xxx</p>
+  <blockquote>
+    <p align="left">Jini -- The remote object export failed with:. xxx is the reason.</p>
+    <p align="left">Execution stops</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">090 S (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server Custom Socket Factory Exception=xxx</p>
+  <blockquote>
+    <p align="left">The build for a client or server CSF failed. xxx is the reason.</p>
+    <p align="left">Execution stops</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">091 S (<strong>P</strong>)<strong>, (L)</strong></p>
+
+<blockquote>
+  <p align="left">Tymeac Server login failed</p>
+  <blockquote>
+    <p align="left">A login failed. Either the password entered or found in a file was in
+    error.</p>
+    <p align="left">Execution stops</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">097 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server, Java Exception=reason</p>
+  <blockquote>
+    <p align="left">An uncaught exception. Reason is the exception.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">098 S (<strong>P</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server initialization failed.</p>
+  <blockquote>
+    <p align="left">This message is preceded by other messages to identify the reason for
+    termination.</p>
+    <p align="left">Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">099 I (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server vX.Y initialized successfully, MilliTime=mmm</p>
+  <blockquote>
+    <p align="left">vX.Y is the current version (E.G. v5.4).</p>
+    <p align="left">Tymeac is available for Client calls.&nbsp; mmm is the time stamp: 
+    System.currentTimeMillis().</p>
+  </blockquote>
+</blockquote>
+
+<p>101 I (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, Notification is not in use</p>
+  <blockquote>
+    <p>No notification Function was specified for start up.</p>
+    <p>Execution continues.</p>
+  </blockquote>
+</blockquote>
+
+<p>103 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, number of Queues is zero.</p>
+  <blockquote>
+    <p>No Queues were found on the<a href="DBMSQue.html"> DBMS</a> Queue Table.&nbsp;The name
+    of the Table is in the <a href="TyCfg.html">Configuration</a> File.</p>
+    <p>Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p>110 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, SQLException Message 1 [SQLState].</p>
+  <blockquote>
+    <p>A DBMS Queue Table error occurred.</p>
+    <p>Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p>115 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, Java Exception [reason]</p>
+  <blockquote>
+    <p>A DBMS Queue Table routine threw an exception.</p>
+    <p>Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p>120 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, start up arguments error: directory name missing</p>
+  <blockquote>
+    <p>The command line had a -dir keyword but no directory name following it.</p>
+    <p>Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p>125 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, start up arguments error: file name missing</p>
+  <blockquote>
+    <p>The command line had a -file keyword but no file name following it.</p>
+    <p>Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p>130 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, start up arguments error: port number missing</p>
+  <blockquote>
+    <p>The command line had a -port keyword but no port number following it.</p>
+    <p>Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p>132 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, start up arguments error: port number not a number</p>
+  <blockquote>
+    <p>The command line had a -port keyword but the port number following it was 
+    not a number.</p>
+    <p>Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p>135 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, start up arguments error: Stand Alone mode is mutex with either
+  directory or filename</p>
+  <blockquote>
+    <p>You cannot specify a directory or filename in stand alone mode. They are mutually
+    exclusive.</p>
+    <p>Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p>210 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, SQLException Message 1 [SQLState].</p>
+  <blockquote>
+    <p>A <a href="DBMSFunc.html">DBMS</a> Function Table error occurred.</p>
+    <p>Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p>215 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, Exception [reason]</p>
+  <blockquote>
+    <p>A <a href="DBMSFunc.html">DBMS</a> Function Table routine threw an exception.</p>
+    <p>Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p>305 C (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, Function [name], expected number of Queues, xx, failed Select on number
+  yy, in Table [name], Function is disabled. </p>
+  <blockquote>
+    <p>The<a href="DBMSFunc.html"> DBMS</a> Function Table contains a row for the number of
+    Queues associated with this Function, xx.&nbsp; While browsing the<a href="DBMSList.html">
+    DBMS</a> List Table for the Queues, the, yy, fetch failed.&nbsp; Probably the List Table
+    is corrupted.&nbsp; Use the Function <a href="TyFuncMaint.html">Maintenance</a> Class to
+    delete/add the Function.</p>
+    <p>Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p>315 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, SQLException Message 1 [SQLState].</p>
+  <blockquote>
+    <p>A <a href="DBMSList.html">DBMS</a> List Table error occurred.</p>
+    <p>Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p>320 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, Java Exception [reason]</p>
+  <blockquote>
+    <p>A <a href="DBMSList.html">DBMS</a> List Table routine threw an exception.</p>
+    <p>Execution stops.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

@@ -1,0 +1,217 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Server Communication</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Server Communication</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This Class is the means by which Tymeac <u>Demonstration</u> Clients communicate with
+    the Tymeac Server.&nbsp;We supply the <a href="Samples.html">source code</a> for this
+    Class in the &quot;Source Directory&quot; the installation creates.</p>
+  </blockquote>
+  <blockquote>
+    <p>The Tymeac Product Classes (GUI and command line) do not use this Class.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>You may modify that which is here.&nbsp;This Class is a plain vanilla example of how
+      you may communicate with the Tymeac Server.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>The name is <u>Ty</u>SvrComm rather than <u>Demo</u>SvrComm. You may never change this
+    class except for the error handling.</p>
+    <p><big><a href="../JavaDoc/com/tymeac/demo/TySvrComm.html">JavaDoc for this class.</a></big></p>
+  </blockquote>
+</blockquote>
+
+<hr noshade size="3">
+
+<p><strong>Instance Fields:</strong></p>
+
+<blockquote>
+  <p><strong>private static TyVariables TyV</strong>&nbsp; -- This is the reference to the
+  Tymeac <a href="TyVariables.html">Variables</a>.</p>
+  <p><strong>private static <a href="../JavaDoc/com/tymeac/base/TymeacInterface.html">TymeacInterface</a>
+  Ti</strong> -- A reference to the remote object. Set in a constructor.</p>
+</blockquote>
+
+<p><strong>Constrctors:</strong></p>
+
+<blockquote>
+  <p><strong>Constructor()</strong></p>
+  <blockquote>
+    <blockquote>
+      <p>Get a new instance of the Tymeac <a href="TyVariables.html">TyVariables</a>.</p>
+      <p>When using the RMI Registry, then do that procedure, (<strong>doRMI()</strong>).</p>
+      <p>When using the JNDI Registry, (CosNaming pluging for IIOP), then do that procedure, (<strong>doIIOP()</strong>).
+      </p>
+      <p>When both the<strong> use_alternate</strong> and <strong>alternate_name</strong> are
+      true and not null, then do the alternate procedure (<strong>doAlternate()</strong>).</p>
+    </blockquote>
+  </blockquote>
+  <p><strong>Constructor(TymeacInterface Ty)</strong></p>
+  <blockquote>
+    <blockquote>
+      <p>Set the<strong> Ti</strong> field variable from the parameter, <strong>Ty</strong>.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" WIDTH="100" HEIGHT="5"></p>
+
+<p align="left"><strong>Instance Methods:</strong></p>
+
+<blockquote>
+  <p><a name="request"></a><strong>public Object[] syncRequest(</strong> <a href="TymeacParm.html">TymeacParm</a> <strong>)</strong><br>
+  <strong>public Object[] asyncRequest(</strong> <a href="TymeacParm.html">TymeacParm</a> <strong>)</strong><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Catches RemoteException, Exception.<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Returns Object[].</p>
+  <blockquote>
+    <blockquote>
+      <p>These are the two mainstay methods of Tymeac Client communication.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Call the (a)syncRequest() remote method of the TymeacInterface stub passing the <a href="TymeacParm.html">TymeacParm</a> parameter.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Exceptions are caught.&nbsp;Any further processing is at your discretion.</p>
+    </blockquote>
+  </blockquote>
+  <p><strong>public String shutRequest()</strong> <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Catches RemoteException, Exception..<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp; Returns String.</p>
+  <blockquote>
+    <blockquote>
+      <p>Call the shutRequest() remote method of the TymeacInterface stub.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Exceptions are caught.&nbsp;Any further processing is at your discretion.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>public int cancelSyncReq(CancelParm forCancel)<br>
+  </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Catches RemoteException, Exception..<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp; Returns int.</p>
+  <blockquote>
+    <blockquote>
+      <p>This is for canceling a syncRequest(). See the <a href="Cancel.html">cancel document</a>
+      for details. </p>
+      <p>Exceptions are caught.&nbsp;Any further processing is at your discretion.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" WIDTH="100" HEIGHT="5"></p>
+
+<p align="left"><strong>Private Methods:</strong></p>
+
+<blockquote>
+  <p><strong>private void doAlternate()</strong></p>
+  <blockquote>
+    <p>Although this Class and this method are your code, the functionality within this method
+    is similar to the code with a private Tymeac communication Class. That Class is used by
+    the Tymeac GUI and&nbsp; non-GUI Client Classes to communicate with the Tymeac Server.
+    THEREFORE, you may not alter the functionality of this method, (see below.)</p>
+    <p>You may certainly do anything in any order. However, it all must come down to invoking
+    this method: &quot;getTymeacInterface()&quot;<br>
+    and returning this object: &quot;TymeacInterface&quot;<br>
+    on an instance of your Alternate.class: &quot;obj&quot; <br>
+    (TymeacInterface)&nbsp; java.lang.reflect.Method.invoke(obj, null);</p>
+    <p>When you make changes to your Alternate.class, you should also make sure the Tymeac GUI
+    Classes work. Run the main Tymeac GUI Class, <a href="TyMenu.html">TyMenu</a>. Choose
+    various windows within to make sure all is well.</p>
+    <p>Functionality:</p>
+    <blockquote>
+      <p>// Load the class <br>
+      Class c = Class.forName(alt_name)</p>
+      <p>// Find this method<br>
+      java.lang.reflect.Method meth = c.getMethod(&quot;getTymeacInterface&quot;, null);</p>
+      <p>// Get a new instance of this class<br>
+      Object obj = c.newInstance();</p>
+      <p>// Invoke the method<br>
+      Ti = (TymeacInterface) meth.invoke(obj, null);</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>private void doIIOP()</strong></p>
+  <blockquote>
+    <p>Get the field for Tymeac JNDI Name, (iiop_name).</p>
+  </blockquote>
+  <blockquote>
+    <p>Try to connect to the JNDI Registry or ORB Daemon.</p>
+  </blockquote>
+  <blockquote>
+    <p>When successful, set the<strong> Ti</strong> field variable = </p>
+    <blockquote>
+      <p>(TymeacInterface)javax.rmi.PortableRemoteObject.narrow(javax.naming.lookup(iiop_name));</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>Exceptions are caught.&nbsp; Any further processing is at your discretion.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>private void doRMI()</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Get the fields for URL and Tymeac Name.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Try to connect to the RMI Registry up to ten (10) times.&nbsp;(Change this for your
+    installation requirements.)&nbsp;A Connect Exception is usually a temporary condition when
+    many clients try to connect at the same time.</p>
+  </blockquote>
+  <blockquote>
+    <p>When successful, set the<strong> Ti</strong> field variable = </p>
+    <blockquote>
+      <p>(TymeacInterface)java.rmi.Naming.lookup(url_name + tymeac_name);</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>Exceptions are caught.&nbsp;Any further processing is at your discretion.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

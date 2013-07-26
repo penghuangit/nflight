@@ -1,0 +1,291 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Tymeac Messages, Start up Configuration ExtensionTy01</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Messages: Start Up Config Extension Ty01</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This section details the Start Up messages when using a Configuration Provider.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>(<strong>P</strong>) Printed to System.out.println(), (this is <a href="TyCfg.html">optional</a>).<br>
+    (<strong>L</strong>) Sent to the Tymeac <a href="RunTime.html#log">Log</a>.<br>
+    (<strong>N</strong>) Sent to the Tymeac <a href="RunTime.html#notify">Notification</a>
+    Function.</p>
+  </blockquote>
+</blockquote>
+
+<hr>
+
+<p align="left">003 S (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server No command line arguments</p>
+  <blockquote>
+    <p align="left">Use of command line arguments is mandatory. See the <a href="StartUp.html">start
+    up</a> document for command line usage.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">005 S (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server No configuration (-config) argument</p>
+  <blockquote>
+    <p align="left">Use of a configuration provider is mandatory. See the <a href="StartUp.html">start up</a> document for command line usage.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">010 S (<strong>P</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server No configuration parms after -config</p>
+  <blockquote>
+    <p align="left">Use of a configuration provider is mandatory. See the <a href="StartUp.html">start up</a> document for command line usage.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">015 S (<strong>P</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server ConfigurationProvider error=xxxx</p>
+  <blockquote>
+    <p align="left">A configuration provider error. xxxx is the reason. xxxx is the reason.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">020 S (<strong>P</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server Configuration getEntry for Directory error=xxxx</p>
+  <blockquote>
+    <p align="left">A configuration getEntry() method returned this error while attempting to
+    access the directory entry in the configuration file. xxxx is the error. See the <a href="StartUp.html">start up</a> document for command line usage.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">025 S (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Configuration getEntry for File error=xxxx</p>
+  <blockquote>
+    <p align="left">A configuration getEntry() method returned this error while attempting to
+    access the file entry in the configuration file.xxxx is the error. See the <a href="StartUp.html">start up</a> document for command line usage.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">030 S (<strong>P</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server Configuration getEntry for Stand Alone error=xxxx</p>
+  <blockquote>
+    <p align="left">A configuration getEntry() method returned this error while attempting to
+    access the stand alone entry in the configuration file.xxxx is the error. See the <a href="StartUp.html">start up</a> document for command line usage.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">040 S (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Configuration getEntry for Verbose error=xxxx</p>
+  <blockquote>
+    <p align="left">A configuration getEntry() method returned this error while attempting to
+    access the verbose entry in the configuration file.xxxx is the error. See the <a href="StartUp.html">start up</a> document for command line usage.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">041 S (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Configuration getEntry for Embedded Data Base 
+  Shut Down error=xxxx</p>
+  <blockquote>
+    <p align="left">A configuration getEntry() method returned this error while attempting to
+    access the edbsd entry in the configuration file.xxxx is the error. See the <a href="StartUp.html">start up</a> document for command line usage.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">045 S (<strong>P</strong>) </p>
+
+<blockquote>
+  <p align="left">Tymeac Server No ConfigurationProvider</p>
+  <blockquote>
+    <p align="left">A configuration getEntry() method returned this error while attempting to
+    access the xxxx entry in the configuration file. xxxx is the error. See the <a href="StartUp.html">start up</a> document for command line usage.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">050 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Configuration getEntry error=xxxx</p>
+  <blockquote>
+    <p align="left">A configuration getEntry() method returned this error while attempting
+    access in the configuration file. xxxx is the error.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">055 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Discovery manager failure=</p>
+  <blockquote>
+    <p align="left">Jini --An access to a discover manager produced the error.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">060 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Join Manager failure=</p>
+  <blockquote>
+    <p align="left">Jini --An access to a join manager produced the error.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">065 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server No application entry, xxxx</p>
+  <blockquote>
+    <p align="left">Jini -- Activation create, field xxxx is missing. In order to create a
+    backend object for the Activation System to activate, certain entries must be in the
+    Configuration File. A field is missing.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">070 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Activation creation, unbalanced properties</p>
+  <blockquote>
+    <p align="left">Jini -- Activation create, the properties field&nbsp; (String[]) in the
+    configuration file needs an even number of entries. E.G. &quot;java.security.policy&quot;,
+    &quot;where located&quot;.</p>
+    <p align="left">Make sure all the String properties are matched.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">075 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Activation creation, Error creating Marshaled Object: xxxx</p>
+  <blockquote>
+    <p align="left">Jini -- Activation create, the options field&nbsp; (String[]) in the
+    configuration file contains Strings used to create a Marshaled Object for the activated
+    program (command line replacements). xxxx is the error from that create. </p>
+  </blockquote>
+</blockquote>
+
+<p align="left">080 I (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Created Tymeac Activatable environment successfully</p>
+  <blockquote>
+    <p align="left">Jini -- The backend activation system was created and registered with the
+    RMI Registry successfully.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">081 S (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Activatable environment creation failure</p>
+  <blockquote>
+    <p align="left">Jini -- Activation create failed. There should be prior messages to
+    indicate why.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">085 S (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Activatable RMI Registry failure= xxxx</p>
+  <blockquote>
+    <p align="left">Jini -- Activation create phase 1 requires using the RMI Registry as a
+    temporary repository for the backend remote object. The phase 2 picks up the remote
+    object. A Naming.rebind failed.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">090 S (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Activatable environment create Exception= xxxx</p>
+  <blockquote>
+    <p align="left">Jini -- Activation create phase 1. Caught exception. xxxx is the
+    exception. </p>
+  </blockquote>
+</blockquote>
+
+<p align="left">095 I (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Activatable Jini Service shut down</p>
+  <blockquote>
+    <p align="left">Jini -- Activation Service ended normally.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">100 I (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Activatable Jini Service created successfully, waiting for a
+  shut down.</p>
+  <blockquote>
+    <p align="left">Jini -- Activation Service is up and registered and will remain until shut
+    down.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">105 S (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Activatable RMI Naming failure=xxxx.</p>
+  <blockquote>
+    <p align="left">Jini -- Activation .Activation create phase 1 requires using the RMI
+    Registry as a temporary repository for the backend remote object. The phase 2 (now) picks
+    up the remote object. A Naming.lookup failed.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">110 I (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Activatable Tymeac Join Manager terminated</p>
+  <blockquote>
+    <p align="left">Jini -- Activation. The Tymeac service terminated</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">115 I (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server Activatable Internal Join Manager terminated</p>
+  <blockquote>
+    <p align="left">Jini -- Activation. The internal service terminated. This is an internal
+    Jini service that accepts shut down requests from the Tymeac Server or another Jini
+    program for destroying the service. See the <a href="SetUpJini2.html">start up document</a>
+    for a detailed discussion</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

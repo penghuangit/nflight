@@ -1,0 +1,225 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>The Long Version</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/wheat.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1 align="center">The Long Version</h1>
+
+<p align="center"><img src="Images/topbar.gif" alt="topbar.gif (1003 bytes)" WIDTH="345" HEIGHT="17"></p>
+
+<blockquote>
+  <blockquote>
+    <p>&nbsp;</p>
+  </blockquote>
+  <p>You could not build a GUI application without a framework, (the Frame, Window,
+  Container, and Component Classes).&nbsp; You should not build a backend application
+  without a framework.</p>
+  <p>A backend [activatable] remote/non-remote object runs in a plain brown box in a dark
+  room with no one watching it.&nbsp; If you simply add application code to this empty box
+  you will run into insurmountable problems.</p>
+  <blockquote>
+    <p><strong>Threads</strong></p>
+    <blockquote>
+      <p>The first problem that comes up is timing the request.&nbsp; The client sends a request
+      to the Backend Server for information contained in a private resource. If a horde of other
+      users are also updating that private resource, by the time the request completes, the
+      original user has gone home. If the private resource is nonfunctioning to the point that
+      the request cannot complete, not only has the original user gone home, but the Client
+      thread hangs forever.</p>
+    </blockquote>
+    <blockquote>
+      <p>How does one do an autonomous request, like a callback?&nbsp; That is -- send in a
+      request, have it processed by a background thread that contacts the original Client when
+      complete. If we simply create a new application thread for every request, the
+      create/destroy overhead and the number of application threads will put a severe strain on
+      the Backend Server, and the Server will eventually run out of resources.</p>
+      <p>The practical solution to these and many more problems is to separate the Client thread
+      activity from the application processing. You can do this by creating an application
+      queuing and threading structure on the server side. This is the way highly reliable, fully
+      mission-critical software products work, and that structure can be available for any
+      application.</p>
+      <p>For a Client that needs an immediate response, the Client thread contacts an
+      application thread.&nbsp; If the application thread does not respond within the time
+      limit, then the requesting thread returns to the Client with a timeout message.</p>
+      <p>For an autonomous request, the Client thread contacts an application thread. The
+      backend application executes asynchronously.</p>
+      <p>Now the only problem is how does one design a queuing and application threading
+      environment so that:<ul>
+        <li>the requesting threads and the application threads can talk to each other</li>
+        <li>the application environment can know about Client timeouts and recover therefrom</li>
+        <li>a thread overload problem does not occur, (i.e. where so many application threads are
+          executing that the JVM cannot sustain anymore threads or these threads cause so much
+          competition for resources that the environment effectively stalls).</li>
+        <li>the application thread create/destroy overhead does not bog down the application
+          processing</li>
+        <li>the threading environment is monitored to pinpoint stalls</li>
+        <li>an abnormally terminating thread can recover and restart</li>
+        <li>partial scheduling failures can back-out</li>
+        <li>the entire threading environment may quiesce and shut down gracefully</li>
+        <li>are you getting the picture? This list can go on and on.</li>
+      </ul>
+      <p>When dealing with threads there are no quick solutions, only thorough designs.</p>
+    </blockquote>
+    <p><strong>Components</strong></p>
+    <blockquote>
+      <p>Having established a queuing environment, it is only a short walk to having multiple
+      queues for each request.&nbsp; This is known as request brokering, that is -- breaking the
+      request into its component parts and placing each component into a separate queue.</p>
+      <p>For a request with multiple access to resources, each access goes into a separate queue
+      with its own threads.&nbsp; As each access completes, the response concatenates with all
+      other responses.&nbsp; When all access complete, the system returns the total response to
+      the originator.</p>
+      <p>This is not very difficult to do.&nbsp; However, what about the autonomous request?
+      &nbsp; After all access complete, there is no originator waiting for the reply, what
+      happens then?&nbsp; This is where the independent agent comes in.&nbsp; The system must
+      create a new process to handle this situation.&nbsp; What seemed easy has now become
+      difficult.</p>
+    </blockquote>
+    <p><a name="recursion"></a><strong>Recursion</strong></p>
+    <blockquote>
+      <p>Recursion is one of the most useful techniques in computer programming.&nbsp; Think of
+      the parentheses processor in a compiler:&nbsp; x = (((a + b) * c) / d)&nbsp; Every inside
+      parentheses pair must process first.&nbsp; This means that the parentheses processor must
+      call itself.</p>
+      <p>It is this ability to stop here, call itself and pick up where it left off that makes
+      recursion so useful.&nbsp; However, the effort required in keeping track of allocated
+      storage, levels, etc., means that designers usually chose some other, less efficient
+      method.</p>
+      <p>There is simply no way to add recursion to a fully built backend process without
+      ripping it completely apart.&nbsp; This must be designed in at the beginning.</p>
+    </blockquote>
+    <p><strong>Logging</strong></p>
+    <blockquote>
+      <p>Anyone who has ever worked with a background process knows how important it is to log
+      errors.&nbsp; How else can anyone know what happened after a failure.&nbsp; There are
+      three kinds of logs: <ol>
+        <li>The individual application's log.</li>
+        <li>A normal application process such as a start up sequence.&nbsp; At each stage of the
+          start up, the process logs its status so that if any total failure occurs, at least the
+          team knows about where to look.</li>
+        <li>The failure log is for application queuing and threading errors.</li>
+      </ol>
+      <p>The first is application dependent.&nbsp; Usually, no general purpose log will suffice.
+      &nbsp; Commercial products are available today and the standard language will support
+      logging in the near future.</p>
+      <p>The other two kinds of logging are part of the framework and usually share a common
+      usage.&nbsp; They do not need a fancy structure; a simple file or DBMS table is
+      sufficient. It is because of this that the framework log should be separate from the
+      application log.&nbsp; This makes it another detail for the application developer.</p>
+    </blockquote>
+    <p><strong>Notification of errors</strong></p>
+    <blockquote>
+      <p>So what does one do when one detects an unrecoverable error?&nbsp; There is usually
+      some standard messaging system in place but how does the framework and each application
+      interface to that procedure?&nbsp; It is better to put a common procedure in place at the
+      framework level.&nbsp; In this way, adherence to the standard is easy.</p>
+    </blockquote>
+    <p><strong>How to detect and recover from stalls</strong></p>
+    <blockquote>
+      <p>A stall is when a request takes so long that the response is no longer needed, a thread
+      is waiting on a locked resource that can never be unlocked or an application has ended
+      abnormally.</p>
+      <p>The only way to detect such an event is to time each function in the life of the
+      request.&nbsp; These include, but are not limited to:<ul>
+        <li>thread processing -- that time outside the pure application code where the thread is
+          executing &quot;synchronized&quot; statements, or other such code.</li>
+        <li>thread activation -- that time when a new thread is required from the JVM but before the
+          thread actually begins executing</li>
+        <li>thread wait time -- how long a thread will wait for resources or new requests</li>
+        <li>application processing -- the actual application code, (this is tough since each
+          application may have different requirements)</li>
+        <li>all the other little parts that make a normal life cycle.</li>
+      </ul>
+      <p>Now, having timed these events, one needs to write a daemon thread that lives on the
+      Server to actually check the timing.</p>
+    </blockquote>
+    <p><strong>Real time alteration of the environment</strong></p>
+    <blockquote>
+      <p>No server runs the same all day, every day.&nbsp; There are always peaks and valleys of
+      processing.&nbsp; Sometimes more time is necessary to process a request because of
+      seasonal requirements.&nbsp; Sometimes a longer queue is necessary because of more
+      requests.</p>
+      <p>A properly designed server can be dynamically tweaked in all the right places to
+      function in a wide range of elements throughout the day.</p>
+      <p>This must be generic and designed in at the beginning.</p>
+    </blockquote>
+    <p><strong>You wrote it.&nbsp; Now you have to tune it</strong>.</p>
+    <blockquote>
+      <p>Tuning starts with good design.&nbsp; Not even we, (and we're good), can tune a can of
+      worms.</p>
+      <p>The basis for tuning is statistics.&nbsp; How many happened where and for how long.
+      &nbsp; You are not going to get this by adding it in after the fact.</p>
+      <p>Taken together with dynamically altering the environment and an audit trail, (log), you
+      have a viable system that is capable of being tuned.</p>
+    </blockquote>
+    <p><strong>What's happening?</strong></p>
+    <blockquote>
+      <p>So,&nbsp; you sent a request to the Server and ... and ... and ...</p>
+      <p>As the saying goes, &quot;A picture is worth a thousand words.&quot;&nbsp; To be truly
+      effective, not only should there be a way for Clients to inquire about autonomous requests
+      but a way for any user to inquire about the overall health of the Backend Server.</p>
+      <p>This means that you must build GUI and non-GUI interfaces to the Server so that it is
+      easy for system administrators to get a picture of the executing environment.</p>
+    </blockquote>
+    <p><strong>What about the next application</strong></p>
+    <blockquote>
+      <p>Now that you built one application with all the underlying framework, can you reuse the
+      framework for another application?</p>
+      <blockquote>
+        <p>Think of this like an office building.&nbsp; Besides the superstructure of concrete and
+        steel every office needs heating/air conditioning, hot/cold water, sewerage, electricity,
+        telephony, satellite/microwave hookups, cabling between floors, removable windows to
+        facilitate large equipment installs and other industry specific requirements.</p>
+      </blockquote>
+      <p>If you have a generic framework in place, then any type of application can live inside.</p>
+    </blockquote>
+    <p><strong>Hooks for adding management services</strong></p>
+    <blockquote>
+      <p>No generic framework can work for all application environments.&nbsp; This is where the
+      hook or user exit comes in.</p>
+      <p>Backend Servers are persistent.&nbsp; Applications can take advantage of this
+      environment to store common variables between threads, (i.e. connection pools are the most
+      common). &nbsp;By using a start up exit, each application can prime its own block of
+      storage and even start daemon threads, (customization).</p>
+      <p>Need global notification when the server goes down?&nbsp; This is a use for a shut down
+      exit.</p>
+      <p>There is no way to add this functionality in after the server is written without
+      ripping it apart.&nbsp; Patch a piece here and it is sure to fail over there.&nbsp; There
+      is no beating good, up-front design.</p>
+    </blockquote>
+    <p><strong>Extensibility</strong></p>
+    <blockquote>
+      <p>The first law of computer programming states that: <em>Any code written today will be
+      enhanced tomorrow.</em></p>
+      <p>Building a static application environment is a ticket to disaster.&nbsp; As soon as
+      people use a system they find other, and sometimes better, ways to use that system. &nbsp;
+      This means changes.</p>
+      <p>Anybody can build an ad hoc or single use system.&nbsp; The true professional builds
+      dynamic systems.&nbsp; Systems capable of using plug-in code, (components), that are
+      easily extensible and changeable.&nbsp; The extra weeks up front in design can save months
+      of work down the road.</p>
+    </blockquote>
+    <p>Problems, problems, problems.&nbsp; Think of the above as the dirty dozen.&nbsp; If you
+    never designed a mission-critical server application before then this is all new.&nbsp; If
+    you have, then you should be happy that you will not have to do all those painstaking
+    details again.</p>
+  </blockquote>
+  <p>We've done this before, many times.&nbsp; We solved the problems.&nbsp; We've made it
+  easy for you.</p>
+  <p>Welcome to <strong>Tymeac</strong><sup><small>&#153;</small></sup></p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

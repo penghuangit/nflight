@@ -1,0 +1,105 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Data Base Management System Queue Table</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>DBMS Tymeac Queue Table</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This table contains all the Queues in the Tymeac
+    system. All column names are UPPER CASE, must be in the order presented here, and
+    must be spelled as presented here. Variable Character columns convert into Java
+    Strings, therefore, lengths are customer determined.&nbsp; </p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+    <p>See the Tymeac Queue Maintenance Class (<a href="TyQueMaint.html">TyQueMaint</a>) for a description of values for each column.</p>
+    <p>There is a pre-built definition in the <b>
+    /scripts/sql</b> directory for this table to make your life a little easier.</p>
+</blockquote>
+
+<h3><strong>Keys:&nbsp;&nbsp; </strong></h3>
+
+<blockquote>
+  <p>Single key -- QUEUE_NAME</p>
+</blockquote>
+
+<h3><strong>Columns:</strong></h3>
+
+<blockquote>
+  <p><strong>QUEUE_NAME</strong>&nbsp;&nbsp;&nbsp; Var Char.&nbsp;&nbsp;&nbsp; The name of a
+  Queue.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>PA_CLASS&nbsp;&nbsp;&nbsp; </strong>Var Char.&nbsp;&nbsp;&nbsp; The name of the
+  Processing Application Class.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>NBR_WAITLISTS&nbsp;&nbsp; </strong>Integer.&nbsp;&nbsp;&nbsp; The total number
+  of Wait Lists for this Queue.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>NBR_IN_WAITLISTS&nbsp;&nbsp; </strong>Integer.&nbsp;&nbsp;&nbsp; The number of
+  <a href="TyQueMaint.html#nbr_slots">physical</a> entries in each Wait List.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>WAIT_TIME&nbsp;&nbsp; </strong>Integer.&nbsp;&nbsp;&nbsp; The maximum time, in
+  seconds, the Queue Thread waits for a Client posting before becoming inactive.</p>
+  <p><strong>THREAD_KILL_TIME</strong>&nbsp; Integer.&nbsp;&nbsp; The maximum time, in
+  seconds, the Queue Thread waits as an inactive thread, (see above, WAIT_TIME), before a
+  thread-destroy, (return in the run() method.)</p>
+  <p><strong>NBR_THREADS&nbsp;&nbsp; </strong>Integer.&nbsp;&nbsp;&nbsp; The maximum number
+  of Threads for this Queue.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>QUE_TYPE&nbsp;&nbsp; </strong>Integer.&nbsp;&nbsp;&nbsp; The type of Queue,
+  0-normal, 1-Output Agent.</p>
+  <p><strong>THREAD_START_DELAY</strong>&nbsp; Integer.&nbsp; Start all threads at Tymeac
+  Start Up, 0-no, 1-yes.</p>
+  <p><strong>OVERALL_PERCENT&nbsp;&nbsp;&nbsp; </strong>Double.&nbsp;&nbsp;&nbsp; The Thread
+  Threshold overall percent.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>INDIVIDUAL_PERCENT&nbsp;&nbsp; </strong>Double.&nbsp;&nbsp;&nbsp; The Thread
+  Threshold Individual percent.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>WEIGHTED_FACTOR&nbsp;&nbsp; </strong>Double.&nbsp;&nbsp;&nbsp; The Thread
+  Threshold weighted factor.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>WEIGHTED_AVERAGE&nbsp;&nbsp; </strong>Double.&nbsp;&nbsp;&nbsp; The Thread
+  Threshold weighted average. </p>
+  <p><strong>PA_TIMEOUT&nbsp;&nbsp;</strong>Integer.&nbsp;&nbsp;&nbsp; The time, in seconds,
+  a Processing Application Class may execute before Tymeac believes it may be stalled.
+  &nbsp; Zero -- use the <a href="Disabled.html#five">default</a>, greater than zero, use
+  this number. </p>
+  <p><strong>TH_NBR_IN_WAITLISTS&nbsp; </strong>Integer.&nbsp;&nbsp;&nbsp; The 
+  number of <a href="TyQueMaint.html#nbr_slots_logical">logical</a> entries in each Wait List.
+  <font color="#FF0000">Since release 6.0</font></p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

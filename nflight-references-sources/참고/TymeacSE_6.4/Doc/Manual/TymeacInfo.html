@@ -1,0 +1,199 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Tymeac Run Time Information</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Run Time Information</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>This is a Singleton Class containing various information on the currently executing
+        Tymeac Server</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac Server instantiates this class during start up. The instance of this class is
+  available to all user classes by the getInstance() method.</p>
+  <p style="text-align: justify"><font size="4">JavaDoc:&nbsp; <a href="../JavaDoc/com/tymeac/base/TymeacInfo.html">public
+  final class com.tymeac.base.TymeacInfo</a></font></p>
+  <blockquote>
+    <h2 style="text-align: justify">Class Methods:</h2>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <h3 style="text-align: justify">public static com.tymeac.base.TymeacInfo getInstance() </h3>
+    </blockquote>
+    <blockquote>
+      <blockquote>
+        <p>This <u>static</u> method returns the instance of the TymeacInfo class.You may then use
+        the instance methods to retrieve information about the currently executing Tymeac Server.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h2>Instance Methods:</h2>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <h3>public String getDBUrl()</h3>
+      <blockquote>
+      <p>Returns a String of the URL name when using DBMS mode, or null.</p>
+      </blockquote>
+      <h3>public String getDBDriver()</h3>
+      <blockquote>
+      <p>Returns a String of the Driver Manager name when using DBMS mode, or 
+      null.</p>
+      </blockquote>
+      <h3>public String getDBUserid()</h3>
+      <blockquote>
+      <p>Returns a String of the User Id when using DBMS mode, or null.</p>
+      </blockquote>
+      <h3>public String getDBPassword()</h3>
+      <blockquote>
+      <p>Returns a String of the Password when using DBMS mode, or null.</p>
+      </blockquote>
+      <h3>public String getDBShutdown()</h3>
+      <blockquote>
+      <p>Returns a String of the shut down class name when using DBMS mode and 
+      an <a href="StartUp.html#options">argument</a> was specified at startup, 
+      or null.</p>
+      </blockquote>
+      <h3>public long getMilliTime()</h3>
+      <blockquote>
+        <p>Returns a <strong>long</strong> that is the Tymeac startup time.</p>
+        <p>MilliTime is the System time in milliseconds since 1970.&nbsp;This time stamp appears
+        on the <a href="StartUp.html#sstart">start up</a> message, on the <a href="Shutdown.html">shut
+        down</a> message, as an instance field in Class CancelParm (see how to cancel synchronous
+        requests -- syncReq() in the <a href="Cancel.html">cancel document</a>) and within all
+        return messages for <a href="Develop.html#async">Asynchronous Requests</a>.&nbsp;It is the
+        way to identify this session of Tymeac.</p>
+      </blockquote>
+        <h3><b><font size="4">public TymeacInterface getTymeac()</font></b></h3>
+      <blockquote>
+        <p>Returns a reference to the Tymeac Server <b>after Tymeac Start Up 
+        finishes.</b></p>
+        <p>When startup creates this class, the Server is not fully available. 
+        That is, exporting the remote object for the external version or saving 
+        a reference to the Server implementation for the internal version has 
+        not completed yet. Naturally, the base must be built before it can be 
+        saved/exported. Therefore, when used in a startup exit, the return value 
+        may be null. Simply, retry the method at a later time.</p>
+      </blockquote>
+      <h3>public String getVersion()</h3>
+      <blockquote>
+        <p>Returns a <strong>String</strong> that is the current version of the Tymeac Server.
+        This is in the form: 1.1.3 or 2.1 etc.</p>
+      </blockquote>
+      <h3>public Object getJoinManager()</h3>
+      <blockquote>
+        <p>Returns an Object <strong>(JoinManager</strong> reference) for use by Jini modules. You 
+        <b>must cast </b>this to a net.jini.lookup.JoinManager. It is saved as 
+        an object since not all developers use Jini and may not have the Jini 
+        packages.</p>
+      </blockquote>
+      <h3>public int getStatus()</h3>
+      <blockquote>
+        <p>Returns an <strong>int</strong> that is the current status of the Tymeac Server.</p>
+        <p>public final static int INITIALIZATION = 0; // 0 in init<br>
+        public final static int AVAILABLE = 1;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+        1 normal processing<br>
+        public final static int SHUT_STAGE1 = 2;&nbsp;&nbsp;&nbsp; // 2 shutdown stage 1<br>
+        public final static int SHUT_STAGE2 = 3;&nbsp;&nbsp;&nbsp; // 3 shutdown stage 2<br>
+        public final static int SHUT_FORCE = 4;&nbsp;&nbsp;&nbsp;&nbsp; // 4 shutdown force<br>
+        public final static int SHUT_COMPLETE = 5;&nbsp;&nbsp; // 5 shutdown complete</p>
+        <p><b>N.B.</b> You should not depend on shut down stages going from 1 to 
+        2 to 3 etc. During stage 1, if there are no Queue Threads active then 
+        the shut down continues past the Stage 1 user exits into the Stage 2 
+        user exits, the embedded database user exit and finally termination. 
+        There is no reason to change this variable.</p>
+      </blockquote>
+      <h3>public int getStartType()</h3>
+      <blockquote>
+        <p>Returns an <strong>int</strong> that is the start up type for this Tymeac Server. (CSF
+        is Custom Socket Factory)</p>
+        <p>public final static int NOT_STARTED = 0;&nbsp;&nbsp;&nbsp; // 0 initializing <br>
+        public final static int NON_ACT_RMI = 1;&nbsp;&nbsp;&nbsp; // 1 non-activatable RMI<br>
+        public final static int ACT_RMI = 2;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 2 Activation RMI<br>
+        public final static int IIOP = 3;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        // 3 IIOP start up<br>
+        public final static int INTERNAL = 4; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+        4 Internal Server<br>
+        public final static int NON_ACT_CSF = 5;&nbsp;&nbsp; // 5 non-activ CSF RMI<br>
+        public final static int ACT_CSF = 6;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 6 Activatable CSF
+        RMI<br>
+        public final static int NON_ACT_JINI = 7;&nbsp;&nbsp;&nbsp; // 7 non_activatable Jini<br>
+        public final static int ACT_JINI = 8; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+        8 Activatable Jini<br>
+        public final static int ACT_CSF_INI = 9; &nbsp; // 9 Activatable CSF Jini<br>
+        public final static int IIOP_POA = 10; &nbsp;&nbsp;&nbsp;&nbsp;// 10 Portable Object
+        Adapter</p>
+      </blockquote>
+      <h3>public int getShutOrigin()</h3>
+      <blockquote>
+        <p>Returns an <strong>int</strong> that is the origin of the shut down.</p>
+        <p>public final static int DEACTIVATION = 1;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 1 from deactivation<br>
+        public final static int SHUT_REQUEST = 2;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 2 from request</p>
+        <p>When using the activation framework, Tymeac Server deactivates when the idle time
+        reaches the <a href="TyCfg.html#activate">threshold</a>.&nbsp;Before deactivating, the
+        Tymeac Server calls the <a href="UserExits.html">shutdown </a>classes, when present.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Examples:</p>
+  <blockquote>
+    <p>If one wishes to use several methods of the TymeacInfo Class within a Processing
+    Application Class then one may save the instance of the TymeacInfo Class and use the
+    instance methods when necessary.</p>
+    <blockquote>
+      <p>TymeacInfo ti&nbsp; = TymeacInfo.getInstance();</p>
+      <p>System.out.println(&quot;Tymeac MilliTime=&quot; + ti.getMilliTime()):</p>
+      <p>System.out.println(&quot;Tymeac Version is&nbsp; &quot; + ti.getVersion()):</p>
+    </blockquote>
+    <p>If one wishes to use a single method of the TymeacInfo Class within a Processing
+    Application Class then one may get the instance of the TymeacInfo Class and use the method
+    immediately.</p>
+    <blockquote>
+      <p>if&nbsp; (TymeacInfo.getInstance().getShutOrigin() == TymeacInfo.DEACTIVATION) {</p>
+      <blockquote>
+        <p>// Shutting down because of deactivation</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

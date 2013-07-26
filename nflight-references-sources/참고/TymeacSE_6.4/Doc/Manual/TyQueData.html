@@ -1,0 +1,205 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Alter Queue Elements </title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Alter Elements of a loaded Tymeac Queue, <br>
+&nbsp;&nbsp;&nbsp; com.tymeac.client.jframe.TyQueData</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>This frame class allows you to alter certain elements of a Tymeac Queue during
+      execution.</p>
+      <p>The non-frame version of this class is <a href="#non">TyQueDataClient</a>, below.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p>Tymeac stores the Queue Elements in the <a href="DBMSQue.html">Queue Table</a>, or <a href="UserQueues.html">User Class</a>. Class <a href="TyQueMaint.html">TyQueMaint</a> is
+  available to alter these values for the DBMS.&nbsp;Manually for the User Classes. However,
+  these elements only load at Tymeac Server start-up.&nbsp;This Class provides a way to
+  temporarily change these elements without a shutdown / start-up sequence.</p>
+  <p>Altering values herein has an immediate effect on performance. Changing the New Thread
+  Thresholds while the Queue is under a heavy load is a way of tuning performance. The
+  effect of the weighted factor, calculated on paper, may not perform as planned.</p>
+  <p>This Class, in a test environment, gives designers an invaluable tool with which to
+  test performance parameters under many conditions to establish the final values for a
+  production system.</p>
+  <p>This Class, in a production system, gives system personnel the tool necessary to
+  respond to temporary, changing conditions.</p>
+  <p>A prime example is altering the number of entries in a Queue's Wait Lists.&nbsp;System
+  personnel can respond to Tymeac <a href="SchdFail.html">scheduling failures</a> caused by
+  exceptional loads on Queues by increasing the maximum number of Wait List entries.</p>
+  <hr noshade size="3">
+</blockquote>
+
+<p align="center"><a href="Images/TyQueData.jpg">
+<img border="0" src="Images/TyQueData_small.jpg" xthumbnail-orig-image="Images/TyQueData.jpg" width="100" height="69"></a>&nbsp; (click to link to full image)</p>
+
+<h3 style="text-align: justify"><strong>Elements</strong></h3>
+
+<blockquote>
+  <p><strong>Queue Name</strong> -- Enter the name of the Tymeac Queue.&nbsp;</p>
+</blockquote>
+
+<p align="center"><strong><big>&lt;--- Thresholds ---&gt;</big></strong></p>
+
+<blockquote>
+  <blockquote>
+    <p><strong>OVERALL %</strong>:
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Format as below.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>INDIVIDUAL %</strong>:&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Format as
+    below.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>WEIGHTED FACTOR</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Format as below.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>WEIGHTED AVERAGE</strong>:&nbsp;&nbsp; Format as below.</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><font color="#FF0000">This format changed in Release 4.0.3. Before you had to enter the
+      zero and decimal (0.) as part of the number.</font></p>
+      <p>The format is any number of digits as a percentage. Tymeac stores the number as a
+      fraction in a floating point number. E.G., for 25 percent, enter 25,&nbsp;Tymeac stores
+      the number as 0.25F, for 5 percent, enter 05, Tymeac stores the number as 0.05F.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><big><strong>&lt;--- Threads ---&gt;</strong></big></p>
+
+<blockquote>
+  <blockquote>
+    <p><strong>Idle Wait Time</strong> --The time, in seconds, the Queue Thread remains
+    waiting for work and selectable.&nbsp; When this time expires, the Thread changes its
+    status to 'inactive', that is, not directly selectable.</p>
+    <p><strong>Idle Thread Life</strong> -- When <u>non-zero</u>, the time, in seconds, a
+    thread remains alive in an inactive state (see above Idle Wait Time). When this time
+    expires, the Tymeac Monitor informs the Thread to destroy (return in the run()
+    method).&nbsp;When <u>zero</u>, the Tymeac Monitor ignores this field.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><big><strong>&lt;--- Wait Lists ---&gt;</strong></big></p>
+
+<blockquote>
+  <blockquote>
+    <p><strong>Nbr Physical WL Entries</strong> -- Enter a new maximum for all Wait Lists.</p>
+
+    <p><strong>Nbr Logical WL Entries</strong> -- Default (&lt; 1 or &gt; physical) is 
+    same as physical. Enter a new value for using Thresholds.</p>
+
+<p align="center"><big><strong>&lt;--- Appl ---&gt;</strong></big></p>
+
+    <p><strong>Appl Timeout</strong> -- Enter a new maximum timeout value, in 
+    seconds, for the Processing Application Class. This overrides both the 
+    <a href="Disabled.html#five">default</a> and 
+    <a href="TyQueMaint.html#timeout">specific</a> time.</p>
+    <blockquote>
+    <p>Initially displayed with the IMPORT BUTTON is either the default or 
+    specific timeout value. As of this writing (release 5.6) the default value 
+    is four times the monitor interval. (E.G. if the monitor interval is 60 
+    seconds, then the default timeout value is 240 seconds.) Once set, this 
+    permanently overrides the default value.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h3 style="text-align: justify"><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>IMPORT</strong> -- Displays the Queue Elements.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>UPDATE</strong> -- Updates the Queue Elements.</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- This is an information message:</p>
+
+<blockquote>
+  <p><u>Connection failure</u> -- The RMI connection failed or the Tymeac Server returned an
+  invalid message.</p>
+  <p><u>Tymeac shutting down</u> -- Tymeac Server is in shut down mode.</p>
+  <p><u>Invalid Queue Name | for Update</u> -- The Queue Name does not exist.</p>
+  <p><u>Make Changes</u> -- The Elements imported, make any necessary changes.</p>
+  <p><u>Successful</u> -- The Queue Elements were updated.</p>
+  <p><u>Invalid number of WL Entries</u>&nbsp; -- Entered value &lt; 1 or NaN.</p>
+  <p><u>Invalid Overall %</u>&nbsp; -- Entered value not a float.</p>
+  <p><u>Invalid Individual %</u>&nbsp; -- Entered value not a float.</p>
+  <p><u>Invalid Weighted Factor %</u>&nbsp; -- Entered value not a float.</p>
+  <p><u>Invalid Weighted Average %</u>&nbsp; -- Entered value not a float.</p>
+  <p><u>Cannot alter WL entries at this time</u> --&nbsp; The number of <u>currently active</u>
+  entries in a Wait List is more than the new number requested.&nbsp; Try again later.</p>
+</blockquote>
+
+<hr>
+
+<h3><a name="non"></a>com.tymeac.client.TyQueDataClient (<a href="../JavaDoc/com/tymeac/client/TyQueDataClient.html">JavaDoc</a>)</h3>
+
+<blockquote>
+  <blockquote>
+    <p>This is the Non-GUI equivalent of the GUI Class, above. An example of how to use this
+    class is: com.tymeac.demo.TyDemoClient_QueData.java in the
+    &lt;TymeacHome&gt;source/com/tymeac/demo directory.</p>
+  </blockquote>
+  <p>Constructor 1 -- has no arguments. This is for the RMI Server. The constructor gets a
+  new instance of&nbsp;a Tymeac internal class that is similar to <a href="TySvrComm.html">TySvrComm</a></p>
+</blockquote>
+
+<blockquote>
+  <p>Constructor 2--&nbsp; is for the internal server. The single argument is the Tymeac
+  Server Interface, TymeacInterface.</p>
+</blockquote>
+
+<p><strong>Instance Methods</strong> --</p>
+
+<blockquote>
+  <p>public <a href="../JavaDoc/com/tymeac/base/TyQueElements.html">TyQueElements</a>
+  importElements(String que) {</p>
+  <blockquote>
+    <p>Returns the <a href="../JavaDoc/com/tymeac/base/TyQueElements.html">TyQueElements</a>.
+    See the JavaDoc for a description thereof.</p>
+    <p>Parameters: the queue name.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>public int updateElements(<a href="../JavaDoc/com/tymeac/base/TyQueElements.html">TyQueElements</a>
+  data) {</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Returns the TyQueElements. See the JavaDoc for a description thereof.</p>
+    <p>Parameters: <a href="../JavaDoc/com/tymeac/base/TyQueElements.html">TyQueElements</a>.
+    See the JavaDoc for a description thereof.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

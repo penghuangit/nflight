@@ -1,0 +1,268 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Internal Server Set Up</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Internal Server Set Up</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <blockquote>
+          <p>In this section we discuss the internal server set up procedures.</p>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <p><b><font size="4">Running the internal server</font></b><font size="4">.</font> If you just installed Tymeac, then you 
+  can verify that the classes are installed properly by <a href="#running">
+  running this demonstration</a> and skipping this tutorial on how to set up 
+  your own structure.</p>
+  <hr color="#000000" width="80%">
+  <p>Tymeac supports your custom implementations by providing a way to run the Tymeac
+  Queuing and Threading structure as an embedded server within any application.</p>
+  <p>This is very similar to the basic, non-activatable remote object procedure. However,
+  the server is part of your application, not as a separate JVM.</p>
+  <p>The directory for the Internal Server is the same as the Remote Object Server, <strong>com.tymeac.base</strong>.</p>
+  <p>The Tymeac class necessary for the internal server is: <strong>com.tymeac.base.InternalServer</strong>.</p>
+  <blockquote>
+    <p>This class has a single, no argument constructor.</p>
+    <p>This class has a single public method,<br>
+    <strong>&nbsp;&nbsp;&nbsp; public TymeacInterface createServer(String[] args)</strong>.</p>
+    <p>You must instantiate this class within your application and call the <strong>createServer()</strong>
+    method passing an options list as you would for any Tymeac Server <a href="StartUp.html#options">start up</a>. The method returns a reference, cast to <strong>com.tymeac.base.TymeacInterface</strong>, 
+    that your application may use to call the methods on the Tymeac Server 
+    similarly to a call on a remote object. </p>
+    <p>Since the Tymeac Interface extends Remote your code must catch the 
+    possible Exception. Also note that the Runtime creates several threads for 
+    Remote Methods (that you never use.)</p>
+    <p>For example, start up:</p>
+    <blockquote>
+      <pre>import com.tymeac.base.*;</pre>
+      <pre>// new server instance
+InternalServer impl = new InternalServer();
+
+// passed arg is &quot;only stand alone&quot;
+String[] in = {&quot;-s&quot;};
+
+// create the server
+TymeacInterface ti = impl.createServer(in);</pre>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>For example, method call:</p>
+    <blockquote>
+      <pre>// form a parameter for Tymeac   
+TymeacParm TP = new TymeacParm(null,         // no data 
+                               &quot;Function_1&quot;, // function name
+                               10,           // wait time
+                               1);           // priority
+
+Object[] back = null;</pre>
+      <pre>try {
+   // do a sync request
+   back = ti.syncRequest(TP);
+}
+catch (Exception e) {}</pre>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>For example, shut down.</p>
+    <blockquote>
+      <pre>String end = null;</pre>
+      <pre>// shut down the server
+try {
+   end = ti.shutRequest();
+}
+catch (Exception e) {}</pre>
+    </blockquote>
+  </blockquote>
+  <p><strong>Persistence:</strong><br>
+  When you use the Tymeac Server as an embedded server there is no automatic persistence as
+  there is with an RMI-Sever. However, as mentioned above, the Runtime does 
+  create several threads for Remote Methods that may make the server persistent. </p>
+  <p>Still, you must keep the instantiated reference to the Tymeac Server
+  alive. The example above in start up uses:<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>InternalServer impl = new
+  InternalServer();<br>
+  </strong><br>
+  You must not set <strong>impl</strong> to null explicitly or by default since this may
+  make the Tymeac Server eligible for garbage collection.</p>
+  <p><strong>Shut down:<br>
+  </strong>You may edit the <a href="TyCfg.html#sys">start up variable shut down thread</a>
+  by setting it to not end the JVM.<br>
+  The product ships with this variable set to end the JVM with Tymeac Server shut down. See
+  the <a href="UserVariables.html">UserClass</a> (sys_exit) or <a href="TyCfg.html">Cfg file</a>.<br>
+  If you wish to shut down the Tymeac Server and reclaim the memory then you MUST edit this
+  variable and recompile.</p>
+  <p><strong>Tymeac Menu</strong><br>
+  Additionally, since displaying and altering Tymeac Server run time information is critical
+  to any application, you may use the standard Tymeac GUI classes. However, you must start
+  the GUI classes from within your application since there is no remote object reference to
+  the Java Virtual Machine.</p>
+  <blockquote>
+    <p>All the Tymeac GUI classes have two constructors. </p>
+    <blockquote>
+      <p>One is without any arguments. This is the constructor the remote objects use since
+      closing any window calls system.exit(0) to end the process. Usually, you would create a
+      script for use on a command line to use these classes.</p>
+      <p>The second is with the <strong>com.tymeac.base.TymeacInterface</strong> reference. This
+      constructor sets the stage so that when the window closes, no call is made to system exit.
+      When running as an embedded server, this is the constructor you should use. You must get a
+      new instance of the GUI class, passing the reference to the Tymeac Server and make it
+      visible.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>An example using the main <a href="TyMenu.html">Tymeac Menu</a>:</p>
+      <blockquote>
+        <pre>// new object passing the reference to the server
+com.tymeac.client.jframe.TyMenu menu = 
+     new com.tymeac.client.jframe.TyMenu(ti);
+
+// make visible
+menu.setVisible(true);</pre>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <hr color="#000000">
+  <p><b><a name="running"></a><font size="4">Running the internal server</font></b> demonstration.</p>
+  <p>We supply a demonstration class to aid in using the internal server:</p>
+    <blockquote>
+    <p style="text-align: justify">The Swing Class was generated with Sun's 
+    NetBeans5.0.&nbsp;<i>If you wish to change the source</i>, then you should use NetBeans. We supply both the source and form files for you.  </p>
+    <p style="text-align: justify">In order to 
+    execute this class, you also need the <u>supplied</u> NetBeans jar file in 
+    the classpath, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+    swing-layout1.0.jar<br>
+    The script we supply has the classpath set up.</p>
+      <blockquote>
+    <p style="text-align: justify">To build this class using Eclipse or another 
+    IDE, copy the classes\lib directory to your project. Such as:<br>
+    \workplace\YourProject. Then add the additional jar file to the project.</p>
+    <p>If this proves too much to handle, we supply 
+    the old source in the directory: \Source\com\tymeac\demo\jframe\OldDemoGui.</p>
+      </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+    <p><strong>com.tymeac.demo.jframe.TyDemoInternalTest</strong> -- This is a GUI application
+    containing five buttons to:<ol style="text-align: left; line-height: 100%">
+      <li>
+      <p style="line-height: 100%"><b>Start the server</b> -- This starts the 
+      server in stand-alone mode. The messages print on the console window.<br>
+&nbsp;</li>
+      <li>
+      <p style="line-height: 100%"><b>Send a sync request </b>for Function_2 -- 
+      This sends a single request to the server for Function_2, returning a 
+      result that displays on the bottom of the window. The result should be:<br>
+      <br>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      Tymeac SR(0000)#Demo1:A1(11)+A2(22)+A#(33)=(66)#<br>
+      <br>
+      See The <a href="TyDemoT1.html">T1 demonstration document</a> for an 
+      explanation on just what this means.<br>
+&nbsp;</li>
+      <li>
+      <p style="line-height: 100%"><b>Open the Tymeac <a href="TyMenu.html">Main Menu</a></b> 
+      -- You may then use all the GUI's for displaying the Tymeac environment.<br>
+&nbsp;</li>
+      <li>
+      <p style="line-height: 100%"><b>Close the Tymeac Main Menu</b> -- If you 
+      wish.<br>
+&nbsp;</li>
+      <li>
+      <p style="line-height: 100%"><b>Shut down the server</b>. -- Since there 
+      may be active threads, you may get a message saying so. Keep pressing the 
+      button until you get the completely shut down message, but, since this 
+      demo uses the <a href="Shutdown.html#shuthread">shut down thread</a>, the 
+      JVM ends in about two (2) seconds (ending the process.)</li>
+    </ol>
+    <p>We supply a script to run this demonstration:
+    <a href="Scripts.html#internal">internal [.bat .sh]</a>. You must edit the 
+    basic script, SET_ENV to point to the Tymeac classes before using this 
+    script.</p>
+    <p>The GUI class comes with two additional classes in support:</p>
+    <blockquote>
+      <p><strong>com.tymeac.demo.jframe.TyDemoInternalTestBean</strong> -- The logic for the GUI
+      buttons.</p>
+      <p><strong>com.tymeac.demo.jframe.TyDemoInternalTestThread</strong> -- The logic for
+      displaying the Main Menu.</p>
+    </blockquote>
+      <p>There are also versions of the above using embedded databases. </p>
+  <blockquote>
+      <p>You must alter the TestBean Class, method startServer() to pass a -edbsd 
+      command line value to the createServer() method. The code is there, just 
+      un-comment it.</p>
+      <p>Look in the /scripts directory for scripts to run in embedded database 
+      mode.</p>
+      <hr>
+  </blockquote>
+      <p><b><font size="4">The multi-threading version.</font></b></p>
+  <blockquote>
+      <p>Sending a single request is nice, but it really doesn't show the 
+      potential of a multi-threading server. Therefore, we supply a version of 
+      the above demonstration that starts twenty-two (22) threads that puts a 
+      load on the internal server.</p>
+      <p>See above for how this class was built (NetBeans.)</p>
+      <p><strong>com.tymeac.demo.jframe.TyDemoInternalTest3</strong> -- This is a GUI application
+    containing five buttons almost the same as above. Buttons 1, 3-5 are the 
+      same. Button 2 is as below:</p>
+      <blockquote>
+        <b>Start 22 threads</b> -- This starts 22 client threads 
+      that pound on the server the same as using the <a href="TyDemoT3.html">T3 
+      demonstration</a> class. 
+        <ul>
+          <li>When the return code is non-zero, the thread 
+      prints the return code and terminates.</li>
+          <li>When you stop the server, each 
+      thread gets a &quot;server is shutting down&quot; return code (4030). Therefore, you 
+      will see rc=4030 for each thread that was running.</li>
+        </ul>
+      </blockquote>
+      <p>We supply a script to run this demonstration: <b>internalT3.bat</b>. You must edit the 
+    basic script, SET_ENV to point to the Tymeac classes before using this 
+    script.</p>
+      <p>The GUI class comes with additional classes in support:</p>
+    <blockquote>
+      <p><strong>com.tymeac.demo.jframe.TyDemoInternalTestBean3</strong> -- The logic for the GUI
+      buttons.</p>
+      <p>See the <a href="TyDemoT3.html">T3 Class</a>. These are 
+      duplicates with a name change.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+      <p><strong>com.tymeac.demo.jframe.TyDemoInternalTest3T3Base</strong></p>
+      <p><strong>com.tymeac.demo.jframe.TyDemoInternalTest3T3Instant</strong></p>
+      <p><strong>com.tymeac.demo.jframe.TyDemoInternalTest3T3Thread</strong></p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

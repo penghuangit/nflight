@@ -1,0 +1,896 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta name="generator" content=
+"Microsoft FrontPage 5.0" />
+<meta http-equiv="Content-Language" content="en-us" />
+<meta name="ProgId" content="FrontPage.Editor.Document" />
+<meta name="description" content=
+"Fork-Join Development in Java SE" />
+<meta name="keywords" content=
+"java, edward harned, threads, fork join, multi-core, priority queue, multi threading, concurrency, embarrassingly parallel, functional forking framework, Tymeac, Tymeacse, Tymeacme, software developer" />
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii" />
+<meta name="ROBOTS" content="index, follow" />
+<title>Fork-Join Development in Java SE</title>
+
+<style type="text/css">
+/*<![CDATA[*/
+<!--
+h1
+        {margin-top:12.0pt;
+        margin-right:0in;
+        margin-bottom:3.0pt;
+        margin-left:0in;
+        page-break-after:avoid;
+        font-size:16.0pt;
+        font-family:Arial;
+        }
+-->
+/*]]>*/
+</style>
+</head>
+<body>
+<p align="center"><span class="atitle"><strong><font face=
+"Arial, Helvetica" size="5">Fork-Join Development in
+Java</font><sup><font face="Arial" size="4">&#8482;</font></sup>
+<font face="Arial, Helvetica" size=
+"5">SE</font></strong></span></p>
+<h3 align="center"><span class="atitle"><strong><font face=
+"Arial, Helvetica" size="3">Fork-Join for everyday,
+multi-core</font></strong></span> <font face="Arial" size=
+"3">Java&#8482;</font> <span class="atitle"><strong><font face=
+"Arial, Helvetica" size=
+"3">applications</font></strong></span></h3>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Forking or
+splitting the workload into multiple tasks for parallel processing
+and joining the results together is a technique used in countless
+scientific, number crunching applications. Many other applications
+could benefit from fork-join processing but using the scientific
+approach may not be in their best interest.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">This article
+presents an &#8220;embarrassingly parallel&#8221; fork-join
+approach that works well for everyday, multi-core applications in
+Java&#8482; SE, ME as well as Android.&#8482; (3000 words)</font></p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><a href=
+"#author">Edward Harned</a> (<a href=
+"mailto:eh%20at%20coopsoft%20dot%20com">eh at coopsoft dot
+com</a>)<br />
+Senior Developer, Cooperative Software Systems, Inc.<br />
+February, 2010&nbsp; [updated August, 2011]</font></p>
+<h3><font face="Arial, Helvetica">What is Fork-Join?</font></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">Think of a fork
+in the road where each path eventually comes back together &#8212;
+joins.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Fork-Join breaks
+an application into several parts for parallel processing and joins
+the results at the end.</font></p>
+<p align="center"><b><font face="Arial, Helvetica" size="2">Figure
+1: Fork-Join Structure</font></b></p>
+<p align="center"><img border="0" src="i/f-j.jpg" width="250"
+height="97" alt="Fork-Join Structure" /></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Let&#8217;s say
+we have an array of one thousand numbers. We need to do a procedure
+on each of these numbers and add the total.</font></p>
+<p align="left"><b><font face="Arial, Helvetica" size="2">Listing
+1:</font> <font face="Arial" size="2">Array
+Processing</font></b></p>
+<div align="left">
+<table bgcolor="#CCCCCC" border="1" cellpadding="5" cellspacing="0"
+width="502" height="20" style="border-collapse: collapse" summary=
+"Array Processing" bordercolor="#111111">
+<tr>
+<td style="font-family: Verdana" height="8" width="488" align=
+"center">
+<p align="left"><font size="2">&nbsp;<br />
+&nbsp;</font> <font size="2" color="#7F0055"><b>for</b></font>
+<font size="2">(</font><font size="2" color=
+"#7F0055"><b>int</b></font> <font size="2">i = 0; i &lt; 1000; i++)
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; total +=
+doProcedure(array[i]);<br />
+&nbsp; }</font></p>
+</td>
+</tr>
+</table>
+</div>
+<p><font face="Verdana, Arial, Helvetica" size="2">If the procedure
+takes one second (wall-clock time) to complete, then it is going to
+take one thousand seconds (over 16&#189; minutes) to complete this
+task.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Fork-Join
+could</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">separate (fork)
+the large array into ten arrays of one hundred elements
+each,</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">processes each
+array on a separate CPU, and</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">join the
+results when finished.</font></li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size="2">That would take
+one hundred seconds (just over 1&#189; minutes), one tenth of the
+original time. The more CPU's available, the faster the
+result.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">This is what
+scientific computing is all about &#8212; simultaneously processing
+humongous amounts of data on as many CPU&#8217;s as available. This
+abstraction closely resembles the standard scientific model of
+Divide-and-Conquer.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Divide-and-Conquer</b> is a natural paradigm for parallel
+algorithms. After dividing a problem into two or more sub-problems,
+the method solves the sub-problems in parallel. Typically, the
+sub-problems are solved recursively and thus the next divide step
+yields even more sub-problems for solving in parallel.</font></p>
+<p align="center"><b><font face="Arial, Helvetica" size="2">Figure
+2: Divide-and-Conquer</font></b></p>
+<p align="center"><img border="0" src="i/dac.jpg" width="400"
+height="252" alt="Divide and Conquer" /></p>
+</blockquote>
+<h3><font face="Arial">Problems using Fork-Join scientific model
+for everyday applications</font></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">Creating tasks
+is not the problem; they&#8217;re only objects. The problem is a
+high number of threads processing the tasks when those tasks
+need:</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Connections</b><br />
+Accessing remote services (DBMS, messaging, and many others)
+requires a connection to the remote service. Generally, the remote
+services use a thread to handle the connection and that requires
+memory, context switching, synchronization, and coordination. The
+more connections to the service, the more resources the service
+needs, and the less connections available for other tasks in the
+JVM. That affects every user.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Locks</b><br />
+Locks are a killer to high performance. Dead/live locks, priority
+inversion, starvation, convoying and overhead (that goes up
+exponentially with the length of the list of waiting tasks) are
+some of the problems of using locks.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Semaphores</b><br />
+The more threads that want a permit concurrently, the more threads
+that must wait for permit availability. This brings us back to all
+the problems of using locks.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Cache
+coherency</b><br />
+When multiple processors access/update the same variable inside a
+cache line, (block of data copied from main memory containing many
+fields), the memory unit may invalidate the cache line. That not
+only slows down an application, it may affect other application as
+well.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Extensive
+memory</b><br />
+The more objects or the bigger the objects, the more memory. The
+more active threads handling the tasks, then the more memory in
+use. Naturally, it follows that large memory tasks need
+throttling.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>The need to
+play nice</b><br />
+You&#8217;re application may not be the only application running on
+the computer. When one application hogs the resources, everyone
+feels the pain. Playing nice with others goes back to what we all
+learned in childhood. The same holds true when developing software
+that does not run as a standalone application.</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">The theme of
+multi-core development is to keep contention, tasks competing for
+the same resources, to a minimum.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">If the dynamic
+decomposition paradigm of Divide-and-Conquer suits your needs, then
+read this article about the high performance <a href=
+"#references">DSE version of Tymeac</a>. Otherwise a Functional
+Forking Framework may better suit your needs.</font></p>
+<h3><span style="font-weight: 400"><b><font face=
+"Arial, Helvetica">Functional Forking
+Framework</font></b></span></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">Java&#8482;SE / ME
+multi-core applications as well as Android™ applications that
+cannot use the Divide-and-Conquer model, do not process large
+arrays of numbers, or do not have a compute intensive structure
+need a functional forking framework for parallelizing applications.
+Specifically, they need to fork the work into its functional
+components rather than decompose an array into identical
+subtasks.</font></p>
+<p align="center"><b><font face="Arial, Helvetica" size="2">Figure
+3: Functional Forking Framework</font></b></p>
+<p align="center"><img border="0" src="i/factor.jpg" width="414"
+height="247" alt="Functional Forking Framework" /></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">A functional
+forking framework has two essential attributes. It must:</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">Limit
+contention.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Be simple to
+use or embarrassingly parallel.</font></li>
+</ul>
+<blockquote>
+<h4><font face="Arial">Limit Contention</font></h4>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Keeping the
+number of active, competing threads to an absolute minimum is
+paramount. The easiest way to limit thread contention is to use
+thresholds for each thread pool servicing a queue of tasks. See
+this article on <a href="#references">High Performance Priority
+Queues in Java SE</a> for an example of how using Wait Lists can
+conserve threading resources.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Reusing
+resources rather than acquiring new copies of resources is a winner
+all-around. We need to consider not only the task code, but the
+resource management code as well.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Take the example
+of a task needing to access a database that requires a
+<i>[java.sql.]statement</i>. By using a queue of requests, the task
+code can share the same <i>statement</i> for many accesses rather
+then acquiring a new statement for each access. Sharing a
+<i>statement</i> is a huge saving in overhead and limits contention
+within the management code.</font></p>
+</blockquote>
+</blockquote>
+<h4><font face="Arial">What is embarrassingly parallel?</font></h4>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Embarrassingly
+parallel algorithms are those that can solve many similar but
+independent tasks simultaneously with little to no need for
+coordination between the tasks. These kinds of problems have such
+easy parallelization that one is almost "embarrassed" to talk about
+how simple it is to get many processors working
+efficiently.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">An
+embarrassingly parallel solution may easily fork into a number of
+completely independent components, each executing on a separate
+processor.</font></p>
+<p align="center"><b><font face="Arial, Helvetica" size="2">Figure
+4: Embarrassingly Parallel</font></b></p>
+<p align="center"><img border="0" src="i/fjGraph.jpg" width="400"
+height="175" alt="Embarrassingly Parallel " /></p>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>For
+example:</b><br />
+A business might need an automated price quote system. To develop a
+quote, the system needs the item&#8217;s base price (price
+database), the customer&#8217;s discount for items and shipping
+(customer database), and basic shipping costs (shipper
+database.)</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Traditionally,
+the program accesses each database serially, waiting for each
+access to complete before moving to the next access.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">In a parallel
+system, the program Forks() the request into three queues, each
+serviced by a thread pool, waits until the last access finishes and
+Joins() the results together.</font></p>
+<p align="center"><b><font face="Arial, Helvetica" size="2">Figure
+5: Price Quote</font></b></p>
+<p align="center"><img border="0" src="i/pricequote.jpg" width=
+"372" height="195" /></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">The above price
+quote is an example of a synchronous request, where the caller
+waits for completion. It is only a small step forward to add
+support for the asynchronous or autonomous request, where the
+caller does not wait for completion.</font></p>
+</blockquote>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">There are many,
+many situations where forking the work into its components is
+desirable:</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">Take a game
+application where we can fork an event into separate components.
+The advantage here is excitement; the more event segments taking
+place concurrently, the more interesting the game.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Take an
+application with multiple animations where we can fork each
+animation to run on its own processor.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Take an image
+processing operation where every pixel in an image needs to have
+its color reversed. The framework can easily distribute the image
+data to multiple tasks that can work independently of each
+other.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Take a
+financial institution where re-valuing a portfolio involves
+components that communicate with various markets around the
+world.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Take a health
+care application where various tests are components in a
+diagnosis.</font></li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size="2">It&#8217;s an
+endeavor to see just what application cannot use parallelization
+with a functional forking framework.</font></p>
+<h3><font face="Arial">How would this framework look in a
+Java&#8482; application?</font></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">A framework for
+forking the request into its functional components needs
+to:</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Know the
+components (Queues) for each request operation (Function.) A simple
+Class containing a String Function name and a list of the
+associated Queues is basic Java&#8482; programming.</font></p>
+<p align="left"><b><font face="Arial, Helvetica" size="2">Listing
+2:</font> <font face="Arial" size="2">Function Class</font></b></p>
+<div align="left">
+<table bgcolor="#CCCCCC" border="1" cellpadding="5" cellspacing="0"
+width="502" height="20" style="border-collapse: collapse" summary=
+"Function Class" bordercolor="#111111">
+<tr>
+<td style="font-family: Verdana" height="8" width="488" align=
+"center">
+<p align="left"><font size="2">&nbsp;<br />
+&nbsp;</font> <font size="2" color="#7F0055"><b>public
+class</b></font> <font size="2">Function {</font></p>
+<p align="left"><font size="2" color=
+"#7F0055"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; private</b></font>
+<font size="2">String</font> <font size="2" color=
+"#0000C0">&nbsp;&nbsp; name</font><font size="2">;</font>
+<font size="2" color="#3F7F5F">// Function name<br /></font>
+<font size="2" color="#7F0055"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+private</b></font> <font size="2">Queue[]</font> <font size="2"
+color="#0000C0">que</font><font size="2">;&nbsp;&nbsp;</font>
+<font size="2" color="#3F7F5F">// Queues for this
+Function</font><font size="2"><br />
+&nbsp; }<br />
+&nbsp;</font></p>
+</td>
+</tr>
+</table>
+</div>
+<p><font face="Verdana, Arial, Helvetica" size="2">Place the
+request (containing the input objects) into each of the queues
+returning an object array to the caller or ignoring the returned
+objects.</font></p>
+<p align="left"><b><font face="Arial, Helvetica" size="2">Listing
+3:</font> <font face="Arial" size="2">Put in Queue</font></b></p>
+<div align="left">
+<table bgcolor="#CCCCCC" border="1" cellpadding="5" cellspacing="0"
+width="502" height="20" style="border-collapse: collapse" summary=
+"Put in Queue" bordercolor="#111111">
+<tr>
+<td style="font-family: Verdana" height="8" width="488" align=
+"center">
+<p align="left"><font size="2">&nbsp;<br />
+&nbsp;</font> <font size="2" color="#7F0055"><b>public</b></font>
+<font size="2">Object[] fork(Queue[] que, Object request)
+{</font></p>
+<p align="left"><font size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Object[] return_obj =</font> <font size="2" color=
+"#7F0055"><b>new</b></font> <font size="2">Object[]
+{</font><font size="2" color=
+"#7F0055"><b>null</b></font><font size="2">,</font> <font size="2"
+color="#7F0055"><b>null</b></font><font size="2">,</font>
+<font size="2" color="#7F0055"><b>null</b></font><font size=
+"2">};</font></p>
+<p align="left"><font size=
+"2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font> <font size="2" color=
+"#7F0055"><b>for</b></font> <font size="2">(</font><font size="2"
+color="#7F0055"><b>int</b></font> <font size="2">i = 0; i &lt;
+que.length; i++) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+putInQueue(que[i], return_obj [i], request);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</font></p>
+<p align="left"><font size="2" color=
+"#7F0055"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return</b></font>
+<font size="2">return_obj;<br />
+}<br />
+&nbsp;</font></p>
+</td>
+</tr>
+</table>
+</div>
+<p><font face="Verdana, Arial, Helvetica" size="2">Wait for
+completion/timeout or do not wait.</font></p>
+<p align="left"><b><font face="Arial, Helvetica" size="2">Listing
+4:</font> <font face="Arial" size="2">Wait/noWait</font></b></p>
+<table bgcolor="#CCCCCC" border="1" cellpadding="5" cellspacing="0"
+width="502" height="20" style="border-collapse: collapse" summary=
+"Wait/noWait" bordercolor="#111111">
+<tr>
+<td style="font-family: Verdana" height="8" width="488" align=
+"center">
+<p align="left"><font size="2">&nbsp;<br />
+&nbsp;</font> <font size="2" color="#7F0055"><b>public
+boolean</b></font> <font size="2">join(Object[] obj) {</font></p>
+<p align="left"><font size="2" color="#3F7F5F">&nbsp;&nbsp;&nbsp;
+/* when all elements are non-null, return true<br />
+&nbsp;&nbsp;&nbsp;&nbsp; * wait for a while<br />
+&nbsp;&nbsp;&nbsp;&nbsp; * after an interval, return false<br />
+&nbsp;&nbsp;&nbsp;&nbsp; */</font><font size="2"><br />
+&nbsp; }<br />
+&nbsp;</font></p>
+</td>
+</tr>
+</table>
+</blockquote>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Return the
+results to the caller or ignore the objects</font></p>
+<blockquote>
+<blockquote>
+<p align="left"><b><font face="Arial, Helvetica" size="2">Figure 6:
+Return to Caller</font></b></p>
+</blockquote>
+<p align="center"><img border="0" src="i/back.gif" width="284"
+height="154" alt="Return Object[]" align="left" /></p>
+</blockquote>
+</blockquote>
+<p align="center">&nbsp;</p>
+<h3>&nbsp;</h3>
+<h3>&nbsp;</h3>
+<h3>&nbsp;</h3>
+<p>&nbsp;</p>
+<h3><font face="Arial">To build this framework we
+would:</font></h3>
+<ol>
+<li><font face="Verdana, Arial, Helvetica" size="2">Need to
+maintain the actual task code that does the work</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Need to
+maintain a list of Queues and Functions</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Need to
+maintain a &#8220;start up&#8221; class that loads the Queues and
+Functions into memory</font></li>
+</ol>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">(1) The code
+that does the work should look like this:</font></p>
+<blockquote>
+<p align="left"><b><font face="Arial, Helvetica" size="2">Listing
+5:</font> <font face="Arial" size="2">Work Code</font></b></p>
+<div align="left">
+<table bgcolor="#CCCCCC" border="1" cellpadding="5" cellspacing="0"
+width="502" height="20" style="border-collapse: collapse" summary=
+"Work Code" bordercolor="#111111">
+<tr>
+<td style="font-family: Verdana" height="8" width="488" align=
+"center">
+<p align="left"><font size="2">&nbsp;<br />
+&nbsp;</font> <font size="2" color="#7F0055"><b>public
+static</b></font> <font size="2">Object main(Object obj) {}<br />
+&nbsp;</font></p>
+</td>
+</tr>
+</table>
+</div>
+<p><font face="Verdana, Arial, Helvetica" size="2">A main() method
+that accepts an object (the input from the caller) and returns an
+object (the result of the work.)</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">(2) We could
+maintain the Queues and Functions as objects within a simple List
+Class.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">(3) Start up
+could simply load the List Classes into memory with a new (List
+Class) and start the threads for each Queue.</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">How a simple
+call could look:</font></p>
+<blockquote>
+<p align="left"><b><font face="Arial, Helvetica" size="2">Listing
+6:</font> <font face="Arial" size="2">Simple Call</font></b></p>
+<table bgcolor="#CCCCCC" border="1" cellpadding="5" cellspacing="0"
+width="502" height="20" style="border-collapse: collapse" summary=
+"Simple Call" bordercolor="#111111">
+<tr>
+<td style="font-family: Verdana" height="8" width="488" align=
+"center">
+<p align="left"><font size="2">&nbsp;<br />
+&nbsp;&nbsp;&nbsp; Framework</font> <font size="2" color=
+"#0000C0">fw</font> <font size="2">=</font> <font size="2" color=
+"#7F0055"><b>new</b></font> <font size="2">Framework();</font></p>
+<p align="left"><font size="2" color="#3F7F5F">&nbsp;&nbsp;&nbsp;
+// For each call:</font><font size="2"><br />
+&nbsp;&nbsp;&nbsp; Function</font> <font size="2" color=
+"#0000C0">func</font> <font size="2">=</font> <font size="2" color=
+"#0000C0">fw</font><font size="2">.getFunction(</font><font size=
+"2" color="#0000C0">name</font><font size="2">);<br />
+&nbsp;&nbsp;&nbsp; Object[] back =</font> <font size="2" color=
+"#0000C0">func</font><font size="2">.fork(request};<br />
+&nbsp;</font></p>
+</td>
+</tr>
+</table>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">This framework
+is simple to use, embarrassingly simple.</font></p>
+<h3><font face="Arial">Summary</font></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">So far,
+we&#8217;ve seen how forking a request into its functional
+components can work as an embedded part of a single application
+(within the same JVM.) To be practical, we also need to make the
+framework accessible from other JVM&#8217;s. Simply, it must
+support many user calls concurrently as a server.</font></p>
+<h3><font face="Arial">Making it a Server</font></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">What changes
+must we make to forge this simple framework into a
+Server?</font></p>
+<ol>
+<li><font face="Verdana, Arial, Helvetica" size="2">We must
+separate the caller from the work.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">We must provide
+error recovery.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">We must support
+the framework as a remote object.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">We must provide
+security.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">We must provide
+administrative functionality for controlling the
+server.</font></li>
+</ol>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><br />
+<b>Separation</b><br />
+The first change is separating the request brokering (that&#8217;s
+the above fork() method) from the actual processing. We need to
+separate, but keep track of, each request in a unique
+object.</font></p>
+<p align="left"><b><font face="Arial, Helvetica" size="2">Listing
+7:</font> <font face="Arial" size="2">Request Object</font></b></p>
+<div align="left">
+<table bgcolor="#CCCCCC" border="1" cellpadding="5" cellspacing="0"
+width="559" height="20" style="border-collapse: collapse" summary=
+"Request Object" bordercolor="#111111">
+<tr>
+<td style="font-family: Verdana" height="8" width="545" align=
+"center">
+<p align="left">&nbsp;<br />
+<font size="2" color="#7F0055"><b>&nbsp; private long</b></font>
+<font size="2" color=
+"#0000C0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+unique_id</font><font size="2">;</font> <font size="2" color=
+"#3F7F5F">// unique identification of this request<br /></font>
+<font size="2" color="#7F0055"><b>&nbsp; private</b></font>
+<font size="2">Object</font> <font size="2" color=
+"#0000C0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input</font><font size="2">;</font>
+<font size="2" color="#3F7F5F">// input reference, if
+any<br /></font> <font size="2" color="#7F0055"><b>&nbsp; private
+boolean</b></font><font size="2" color="#0000C0">&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type</font><font size=
+"2">;</font> <font size="2" color="#3F7F5F">// type of request
+true=sync false=async<br /></font><font size="2" color=
+"#7F0055"><b>&nbsp; private</b></font> <font size=
+"2">Object[]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>
+<font size="2" color="#0000C0">output</font> <font size="2" color=
+"#3F7F5F">// the output objects from the
+tasks<br /></font><font size="2" color="#7F0055"><b>&nbsp;
+private</b></font> <font size="2">AtomicInteger</font> <font size=
+"2" color="#0000C0">next_output</font><font size="2">;</font>
+<font size="2" color="#3F7F5F">// subscript to add an element to
+above<br /></font><font size="2" color="#7F0055"><b>&nbsp;
+private</b></font> <font size=
+"2">Queue[]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>
+<font size="2" color="#0000C0">que_names</font><font size=
+"2">;</font> <font size="2" color="#3F7F5F">// list of all the
+queues in this function<br /></font><font size="2" color=
+"#7F0055"><b>&nbsp; private</b></font> <font size="2">Queue</font>
+<font size="2" color=
+"#0000C0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+agent</font><font size="2">;</font> <font size="2" color=
+"#3F7F5F">// future queue, if used<br /></font><font size="2"
+color="#7F0055"><b>&nbsp; private</b></font> <font size=
+"2">AtomicInteger</font> <font size="2" color=
+"#0000C0">nbr_remaining</font><font size="2">;</font> <font size=
+"2" color="#3F7F5F">// queues remaining to be
+processed<br /></font><font size="2" color="#7F0055"><b>&nbsp;
+private int</b></font> <font size="2" color=
+"#0000C0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+wait_time</font><font size="2">;</font> <font size="2" color=
+"#3F7F5F">// max wait time for sync request</font> <font size=
+"2"><br />
+&nbsp;</font></p>
+</td>
+</tr>
+</table>
+</div>
+<p><font face="Verdana, Arial, Helvetica" size="2">What is field
+&#8220;agent?&#8221;</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Agent</b><br />
+A synchronous request returns the Object array from the processing
+to the caller. What should the framework do with the Object array
+returned from an asynchronous request? The framework may optionally
+put the Object array (as an input) into a new Queue for processing
+by an agent task. This way the agent task can take action based on
+the completion status of the prior processing.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>For
+example:</b><br />
+A Function is to generate a price quote and email it to a user as
+an asynchronous request.</font></p>
+<ol>
+<li><font face="Verdana, Arial, Helvetica" size="2">The caller uses
+the asynchronous fork() method.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">The framework
+forks the request into its respective Queues.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">When the last
+Queue finishes, the framework passes the returned object array to
+the agent task by putting the request into the Queue specified as
+&#8220;agent.&#8221;</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">The agent task
+sends the email returning nothing.</font></li>
+</ol>
+</blockquote>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Error
+recovery</b><br />
+The second change is adding error recovery, the mark of
+professionalism.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">What can go
+wrong here? "Anything that can go wrong will go wrong." <a href=
+"#references">Murphy&#8217;s Law</a>.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Back
+out</b><br />
+We could have a forking error. A bounded Queue could be full or the
+Queue could be disabled (more on this below.) Error recovery should
+back out all the Queues that forked successfully and inform the
+caller of the problem. For example:</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">We have three
+Queues (A, B, C) in the Function.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Queues A and B
+successfully receive the request.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Queue C fails
+to receive the request because the Queue is full.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Now we go
+backwards trying to pull the request out of all the Queues that
+forked successfully so we can save processing time for faulty
+requests.</font></li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Exception/Error</b><br />
+We could have an exception/error in the actual task code that does
+the work. If it failed once, it probably will fail again.
+Therefore, it is advisable to disable the Queue until a developer
+fixes the problem. When the task code is clean, we don&#8217;t want
+to take down the server. We want to inform the server that we have
+a new copy of the task code that is clean and we want the Queue
+enabled.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Stall</b><br />
+We could have the above happen in an asynchronous request, called a
+stall (synchronous requests time out and can purge from the
+system.) Since Functions cannot complete until all the Queues
+finish, we need to place stalled requests into a Stalled List. When
+the Queue is again serviceable, we can re-start the processing from
+the Stalled List.</font></p>
+</blockquote>
+<table width="40%" align="right" border="0" cellpadding="0"
+cellspacing="0" summary="spacer">
+<tr>
+<td width="10"><font face="Verdana, Arial, Helvetica" size=
+"2"><img alt="." src="i/space1.gif" width="1" height=
+"1" /></font></td>
+<td>
+<table border="1" cellpadding="5" cellspacing="0" summary=
+"Add slots to WaitList" align="right">
+<tbody>
+<tr>
+<td bgcolor="#EEEEEE"><font face="Verdana, Arial, Helvetica" size=
+"2">Expunging is a subject unto itself and requires thread
+containment. This article introduces the subject: <i><a href=
+"#references">Managing Threads in Java SE</a></i></font></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</table>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Thread
+quandary</b><br />
+We could have a thread block forever on an outside resource or go
+into a never-ending loop. Either way, by timing events in the life
+of a thread, the framework may recognize this situation and may
+expunge the thread replacing it with a new thread.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Canceling</b><br />
+We could have a caller want to cancel a previously submitted
+request. The cancel is similar to a time-out error but it is
+applicable to both synchronous and asynchronous requests. Although
+canceling a request is most desirable, the logic for handling a
+cancellation in a multi-component request is not for the faint of
+heart.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Monitoring</b><br />
+Timing is useless unless a daemon thread monitors the timed events
+looking for actual or potential problems.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Notification</b><br />
+No framework can handle every situation; sometimes human
+intervention is necessary. We should notify administrators by
+sending a message through whatever means the organization uses
+(Instant Messaging, email, or any homegrown method.)</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Remote
+object</b><br />
+The third change is supporting the framework as a remote object
+with optional activation/deactivation to conserve
+resources.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Remote Method
+Invocation comes in many flavors:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Basic<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Custom Socket
+Factory<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IIOP<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Portable Object
+Adapter<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Jini<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Inter Process Communication</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Your environment
+may consist of a cloud with separate processors at many different
+locations. Making the framework flexible makes perfect
+sense.</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Security</b><br />
+The fourth change is adding security.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Java&#8482;
+security technology is part of the SE/ME platforms, it requires
+front-ending the server with security classes for
+flexibility.</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Administrator
+functions</b><br />
+The fifth change is adding administrator functions.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Logging is
+boring and mainly useless, until something goes wrong.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Statistics are
+the basis for performance analysis and tuning.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">We need to
+provide interfaces to the internal structures so users can monitor
+and control functionality. It isn&#8217;t much good if no one knows
+what it is doing. Once people know what it is doing, they probably
+will want to change it.</font></p>
+</blockquote>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Writing a
+Fork-Join framework that is simple to use and efficient for local
+calls is difficult. Doing the same for network access is a major
+undertaking.</font></p>
+<h3><font face="Arial">How long would it take to build such a
+Server?</font></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">About 5-6
+seconds. Just long enough to unzip one file.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Happily, there
+are general-purpose, fork-join frameworks supporting the properties
+mentioned above for everyday, multi-core applications in
+Java&#8482; SE, ME and Android&#8482; available today.</font></p>
+<table border="0" cellspacing="0" style="border-collapse: collapse"
+bordercolor="#111111" id="AutoNumber8" summary="Tymeac">
+<tr>
+<td><font face="Verdana, Arial, Helvetica" size=
+"2">Tymeac</font><font face="Verdana" size="2">&#8482;</font>
+<font face="Verdana, Arial, Helvetica" size="2">for the Java&#8482;
+SE / ME / Android™ platforms are Open Source Software
+projects maintained on<br />
+and you can download the latest editions there.</font></td>
+<td><font face="Verdana, Arial, Helvetica" size="2"><img border="0"
+src="i/space1.gif" alt="." width="1" height="1" /></font></td>
+<td align="left" width="125"><a href=
+"http://www.sourceforge.net/projects/tymeacse/"><font face=
+"Verdana, Arial, Helvetica" size="2"><img border="0" src=
+"i/sflogo1.jpg" width="125" height="37" alt=
+"SourceForge.net" /></font></a></td>
+</tr>
+</table>
+<h3><b><font face="Arial" size="4">Conclusion</font></b></h3>
+<p><font face="Verdana" size="2">Using a Fork-Join framework
+developed for the compute-intensive communities may not work well
+for everyday applications.</font></p>
+<p><font face="Verdana" size="2">The bulk of</font> <font face=
+"Verdana, Arial, Helvetica" size="2">Java&#8482;</font> <font face=
+"Verdana" size="2">multi-core applications need to fork the work
+into its functional components with a professional grade framework
+that is easy to use, efficient, and open-source.</font></p>
+<h3><b><font face="Arial" size="4"><a name=
+"references"></a>References</font></b></h3>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2">Downloads:</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Download the
+latest <b>SE</b> edition of <a href=
+"http://www.sourceforge.net/projects/tymeacse/">Tymeac here</a>.
+With all the documentation, scripts, classes and source.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Download the
+latest <b>ME</b> edition of <a href=
+"http://www.sourceforge.net/projects/tymeacme/">Tymeac here</a>.
+With all the documentation and source.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Download the
+latest <b>AND</b> edition of
+<a href="http://www.sourceforge.net/projects/tymeacand/">Tymeac here</a>.
+With all the documentation and full eclipse projects.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Download the
+latest <b>DSE</b> edition of <a href=
+"http://www.sourceforge.net/projects/tymeacdse/">Tymeac here</a>.
+The Divide-and-Conquer version.</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2">Articles:</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">The high
+performance Divide-and-Conquer version of Tymeac</font> <font face=
+"Verdana" size="2">&#8212;</font> <a href=
+"http://coopsoft.com/ar/ConquerArticle.html"><font face=
+"Verdana, Arial, Helvetica" size="2">A Java Fork-Join
+Conqueror</font></a></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">The high
+performance Android™ version of Tymeac</font> <font face=
+"Verdana" size="2">&#8212;</font> <font face=
+"Verdana, Arial, Helvetica" size="2">
+<a href="http://coopsoft.com/ar/AndroidArticle.html">Managing Threads in Android</a></font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Using Wait Lists
+for Efficiency</font> <font face="Verdana" size="2">&#8212;</font>
+<a href="http://coopsoft.com/ar/PriQueArticle.html"><font face=
+"Verdana, Arial, Helvetica" size="2">High Performance Priority
+Queues in Java SE</font></a></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">The Java&#8482;
+SE Thread Container</font> <font face="Verdana" size=
+"2">&#8212;</font> <a href=
+"http://coopsoft.com/ar/j2searticle.html"><font face=
+"Verdana, Arial, Helvetica" size="2">Managing Threads in Java
+SE</font></a></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2">Other:</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Fork-join queue
+wiki</font> <font face="Verdana" size="2">&#8212;</font> <a href=
+"http://en.wikipedia.org/wiki/Fork-join_queue"><font face=
+"Verdana, Arial, Helvetica" size=
+"2">http://en.wikipedia.org/wiki/Fork-join_queue</font></a></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Murphy&#8217;s
+Law</font> <font face="Verdana" size="2">&#8212;</font> <a href=
+"http://en.wikipedia.org/wiki/Murphy%27s_law"><font face=
+"Verdana, Arial, Helvetica" size=
+"2">http://en.wikipedia.org/wiki/Murphy%27s_law</font></a></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">CPU cache
+wiki</font> <font face="Verdana" size="2">&#8212;</font> <a href=
+"http://en.wikipedia.org/wiki/CPU_cache"><font face=
+"Verdana, Arial, Helvetica" size=
+"2">http://en.wikipedia.org/wiki/CPU_cache</font></a></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Cache coherence
+wiki</font> <font face="Verdana" size="2">&#8212;</font> <a href=
+"http://en.wikipedia.org/wiki/Cache_coherence"><font face=
+"Verdana, Arial, Helvetica" size=
+"2">http://en.wikipedia.org/wiki/Cache_coherence</font></a></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Embarrassingly
+parallel wiki</font> <font face="Verdana" size="2">&#8212;</font>
+<a href=
+"http://en.wikipedia.org/wiki/Embarrassingly_parallel"><font face=
+"Verdana, Arial, Helvetica" size=
+"2">http://en.wikipedia.org/wiki/Embarrassingly_parallel</font></a></p>
+</blockquote>
+<h3><a name="author"></a><font face="Arial, Helvetica">About the
+Author</font></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2"><a href=
+"mailto:eh%20at%20coopsoft%20dot%20com">Edward Harned</a> is a
+software developer with over thirty years industry experience. He
+first led projects as an employee in major industries and then
+worked as an independent consultant. Today, Ed is a senior
+developer at <a href="http://www.coopsoft.com/">Cooperative
+Software Systems, Inc</a>., where, for the last twelve years, he
+has used Java&#8482; programming to bring multi-threading solutions
+to a wide range of tasks.</font></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</blockquote>
+</body>
+</html>

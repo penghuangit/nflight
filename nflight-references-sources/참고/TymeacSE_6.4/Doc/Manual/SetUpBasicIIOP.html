@@ -1,0 +1,97 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<title>Tymeac Basic IIOP Set Up</title>
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Basic IIOP Set Up</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Support for Internet Inter-Orb Protocol is through the Java Naming and Directory
+      Interface, (JNDI) with the CosNaming plugin, in place of the RMI Registry.&nbsp;This set
+      up is similar to the basic set up in that it involves two of the Tymeac base classes and
+      one script file.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<ol>
+  <li>The first Tymeac base class is the RMI Variables, <a href="TyVariables.html">TyVariables</a>.
+    This Class contains instance fields for using the IIOP methods and iiop_name for CosNaming
+    server binding and lookup.</li>
+</ol>
+
+<blockquote>
+  <p>Go to tab 2 (IIOP)</p>
+  <blockquote>
+    <p>If you have a name filled in and you just want to change it, then Press 
+    the Import Button.</p>
+    <p>Otherwise, fill in the name of the server you want.</p>
+  </blockquote>
+  <p>Press the finish button and save the java file.</p>
+  <p>Compile the java file into the &lt;tymeac_home&gt;/common directory.</p>
+  <p>The static class fields are filled in properly, however, if you want to 
+  edit the java file yourself, then follow the below directions:</p>
+  <ul>
+    <li>You must make changes to the instance field boolean,<br>
+      &nbsp;&nbsp;&nbsp; t<strong>ymeac_use_iiop</strong> by setting it to <strong>true</strong><br>
+      and by setting the instance field boolean, <br>
+      <strong>&nbsp;&nbsp;&nbsp; tymeac_use_rmi</strong> by setting it to <strong>false</strong>.</li>
+    <li><p align="left" style="text-align: justify">You may change the instance field String <strong>tymeac_iiop_name</strong>
+      to any name you wish.</p>
+    </li>
+    <blockquote>
+      <p align="left" style="text-align: justify">private static boolean <strong>tymeac_use_rmi
+      = false</strong>;<br>
+      private static boolean <strong>tymeac_use_iiop = true;</strong><br>
+      private static String tymeac_iiop_name = &quot;TymeacIIOP&quot;;</p>
+    </blockquote>
+  </ul>
+  <p align="left" style="text-align: justify">Compile into the &lt;tymeac_home&gt;/common 
+  directory.Tymeac Server and Clients both use these
+  variables.</p>
+</blockquote>
+
+<ol>
+  <li type="disc" value="2"><p align="left">With communication software, sometimes different
+    environments produce unique situations. It is for this reason that we supply a
+    user-maintained Class for calling the remote methods on the Tymeac Server, <a href="TySvrComm.html">TySvrComm</a>.&nbsp;If you encounter Remote Object errors then you
+    may add exception handling code within this class and recompile into the
+    &lt;home&gt;\com\tymeac\demo directory.</p>
+  </li>
+  <li type="disc" value="3">We supply a script file for starting the Tymeac Server for use
+    with IIOP, &lt;home&gt;/<a href="Scripts.html#iiop">scripts/ IIOPServer</a>.bat[sh].You <strong>must
+    edit</strong> the SET_ENV script:.&nbsp;The command line options are the same as the <a href="StartUp.html#options">non-activatable</a> Tymeac Server.</li>
+</ol>
+
+<blockquote>
+  <p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  <p>Start the JNDI Registry, (CosNaming server), in a new process, </p>
+  <blockquote>
+    <p><strong>Windows<sup><small>&#153;</small></sup> :</strong> start tnameserv or the ORBD<br>
+    <strong>Unix<small><sup>®</sup></small> :</strong> tnameserv &amp;</p>
+  </blockquote>
+  <p>Start Tymeac in a new process</p>
+  <blockquote>
+    <p>execute the IIOPServer.bat[sh] script.</p>
+  </blockquote>
+  <p>The Tymeac Client functionality is the same as for an RMI Registry.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

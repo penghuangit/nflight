@@ -1,0 +1,147 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Jini Document Activation Base Class</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Jini Document Activation Base Class</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This source code supplied Class demonstrates how to prepare and register the Jini
+    Document activatable remote object.</p>
+  </blockquote>
+</blockquote>
+
+<h2>Package</h2>
+
+<blockquote>
+  <p>com.tymeac.demo.jini.base;</p>
+</blockquote>
+
+<h2>Imports you may need:</h2>
+
+<blockquote>
+  <p>import java.io.IOException;<br>
+  import java.util.Properties;<br>
+  import java.rmi.*;<br>
+  import java.rmi.server.*;<br>
+  import java.rmi.activation.*;</p>
+</blockquote>
+
+<h2>public class TyDemoJiniDocActivationBase( { </h2>
+
+<blockquote>
+  <p>Instance fields are those fields used by the methods:</p>
+</blockquote>
+
+<h2>public TyDemoJiniDocActivationBase() {</h2>
+
+<blockquote>
+  <p>This constructor sets the instance fields needed by the methods.&nbsp; Your operating
+  system may require Upper or Lower case or the proper mixture of the two.</p>
+  <p>// The file separator character is either a slash (/) or a back slash (\).<br>
+  sep = System.getProperties().getProperty(&quot;file.separator&quot;);</p>
+  <p><font color="#FF0000">Edit</font> your file directory.&nbsp; Win format shown. <br>
+  dir = &quot;k:&quot;;</p>
+  <p><font color="#FF0000">Edit</font> the &quot;classes&quot; home location.<br>
+  svc_home = dir + sep + &quot;TymeacServer&quot; + sep + &quot;Classes&quot;;</p>
+  <p>Properties are the replacement of command line options of -Djava.security.policy and
+  -classpath.&nbsp; Each is a String pair, the key followed by the value.</p>
+  <p>// Properties security key <br>
+  sec_key = &quot;java.security.policy&quot;;</p>
+  <p><font color="#FF0000">Edit</font> properties security value <br>
+  sec_value = dir + sep + &quot;TymeacServer&quot; + sep + &quot;Classes&quot; +&nbsp; sep +
+  &quot;Security&quot;&nbsp; + sep + &quot;policy.all&quot;; </p>
+  <p>// Properties classpath key<br>
+  cp_key = &quot;java.class.path&quot;;</p>
+  <p><font color="#FF0000">Edit</font> properties classpath value <br>
+  cp_value = svc_home; </p>
+  <p><font color="#FF0000">Edit</font> the location of the Activation Object. &nbsp; Your
+  o/s may require additional &quot;/&quot;, i.e. file:// or file:/// <br>
+  location = &quot;file:/&quot; + svc_home&quot; + &quot;/&quot;;</p>
+  <p><font color="#FF0000">Edit</font> the name of the activation class <br>
+  activation_name = &quot;com.tymeac.demo.jini.base.TyDemoJiniDocImpl&quot;; </p>
+</blockquote>
+
+<h2>public TyDemoJiniDocInterface createBackend(com.tymeac.base.TymeacInterface tymeac)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throws IOException { </h2>
+
+<blockquote>
+  <p>Create the backend Jini Document Service Remote Object.&nbsp; The variables used herein
+  were set in the above constructor.&nbsp; This is a general usage format.&nbsp; You may
+  alter this to any format required by your installation.</p>
+</blockquote>
+
+<blockquote>
+  <p>Some methods herein may throw an exception</p>
+  <p>try {</p>
+  <blockquote>
+    <p>// New properties object <br>
+    Properties props = new Properties();</p>
+  </blockquote>
+  <blockquote>
+    <p>// Set the security property <br>
+    props.put(sec_key, sec_value);</p>
+  </blockquote>
+  <blockquote>
+    <p>// Set the classpath property <br>
+    props.put(cp_key, cp_value);</p>
+    <p>// The marshalled object for passing data to the constructor are Object[] </p>
+    <p>// The marshalled object with only the tymeac server remote object, (from the parm)<br>
+    Object[] my_data = new Object[1]; <br>
+    my_data[0] = (Object) tymeac;</p>
+    <p>// Set a marshalled Object<br>
+    MarshalledObject data = new MarshalledObject( (Object) my_data);</p>
+  </blockquote>
+  <blockquote>
+    <p>// Do not use a command env<br>
+    ActivationGroupDesc.CommandEnvironment ace = null; </p>
+  </blockquote>
+  <blockquote>
+    <p>// Get a new group<br>
+    ActivationGroupDesc group = new ActivationGroupDesc(props, ace);</p>
+    <p>// Register the group and get the ID.<br>
+    ActivationGroupID gid = ActivationGroup.getSystem().registerGroup(group); </p>
+    <p>// Now create the group<br>
+    ActivationGroup.createGroup(gid, group, 0);</p>
+    <p>// Create an activation descriptor<br>
+    ActivationDesc desc = new ActivationDesc( activation_name, // name of the class<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    location, // dasd storage location of the class<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    data); // parms class needs to initialize </p>
+    <p>// Create the 'backend' object <br>
+    return (TyDemoJiniDocInterface) Activatable.register(desc);</p>
+  </blockquote>
+  <p>} // end-try </p>
+  <p>catch (RemoteException ex1) {</p>
+  <blockquote>
+    <p>System.err.println(&quot;Error creating backend object: &quot; +<br>
+    ex1.getMessage()); </p>
+  </blockquote>
+  <p>} // end-catch</p>
+  <p>catch (ActivationException ex2) {</p>
+  <blockquote>
+    <p>System.err.println(&quot;Problem with activation: &quot; + ex2.getMessage());<br>
+    ex2.printStackTrace(); </p>
+  </blockquote>
+  <p>} // end-catch</p>
+  <p>// Failure<br>
+  return null;</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

@@ -1,0 +1,641 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Tuning</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Tuning</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+    <p>Tuning is a full time job for professionals and involves every parameter 
+    of the operating system, Java, applications, and network.</p>
+    <p>This section is not a how to tune manual, but a what does Tymeac do, and 
+    therefore, what should I look for in tuning. Two parameters, applicable to 
+    Tymeac, are: <a href="#threads">Threads</a> and <a href="#waitlists">Wait Lists</a>.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h3><a name="threads"></a>Threads</h3>
+
+<blockquote>
+  <p>Tymeac runs on all processors that support Java. The RMI Servers run on all 
+  processors that support RMI . However, not all RMI
+  Servers work identically on all platforms for all releases of  RMI or operating
+  systems.</p>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac <a href="ThreadMgmt.html">manages threads</a>.&nbsp;Tymeac handles the synchronization, deadlock avoidance,
+  blocking - runnable tasks for threads.&nbsp;Tymeac insulates the Tymeac Client from thread
+  management.</p>
+  <p>The Queue Maintenance Class (<a href="TyQueMaint.html">TyQueMaint</a>) or User Classes
+  (<a href="UserQueues.html">TyUserQueues</a>) defines the number of threads for each Queue.</p>
+  <p>Tymeac <u>may</u> start all threads for a Queue at Tymeac start up when<a href="TyQueMaint.html#start"> indicated</a>. Otherwise, Tymeac instantiates and starts
+  each thread when necessary.</p>
+  <p><a name="pool"></a>Tymeac differs from the traditional thread pool in its ability to 
+  thoroughly
+  control the threading environment.</p>
+  <blockquote>
+    <p>Three big problems with basic thread pools are:<br>
+    &nbsp;&nbsp;&nbsp; 1. When to start/terminate a thread. <br>
+    &nbsp;&nbsp;&nbsp; 2. How to control how many threads are executing at any one time.<br>
+    &nbsp;&nbsp;&nbsp; 3. How to determine when a thread stalls.</p>
+    <p>Let's say there are three threads in a pool.<ol>
+      <li>Normally you start all three threads at system startup. The threads remain alive until
+        the system shuts down. Each Java thread usually maps to an operating system thread. During light
+        activity for the queue, there is no way to reduce the load on the total system.</li>
+    </ol>
+    <blockquote>
+      <p>The other way is to start each thread when you put a request into a queue (lazy
+      initialization) up until the maximum. Each thread reduces the load on the queue until
+      there is no more work, at which time it terminates. While this reduces the thread load on
+      the system, it results in a large thread create/destroy overhead for a heavily used
+      system.</p>
+    <p><b><em style="font-style: normal">Tymeac solves this problem with lazy initialization and the ability to reuse or
+    selectively terminate threads during light activity.</em></b></blockquote>
+    <ol start="2">
+      <li>The threads block until there is work. If there is one request in the
+        queue, then one thread is working and the other two are blocking. When there are three or
+        more requests in the queue, then all threads are working.<br>
+        <br>
+        There is no way to control the number of threads working when there is more than one
+        request in the queue. When a thread can process a request in a short time period, then
+        using more than one thread for a light load is a waste of resources. Additionally, since
+        threads compete with each other for cycles, storage etc., unnecessary threads may slow
+        down the overall throughput.</li>
+    </ol>
+    <blockquote>
+    <p><b><em style="font-style: normal">Tymeac solves this problem with the <u>inactive status</u> and new thread
+    thresholds (see below).</em></b></blockquote>
+    <ol start="3">
+      <li>When problems arise in a thread (deadlocks, exceptions, errors), the thread stalls. That
+        is, it cannot continue executing without intervention. There is no way to internally
+        determine when a deadlock is present. There is no automatic error recovery and restart.
+        The best one can hope for is that someone notices that the work is not getting done.</li>
+    </ol>
+    <blockquote>
+    <p><b><em style="font-style: normal">Tymeac solves this problem by timing each status in the life of a thread,
+    automatically recovering whenever possible and notifying administrators when there is a
+    hard stall.</em></b></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>While the Thread Pool... Classes in java.util.concurrent address the first 
+  problem, they don't handle problems two and three. Additionally, they don't 
+  adequately deal with priority queues and thresholds.</p>
+  <hr color="#000000" width="60%">
+  <p>A thread waits (blocks) until it is needed (runnable).&nbsp;When necessary, Tymeac gets
+  a new instance of the thread (i.e. allocated) and starts() it.&nbsp;Active and inactive
+  are Tymeac thread <a href="TyQueThd.html#status">status codes</a>.&nbsp;Initially, all
+  threads are <u>inactive</u>.</p>
+  <p>Tymeac first <a href="TyQueMaint.html#activate">activates a thread</a> when there is
+  work for the Queue.</p>
+</blockquote>
+
+<blockquote>
+  <p>When a thread has no work it enters a status of <u>Waiting for work</u>.</p>
+  <blockquote>
+    <p>If a new request comes into the Queue, then Tymeac notifies the first thread with this
+    status that there is work.&nbsp;The thread's status becomes <u>Notified, awaiting
+    execution</u>.&nbsp;</p>
+    <p>As soon as Java time slices the thread it changes its status to <u>Thread
+    processing</u>. Since every request goes into a Wait List, this newly notified thread may
+    not be the thread to process the request.&nbsp;Any currently working thread in the Queue
+    may fetch the request. In any case, when the thread has no work it re-enters a status of <u>Waiting
+    for work</u>.</p>
+    <p>When the time for waiting expires (the Wait Time Element in Queue Maintenance <a href="TyQueMaint.html#waitime">TyQueMaint</a>) the thread sets its status to <u>Inactive</u>.&nbsp;The
+    thread is alive but blocking and is no longer participating in scheduling until
+    reactivated as a result of a Threshold exception, below.&nbsp;(The Tymeac Monitor may
+    destroy a thread after its <a href="TyQueMaint.html#kill">Idle Thread Life</a> time
+    expires.)</p>
+    <p>See the full <a href="Tuning.html#cycle">life cycle</a> of a thread, below.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac always reactivates a thread when there is an overflow in the wait lists. An
+  overflow is when the request does not fit into the desired wait list because that wait
+  list is full and the request must go into the next, higher wait list.</p>
+  <p>The New Thread Thresholds (<a href="TyQueMaint.html#threshold">TyQueMaint</a>) describes the
+  algorithms used in determining when Tymeac may reactivate a thread when there is no
+  overflow. However, not expounded there is the threshold scan delay.</p>
+  <blockquote>
+    <p><a name="scan"></a>The threshold scan delay is a two second delay Tymeac uses between
+    starting a new thread and next scanning the wait lists for threshold values. This delay is
+    to avoid unnecessarily starting too many threads when there is a flood of requests. For
+    example:</p>
+    <blockquote>
+      <p>Let's say the individual threshold percent for a Queue is 60%. Therefore, when the
+      number of pending requests in a wait list exceeds 60%, Tymeac starts a new thread.</p>
+      <p>Currently the load on the Queue is 50% but then a burst of requests comes in increasing
+      the load well past 60%. Tymeac starts a new thread when the first new request exceeds 60%
+      but does not scan the wait lists again for two seconds. This gives the newly started
+      thread a chance to reduce the load before more threads enter the system.</p>
+    </blockquote>
+    <p>The scan delay value is system wide, not part of each individual Queue. This is because
+    of the fact that sometimes too many variables makes tuning a nightmare, especially across
+    multiple operating systems.<br>
+    See below, in <a href="#waitlists">Wait Lists</a> (fixed
+    number of entries within each Queue). <br>
+    See also the Monitor (<a href="Disabled.html#nb">interval
+    of the timed events</a>).</p>
+  </blockquote>
+  <hr color="#000000" width="60%">
+</blockquote>
+
+<blockquote>
+  <p><a name="mat"></a><strong>M</strong>aximum <strong>A</strong>ctive <strong>T</strong>hreads
+  gives little warning of a problem.&nbsp;This is not the total number of threads defined
+  within Java but the total number of threads within Java <u>actively</u> <u>processing</u>&nbsp;
+  <strong>MAT</strong> is our way of saying the processor is out of gas.</p>
+</blockquote>
+
+<blockquote>
+  <p>Threads, whether operating system threads or logical threads, compete with each other
+  within a Tymeac Queue, with other threads in Java, and with other processes in the
+  Box.&nbsp;Sometimes adding more threads slows down overall processing because of resource
+  limits (memory, cycle, network, locks, blocking, etc.) </p>
+</blockquote>
+
+<blockquote>
+  <p>Hence, there is a very close correlation between the number of threads for each Queue
+  and the <strong>M</strong>aximum <strong>A</strong>ctive <strong>T</strong>hreads for the
+  system.</p>
+</blockquote>
+
+<blockquote>
+  <p>This is the purpose of inactivating a Tymeac thread.&nbsp;While <u>Inactive</u>, and
+  alive, the thread is not looking for work and Java does not time slice the
+  thread.&nbsp;Tymeac Scheduling does not directly select an I<u>nactive</u> thread for a
+  client request.&nbsp;Therefore, the thread uses a minimum of resources and does not
+  compete with other threads.</p>
+</blockquote>
+
+<blockquote>
+  <p>An <strong>example</strong> is helpful.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>A Queue has three threads.&nbsp;These we will call, #0, #1, and #2.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>After Tymeac start up, no threads are active.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>When the first request comes in for this Queue, Tymeac places it in a Wait List and
+    activates thread #0.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>More, and more, and more requests come in for this Queue. Tymeac places the requests
+    into Wait Lists.&nbsp;Thread #0 processes these requests, without competition from other
+    threads.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>As the Wait Lists fill up, Tymeac checks the New Thread Thresholds for this
+    Queue.&nbsp;When the Queue exceeds a threshold, Tymeac activates thread #1.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>More, and more, and more requests come in for this Queue.&nbsp;Tymeac places the
+    requests into Wait Lists.&nbsp;Threads #0 and #1 process these requests.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>As the Wait Lists become empty and the threads are no longer busy, the threads wait for
+    new work.&nbsp; The status is <u>Waiting for Work</u>.&nbsp;Waiting threads no longer look
+    for work themselves. They are blocking.&nbsp;These waiting threads never get time sliced
+    until the Tymeac Scheduler notifies them (runnable).</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>When new requests come in, Tymeac notifies the first thread in the list, thread #0. As
+    long as thread #0 finishes its work before a new request comes in then Tymeac never
+    notifies thread #1.&nbsp;Thread #0 waits and Tymeac notifies it again.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>When the Wait Time expires, thread #1 becomes <u>inactive</u>.&nbsp;A threshold
+    exception must take place before thread #1 can participate again.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>As more, and more, and more requests come in for this Queue.&nbsp;Tymeac places the
+    requests into Wait Lists. Thread #0 processes these requests, without competition from
+    other threads.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>When the Wait Lists are empty and no new requests come in, then thread #0's Wait Time
+    expires and it becomes<u> inactive</u>.&nbsp;When the next request comes in, Tymeac
+    reactivates thread #0.</p>
+  </blockquote>
+  <p>The <a href="TyQueMaint.html#kill">Idle Thread Life</a> parameter in the Queue
+  determines when the Tymeac Monitor destroys a thread. Specifying a time of zero ignores
+  this parameter. Otherwise, when the the thread remains <u>inactive</u> for &quot;Idle
+  Thread Life&quot; seconds, the Tymeac Monitor, <u>when next it runs</u>, destroys the
+  thread.</p>
+</blockquote>
+
+<blockquote>
+  <p>The Thread Display/Purge/Enable Class, <a href="TyQueThd.html">TyQueThd</a>, is
+  available to monitor the status of each Queue's threads.</p>
+  <p><b><a name="nice"></a>Playing nice</b><br>
+  Why go through all this trouble? It's called playing nice.</p>
+  <blockquote>
+  <p>Tymeac Functions play nice within Tymeac. Each Tymeac Queue uses the 
+  minimum amount of resources and returns the resource as soon as possible. We 
+  assume there are other Tymeac clients using different Tymeac Functions. When 
+  one client hogs the resources, everyone feels the pain.</p>
+  <p>Tymeac Functions play nice within the Box. We assume there are other 
+  applications executing in the Box besides us.</p>
+  </blockquote>
+</blockquote>
+
+<hr color="#000000" width="60%">
+
+<blockquote>
+  <p>The Shut Down and On Request Classes write <a href="Stats.html">statistics</a> to the
+  Statistics repository. These statistics are useful in analyzing performance:</p>
+</blockquote>
+
+<blockquote>
+  <p><u>Number Processed</u>, <u>Number Activated</u>, <u>Number of Waits</u>, <u>Number
+  Notified</u>, <u>Number Instantiated</u>.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><b>Number Processed<br>
+    </b>The algorithm, for thread notification, is 'first available'.&nbsp;The usage is usually
+    heaviest at the top. However, what may appear as a lopsided usage in no way precludes that
+    something is wrong.&nbsp;The status of higher order threads may be 'in use' so that lower
+    order threads 'are notified' more often.&nbsp;The application process of some threads may
+    take longer than others. The <u>Number Processed</u> by a thread in itself is of little
+    importance.</p>
+    <p>The sum of all threads' <u>Number Processed</u> is the total requests processed by the
+    Queue.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><b>Number Activated<br>
+    </b>The <u>Number Activated</u> of zero is significant.&nbsp;A prudent reserve is always
+    wise and business rules change daily.&nbsp;However, after observing a zero usage over
+    time, eliminating some never used threads reduces storage usage.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><b>Number of Waits, Number
+  Notified<br>
+    </b>The <u>Number of Waits</u> and <u>Number Notified</u> are significant.&nbsp;</p>
+    <blockquote>
+    <p>The <u>Number
+    of Waits</u> is the number of time-outs (i.e., wait interval expired with no new
+    work.)&nbsp;The thread sets its status to <u>Waiting for work</u>, and issues a
+    wait.&nbsp;If Tymeac notifies (<u>Number Notified</u>) the thread at anytime before the wait interval expires then
+    there is no time-out.</p>
+    <p>When the <u>Number Notified</u> is significantly lower than the <u>Number
+    of Waits</u>, then the Wait Time may be too low.</p>
+    </blockquote>
+    <p><b>Number Instantiated<br>
+    </b>The <u>Number Instantiated</u> is the total new instances of a thread.&nbsp;This number
+    is only significant when taken together with the interval the Tymeac Server is executing.
+    For example, if the number is 3,000 and the interval for the Tymeac Server is three (3)
+    days, then this is good.&nbsp;However, if the interval is three (3) hours, then the Queue
+    parameter, <a href="TyQueMaint.html#kill">Idle Thread Life</a> is probably too small.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Once again, this is not a how to tune manual, but a what does Tymeac do, and therefore,
+  what should I look for in tuning.</p>
+</blockquote>
+
+<blockquote>
+  <p>The Queue Update Class (<a href="TyQueData.html">TyQueData</a>) is a way to experiment
+  without making permanent (DBMS/User Class) changes. The New Thread Thresholds and Wait
+  Interval are alterable and effect an immediate change. </p>
+</blockquote>
+
+<hr color="#000000" width="60%">
+
+<blockquote>
+  <h3><a name="cycle"></a>Thread Life Cycle</h3>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Tymeac Start-up creates the Queues.&nbsp;Each thread entry within the Queue is
+    initially set with a status of <u>Never Used</u>.&nbsp;Whether there is a physical Java
+    thread attached depends on the <a href="TyQueMaint.html#start">start up option</a> in the
+    Queue definition. The <a href="TyQueThd.html">Queue Thread Display/Alter</a> indicates the
+    presents of a physical Java thread as 'existent', and the absence of a physical Java
+    thread as 'null'.</p>
+    <blockquote>
+      <p>When the start up option is to start all threads, Tymeac instantiates and start() all
+      threads in the Queue.&nbsp;The status remains as <u>Never Used</u>.&nbsp;However, during
+      display of the Queue's threads, the suffix changes from 'null' to 'existent'.</p>
+      <p>When the <a href="TyQueMaint.html#kill">thread life option</a> in the Queue definition
+      has a value greater than zero, the Tymeac Monitor destroys the thread when the interval
+      expires.&nbsp;The status remains as <u>Never Used</u>.&nbsp; However,&nbsp; during display
+      of the Queue's threads, the suffix changes from 'existent' to null'.</p>
+    </blockquote>
+    <p>The first request for a Queue activates the first thread in the Queue. If no physical
+    thread exists, Tymeac instantiates and starts the Java thread.&nbsp;The status changes
+    from <u>Never Used</u> to <u>Reactivated, awaiting execution</u>.&nbsp; This new status is
+    a <a href="Disabled.html#five">timed event</a>. If this status remains for an unreasonable
+    amount of time, the Tymeac Monitor <a href="Tuning.html#flag">flags</a> the thread as a
+    possible problem.&nbsp;Other threads may become active as a result of Wait List overflows
+    or Threshold exceptions.</p>
+    <p><a name="work"></a><strong>Work Cycle</strong>:</p>
+    <blockquote>
+      <p>When the thread gets execution time, it changes its status to <u>Thread Processing</u>.
+      The thread is executing code such as fetching a request from a Wait List, preparing to
+      invoke the application method, or processing the output from the application. This new
+      status is a <a href="Disabled.html#five">timed event</a>. If this status remains for an
+      unreasonable amount of time, the Tymeac Monitor <a href="Tuning.html#flag">flags</a> the
+      thread as a possible problem.</p>
+    </blockquote>
+    <blockquote>
+      <p>If the thread successfully fetches a request from a Wait List:&nbsp;(Since every
+      request goes into a Wait List, this newly notified thread may not be the thread to process
+      the request.&nbsp;Any currently working thread in the Queue may fetch the request.)</p>
+    </blockquote>
+    <blockquote>
+      <ul>
+        <li>it changes its status to <u>In application class</u> and invokes the Processing
+          Application Class.&nbsp;This new status is a <a href="Disabled.html#five">timed event</a>.
+          If this status remains for an unreasonable amount of time, the Tymeac Monitor <a href="Tuning.html#flag">flags</a> the thread as a possible problem.</li>
+      </ul>
+    </blockquote>
+    <blockquote>
+      <ul>
+        <li>Upon return from the Processing Application Class, the thread changes its status to <u>Thread
+          Processing</u>.&nbsp;The thread saves the Processing Application's output Object, when
+          necessary.</li>
+      </ul>
+    </blockquote>
+    <blockquote>
+      <ul>
+        <li>If this is an Asynchronous Request with an Output Agent Queue, and this is the final
+          Queue in the request, then the thread changes its status to <u>Scheduling Output Agent</u>
+          and schedules the Output Agent Queue. This new status is a <a href="Disabled.html#five">timed
+          event</a>.&nbsp;If this status remains for an unreasonable amount of time, the Tymeac
+          Monitor<a href="Tuning.html#flag"> flags</a> the thread as a possible problem.</li>
+      </ul>
+    </blockquote>
+    <blockquote>
+      <ul>
+        <li>Upon return from scheduling the Output Agent Queue, the thread changes its status to <u>Thread
+          Processing</u> and attempts to fetch the next request from a Wait List.</li>
+      </ul>
+    </blockquote>
+    <blockquote>
+      <p>When no work remains in any Wait List, the thread changes its status to <u>Waiting for
+      work</u>.&nbsp;This new status is <a href="TyQueMaint.html#waitime">optionally timed</a>.</p>
+    </blockquote>
+    <blockquote>
+      <p>If any new work comes in, this thread is immediately available to processes that
+      request.&nbsp;The request changes its status to <u>Notified, awaiting execution</u>.&nbsp;This
+      new status is a <a href="Disabled.html#five">timed event</a>. If this status remains for
+      an unreasonable amount of time, the Tymeac Monitor <a href="Tuning.html#flag">flags</a>
+      the thread as a possible problem.&nbsp;The above, <a href="Tuning.html#work">work cycle</a>,
+      repeats.</p>
+    </blockquote>
+    <blockquote>
+      <p>If no new work comes in and <br>
+      this Queue is participating in the <a href="TyQueMaint.html#waitime">optional timing</a>
+      of waiting threads and<br>
+      that time elapses,<br>
+      then the thread changes its status to <u>Inactive</u>. This is a timeout event. Tymeac
+      keeps <a href="Stats.html">statistics</a> on the life cycle of threads.</p>
+    </blockquote>
+    <blockquote>
+      <p>If new work comes in, this thread may only participate in processing when:</p>
+    </blockquote>
+    <blockquote>
+          <ul>
+            <li>There are no other threads working in the Queue,</li>
+            <li>the placement of a request into a Wait List results in an overflow, or</li>
+            <li>a Wait List exceeds a Threshold limit.</li>
+          </ul>
+    </blockquote>
+    <blockquote>
+      <blockquote>
+        <p>When necessary, the new request activates the thread. If no physical thread exists,
+        Tymeac instantiates and starts the Java thread. The status changes to <u>Reactivated,
+        awaiting execution</u>.&nbsp;The above, <a href="Tuning.html#work">work cycle</a>,
+        repeats.</p>
+      </blockquote>
+    </blockquote>
+    <blockquote>
+      <p>If no new work comes in and<br>
+      the Queue is participating in the <a href="TyQueMaint.html#kill">optional timing of
+      inactive threads</a>, and<br>
+      that time elapses<br>
+      then, when the Tymeac Monitor next runs, it destroys the physical thread.</p>
+    </blockquote>
+    <blockquote>
+      <p>When the next request comes into this Queue, that request activates the
+      thread.&nbsp;The status changes to <u>Reactivated, awaiting execution</u>.&nbsp;This new
+      status is a <a href="Disabled.html#five">timed event</a>. If this status remains for an
+      unreasonable amount of time, the Tymeac Monitor <a href="Tuning.html#flag">flags</a> the
+      thread as a possible problem.&nbsp;The above, <a href="Tuning.html#work">work cycle</a>,
+      repeats.</p>
+    </blockquote>
+    <p><a name="flag"></a><strong>Flagged Threads:</strong></p>
+    <blockquote>
+      <p>There are two stages of a thread's life cycle that denote a problem. These are status
+      codes of <u>Disabled</u> and <u>Cancelled</u>.&nbsp;The section, &quot;<a href="Disabled.html">How a thread's status becomes disabled</a>&quot;, discusses the <u>Disabled</u>
+      status code.</p>
+      <p>The <u>Cancelled</u> status code results from an excessive amount of time in a state of
+      &quot;processing&quot; or &quot;about to process&quot;. The problem with threads, in any
+      environment, is: What are they doing?&nbsp; Are they alive?, etc.&nbsp;To address this
+      problem, Tymeac <a href="Disabled.html#five">times</a> certain events.&nbsp;When the
+      thread exceeds one of these time limits, the Tymeac Monitor changes its status to <u>Cancelled</u>.&nbsp;On
+      the next cycle of the Tymeac Monitor, all <u>Cancelled</u> threads are set to <u>Disabled</u>.</p>
+      <p>These <u>Cancelled</u> or <u>Disabled</u> status codes have no effect on the
+      thread.&nbsp;If a thread is just slow, then it changes its own status according to its
+      processing.</p>
+      <p>These status codes have an effect on scheduling an <u>Inactive</u> thread.&nbsp;Recall
+      from above, that when new work comes in, the <u>Inactive</u> thread may only participate
+      in processing when:</p>
+    </blockquote>
+    <blockquote>
+      <ul>
+        <li>There are no other threads working in the Queue,</li>
+        <li>the placement of a request into a Wait List results in an overflow, or</li>
+        <li>a Wait List exceeds a Threshold limit.</li>
+      </ul>
+    </blockquote>
+    <blockquote>
+      <p><u>Cancelled</u> or <u>Disabled</u> status code threads are not considered working nor
+      are they considered available to activate. Therefore, they are non-participants in the
+      Queue.</p>
+      <p>Consider the following:</p>
+      <blockquote>
+        <p>A Queue has three threads.&nbsp;These we will call, #0, #1, and #2.</p>
+        <p>When the first request comes in for this Queue, Tymeac places it in a Wait List and
+        activates thread #0.</p>
+        <p>The Processing Application Class develops a 'hanging' problem for which it never
+        recovers. It may be waiting for another resource to become available, etc.</p>
+        <p>Tymeac considers this thread &quot;working&quot;.&nbsp;As any new requests comes in,
+        Tymeac places the request in a Wait List.&nbsp;As long as no overflow occurs or no
+        Threshold limit exceeds, then it is reasonable to assume that thread #0 will process the
+        new request when it finishes with the current one.&nbsp; Therefore, Tymeac does not
+        activate a new thread.</p>
+        <p>Thread #0 exceeds a time limit.&nbsp;The Tymeac Monitor sets the status to Cancelled.
+        If the request thread #0 is working on is an Asynchronous Request, the Tymeac Monitor
+        places an entry in the <a href="Stalled.html">Stall Array</a> for this request.</p>
+        <p>As any new requests comes in, Tymeac places the request in a Wait List.&nbsp; Since no
+        threads are considered &quot;Working&quot;, Tymeac activates thread #1.&nbsp; As long as
+        thread #1 does not 'hang' as well, it processes the requests normally.</p>
+        <p>On the next cycle of the Tymeac Monitor, it sets the status of thread #0 to Disabled
+        and may send a message to the <a href="TyNotify.html">Notification</a> Queue.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h3><a name="waitlists"></a><strong>Wait Lists </strong></h3>
+
+<blockquote>
+  <p>Each Queue must have at least one Wait List.&nbsp;The Queue Maintenance Class (<a href="TyQueMaint.html#waitlist">TyQueMaint</a>) or User Classes (<a href="UserQueues.html">TyUserQueues</a>)
+  defines the number of Wait Lists and number of 
+  <a href="TyQueMaint.html#nbr_slots">physical</a> and
+  <a href="TyQueMaint.html#nbr_slots_logical">logical</a> entries available in each Wait
+  List.&nbsp;All Wait Lists use FIFO processing. Tymeac Server, when activating a new
+  thread, always puts the request into a Wait List. This is so that the first thread looking
+  for work may process the request rather than making the request wait for the new thread
+  to become active.</p>
+</blockquote>
+
+<blockquote>
+  <p>The request (<a href="TymeacParm.html">TymeacParm</a>)
+  specifies the priority of the request. Tymeac puts it into its respective Wait List.&nbsp;Priority 3 goes
+  into Wait List 3, Priority 1 goes into Wait List 1. </p>
+</blockquote>
+
+<blockquote>
+  <p>Wait Lists may not be priority lists.&nbsp;Using two or more Wait Lists when the
+  request always specifies priority 1 is an overflow technique. See the 
+  discussion in the Queue Maintenance Class (<a href="TyQueMaint.html#example">TyQueMaint</a>) 
+  for how to use these Wait Lists and the problems of such.</p>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac attempts to put the request into the Wait List corresponding to its
+  priority.&nbsp;However, when that Wait List is full, Tymeac puts the request into the next
+  higher Wait List. This is a primary overflow.&nbsp;When that Wait List is also full,
+  Tymeac puts the request into the next higher Wait List.&nbsp;This is a secondary overflow. 
+  Overflows are handled errors.</p>
+  <p><a name="all"></a>All Wait Lists for a Queue have a fixed number of entries taken from
+  the Queue Maintenance Class. Using a variable number for each Wait List makes tuning
+  extremely difficult.</p>
+  <p>Circumstances change day to day. In reality, nobody monitors any system with extreme diligence. Using a
+  variable number of entries for each Wait List means that similar Queues may not reflect
+  similar behavior.&nbsp;When conditions change, the algorithm for determining what is a
+  problem must be unique for the number of entries factor. The fixed number makes the
+  calculation simple, affords an  at-a-glance picture with numbers and charts, and a
+  meaningful assumption about similar Queues is possible.</p>
+  <p>See also the <a href="Disabled.html#nb">note</a> in the discussion of Disabled Queues.</p>
+  <p>The Queue Elements Display/Alter Class (<a href="TyQueData.html">TyQueData</a>) permits
+  modifying the number of entries in Wait Lists during execution.&nbsp;This gives 
+  you another tool with which to tune performance.</p>
+</blockquote>
+
+<blockquote>
+  <p>The <a href="Stats.html">statistics</a> show the high water mark, primary and secondary overflows at Shut
+  Down and On Request. Each Wait List is listed starting at 1:</p>
+
+  <blockquote>
+
+<p><b>Times Used</b><br>
+Just what it says.</p>
+
+<p><b>Highest Used</b><br>
+High water mark for number of pending requests at any time. When this number is 
+close to the <a href="TyQueMaint.html#nbr_slots">physical</a> number of entries 
+in a Wait List, then it may be time to increase the physical number of slots.</p>
+
+<p><b>Times Reset</b><br>
+During a back-out as the result of a scheduling failure, time-out or cancel -- 
+the number of requests removed from this Wait List.</p>
+
+<p><b>Times overflowed primary</b><br>
+When a request does not fit in the desired Wait List, it overflows into the next 
+Wait List. Overflow is a handled error. If this number is high, make the
+<a href="TyQueMaint.html#nbr_slots">physical</a> number of entries in the Wait 
+List higher.</p>
+
+<p><b>Times overflowed secondary</b><br>
+When a request does not fit in the desired Wait List, it overflows into the next 
+Wait List. However, when that Wait List is also full, the request overflows into 
+a subsequent Wait List. Overflow is a handled error. If this number is high, 
+then the <a href="TyQueMaint.html#nbr_slots">physical</a> number of entries in 
+the Wait List is much too low.</p>
+
+  </blockquote>
+
+<p>One may use the statistics to observe a trend before it becomes a problem 
+  (high water mark.) One may
+  increase or decrease the number of Wait Lists and/or entries available for Wait Lists.</p>
+
+<p>See also the Queue statistics for balancing the number of
+<a href="TyQueMaint.html#nbr_slots_logical">logical</a> slots in Wait Lists:</p>
+
+  <ul>
+    <li>Total times reached Overall Threshold</li>
+    <li>Total times reached Individual Threshold</li>
+    <li>Total times reached Weighted Average Threshold</li>
+  </ul>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<p>&nbsp; <!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

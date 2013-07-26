@@ -1,0 +1,124 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>DevelopmentExample</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Development Example</h1>
+<blockquote>
+  <p><strong><big>Preface</big></strong></p>
+  <blockquote>
+    <p>A Client wants to execute a method on the Server and it wants the method to use current
+    data. Therefore, the Client passes the current data (what we call &quot;input&quot;) to
+    the code. The Client wants two things from the Server:<ol>
+      <li>A response that says the Server worked perfectly. </li>
+      <li>The result of the application method working on the current data, what we call
+        &quot;returned data&quot;.</li>
+    </ol>
+    <p>Let's say the Server calculates Celsius based on Fahrenheit. The Client passes a
+    Fahrenheit number &quot;input&quot; to the Server and the Server returns a Celsius number
+    &quot;returned data&quot; to the Client. Additionally, Tymeac includes a String indicating
+    how the Tymeac Server performed (not the underlying application.)</p>
+    <p>The Client can wait for the process to complete, a Synchronous Request.</p>
+    <p>The Client may not wait for the process to complete. This is an Asynchronous Request,
+    also called autonomous processing. In such a case, how would the Client ever know what
+    happened and where would the &quot;returned data&quot; go? The Server code could transmit
+    it to the Client in the network. Unfortunately, this would make the application code very
+    complex.</p>
+    <p>Tymeac's answer to overly complex applications is to separate the do-the-work from the
+    what-now. The application method (do-the-work) calculates the Celsius number, wraps it in
+    an Object and returns the Object to the Server. The Server returns the Object to the
+    Client for a Synchronous Request.</p>
+    <p>For the Asynchronous Request the Server may (this is optional) put the returned Object
+    in a Queue called the Output Agent Queue. An Output Agent Queue is just like any other
+    Tymeac Queue. It has Wait Lists, threads and another Processing Application Class that you
+    write. This is where you may put the what-now code. When you define the 
+    Queue, you have the option of specifying it as an &quot;Output Agent&quot; Queue.</p>
+    <p>For example, when you wish the Client to receive the &quot;returned data&quot; on the
+    network you would do the following:</p>
+    <p>First you must write two Processing Application Classes:<ol>
+      <li>DoTempConv -- Converts Fahrenheit.to Celsius.</li>
+      <li>SendToNetwork -- Sends the Converted Object to the user.</li>
+    </ol>
+    <p>Then you define<ul>
+      <li>a <strong>Tymeac Function</strong> called &quot;Convert&quot; that contains a normal
+        Tymeac Queue called &quot;FtoC&quot; (short for Fahrenheit to Celsius) and Output Agent
+        Queue called &quot;PutOnNet&quot;.<br>
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <img src="Images/TyFdemo.gif" alt="TyFdemo.gif (2501 bytes)" width="205" height="133"><br>
+        <br>
+      </li>
+      <li>a <strong>Tymeac Queue</strong> called &quot;FtoC&quot; that uses a Processing
+        Application Class called &quot;DoTempConv&quot;.<br>
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <img src="Images/QWLT2demo.gif" alt="QWLT2demo.gif (4685 bytes)" width="343" height="302"><br>
+        <br>
+      </li>
+      <li>a <strong>Tymeac Output Agent Queue</strong> called &quot;PutOnNet&quot; that uses a
+        Processing Application Class called &quot;SendToNetwork&quot;.</li>
+    </ul>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <img src="Images/QWLT3demo.gif" alt="QWLT3demo.gif (4794 bytes)" width="343" height="302"></p>
+    <blockquote>
+      <p>Now at execution time:</p>
+    </blockquote>
+    <blockquote>
+      <ul>
+        <li><p align="left">The Client does an Asynchronous Request to the Tymeac Server passing the
+          Fahrenheit number &quot;input&quot;</p>
+        </li>
+        <li><p align="left">The Tymeac Server puts the &quot;input&quot; into Queue
+          &quot;Convert&quot;. A Queue Thread associated with this Queue picks up the
+          &quot;input&quot; and using Java Reflection invokes the main() method of Class
+          &quot;DoTempConv&quot;.</p>
+        </li>
+        <li><p align="left">The &quot;DoTempConv&quot; Class returns an Object &quot;Converted&quot;
+          to the Queue Thread.</p>
+        </li>
+        <li><p align="left">The Queue Thread puts the &quot;Converted&quot; object, which is now a
+          new &quot;input&quot;, into Queue &quot;PutOnNet&quot;. An Output Agent Thread associated
+          with this Queue picks up the new &quot;input&quot; and using Java Reflection invokes the
+          main() method of Class &quot;SendToNetwork&quot;.</p>
+        </li>
+        <li><p align="left">The &quot;SendToNetwork&quot; Class passes the &quot;Converted&quot;
+          object to the network.</p>
+        </li>
+      </ul>
+      <p align="left">&nbsp;</p>
+    </blockquote>
+  </blockquote>
+  <p align="center"><img src="Images/Pic2.gif" alt="Pic2.gif (6522 bytes)" width="379" height="370"></p>
+  <blockquote>
+    <p>&nbsp;</p>
+    <p>Now if that was all there was to Tymeac, then it would be a very nice backend process
+    manager. But there is more. Tymeac is also a Request Broker. Your Tymeac Functions may
+    contain multiple Tymeac Queues.</p>
+    <p>What if your &quot;input&quot; Fahrenheit number also needs converting to a second or
+    third scale? No problem. You simple write the Processing Application Class to do this
+    conversion. Define Tymeac Queues as above. Add the new Queues to the Tymeac Function. Now
+    when you execute this Tymeac Function, you get back all the conversions in one Object
+    array.</p>
+    <p>The details begin with the Processing Application Class.</p>
+  </blockquote>
+</blockquote>
+<p>&nbsp;</p>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+
+</html>

@@ -1,0 +1,138 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Examples</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Processing Examples</h1>
+
+<blockquote>
+  <blockquote>
+    <p>Tymeac is the fastest, most efficient vehicle for processing every level of
+    request.&nbsp; This section lists several examples of Tymeac Processing. Other, <a href="../Brochure/benex.html">real-world examples can be found here</a>.</p>
+  </blockquote>
+</blockquote>
+
+<h4><a name="simple"></a>For the simple request:</h4>
+
+<p>As a result of the fall marketing campaign, how many customers purchased our new
+product <br>
+with all options?</p>
+
+<p>This request requires parallel queries to the marketing database and the sales
+database.</p>
+
+<p>&nbsp;</p>
+
+<p><img src="Images/Mfig1.gif" alt="Mfig1.gif (2615 bytes)" WIDTH="358" HEIGHT="97"></p>
+
+<p>&nbsp;</p>
+
+<p>Therefore, invoke the Synchronous Request Method of the Tymeac Server for</p>
+
+<p>Function_25<br>
+&nbsp;&nbsp;&nbsp; Queue_16, (marketing), <br>
+&nbsp;&nbsp;&nbsp; Queue_27, (sales)).</p>
+
+<p>Wait for completion a maximum of four seconds.</p>
+
+<p>Pass the response back to the originator.</p>
+
+<p>&nbsp;</p>
+
+<p ALIGN="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="Images/Mfig2.gif" alt="Mfig2.gif (4013 bytes)" WIDTH="265" HEIGHT="313"></p>
+
+<p>&nbsp;</p>
+
+<h4><a name="complex"></a>For the complex request:</h4>
+
+<p>A customer requires a portfolio revaluation at the earliest possible time but does not <br>
+want to be locked out from entering other requests while this is being done.</p>
+
+<p>This request requires the combined information from three processes as input to a <br>
+compute intensive application and the result sent to the originator on a dynamically <br>
+acquired session.</p>
+
+<p>&nbsp;</p>
+
+<p ALIGN="left"><img src="Images/Mfig3.gif" alt="Mfig3.gif (4586 bytes)" WIDTH="493" HEIGHT="187"></p>
+
+<p>&nbsp;</p>
+
+<p>Therefore, invoke the Asynchronous Request Method of the Tymeac Server for</p>
+
+<p>Function_22<br>
+&nbsp;&nbsp;&nbsp; Queue 12, (Process 1), <br>
+&nbsp;&nbsp;&nbsp;&nbsp;Queue 13, (Process 2) <br>
+&nbsp;&nbsp;&nbsp; Queue 14, (Process 3)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;with an Output Agent, Queue_15).</p>
+
+<p>When all Queues successfully schedule send an &quot;in progress&quot; message to the
+requester <br>
+freeing the connection for other work.</p>
+
+<p>When the last Processing Application Class finishes, (the order of which is
+irrelevant), <br>
+the Tymeac Queue Thread schedules the Output Agent, (Queue_15), passing the combined <br>
+return Objects of all the processes.&nbsp;This application process is a front end for the
+second phase<br>
+required to complete the request -- the compute intensive process, (another Tymeac
+Function).</p>
+
+<p>Therefore, the Queue_15's Processing Application Class recursively invokes the <br>
+Asynchronous Request Method of the Tymeac Server for:</p>
+
+<p>Function_23<br>
+&nbsp;&nbsp;&nbsp; Queue_107 <br>
+&nbsp;&nbsp;&nbsp; with an Output Agent Queue_108), <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( passing the concatenated return Objects of
+the other Queues.)</p>
+
+<p>When the Queue schedules successfully the process ends.</p>
+
+<p>When the compute intensive process finishes, the Tymeac Queue Thread schedules the <br>
+Output Agent (Queue_108) passing the result of that process.&nbsp;This application is a <br>
+common message client that dynamically sends the response to the originator using RMI
+Callback.</p>
+
+<blockquote>
+  <p><strong>Note:</strong>&nbsp; We demonstrate how to do an RMI Callback in our <a href="Samples.html#callback">sample code</a>.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<p><img src="Images/Mfig4a.gif" alt="Mfig4a.gif (12400 bytes)" WIDTH="734" HEIGHT="408"></p>
+
+<p>&nbsp;</p>
+
+<p>As complicated as this looks it is really a simple process to set up.</p>
+
+<p>The Functions and Queues easily construct in the Function and Queue Maintenance
+Classes.<br>
+It is only a matter of filling in the blanks.</p>
+
+<p>The Processing Application Classes are small, single purpose Classes that are easy to
+write<br>
+and test since they are separate from each other and the execution environment.</p>
+
+<p>The coordinating, timing, scheduling, monitoring, and managing are handled by Tymeac.</p>
+
+<p>The system architect can concentrate on solving business problems.</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp; 
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

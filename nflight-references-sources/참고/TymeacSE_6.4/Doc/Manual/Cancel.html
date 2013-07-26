@@ -1,0 +1,460 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Canceling a Request</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Canceling a Request</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>It may be necessary at times to cancel an active (a)synchronous request. While you can
+      cancel the request, you cannot stop the active processing. That is, you cannot force a
+      thread to stop. For an explanation on why, see the Java API documentation on the Thread.stop() method.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>There are three basic Tymeac Server Methods available for Clients:</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <ol>
+      <li>shutRequest()&nbsp; --- Shut down the Tymeac Server.</li>
+      <li>asyncRequest() -- Request_without_waiting for completion.</li>
+      <li>syncRequest() --- Request_with_wait for completion</li>
+    </ol>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>shutRequest()</strong></p>
+  <blockquote>
+    <p>Once a shut down sequence begins, there is no way to reverse it.</p>
+  </blockquote>
+  <p><a name="async"></a><strong>asyncRequest()</strong></p>
+  <blockquote>
+    <p>The asynchronous request has three stages of processing:<ol>
+      <li>In Output Agent stage (after processing all the normal queues.)</li>
+      <li>Actively processing in normal queues.</li>
+      <li>Not started</li>
+    </ol>
+    <p>When in the Output Agent stage,</p>
+    <blockquote>
+      <p>you must use the <a href="TyStalled.html">Stalled Request Display/Alter</a> to effect
+      any changes.</p>
+      <p>This assumes the request exceeded the allowable time limit and is marked
+      &quot;stalled.&quot; If the Output Agent Processing Application Class hasn't exceed the
+      time limit, then you must wait until it does. This is a case of trying to stop a thread.</p>
+    </blockquote>
+    <p>When actively processing or not started,</p>
+    <blockquote>
+      <p>you may use the <a href="TyReqStatus.html">Request Status/Cancel Display</a> (or the
+      non-GUI class) to cancel the request.</p>
+    </blockquote>
+    <blockquote>
+      <p>If you catch the request before any processing begins, then you may completely remove
+      the request as if it had never been received.</p>
+      <p>If the request is actively processing, </p>
+      <blockquote>
+        <p>then the request is removed from each Queue's Wait List when possible.</p>
+        <p>The Queue Threads ignore any output from the Processing Application Class and when at
+        the last application process in the Tymeac Function, the Queue Thread ignores starting the
+        Output Agent process.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <p><a name="sync"></a><strong>syncRequest() (and use of the <a href="#cancel">cancelSyncReq() method</a>)</strong></p>
+  <blockquote>
+    <p>This is very difficult for those not intimate with multi-threading. The 
+    good part is even though you may have no idea what is happening after 
+    reading what follows, the examples we 
+    supply work and you may simply clone those for your own use. (We have a 
+    GUI demo too.)</p>
+    <p><b>In a Synchronous Request, </b> <br>
+    the Tymeac Server (Endpoint) Connection Thread is waiting for the Queue 
+    Threads to finish before issuing a return to the calling Client. </p>
+    <p>Since both the Tymeac Server (Endpoint) Connection Thread and the Client 
+    calling thread are 
+    both in a wait state, we need more threads.</p>
+    <blockquote>
+    <p>Specifically: you issue a call to the Tymeac Server with a synchronous 
+    request in a thread: <br>
+&nbsp;&nbsp;&nbsp;&nbsp; Object[] back = server.syncRequest()<br>
+    Your client calling thread is now waiting for a response.</p>
+    <p>On the Server side, </p>
+    <blockquote>
+    <p>when using RMI, the RMI runtime creates an end-point connection thread<br>
+    when using the internal server, your client thread is the end-point.</p>
+    <p><img border="0" src="Images/Remote.jpg" width="225" height="228">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <img border="0" src="Images/Embedded.jpg" width="225" height="228"></p>
+    <p>Tymeac schedules your request to one or more Queues (depending on your 
+    requirements.) A Queue Thread, from the thread pool on each 
+    Queue, picks up your request and processes it. The end-point thread then waits for 
+    the Queue Thread[s] to finish.</p>
+    <p>What &quot;cancel&quot; has to do is have a <u>new</u> client thread communicate with the 
+    server end-point thread that is 
+    waiting for the Queue Thread[s] to finish and tell it to 'wake up and forget about 
+    those other guys.' (the other guys being the Queue Threads)</p>
+    <p>Simple.</p>
+    </blockquote>
+    </blockquote>
+    <p>There are two methods for canceling a synchronous request -- a cancel word and call
+    back. There are two methods because each has drawbacks.</p>
+    <p>These methods are not mutually exclusive. You may use both in any syncRequest(). You may
+    execute both at different times and even execute each multiple times (the Server rejects
+    subsequent requests with an invalid request_id.) There is no TymeacParm constructor using
+    both. There are TymeacParm setters for each.</p>
+    <p><strong>Cancel Word</strong></p>
+    <blockquote>
+      <p>A cancel word is a unique number (long integer) the Client wishes to 
+      associate with a synchronous request. This number must be truly unique for 
+      all active<sup><a href="#one" style="text-decoration: none">1</a></sup> requests in the
+      Tymeac Server. You place the cancel word in the <a href="TymeacParm.html#callback">TymeacParm</a>.</p>
+      <p>When you do a syncRequest(), the Server checks the cancel word against all current synchronous requests 
+      that use a cancel word and rejects the request if it finds
+      a duplicate. The development of a unique number is only limited by imagination. For the
+      demonstration classes, we use a random number, method nextLong() in java.util.Random.</p>
+      <p>You will need one class (<strong>com.tymeac.base.CancelParm</strong>) in addition to
+      your normal Tymeac Client/Server classes.</p>
+      <blockquote>
+        <p><a href="../JavaDoc/com/tymeac/base/CancelParm.html"><strong>public class CancelParm</strong></a></p>
+      </blockquote>
+      <blockquote>
+        <p>&nbsp;&nbsp;&nbsp; // constructor<br>
+        &nbsp;&nbsp;&nbsp; <strong>public CancelParm (long cancel_word)</strong></p>
+      </blockquote>
+    </blockquote>
+    <blockquote>
+      <p>The color-coded scenario of how this works is as follows: <br>
+      &nbsp;&nbsp;&nbsp; (<font color="#008000">green=Client</font>,<font color="#000080"> </font>
+      <font color="#FF00FF">pink=NewClientThread</font><font color="#000080">,
+      navy=Server</font>)<ul>
+        <li><p align="left"><font color="#008000">The Client places a <em>cancel word</em> long
+          integer in the cancel word parameter of the</font> <a href="TymeacParm.html#callback">TymeacParm</a>&nbsp;
+          <font color="#008000">(that is passed to the Tymeac Server.)</font></p>
+        </li>
+        <li><p align="left"><font color="#008000">The Client must start a  </font>
+        <font color="#FF00FF">new thread</font><font color="#008000"> or wake up an
+          existing thread and pass it the <em>cancel word</em>. It is this </font>
+        <font color="#FF00FF">new thread</font><font color="#008000"> that does 
+        the subsequent cancel request.</font></p>
+        </li>
+        <li><p align="left"><font color="#008000">The Client calls the Tymeac Server with a
+          syncRequest(). This causes a wait until complete in the current thread.</font></p>
+        </li>
+        <li><p align="left"><font color="#000080">The Tymeac Server recognizes the <em>cancel word</em>
+          object in the TymeacParm and saves the<em> cancel word</em> object in case the Client
+          later wishes to cancel the call.</font></p>
+        </li>
+        <li><p align="left"><big>... </big>When the Client is ready to cancel the request, 
+        the Client calls its <font color="#FF00FF">new thread</font> </p>
+        </li>
+        <li><p align="left"><font color="#FF00FF">The Client's new thread takes the <em>cancel word</em>,
+          creates a CancelParm Object using the single argument constructor and calls the Tymeac
+          Server with a</font><br>
+          <strong>&nbsp;&nbsp;&nbsp; <a href="#cancel">cancelSyncReq(CancelParm)</a></strong>
+        <font color="#FF00FF">method.<br>
+          This method returns immediately with an</font><font color="#008000"> </font><a href="#rc">integer
+          for your evaluation</a>.</p>
+        </li>
+        <li><p align="left"><font color="#000080">The Tymeac Server treats the cancel request in a
+          similar way as the time-out logic. First, it wakes up the waiting (Endpoint) Connection
+          Thread. The time-out logic tries to back-out any request in a Queue that has not started
+          and returns the result of processing to the Client.</font></p>
+        </li>
+      </ul>
+      <p>The drawbacks with this method are.<ol>
+        <li><p align="left">If the cancel word is not unique the original call fails (<a href="Usage.html#broker">return code</a>).</p>
+        </li>
+        <li>
+        <p align="left">If the new thread calls the Tymeac Server before the Server is ready to
+          handle a new request, the secondary call fails.</p>
+          <blockquote>
+
+        <p align="left">This can happen when the Server is under stress and the original (Endpoint) Connection
+          Thread does not get enough CPU time to completely broker the request. The secondary call
+          receives an invalid cancel word reply. When the original (Endpoint) Connection Thread gets
+          CPU time, it continues without knowledge of the cancel attempt.</p>
+          </blockquote>
+
+        </li>
+        <li><p align="left">If the cancel word is &quot;misused&quot; there could be a difficult bug
+          to find. That is, when a thread uses the wrong cancel word to cancel a request
+          (application A cancels application B's request -- oops.).</p>
+        </li>
+      </ol>
+      <p>Call back solves these problems, but adds a few of its own.</p>
+    </blockquote>
+    <p><strong>Call Back</strong></p>
+    <blockquote>
+      <p>This technique uses callback. We have a discussion of <a href="Callback.html">callback</a>
+      in the package along with examples of how to use it. If you are not familiar with callback
+      <strong>or your client is behind a firewall</strong> then have a read in the
+      documentation. This does not apply to the Internal Server.</p>
+      <blockquote>
+        <div align="left"><table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="42" valign="top"><strong>N.B.</strong></td>
+            <td>When an instance exports a remote object the RMI run time opens a new port on the
+            machine where calls can be made to the object. (Only one port is open per class.) If you
+            have several clients exporting remote objects on a machine, then you are going to require
+            a corresponding level of diligence.</td>
+          </tr>
+        </table>
+        </div>
+      </blockquote>
+      <p>You will need one interface (<strong>com.tymeac.base.InterruptionReady</strong>) and
+      one class (<strong>com.tymeac.base.CancelParm</strong>) in addition to your normal Tymeac
+      Client/Server classes.</p>
+      <blockquote>
+        <p><a href="../JavaDoc/com/tymeac/base/InterruptionReady.html"><strong>public interface
+        InterruptionReady</strong></a></p>
+      </blockquote>
+      <blockquote>
+        <p><a href="../JavaDoc/com/tymeac/base/CancelParm.html"><strong>public class CancelParm</strong></a></p>
+      </blockquote>
+      <p>You must write a Class that implements InterruptionReady. The single method is ready().
+      You may use a separate Class or have your Client implement this interface. 
+      The Tymeac Server executes this method as a remote method call passing the 
+      CancelParm object as a parameter.<br>
+&nbsp;&nbsp; <i>client_callback_remote_object.ready(CancelParm)</i></p>
+      <blockquote>
+        <p>The ready() method must either start a new thread or wake up an existing thread and
+        pass the CancelParm Object from the Tymeac Server to that thread. It is this new thread
+        that does the secondary call to the Tymeac Server to cancel the request.</p>
+      </blockquote>
+      <p>You must instantiate the implementation class and develop a callback Object.</p>
+      <blockquote>
+        <p>For remote communication, you must export the remote object
+        (UnicastRemoteObject.exportObject() is one way).</p>
+        <p>For the internal server, you may use an instance of the implementation class.</p>
+      </blockquote>
+      <p>You then place the callback Object in the <a href="TymeacParm.html#callback">TymeacParm</a>.</p>
+      <p>The color-coded scenario of how this works is as follows: <br>
+      &nbsp;&nbsp;&nbsp; (<font color="#008000">green=Client</font>,<font color="#000080"> </font>
+      <font color="#FF00FF">pink=NewClientThread</font><font color="#000080">,
+      navy=Server</font>)<ul>
+        <li><p align="left"><font color="#008000">The Client implements the 
+        ready(CancelParm) method of Interface: InterruptionReady.<br>
+        <br>
+        The
+          Client's implementation of the ready(CancelParm) method includes code to either start a </font>
+        <font color="#FF00FF">new thread</font><font color="#008000">
+          or wake up a </font><font color="#FF00FF">waiting thread</font><font color="#008000">. The ready() code must pass the other 
+        thread the CancelParm object &quot;called back&quot; from the Tymeac Server
+          (see below in the Server method: </font><em><font color="#008000">callback.ready()</font></em><font color="#008000"> ).</font></p>
+        </li>
+        <li><p align="left"><font color="#008000">The Client exports a remote object of the
+          InterruptionReady Implementation Class,<br>
+          &nbsp;&nbsp;&nbsp; <em>callback</em> =
+          (InterruptionReady)UnicastRemoteObject.exportObject()<br>
+          (This exporting step is not necessary for the Internal Server.)</font></p>
+        </li>
+        <li><p align="left"><font color="#008000">The Client places a reference to the <em>callback</em>
+          remote object in the callback parameter of the</font> <a href="TymeacParm.html">TymeacParm</a>&nbsp;
+          <font color="#008000">(that is passed to the Tymeac Server.)</font></p>
+        </li>
+        <li><p align="left"><font color="#008000">The Client calls the Tymeac Server with a
+          syncRequest(). This causes a wait until complete in the current thread.</font></p>
+        </li>
+        <li><p align="left"><font color="#000080">The Tymeac Server recognizes the <em>callback</em>
+          InterruptionReady object in the TymeacParm and issues a call back to the Client when it is
+          &quot;ready to handle another request&quot;. The call creates a CancelParm 
+        object
+          containing the current <em>session_id</em> and <em>request_id.</em> 
+        This guarantees uniqueness<sup><a href="#two" style="text-decoration: none">2</a></sup>.<br>
+          &nbsp;&nbsp; <br>
+          &nbsp;&nbsp;&nbsp; //&nbsp; call back<br>
+          &nbsp;&nbsp;&nbsp; <em>callback</em>.ready(new CancelParm(<em>session_id</em>, <em>request_id</em>));
+          </font> </p>
+        </li>
+        <li><p align="left"><font color="#FF00FF">The Client's new thread takes the CancelParm
+          object from the above</font><font color="#008000"> </font><font color="#000080"><em>callback</em>.ready()</font><font color="#008000"> </font>
+        <font color="#FF00FF">and saves it for when the Client wishes to cancel the original request.</font></p>
+        </li>
+        <li><p align="left"><big>...</big>&nbsp; When the Client is ready to cancel the request, 
+        the Client calls its <font color="#FF00FF">new thread</font> </p>
+        </li>
+        <li><p align="left"><font color="#FF00FF">The Client's new thread uses the CancelParm object
+          and calls the Tymeac Server with a</font><br>
+          <strong>&nbsp;&nbsp; <a href="#cancel">cancelSyncReq(CancelParm)</a></strong> 
+        <font color="#FF00FF">method.<br>
+          This method returns immediately with an</font> <a href="#rc">integer for your evaluation</a>.</p>
+        </li>
+        <li><p align="left"><font color="#000080">The Tymeac Server treats the cancel request in a
+          similar way as the time-out logic. First, it wakes up the waiting (Endpoint) Connection
+          Thread. The time-out logic tries to back-out any request in a Queue that has not started
+          and returns the result of processing to the Client.</font></p>
+        </li>
+      </ul>
+      <p>The drawbacks with this method are.<ol>
+        <li><p align="left">It requires substantial work in the Server to call back the Client. (The
+          call back is done in a new, internal asynchronous request since the call back may result
+          in a blocking state.)</p>
+        </li>
+        <li><p align="left">For remote communication this involves an RMI invocation in the other
+          direction with all the problems of networks, ports, security, added traffic, etc.</p>
+        </li>
+        <li><p align="left">If the Client is not Java then this method is unavailable An example is
+          IIOP and IIOP with the Portable Object Adapter.</p>
+        </li>
+        <li><p align="left">It is more complex then using a cancel word with Clients having to
+          implement an interface, provide call back code that executes in a thread outside their
+          image and all the problems of being a Server (RMI or local).</p>
+        </li>
+      </ol>
+    </blockquote>
+  </blockquote>
+  <hr>
+  <p>Yes, it is confusing even with colors and links. We provide an academic implementation
+  of this logic for both scenarios in the /Source directory. This should make understanding
+  easier.</p>
+  <blockquote>
+    <p><strong>Cancel Word:</strong></p>
+    <blockquote>
+      <p><b>To make this a little easier, we provide an
+      <a href="Demo.html#cancel">AWT GUI</a>.</b> </p>
+      <p><strong>com.tymeac.demo.TyDemoClientCancel3</strong> is for remote method calls using
+      an external thread<br>
+      &nbsp;&nbsp;&nbsp; (<strong>com.tymeac.demo.TyDemoClientCancelThread3Thread</strong>).</p>
+      <p><strong>com.tymeac.demo.TyDemoInternalClientCancelled2 </strong>is for the internal
+      server.</p>
+    </blockquote>
+    <p><strong>Call Back:</strong></p>
+    <blockquote>
+      <p><strong>com.tymeac.demo.TyDemoClientCancel</strong> is for remote method calls using an
+      internal thread.</p>
+      <p><strong>com.tymeac.demo.TyDemoClientCancel2</strong> is for remote method calls using
+      an external thread <br>
+      &nbsp;&nbsp;&nbsp; (<strong>com.tymeac.demo.TyDemoClientCancelThread2Thread</strong>).</p>
+      <p><strong>com.tymeac.demo.TyDemoInternalClientCancelled </strong>is for the internal
+      server.</p>
+    </blockquote>
+    <p>The classes are already compiled including a stub for the remote method. You can run a
+    test in the same way you start any Tymeac Client. If the original call to Tymeac returns
+    before you can issue a cancel, then you must either slow down the processing or increase
+    the load on the server.</p>
+    <p>You can slow down the processing in an application by putting in a delay of several
+    seconds. This is a method we use. (It is the method to use for the Internal Server.) In
+    one of the Demo classes (Demo1 for Queue AAAA) before it does anything, issue a Try {
+    Thread.sleep(5000) and catch InterruptedException. The sleep is for milliseconds so the
+    number of seconds you want it to sleep is multiplied by 1000.</p>
+    <p>To increase the load on the [remote] Server, DO NOT PUT IN A SLEEP AS ABOVE. Use the <a href="TyDemoT3.html">com.tymeac.demo.TyDemoT3</a> class and start many threads, but note
+    below.</p>
+    <p><strong>Note:</strong> as mentioned above, each <u>cal</u>l <u>back</u> cancel request
+    requires a remote object exported on a port. If you run into &quot;port&quot; problems,
+    then the request containing the callback parm may hang until the system clears.
+    (Communication parameters are unique for each installation. Solutions naturally depend on
+    your environment.)</p>
+  </blockquote>
+</blockquote>
+
+<hr align="left" width="70%" noshade size="3" color="#808080">
+<div align="left">
+  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="74%" id="AutoNumber1">
+    <tr>
+      <td width="2%" align="left" valign="top"><b><a name="one"></a>1</b></td>
+      <td width="98%">&nbsp;The cancel word is only relevant for a single 
+      request. (i.e. While the request is<br>
+&nbsp;active&nbsp; in the Tymeac system.) Once the request has finished,&nbsp; 
+      you may re-use that<br>
+&nbsp;number.<br>
+&nbsp;</td>
+    </tr>
+  </table>
+</div>
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0" width="523" style="border-collapse: collapse" bordercolor="#111111">
+  <tr>
+    <td width="10" valign="top" align="left"><strong><sup><a name="two"></a>
+    </sup>2</strong></td>
+    <td width="513">&nbsp;The <i>session_id </i>is the Tymeac start up time, also known as <i>MilliTime</i>
+    <br>
+    &nbsp;This number
+    appears on the startup/shutdown messages as well as the <br>
+    &nbsp;return message for the asyncRequest().<br>
+    The <i>request_id</i> is a unique number Tymeac assigns each synchronous request.
+    <br>
+    Combined, they make the object <u>relatively</u> unique.</td>
+  </tr>
+</table>
+</div>
+
+<hr align="left" width="70%" noshade size="3" color="#808080">
+
+<p><a name="cancel"></a><strong>public int cancelSyncReq(CancelParm forCancel) </strong></p>
+
+<blockquote>
+  <p>This method is part of the
+  <a href="../JavaDoc/com/tymeac/base/TymeacInterface.html">TymeacInterface</a>. 
+  You call it using the remote object in the same way as an asyncRequest() or 
+  syncRequest(). The method is synchronous; it returns immediately from the Tymeac Server with a
+  value as below.</p>
+</blockquote>
+
+<blockquote>
+  <p>The single parameter is the <a href="../JavaDoc/com/tymeac/base/CancelParm.html"><strong>CancelParm</strong></a>
+  class.</p>
+  <p>When using a <strong>Cancel Word</strong>:</p>
+  <blockquote>
+    <p>The Client constructs the CancelParm object using the single arg constructor:<br>
+    &nbsp;&nbsp;&nbsp; CancelParm cp = new CancelParm(cancel_word);</p>
+  </blockquote>
+  <p>When using a <strong>Call Back</strong>:</p>
+  <blockquote>
+    <p>The Tymeac Server constructs the CancelParm object using the two arg constructor:<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; new CancelParm(<em>session_id</em>, <em>request_id</em>)</p>
+    <p>The Tymeac Server passes the CancelParm class to the Client when it finds an
+    InterruptionReady instance in the <em>callback</em> field of the TymeacParm class. The
+    TymeacParm class is the parameter a Client passed to the Tymeac Server on a syncRequest(). The
+    Tymeac Server uses a callback function (remote or internal) by executing the ready()
+    method of the InterruptionReady interface.</p>
+    <blockquote>
+      <p><em>callback</em>.ready(new CancelParm(<em>session_id</em>, <em>request_id</em>)); </p>
+    </blockquote>
+    <p>The Tymeac Server executes the ready() method in a new, internal asynchronous request.
+    Therefore, if this method throws any Exception, then the Client will never get the
+    callback. The Server logs all exceptions.</p>
+  </blockquote>
+  <p>The Client executes the cancelSyncReq() method using RMI for remote communication or as
+  a local call for the internal server.</p>
+</blockquote>
+
+<p><a name="rc"></a>Return code from a cancelSyncReq() method.</p>
+
+<blockquote>
+  <p>These are public static final integers in <a href="../JavaDoc/com/tymeac/base/CancelParm.html"><strong>com.tymeac.base.CancelParm</strong></a>:</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <font SIZE="2"><p></font>CancelParm<font SIZE="2">.SUCCESSFUL</p>
+    <p></font>CancelParm<font SIZE="2">.INVALID_SESSION_ID</p>
+    <p></font>CancelParm<font SIZE="2">.INVALID_REQUEST_ID -- You may also get this return
+    code if you try to cancel a request more than once.</p>
+    <p></font>CancelParm<font SIZE="2">.INVALID_CANCEL_WORD </p>
+    <p></font>CancelParm<font SIZE="2">.CONNECTION_FAILURE </p>
+    <p></font>CancelParm<font SIZE="2">.REMOTE_EXCEPTION </p>
+    <p></font>CancelParm<font SIZE="2">.EXCEPTION </font></p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

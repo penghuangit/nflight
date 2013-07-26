@@ -1,0 +1,226 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Activation Base Class</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Activation Base</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This source code supplied Class demonstrates how to prepare and register the Tymeac
+    Server&nbsp; activatable remote object.</p>
+  </blockquote>
+</blockquote>
+
+<h2>Package</h2>
+
+<blockquote>
+  <p>package com.tymeac.demo;</p>
+</blockquote>
+
+<h2>Imports you may need:</h2>
+
+<blockquote>
+  <p>import java.io.IOException;<br>
+  import java.util.Properties;<br>
+  import java.rmi.*;<br>
+  import java.rmi.server.*;<br>
+  import java.rmi.activation.*;<br>
+  import com.tymeac.base.*;<br>
+  import com.tymeac.common.*;</p>
+</blockquote>
+
+<h2>public class TyDemoActivationBase { </h2>
+
+<blockquote>
+  <p>Instance fields are those fields used by the methods:</p>
+</blockquote>
+
+<h2>public TyDemoActivationBase() {</h2>
+
+<blockquote>
+  <p>This constructor sets the instance fields needed by the methods.&nbsp; Your operating
+  system may require Upper or Lower case or the proper mixture of the two.&nbsp; For details
+  on the directory structure, see that <a href="Directories.html">document.</a></p>
+  <p>// The file separator character is either a slash (/) or a back slash (\).<br>
+  file_sep = System.getProperties().getProperty(&quot;file.separator&quot;);</p>
+  <p>// The path separator character is either a slash colon (:) or a semi-colon (;)<br>
+  path_sep = System.getProperties().getProperty(&quot;path.separator&quot;);</p>
+  <p><font color="#FF0000">Edit</font> your file directory.&nbsp; Win format shown. <br>
+  dir = &quot;k:&quot;;</p>
+  <p><font color="#FF0000">Edit</font> the tymeac home location.<br>
+  ty_home = dir + file_sep + &quot;TymeacServer&quot; + file_sep + &quot;Classes&quot;;</p>
+  <p>Properties are the replacement of command line options of -Djava.security.policy and
+  -classpath.&nbsp; Each is a String pair, the key followed by the value.</p>
+  <p>// Properties security key <br>
+  sec_key = &quot;java.security.policy&quot;;</p>
+  <p><font color="#FF0000">Edit</font> properties security value with the location of your
+  policy file <br>
+  sec_value = ty_home + file_sep + &quot;security&quot; + file_sep + &quot;policy.all&quot;;
+  </p>
+  <p>// Properties classpath key<br>
+  cp_key = &quot;java.class.path&quot;;</p>
+  <p><font color="#FF0000">Edit</font> properties classpath value INCLUDING the DBMS
+  DriverManager, etc. location.&nbsp; (If you are not using a DBMS, then ignore this
+  line.)&nbsp; Each line ends with a path_sep continuation, except the last.<br>
+  cp_value&nbsp; = ty_home + path_sep<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  + &quot;m:&quot; + file_sep + &quot;sqllib&quot; + file_sep + &quot;java&quot; + file_sep
+  + &quot;db2java.zip&quot;;</p>
+  <p><font color="#FF0000">Edit</font> the location of the Tymeac Activation Object,
+  (TymeacActivationImpl.class, or any user-named class that inherits this class.) &nbsp;
+  Your o/s may require additional &quot;/&quot;, i.e. file:// or file:/// <br>
+  location = &quot;file:/&quot; + ty_home&nbsp; + &quot;/&quot;;</p>
+  <p><font color="#FF0000">Edit</font> the marshalled objects for passing data, (replacement
+  for the <a href="StartUp.html#options">command line options</a>), to the Tymeac Server
+  constructor.&nbsp; These are String[]</p>
+  <blockquote>
+    <p>//No marshalled data default<br>
+    //MarshalledObject data = null;</p>
+  </blockquote>
+  <blockquote>
+    <p>// marshalled object for a database with only a directory input<br>
+    //String[] my_data = new String[2];</p>
+  </blockquote>
+  <blockquote>
+    <p>//my_data[0] = &quot;-dir&quot;;<br>
+    //my_data[1] = ty_home + file_sep + &quot;cfg_file_location&quot;;</p>
+  </blockquote>
+  <p>// This is a marshalled object with only a stand alone option<br>
+  String[] my_data = new String[1]; <br>
+  my_data[0] = &quot;-s&quot;;</p>
+  <p>// This can throw an IOException</p>
+  <p>try { </p>
+  <blockquote>
+    <p>// Set a marshalled Object<br>
+    data = new MarshalledObject( (Object) my_data);</p>
+  </blockquote>
+  <p>} // end-try </p>
+  <p>catch (IOException e) {</p>
+</blockquote>
+
+<blockquote>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(&quot;Error creating
+  Marshalled Object: &quot; + e.getMessage()); <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.exit(0);</p>
+</blockquote>
+
+<blockquote>
+  <p>} // end-catch </p>
+  <p>// New Tymeac variables definitions<br>
+  TyV = new TyVariables();</p>
+  <p>// Tymeac String names used in the methods<br>
+  tymeac_url = TyV.getUrl();<br>
+  tymeac_name = TyV.getTymeac(); </p>
+</blockquote>
+
+<h2>public com.tymeac.base.TymeacInterface createBackend()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throws &nbsp;
+IOException { </h2>
+
+<blockquote>
+  <p>Create the backend Tymeac Server Remote Object.&nbsp; The variables used herein were
+  set in the above constructor.&nbsp; This is a general usage format.&nbsp; You may alter
+  this to any format required by your installation.</p>
+</blockquote>
+
+<blockquote>
+  <p>Some methods herein may throw an exception</p>
+  <p>try {</p>
+  <blockquote>
+    <p>// New properties object <br>
+    Properties props = new Properties();</p>
+  </blockquote>
+  <blockquote>
+    <p>// Set the security property <br>
+    props.put(sec_key, sec_value);</p>
+  </blockquote>
+  <blockquote>
+    <p>// Set the classpath property <br>
+    props.put(cp_key, cp_value);</p>
+  </blockquote>
+  <blockquote>
+    <p>// Do not use a command env<br>
+    ActivationGroupDesc.CommandEnvironment ace = null; </p>
+  </blockquote>
+  <blockquote>
+    <p>// Get a new activation group<br>
+    ActivationGroupDesc group = new ActivationGroupDesc(props, ace);</p>
+    <p>// Register the group and get the ID.<br>
+    ActivationGroupID gid = ActivationGroup.getSystem().registerGroup(group); </p>
+    <p>// Now create the group<br>
+    ActivationGroup.createGroup(gid, group, 0);</p>
+    <p>// Create an activation descriptor<br>
+    ActivationDesc desc = new ActivationDesc( tymeac_name,&nbsp;&nbsp;&nbsp; // name of the
+    class<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    location,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // dasd
+    storage location of the class<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    data);
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    // parms class needs to initialize </p>
+    <p>// Register with the activation daemon and get the 'backend' object <br>
+    return (TymeacInterface) Activatable.register(desc);</p>
+  </blockquote>
+  <p>} // end-try </p>
+  <p>catch (RemoteException ex1) {</p>
+  <blockquote>
+    <p>System.err.println(&quot;Error creating backend object: &quot; +<br>
+    ex1.getMessage()); </p>
+  </blockquote>
+  <p>} // end-catch</p>
+  <p>catch (ActivationException ex2) {</p>
+  <blockquote>
+    <p>System.err.println(&quot;Problem with activation: &quot; + ex2.getMessage());<br>
+    ex2.printStackTrace(); </p>
+  </blockquote>
+  <p>} // end-catch</p>
+  <p>/ Failure<br>
+  return null;</p>
+</blockquote>
+
+<h2>public int registerWithRMI(com.tymeac.base.TymeacInterface backend) { </h2>
+
+<blockquote>
+  <p>Register the backend Tymeac Server Remote Object with the RMI Registry.&nbsp; The
+  backend is the remote object returned from the Activatable.register(desc), above.</p>
+</blockquote>
+
+<blockquote>
+  <p>// Rebind the TymeacInterface Remote Object to the RMI Registry:</p>
+  <p>try {</p>
+  <blockquote>
+    <p>Naming.rebind(tymeac_url + tymeac_name,&nbsp;&nbsp;&nbsp; // name to use <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    backend);
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    // remote object</p>
+    <p>return 0;</p>
+  </blockquote>
+  <p>} // end-try</p>
+  <p>catch (Exception ex3) {</p>
+  <blockquote>
+    <p><br>
+    System.out.println(&quot;Rebinding failed&quot;);<br>
+    ex3.printStackTrace(); </p>
+  </blockquote>
+  <p>} // end-catch</p>
+  <p>// Failure<br>
+  return 1; <br>
+  </p>
+</blockquote>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

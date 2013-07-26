@@ -1,0 +1,105 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Test T1</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Testing Class,<br>
+&nbsp;&nbsp;&nbsp;&nbsp; com.tymeac.demo.jframe.TyDemoT1</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This source code supplied Class demonstrates Tymeac
+    functionality.</p>
+  </blockquote>
+  <blockquote>
+    <p>This Class is a complement to the <a href="Demo.html">Demonstration
+    System</a> and is used as an Installation Verification Procedure.</p>
+    <p>The Swing Class was generated with Sun's 
+    NetBeans5.0.&nbsp;If you wish to change the source, then you should use 
+    NetBeans. We supply both the source and form files for you.  </p>
+    <p>In order to 
+    execute this class, you also need the supplied NetBeans jar file in the 
+    classpath, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+    swing-layout1.0.4.jar<br>
+    The script we supply has this in the classpath.</p>
+    <p>We supply this jar file in the classes\lib 
+    directory. The <a href="Scripts.html#t1">script file</a> for this class 
+    includes the additional jar file in the classpath.</p>
+    <p>To build this class using Eclipse or another 
+    IDE, copy the classes\lib directory to your project. Such as:<br>
+    \workplace\YourProject. Then add the additional jar file to the project.</p>
+    <p>If this proves too much to handle, we supply 
+    the old source in the directory: \Source\com\tymeac\demo\jframe\OldDemoGui.</p>
+    <hr noshade size="3">
+  </blockquote>
+</blockquote>
+
+<p align="center"><a href="Images/TyDemoT1.jpg">
+<img border="2" src="Images/TyDemoT1_small.jpg" xthumbnail-orig-image="Images/TyDemoT1.jpg" width="100" height="92"></a>&nbsp; (click to link to full image)</p>
+
+<h3>Elements:</h3>
+
+<blockquote>
+  <p><strong>Function Name:&nbsp;&nbsp; </strong>Enter a Function name from Function_1 to
+  Function_8.&nbsp; These are described in the <a href="Demo.html">Demonstration</a> System.
+  &nbsp; </p>
+  <blockquote>
+    <p><strong>Note</strong> that these are 10 characters each.&nbsp;The text field converts
+    to a String.&nbsp;Therefore, do not include any white spaces after the Function name as it
+    will not match the Demonstration Functions.</p>
+  </blockquote>
+  <p><strong>A1-3:</strong>&nbsp;&nbsp;&nbsp; Enter any two digits from 00 to 99.<br>
+  <strong>B1-3:</strong>&nbsp;&nbsp;&nbsp; Enter any two digits from 00 to 99.<br>
+  <strong>C1-3:</strong>&nbsp;&nbsp;&nbsp; Enter any two digits from 00 to 99.&nbsp;&nbsp; </p>
+  <p><strong>Result:&nbsp;&nbsp; </strong>This displays the result of a Request to Tymeac
+  Server described&nbsp; in the Demonstration System.</p>
+</blockquote>
+
+<h3>Buttons:</h3>
+
+<blockquote>
+  <p><strong>SEND:&nbsp;&nbsp; </strong>Press to send the request to Tymeac Server.</p>
+</blockquote>
+
+<p><strong>Class com.tymeac.demo.jframe.TyDemoT1Bean</strong> is a complement to T1.&nbsp;
+</p>
+
+<blockquote>
+  <p><strong>public void</strong> <strong>readLn()</strong> </p>
+  <blockquote>
+    <p>takes the Function Name, digits for A, B, and C, calls the goTymeac() method and sets
+    the result text.&nbsp; </p>
+  </blockquote>
+  <p><strong>private Object[] goTymeac()</strong> </p>
+  <blockquote>
+    <p>sets up the <a href="TymeacParm.html">TymeacParm</a> and calls the methods in <a href="TySvrComm.html">TySvrComm</a> for the Tymeac Server Functions.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac Functions 1-4 and 8 use a Synchronous Request.&nbsp; That is, the client waits
+  for the completion of the requested Tymeac Function.&nbsp; The <a href="Usage.html#rc">return
+  message</a> from Tymeac is: Tymeac SR(0000) + the result of the processing.</p>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac Functions 5-7 use an Asynchronous Request.&nbsp; That is, the client does not
+  wait for the completion of the requested Tymeac Function.&nbsp; The <a href="Usage.html#rc">return message</a> from Tymeac is: Tymeac
+  AR(0000)[MilliTime,RequestId]&nbsp;&nbsp;&nbsp; </p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

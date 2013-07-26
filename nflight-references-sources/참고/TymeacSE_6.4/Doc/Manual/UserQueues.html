@@ -1,0 +1,144 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac User Queues </title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac User Queues</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The purpose of this Class is a replacement for the Queue Table in a 
+      data base management system and the maintenance of that table by the frame 
+      Class <a href="TyQueMaint.html">TyQueMaint</a>.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Since this is a user maintained Class, we provide a simple <a href="Samples.html">source
+      code</a> Class (<strong>QueueChecker</strong>), with which you may check the validity of
+      this Class before starting the TymeacServer.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <blockquote>
+    <p>Since maintaining this class by hand can result in errors, we provide a GUI with which
+    you may maintain this class. This is a binary &quot;use the GUI or do it by hand&quot;. If
+    you use the GUI, then you should not try to edit the resulting java file. The GUI is very
+    simple -- it reads a java file without comments or formatting.</p>
+    <p><font color="#FF0000">Release 6.0 changes:</font></p>
+    <blockquote>
+    <p>The easiest way to change this structure when installing release 6.0 is 
+    to manually alter the java file created by the GUI in releases prior to 6.0.</p>
+    <p>Simply add the logical number of Wait List entries after the physical 
+    number of Wait List entries, such as <br>
+    FROM:</p>
+      <blockquote>
+        <font SIZE="2" COLOR="#3f7f5f">
+        <p ALIGN="LEFT">// [QUEUE]<br>
+        </font><font SIZE="2">temp.addElement( </font>
+        <font SIZE="2" COLOR="#7f0055"><b>new</b></font><font SIZE="2"> 
+        TymeacIndividualQueue( <br>
+        </font><font SIZE="2" COLOR="#2a00ff">&quot;AAAA&quot;</font><font SIZE="2">,</font><font SIZE="2" COLOR="#2a00ff"><br>
+        &quot;com.tymeac.serveruser.Demo1&quot;</font><font SIZE="2">,<br>
+        </font><font SIZE="2" COLOR="#2a00ff">&quot;no&quot;</font><font SIZE="2">,<br>
+        </font><font SIZE="2" COLOR="#2a00ff">&quot;no&quot;</font><font SIZE="2">,<br>
+        0,<br>
+        3,<br>
+        10,<br>
+        50,<br>
+        10,<br>
+        20,<br>
+        0.00F,<br>
+        0.60F,<br>
+        0.05F,<br>
+        0.00F));</p>
+        </font>
+      </blockquote>
+    <p>TO:</p>
+      <blockquote>
+    <p><font SIZE="2" COLOR="#3f7f5f">// [QUEUE]<br>
+    </font><font SIZE="2">temp.addElement( </font>
+    <font SIZE="2" COLOR="#7f0055"><b>new</b></font><font SIZE="2"> 
+    TymeacIndividualQueue( <br>
+    </font><font SIZE="2" COLOR="#2a00ff">&quot;AAAA&quot;</font><font SIZE="2">,</font><font SIZE="2" COLOR="#2a00ff"><br>
+    &quot;com.tymeac.serveruser.Demo1&quot;</font><font SIZE="2">,<br>
+    </font><font SIZE="2" COLOR="#2a00ff">&quot;no&quot;</font><font SIZE="2">,<br>
+    </font><font SIZE="2" COLOR="#2a00ff">&quot;no&quot;</font><font SIZE="2">,<br>
+    0,<br>
+    3,<br>
+    10,<br>
+    50,<br>
+    30, &lt;=== added here<br>
+    10,<br>
+    20,<br>
+    0.00F,<br>
+    0.60F,<br>
+    0.05F,<br>
+    0.00F));</font></p>
+      </blockquote>
+    </blockquote>
+    <p>In either case, once you create the TymeacUserQueues.java file, you must compile it
+    into the com/tymeac/serveruser directory.</p>
+    <p>The GUI class is <strong>com.tymeac.jframe.TyUserQueues</strong>.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><a href="Images/TyUserQueues.jpg">
+<img border="0" src="Images/TyUserQueues_small1.jpg" xthumbnail-orig-image="Images/TyUserQueues.jpg" width="100" height="97"></a><br>
+(Click for full image)</p>
+
+<blockquote>
+  <blockquote>
+    <p>It require access to the java file, TymeacUserQueues.java. You may not substitute
+    another file name in the dialog box.  </p>
+    <p>The editing for the fields is the same as the
+    DBMS Functions GUI, <a href="TyQueMaint.html">TyQueMaint</a>.</p>
+    <p>The rest of this document explains the java file format.</p>
+  </blockquote>
+</blockquote>
+
+<h3>Instance Fields</h3>
+
+<blockquote>
+  <p>Int total_queues - The total number of Tymeac Queues in the system.</p>
+  <p><a href="IndividQueue.html">com.tymeac.base.TymeacIndividualQueue</a>[] tic - This
+  array contains each Queue.</p>
+</blockquote>
+
+<h3>Constructor</h3>
+
+<blockquote>
+  <p>This is where you set the values for the above instance variables.</p>
+  <p>You may either use the no-argument constructor for the TymeacIndividualQueue Class and
+  set all the fields with mutators, or use the argument constructor to set the field values.
+  The source code we supply with the product demonstates both methods.</p>
+</blockquote>
+
+<h3>Instance Methods</h3>
+
+<blockquote>
+  <p>These are accessors for all the above instance fields.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

@@ -1,0 +1,341 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Taming the Beast</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/wheat.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1 align="center">Taming the Beast</h1>
+
+<p align="center">Once you understand The Shadow of multi-threading<br>
+then you know that multi-threading is a beast.</p>
+
+<p align="center"><a href="Images/hydra-2.gif">
+<img border="0" src="Images/hydra-2_small.gif" xthumbnail-orig-image="Images/hydra-2.gif" width="100" height="123"></a><br>
+<small>(click for full image)</small></p>
+
+<h2 align="center">Tymeac Tames the Beast</h2>
+
+<blockquote>
+  <h3>The Questions</h3>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" msimagelist>
+    <tr msimagelist>
+      <td valign="top" width="42" msimagelist>
+      <img src="Images/magball1.gif" hspace="15" width="12" height="12"></td>
+      <td valign="top" width="100%">So, you started a thread to format some data into a local
+      file.<br>
+      Where is the file?</td msimagelist>
+    </tr>
+  </table msimagelist>
+  <blockquote>
+    <blockquote>
+      <p>When things go wrong you could always place error messages inside the file, but what
+      happens if the user is not authorized to access the file system?</p>
+      <p>A thread is another process and when things go wrong, processes need to notify each
+      other or at least have a way to log the errors.</p>
+      <p>But what if the thread logic has a bug and the code loops indefinitely? Now you're in
+      trouble.</p>
+      <p><a href="#log">How Tymeac handles this.</a></p>
+    </blockquote>
+  </blockquote>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" msimagelist>
+    <tr msimagelist>
+      <td valign="top" width="42" msimagelist>
+      <img src="Images/magball1.gif" hspace="15" width="12" height="12"></td>
+      <td valign="top" width="100%">So, you started a thread to format some data into a local
+      file as an autonomous process.<br>
+      Where is the file?</td msimagelist>
+    </tr>
+  </table msimagelist>
+  <blockquote>
+    <blockquote>
+      <p>When things go wrong in autonomous processes (i.e. you place the request in a Queue and
+      you do not wait for it to complete) how are you ever going to find out what happened?</p>
+      <p><a href="#stall">How Tymeac handles this.</a></p>
+    </blockquote>
+  </blockquote>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" msimagelist>
+    <tr msimagelist>
+      <td valign="top" width="42" msimagelist>
+      <img src="Images/magball1.gif" hspace="15" width="12" height="12"></td>
+      <td valign="top" width="100%">So, you started a thread to format some data into a local
+      file.<br>
+      Everything else on the Box is now running at a snail pace and where is the file?</td msimagelist>
+    </tr>
+  </table msimagelist>
+  <blockquote>
+    <blockquote>
+      <p>This may be the thread overload problem. There may not be enough resources to sustain
+      any more threads. Every operating system has a physical and/or practical limit on
+      processes and storage. Then there could be so many other threads executing and holding
+      locks that nothing is getting done.</p>
+      <p>This may also be caused by excessive create/destroy overhead. Creating a new Java
+      thread usually means creating an operating system thread as well. This is no small task.</p>
+      <p><a href="#overload">How Tymeac handles this.</a></p>
+    </blockquote>
+  </blockquote>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" msimagelist>
+    <tr msimagelist>
+      <td valign="top" width="42" msimagelist>
+      <img src="Images/magball1.gif" hspace="15" width="12" height="12"></td>
+      <td valign="top" width="100%">So, you started a thread to format some data into a local
+      file.<br>
+      Oops, you now decide you want to cancel that process.</td msimagelist>
+    </tr>
+  </table msimagelist>
+  <blockquote>
+    <blockquote>
+      <p>Good luck. How in the world are you going to find that process and tell it to stop?</p>
+      <p><a href="#cancel">How Tymeac handles this.</a></p>
+    </blockquote>
+  </blockquote>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" msimagelist>
+    <tr msimagelist>
+      <td valign="top" width="42" msimagelist>
+      <img src="Images/magball1.gif" hspace="15" width="12" height="12"></td>
+      <td valign="top" width="100%">So, you started a thread to format some data into a local
+      file.<br>
+      What you really need is to reformat multiple data sources and to put the results into
+      multiple files.</td msimagelist>
+    </tr>
+  </table msimagelist>
+  <blockquote>
+    <blockquote>
+      <p>Either you are going to have one very large Class doing multiple functions or multiple
+      threads for each function. In either case it is going to be a nightmare to control and
+      maintain.</p>
+      <p><a href="#components">How Tymeac handles this.</a></p>
+    </blockquote>
+  </blockquote>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" msimagelist>
+    <tr msimagelist>
+      <td valign="top" width="42" msimagelist>
+      <img src="Images/magball1.gif" hspace="15" width="12" height="12"></td>
+      <td valign="top" width="100%">So, you started a thread to format some data into a local
+      file.<br>
+      What you really need is to reuse some data from a prior request to add to the current
+      request.</td msimagelist>
+    </tr>
+  </table msimagelist>
+  <blockquote>
+    <blockquote>
+      <p>The word is persistence. How can you share storage between threads and requests without
+      using temporary files?</p>
+      <p><a href="#persistence">How Tymeac handles this.</a></p>
+    </blockquote>
+  </blockquote>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" msimagelist>
+    <tr msimagelist>
+      <td valign="top" width="42" msimagelist>
+      <img src="Images/magball1.gif" hspace="15" width="12" height="12"></td>
+      <td valign="top" width="100%">So, you started a thread to format some data into a local
+      file<br>
+      and now you need a hot fix to an application.<br>
+      Does this mean you have to shut down everything and start all over?</td msimagelist>
+    </tr>
+  </table msimagelist>
+  <blockquote>
+    <blockquote>
+      <p>Who ever heard of a 24/7 mission-critical server going to sleep much less having to be
+      reborn just to change a light bulb?</p>
+      <p>In order to support the hot fix you first need to have total control of the
+      environment.</p>
+      <p><a href="#hot">How Tymeac handles this.</a></p>
+    </blockquote>
+  </blockquote>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" msimagelist>
+    <tr msimagelist>
+      <td valign="top" width="42" msimagelist>
+      <img src="Images/magball1.gif" hspace="15" width="12" height="12"></td>
+      <td valign="top" width="100%">So, you started a thread to format some data into a local
+      file.<br>
+      Now you find that this process needs recursion (calling itself in a new thread.)</td msimagelist>
+    </tr>
+  </table msimagelist>
+  <blockquote>
+    <blockquote>
+      <p>This can easily lead to a thread overload problem. Just how many levels of recursion
+      should you support?</p>
+      <p><a href="#recursion">How Tymeac handles this.</a></p>
+    </blockquote>
+  </blockquote>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" msimagelist>
+    <tr msimagelist>
+      <td valign="top" width="42" msimagelist>
+      <img src="Images/magball1.gif" hspace="15" width="12" height="12"></td>
+      <td valign="top" width="100%">So, you created a server with a nice pool of threads to
+      handle requests.<br>
+      How can you inquire about the overall health of the server and pinpoint congestion?</td msimagelist>
+    </tr>
+  </table msimagelist>
+  <blockquote>
+    <blockquote>
+      <p>Solving this problem requires a ton of code on your part to access storage shared
+      between the threads and the base server. It also requires GUI and non-GUI application to
+      present this picture to the user.</p>
+    </blockquote>
+    <blockquote>
+      <p><a href="#picture">How Tymeac handles this.</a></p>
+    </blockquote>
+  </blockquote>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" msimagelist>
+    <tr msimagelist>
+      <td valign="top" width="42" msimagelist>
+      <img src="Images/magball1.gif" hspace="15" width="12" height="12"></td>
+      <td valign="top" width="100%">So, you created a server with a nice pool of threads to
+      handle requests.<br>
+      How can you quiesce and shut down gracefully?</td msimagelist>
+    </tr>
+  </table msimagelist>
+  <blockquote>
+    <blockquote>
+      <p>If you just terminate the server you could loose the in progress work so it is
+      advisable to quiet the server before shutting it down.</p>
+      <p><a href="#shut">How Tymeac handles this.</a></p>
+    </blockquote>
+  </blockquote>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" msimagelist>
+    <tr msimagelist>
+      <td valign="top" width="42" msimagelist>
+      <img src="Images/magball1.gif" hspace="15" width="12" height="12"></td>
+      <td valign="top" width="100%">So, you created a server with a nice pool of threads to
+      handle requests.<br>
+      How can you debug this multi-threading application?</td msimagelist>
+    </tr>
+  </table msimagelist>
+  <blockquote>
+    <blockquote>
+      <p>One thread at a time is easy. Even trapping a method in a thread is the mainstay of
+      every IDE.</p>
+      <p>What happens when you have many requests hitting the box and storage is getting tight
+      and the problem is intermittent and you're running out of time, etc.?</p>
+      <p>You cannot debug a multi-threading application unless debugging was built into the
+      system at design time.</p>
+      <p><a href="#debug">How Tymeac handles this.</a></p>
+    </blockquote>
+  </blockquote>
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" msimagelist>
+    <tr msimagelist>
+      <td valign="top" width="42" msimagelist>
+      <img src="Images/magball1.gif" hspace="15" width="12" height="12"></td>
+      <td valign="top" width="100%">How can you tune the applications on this box?</td msimagelist>
+    </tr>
+  </table msimagelist>
+  <blockquote>
+    <blockquote>
+      <p>You must be kidding? You don't even know how many threads are running at any one time
+      much less the current stage of processing of each individual thread.</p>
+      <p><a href="#tune">How Tymeac handles this.</a></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<hr>
+
+<h3>How Tymeac handles these problems.</h3>
+
+<blockquote>
+  <p><a name="log"></a>Where is the file?</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>The hardest part of computer programming is error recovery. How the team handles
+    anomalies separates the professional from the amateur.</p>
+    <p>Tymeac handles logging of all phases of the Server. You may place the log in a DBMS,
+    local file or supply your own code to store the messages. (<a href="../Manual/RunTime.html#log">See
+    here)</a></p>
+    <p>Tymeac notifies system administrators when problems arise in the Server. You may tailor
+    this to your own specifications. (<a href="../Manual/RunTime.html#notify">See here</a>)</p>
+    <p>Tymeac times the application processing so that excessive execution times can be
+    trapped. (<a href="../Manual/Disabled.html#five">See here)</a></p>
+    <p>Tymeac handles abnormally ending applications by flagging the offender as no longer
+    available. (<a href="../Manual/Develop.html#catch">See here</a>)</p>
+  </blockquote>
+  <p><a name="overload"></a>Thread overload.</p>
+  <blockquote>
+    <p>Tymeac lets you limit the number of threads in each Queue. This way you always know the
+    maximum number of threads that may exist at any one time.</p>
+    <p>Tymeac puts all requests in prioritized <a href="../Manual/TyQueMaint.html#waitlist">Wait Lists</a>
+    and lets the threads on the Queue process requests from these Wait Lists. Something like a
+    thread pool but with proper management. (See <a href="../Manual/Tuning.html#pool">here for pooling
+    and thread management</a>.)</p>
+    <p>Tymeac only creates a thread when it is absolutely necessary. This is something no
+    thread pool can do. Tymeac uses <a href="../Manual/TyQueMaint.html#threshold">Thresholds</a> to
+    determine when to create a new thread. This way there is no excessive create overhead.</p>
+    <p>Tymeac reuses threads when the work finishes rather than destroying the thread. This
+    cuts down on the create/destroy overhead. (See these parameters: <a href="../Manual/TyQueMaint.html#waitime">idle wait time</a> and<a href="../Manual/TyQueMaint.html#kill"> idle
+    thread life</a>).</p>
+  </blockquote>
+  <p><a name="components"></a>Components</p>
+  <blockquote>
+    <p>Tymeac is a request broker. Tymeac supports multiple functionality (components) within
+    a request by placing each component in a separate Queue with its own set of threads. (<a href="../Manual/Develop.html#function">See here</a>)</p>
+  </blockquote>
+  <p><a name="persistence"></a>Persistence</p>
+  <blockquote>
+    <p>Tymeac is a Server, both RMI and internal. The Server itself is persistent. Therefore,
+    maintaining persistent application storage is possible with the use of the user exit
+    structure. (<a href="../Manual/UserExits.html">See here</a>)</p>
+  </blockquote>
+  <p><a name="stall"></a>Stalls.</p>
+  <blockquote>
+    <p>When threads hang, abnormally terminate or are unresponsive in autonomous processes
+    this is called a stall. <a href="../Manual/TyStalled.html">Tymeac handles the stall</a>.</p>
+  </blockquote>
+  <p><a name="cancel"></a>Cancel Requests.</p>
+  <blockquote>
+    <p>Tymeac allows both synchronous and asynchronous canceling of requests. Tymeac is a
+    mission-critical, professional product. (<a href="../Manual/Cancel.html">See here</a>)</p>
+  </blockquote>
+  <p><a name="hot"></a>Hot fix.</p>
+  <blockquote>
+    <p>Tymeac lets you change the Processing Application Class for any Queue at any time. (<a href="../Manual/TyNewCopy.html">See here</a>)</p>
+  </blockquote>
+  <p><a name="recursion"></a>Recursion</p>
+  <blockquote>
+    <p>Tymeac supports any level of recursion by letting any Processing Application Class call
+    the Server for a new request. Simply because the call is a new request there is no need
+    for &quot;special code&quot; or limitation. (<a href="../Manual/Develop.html#second">See here</a>)</p>
+  </blockquote>
+  <p><a name="picture"></a>Picture</p>
+  <blockquote>
+    <p>Tymeac provides <a href="../Manual/TyMenu.html">GUI clients</a> for the following run time
+    functionality:<ul>
+      <li>Thread status/alteration</li>
+      <li>Wait List status/alteration</li>
+      <li>Stalled asynchronous request display/alteration</li>
+      <li>Live Queue modification</li>
+      <li>Live Function statistics</li>
+      <li>System statistics snap shot</li>
+      <li>Asynchronous request status/cancellation</li>
+      <li>Hot fix to a user application Class</li>
+      <li>Overall system picture</li>
+      <li>System shut down</li>
+    </ul>
+    <p>Tymeac provides non-GUI clients for the above so that users can fetch the raw data and
+    easily make use of it.</p>
+  </blockquote>
+  <p><a name="shut"></a>Shut Down</p>
+  <blockquote>
+    <p>Tymeac shuts down in multiple stages. (<a href="../Manual/Shutdown.html">See here</a>)</p>
+  </blockquote>
+  <p><a name="debug"></a>Debug</p>
+  <blockquote>
+    <p>Debugging was a primary consideration during Tymeac design. (<a href="../Manual/Develop.html#testing">See here</a>)</p>
+  </blockquote>
+  <p><a name="tune"></a>Tuning</p>
+  <blockquote>
+    <p>Tuning starts at the design stage. Tymeac is the result of decades of experience. (<a href="../Manual/Tuning.html">See here</a>)</p>
+  </blockquote>
+</blockquote>
+&nbsp;<p><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

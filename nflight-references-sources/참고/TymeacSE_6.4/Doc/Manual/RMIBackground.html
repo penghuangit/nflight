@@ -1,0 +1,117 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>RMI Background</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>RMI Background</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p align="left">It is not the purpose of this document to substitute for an RMI
+      primer.&nbsp; If you need detailed information on how RMI works, then we strongly suggest
+      you get one of the numerous books on the subject.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p align="left">In order to use the Tymeac product, you only need a rudimentary knowledge
+      of RMI.&nbsp; Sun provides this in the JDK documentation:</p>
+      <p>General Information<br>
+      &nbsp;&nbsp;&nbsp; Guide to Features<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Basic Features<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Remote Method
+      Invocation (RMI)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      RMI Tutorial<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Getting started</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" WIDTH="100" HEIGHT="5"></p>
+
+<blockquote>
+  <p align="left">Remote Method Invocation is similar to Remote Procedure Call.&nbsp;A
+  client, here, calls a method on a server, there.&nbsp; For RPC the word &quot;Remote&quot;
+  means &quot;Not in this computer&quot;.&nbsp;For RMI the word &quot;Remote&quot; simply
+  means: &quot;Not in this Java Virtual Machine&quot;.&nbsp;For RMI, you may run the client
+  and the server on the same machine, but in different JVM's. </p>
+  <p align="left">An RMI client naturally must know what methods are available on the server
+  JVM.&nbsp;In RMI, a Java interface describes these methods. The RMI server implements the
+  interface methods, not the RMI clients.&nbsp;Since the RMI clients do not have direct
+  access to the implementation of the RMI server methods, the RMI compiler must produce an
+  object for use by the RMI clients.&nbsp;This object is called the<em> stub</em>.&nbsp;For
+  marshalling on the server in JDK1.1, RMI uses a similar object called the <em>skel</em>.</p>
+  <p align="left">In order for clients to find servers, RMI uses a process called the <em>bootstrap
+  registry service</em> or the <em>Java Remote Object Registry</em> or simply the RMI
+  Registry. This native executable is in the &quot;bin&quot; directory as part of the Java
+  Runtime Library on you PATH.</p>
+  <blockquote>
+    <p align="left">For CORBA, there is the CosNaming plugin for the JNDI Registry.&nbsp;If
+    you wish to use this feature, then see:</p>
+    <p align="left">Guide to Features<br>
+    &nbsp;&nbsp;&nbsp; Enterprise Features<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RMI-IIOP</p>
+  </blockquote>
+  <p align="left">The RMI server registers objects (the implementation of the interface)
+  with the RMI Registry by passing a reference to the object and giving the object a
+  java.lang.String &quot;name&quot;.</p>
+  <p align="left">The clients retrieve <em>stubs</em> to those objects by specifying the
+  same java.lang.String &quot;name&quot; and communicating with the RMI Registry through a
+  URL that begins with &quot;rmi://&quot;.&nbsp; When the client and server are on on the
+  same machine, the URL is &quot;rmi:///&quot;.&nbsp;When on different machines, the URL
+  points to that machine, &quot;rmi://your-company.com/&quot;.</p>
+  <blockquote>
+    <p align="left"><strong>Note</strong> the three slashes (///) for a local URL.&nbsp;This
+    is not a typo. That third slash is a trailing slash.&nbsp; In order to set this to a
+    remote name, you put that remote name between the second and third slashes.&nbsp; Such as:<br>
+    rmi://your-company.org/&nbsp; or&nbsp; rmi://192.168.42.1/&nbsp; (using a physical IP
+    address is handy for testing.)</p>
+  </blockquote>
+  <p align="left">The only concern now is how does the RMI Registry find the <em>Interface.class,
+  stub</em>. The answer is the CLASSPATH.&nbsp;When the RMI server registers with the RMI
+  Registry, the Registry needs access to these objects.</p>
+  <p align="left">RMI clients, when on a separate machine, <u>MAY</u> not need a
+  CLASSPATH.&nbsp;This is dependent on your operating system and Java release.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p align="left">The<em> interface</em> (TymeacInterface.class),&nbsp; <em>stub</em> (
+    TymeacStandardImpl_Stub) and (TymeacActivationImpl_Stubl for the activation system),
+    reside in the Tymeac directory: <strong>&lt;home&gt;\base</strong>.&nbsp;(See the <a href="Directories.html">directory</a> document for a description of all the Tymeac
+    directories.)</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p align="left">Even if you use the -classpath option, the RMI Registry still needs access
+  to these objects and this is through the CLASSPATH.</p>
+  <blockquote>
+    <p align="left">An unprofessional approach to bypass using a CLASSPATH is to switch
+    directories to the <strong>&lt;home&gt;\base</strong> directory and start the RMI Registry
+    therefrom.&nbsp;Since command windows inherit the ClassPath of the command window in which
+    they start, the RMI Registry finds the <em>stub</em> by default.</p>
+  </blockquote>
+  <p align="left">If you do not provide proper CLASSPATH access to these objects, then you
+  will get unMarshaling errors on Tymeac <a href="MsgTy00.html">start up</a> and/or on
+  Tymeac client communication.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

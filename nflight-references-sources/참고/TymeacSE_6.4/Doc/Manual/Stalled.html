@@ -1,0 +1,232 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Stalled Requests</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Stall Array</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Tymeac Asynchronous Request processing is a background function.&nbsp;There is no
+      timing for the Tymeac Function.&nbsp;Therefore, when something goes wrong, Tymeac uses an
+      alternate method to recover.&nbsp;This section discusses that alternative.</p>
+      <p>The Stall Array is a list of Asynchronous Requests.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The Stall Array is both an in-doubt as well as a hard stall mechanism for <a href="Definitions.html#async">Asynchronous Requests</a>.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p><a name="first"></a>The <strong>first</strong> situation arises during initial
+  scheduling.</p>
+  <blockquote>
+    <p>The Tymeac Server adds an entry to this array during back-out processing, when
+    in-doubt.</p>
+  </blockquote>
+  <blockquote>
+    <p>Back-out occurs when a Queue, within a Function, <a href="SchdFail.html">fails
+    scheduling</a>. The Tymeac Server informs all previously scheduled Queue's to ignore
+    processing.&nbsp;If the request is in a Wait List, then Tymeac removes it. In the small
+    window between the time the application class finishes processing but before the Queue
+    Thread can update the status, the Tymeac Server is in doubt whether it can safely release
+    resources.&nbsp;The Tymeac Server places an entry in the Stall Array.</p>
+  </blockquote>
+  <blockquote>
+    <p>The <a href="Monitor.html">Monitor</a> Thread cleans-up such an entry when the Queue
+    Thread updates the status.</p>
+  </blockquote>
+  <blockquote>
+    <p>An <strong>example</strong> is helpful.</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Tymeac Function, &quot;Function_6&quot;, in the <a href="Demo.html">Demonstration</a>
+      System uses two Queues, 'AAAA' and 'BBBB'.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>When there is a request for &quot;Function_6&quot;:</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The user-written Tymeac Client application forms the <a href="TymeacParm.html">parameters</a>
+      needed by the Tymeac Server and does an <a href="TySvrComm.html">asyncRequest</a>.&nbsp;When
+      all Tymeac Queues successfully schedule, the Tymeac Server returns to the user-written
+      client application. The application may inform the requester that the request scheduled
+      and free the connection for other work.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>However, the following may occur:</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The Tymeac Server determines that the Function consists of two Tymeac Queues.&nbsp;The
+      Tymeac Server schedules&nbsp;Queue 'AAAA'; scheduling complete. The Tymeac Server
+      schedules Queue 'BBBB'; scheduling fails (see Scheduler <a href="Usage.html#schd">Return
+      Codes</a>).</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>This Function cannot complete successfully.&nbsp;A back-out of all previously scheduled
+      Queues is desirable either to avoid unnecessary processing when the request is in a
+      Queue's Wait List pending execution, or, to limit the amount of post-application
+      processing done by the <a href="Definitions.html#quethread">Queue Thread</a>.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>In this example, Queue 'AAAA' is the only previously scheduled Queue in need of
+      back-out processing.&nbsp;The Tymeac Server attempts to back-out Queue 'AAAA' by removing
+      the Wait List entry.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>When it finds the entry and removes it, the back-out is successful.&nbsp;When a
+        successful back-out occurs, the Tymeac Server frees all associated resources.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>When an <u>unsuccessful</u> back-out occurs, the Tymeac Server cannot free the
+      request's resources without the possibility of jeopardizing system integrity.&nbsp;That
+      is, a Queue Thread may be reading the input&nbsp;Object or updating internal tables. The
+      stage of processing for the request is unknown.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>This may simply be a case where one Thread is locking a resource and another Thread is
+      waiting on that lock before it updates the resource.&nbsp;This is only a problem in that
+      the Tymeac Server cannot free valuable system resources at this time.&nbsp;Therefore, the
+      Tymeac Server adds an entry to the Stall Array.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>When the Queue Thread for Queue 'AAAA' finishes processing the request, it determines
+      that no further Queues remain for the request, and the request is 'in error'. Therefore,
+      the Queue Thread frees the request's resources.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The entry in the Stall Array remains.&nbsp;However, no resources for the request
+      remain.&nbsp; When the Monitor Thread runs, it deletes the Stall Array Entry.</p>
+    </blockquote>
+  </blockquote>
+  <p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  <p><a name="second"></a>The <strong>Second</strong> situation arises during the
+  Monitor Thread scan of Tymeac resources.</p>
+  <blockquote>
+    <p>The Monitor Thread places an entry in the Stall Array when in-doubt.</p>
+  </blockquote>
+  <blockquote>
+    <p>Tymeac is a process <u>now</u> system.&nbsp;The Monitor Thread examines the Tymeac
+    System for entries remaining for a lengthy period and adds an entry to the Stall Array
+    when &quot;this has been here much too long&quot;.&nbsp;An example of a request remaining
+    for a <a href="Disabled.html#five">lengthy period</a> is a situation caused by an loop in
+    an <a href="Definitions.html#pap">Processing Application Class</a> or an operating system
+    purge outside of this image.</p>
+  </blockquote>
+  <blockquote>
+    <p>When Tymeac flags the Asynchronous Request due to lengthy processing time in
+    applications (that is, the Request is not hanging, it is just taking a long time) then
+    this Stall Array Entry should be ignored. The Monitor Thread eventually cleans-up this
+    entry.</p>
+  </blockquote>
+  <p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  <p><a name="third"></a>The <strong>Third</strong> situation arises during the scheduling
+  of the <a href="Definitions.html#oa">Output Agent</a> Queue. This is not an in-doubt
+  situation but a hard stall. </p>
+  <blockquote>
+    <p>When Tymeac flags an Asynchronous Request due to a <a href="SchdFail.html">failure to
+    schedule</a> the Output Agent Queue, then recovery and re-scheduling are possible.</p>
+  </blockquote>
+  <blockquote>
+    <p>The Output Agent Queue is the Tymeac Queue that processes the combined output of all
+    the previously executed asynchronous component processes of the Function.</p>
+  </blockquote>
+  <blockquote>
+    <p>The last Queue Thread to finish processing schedules the Output Agent Queue. However,
+    when <a href="SchdFail.html">scheduling fails</a>, the Asynchronous Request
+    stalls.&nbsp;The Queue Thread puts the stalled request into the Stall Array and writes<a href="MsgTy06.html"> messages</a> to the <a href="DBMSLog.html">Log</a> and <a href="RunTime.html#notify">Notification</a> facility.</p>
+  </blockquote>
+  <blockquote>
+    <p>After the system administrator resolves the problem with the Output Agent Queue, the
+    Stalled Request Display (<a href="TyStalled.html">TyStalled</a>) '<strong>ReSchd OA'</strong>
+    button, attempts to re-schedule the Output Agent Queue.&nbsp; This may finish the request.</p>
+  </blockquote>
+  <p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  <p><a name="fourth"></a>The <strong>Fourth</strong> situation arises when a Processing
+  Application Class abnormally terminates.&nbsp;This is a hard stall.</p>
+  <blockquote>
+    <p>Through decades of experience we know there is no such thing as a secure computer
+    system.&nbsp; Therefore, when an application abnormally terminates (that is: it does not
+    catch an exception or re-throws an exception) the potential for system damage is great.</p>
+    <p>Tymeac's response to an exception in a Processing Application Class is to flag the
+    Queue Thread (in which it executes) as &quot;<a href="Disabled.html">disabled</a>&quot;,
+    terminate the [physical] Queue Thread, <a href="DBMSLog.html">Log</a> and print the error,
+    and, add an entry to the Stall Array.</p>
+    <blockquote>
+      <p>It is the designers responsibility to handle all exceptions in Processing Application
+      Classes.&nbsp;In a multi-threading application it is often difficult to pin point the
+      cause of the crash without a record.&nbsp;This is like an airplane's &quot;black box&quot;
+      after a crash.&nbsp;If there is no Tymeac Log in use and no Tymeac error printing (console
+      window) then user logging is vital.&nbsp;Tymeac cannot diagnose application errors.</p>
+    </blockquote>
+    <p>After the system administrator resolves the problem with the Processing Application
+    Class, the Queue Thread Class (<a href="TyQueThd.html">TyQueThd</a>) '<strong>enable all'</strong>
+    button instantiates and, when there are pending requests in the Wait Lists, activates a
+    new Queue Thread for the Queue.</p>
+    <p align="center">
+    <img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  </blockquote>
+  <p><a name="fifth"></a>The <strong>Fifth</strong> situation arises when an 
+  AsyncRequest is cancelled. This is an in-doubt situation. </p>
+  <blockquote>
+  <p>Prior to release 5.0 we used a course grained locking mechanism for 
+  controlling access to Tymeac resources. Basically, we &quot;locked&quot; the environment 
+  when we added a new request to the system as well as when we cancelled a 
+  request. This way we were sure of what parts of the request were never run, 
+  running and finished. Therefore, we could be sure when we cancelled a request 
+  that no Queue Threads needed resources and those resources could be freed.</p>
+  <p>As of release 5.0 the environment is no longer &quot;locked&quot; during cancel 
+  processing. When Tymeac can remove every part of the request before any Queue 
+  Threads begin processing, then Tymeac may safely free the resources. 
+  Otherwise, Tymeac is once again &quot;in doubt&quot; whether it can free the resources 
+  so the AsyncRequest resources are left alone. The Monitor may remove these 
+  resources after the last Queue Thread finishes but it may also add a stall 
+  array entry if any doubt remains.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

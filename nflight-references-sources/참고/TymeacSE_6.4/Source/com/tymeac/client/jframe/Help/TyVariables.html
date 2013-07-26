@@ -1,0 +1,110 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Server RMI Variables</title>
+
+</head>
+
+<body>
+
+<h1>Tymeac Server RMI Variables</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This Class contains the String names by which Tymeac Server and Clients communicate.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" WIDTH="100" HEIGHT="5"></p>
+
+<p>When you change any of the instance fields, you must recompile this Class into the
+&lt;home&gt;\Common directory. Both the Tymeac Server and Tymeac GUI and non-GUI Clients
+use this class. Your clients may also use this class when communicating with the Tymeac
+Server. Naturally, both the Server and Clients must use the same values for communication.</p>
+
+<p><strong>Basic RMI Panel:</strong></p>
+
+<blockquote>
+  <p><strong>private static String tymeac_url_name</strong> -- This is the URL for RMI
+  calls.</p>
+  <blockquote>
+    <p><strong>By default</strong> the name is for local calls &quot;rmi:///&quot;. </p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><strong>Note</strong> the three slashes (///).&nbsp; This is not a typo.&nbsp;That
+      third slash is a trailing slash. In order to set this to a remote name, you put that
+      remote name between the second and third slashes.&nbsp; Such as:<br>
+      rmi://your-company.org/&nbsp; or&nbsp; rmi://192.168.42.1/</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>private static String tymeac_name</strong> -- </p>
+  <blockquote>
+    <p><strong>By default </strong>the name is mixed case
+    &quot;com.tymeac.demo.TyDemoActivation&quot;.</p>
+    <p>For non-activatable remote objects:</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The RMI Naming.rebind() name used by Tymeac Server at start up and by all Tymeac
+      Clients in RMI Naming.lookup().&nbsp;You may change this to your installation
+      requirements.&nbsp;This class ships with the name set as above.&nbsp;For <u>non-activatable</u>
+      remote objects there is no requirement for the String value. The Server binds to the RMI
+      Registry using this String value and Clients lookup using this same String value.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>For activatable remote objects:</p>
+    <blockquote>
+      <p>The name of the Activatable Object Class.&nbsp;This is the Class that extends
+      TymeacActivationImpl.&nbsp;This name is used by the Java Activation System, (rmid or
+      Pheonix), to activate the Tymeac Server and by the Tymeac Clients to request a Tymeac
+      Server function. This class ships with the name set as above.&nbsp;This is for the
+      demonstration system Activatable Object Class.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p><strong>IIOP Panel:</strong></p>
+
+<blockquote>
+  <p>This field is for the JNDI Registry, (CosNaming server), Communication, (RMI-IIOP).</p>
+  <blockquote>
+    <p><strong>private static String tymeac_iiop_name</strong> -- </p>
+    <blockquote>
+      <p><strong>By default </strong>null.</p>
+    </blockquote>
+    <blockquote>
+      <p>The JDNI Naming.rebind() name used by Tymeac Server at start up,
+      (InitialContext().rebind() ), and by all Tymeac Clients in CosNaming.lookup(),
+      (javax.naming.lookup() ).&nbsp; You may change this to your installation requirements.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p><strong>Alternate Panel:</strong></p>
+
+<blockquote>
+  <p>This field is for non standard Communication.&nbsp;</p>
+  <blockquote>
+    <p><strong>private static String tymeac_alternate_class_name</strong> -- The name of the
+    non standard communication protocol class.</p>
+    <blockquote>
+      <p><strong>By default </strong>null.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Jini, release 1.x is such a protocol.&nbsp;Since there is no way to package such a
+      method, the execution is up to the user. You must write a class that implements your way
+      of communication.&nbsp;Place the name in the String <strong>tymeac_alternate_class_name</strong>.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;</body></html>

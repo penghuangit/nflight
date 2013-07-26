@@ -1,0 +1,184 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Overall Status</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Overall Status, <br>
+&nbsp;&nbsp;&nbsp; com.tymeac.client.jframe.TyOverall</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This frame class displays the overall load on the system.</p>
+    <p>The non-frame version of this class is <a href="#non">TyOverallClient</a>, below.</p>
+    <hr noshade size="3">
+  </blockquote>
+</blockquote>
+
+<p align="center"><a href="Images/TyOverall.jpg">
+<img src="Images/TyOverall_small.jpg" alt="TyOverall.jpg (31237 bytes)" border="2" width="100" height="72"></a>&nbsp; (click to link to full image)</p>
+
+<h3><big><strong>Elements</strong></big></h3>
+
+<blockquote>
+  <p style="text-align: justify"><a name="top"></a><strong>Top List:</strong>&nbsp;&nbsp;
+  The two or three lines are:</p>
+  <blockquote>
+    <ul>
+      <li><p>The number of <a href="Definitions.html#sync">Synchronous
+        Request</a> currently working in the system.<br>
+        When the system is idle and this number is greater than zero, then there may be timed-out
+        requests lingering. RMI threads (the request) and Tymeac Queue Threads &quot;share&quot;
+        some persistent storage.&nbsp;Eventually, the Tymeac <a href="Monitor.html">Monitor</a>
+        frees this storage.</p>
+      </li>
+      <li><p>The number of <a href="Definitions.html#async">Asynchronous
+        Requests</a> currently working in the system. This number includes any 
+      Asynchronous Requests cancelled but not purged. Tymeac marks cancelled 
+      requests as purgeable but does not physically purge the request from the 
+      system immediately. The Monitor purges those cancelled request <u>when 
+      next it runs</u>.</p>
+      </li>
+      <li><p>The next line only appears when there are entries in the
+      <a href="Stalled.html">Stall Array</a>:<br>
+      <br>
+      The number of Asynchronous Requests possibly <a href="Stalled.html">stalled</a> in the system.<br>
+        When this number is greater than the above number of Asynchronous Requests, then there may
+        be &quot;<a href="Stalled.html">doubtful</a>&quot; requests lingering.&nbsp;Eventually,
+        the Tymeac <a href="Monitor.html">Monitor</a> frees these elements.</p>
+      </li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p style="text-align: justify"><a name="bottom"></a><strong>Bottom List:</strong>&nbsp;&nbsp;Each
+  line is the name of a Queue with threads of a status other than &quot;disabled&quot;. (See
+  <a href="TyQueThd.html">TyQueThd</a> for the status information.)&nbsp; That is, the Queue
+  has attendant threads, that can process a request.</p>
+  <p style="text-align: justify">This List is useful during <a href="Shutdown.html">shut
+  down</a> processing.&nbsp;After requesting shut down and when there are no more Queues
+  with attendant threads, the system may be shut down.</p>
+  <blockquote>
+    <p style="text-align: justify"><strong>For example:</strong>&nbsp; An administrator
+    requests Tymeac shut down.&nbsp; </p>
+    <blockquote>
+      <p style="text-align: justify">Tymeac enters stage one of shut down processing.&nbsp; <ul>
+        <li><p style="text-align: justify">No new requests may enter the system.&nbsp; </p>
+        </li>
+        <li><p style="text-align: justify">Existing processes may continue until complete.</p>
+        </li>
+        <li><p style="text-align: justify">When non-Output Agent threads complete, they terminate.
+          If there are no working asynchronous requests, then the Output Agent threads terminate.</p>
+        </li>
+        <li><p style="text-align: justify">When there are working asynchronous requests, new Output
+          Agent Queues may schedule.</p>
+        </li>
+        <li><p style="text-align: justify">When no requests are pending (the Top List) this Bottom
+          List shows only the Output Agent Queues, when asynchronous request were working at the
+          time of the shut down.</p>
+        </li>
+      </ul>
+    </blockquote>
+    <blockquote>
+      <p style="text-align: justify">An administrator requests Tymeac shut down, again.&nbsp; </p>
+    </blockquote>
+    <blockquote>
+      <p style="text-align: justify">Tymeac enters stage two of shut down processing.<ul>
+        <li><p style="text-align: justify">Output Agent threads are told to terminate when they
+          finish processing.</p>
+        </li>
+        <li><p style="text-align: justify">When all processes complete, the Output Agent threads
+          terminate and this Bottom List shows that there are no more attendant threads for any
+          Queue.</p>
+        </li>
+      </ul>
+    </blockquote>
+    <blockquote>
+      <p style="text-align: justify">The system is halted.</p>
+    </blockquote>
+    <blockquote>
+      <p style="text-align: justify">An administrator requests Tymeac shut down, again. This
+      completes shut down.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>REFRESH TOP:&nbsp;&nbsp;&nbsp; </strong>This button refreshes the top list
+  only.</p>
+  <p><strong>REFRESH BOTH:&nbsp;&nbsp;&nbsp; </strong>This button refreshes the top list and
+  the bottom list.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- This is an information message:</p>
+
+<blockquote>
+  <p><u>Connection failure</u> -- The RMI connection failed or the Tymeac Server returned an
+  invalid message.</p>
+  <p><u>Ok</u> -- The request processed.</p>
+</blockquote>
+
+<hr>
+
+<h3><a name="non"></a>com.tymeac.client.TyOverallClient (<a href="../JavaDoc/com/tymeac/client/TyOverallClient.html">JavaDoc</a>)</h3>
+
+<blockquote>
+  <blockquote>
+    <p>This is the Non-GUI equivalent of the GUI Class, above. An example of how to use this
+    class is: com.tymeac.demo.TyDemoClient_getOverall.java in the
+    &lt;TymeacHome&gt;source/com/tymeac/demo directory.</p>
+  </blockquote>
+  <p>Constructor 1 -- has no arguments. This is for the RMI Server. The constructor gets a
+  new instance of&nbsp;a Tymeac internal class that is similar to <a href="TySvrComm.html">TySvrComm</a></p>
+</blockquote>
+
+<blockquote>
+  <p>Constructor 2--&nbsp; is for the internal server. The single argument is the Tymeac
+  Server Interface, TymeacInterface.</p>
+</blockquote>
+
+<p><strong>Instance Methods</strong> --</p>
+
+<blockquote>
+  <p>public <a href="../JavaDoc/com/tymeac/base/TyOverallObj.html">TyOverallObj</a>
+  refreshBoth() {</p>
+  <blockquote>
+    <p>Returns the <a href="../JavaDoc/com/tymeac/base/TyOverallObj.html">TyOverallObj</a>.
+    see the JavaDoc for a description thereof.</p>
+    <p>Parameters None.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>public <a href="../JavaDoc/com/tymeac/base/TyOverallObj.html">TyOverallObj</a>
+  refreshTop() {</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Returns the <a href="../JavaDoc/com/tymeac/base/TyOverallObj.html">TyOverallObj</a>.
+    see the JavaDoc for a description thereof.</p>
+    <p>Parameters None.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

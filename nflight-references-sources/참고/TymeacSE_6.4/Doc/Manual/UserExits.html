@@ -1,0 +1,207 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac User Exits</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac User Exits</h1>
+
+<blockquote>
+  <blockquote>
+    <p>As with other general purpose tools, Tymeac cannot supply all the functionality one may
+    wish to have.&nbsp;Therefore, we provide exits or hooks into which you may add your own
+    functionality.</p>
+    <p>The way in which one may use persistent storage is only limited by imagination (see two
+    simple <a href="Persistence.html">examples</a>.)&nbsp;This is a shared sub-pool of storage
+    for use by multiple Tymeac User Functions.&nbsp;We provide several sample Classes to
+    demonstrate how one might set this up.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p>Tymeac provides four exits.&nbsp;</p>
+  <ol>
+    <li>At Tymeac start up. </li>
+    <li>A Stage One shut down exit.</li>
+    <li>A Stage Two shut down exit.</li>
+    <li>An exit just before final termination of the Server that you may use for embedded database 
+    shut down 
+    or anything else you like.</li>
+  </ol>
+  <p>All the exits are lists of Classes that Tymeac instantiates.</p>
+  <ul>
+    <li>Each Class must have a public constructor that takes no parameters.</li>
+    <li>Simply put all the code you want inside this constructor.</li>
+    <li>For names with
+  URL's, see the <a href="ClassNameFormat.html">naming and URL</a> document.</li>
+  </ul>
+  <blockquote>
+    <p>public class TyDemoStartup1 {</p>
+    <p>&nbsp;&nbsp;&nbsp; public TyDemoStartup1() {<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // add your code here<br>
+    &nbsp;&nbsp;&nbsp; }<br>
+    }</p>
+  </blockquote>
+  <p>Tymeac loads (findSystemClass()) and instantiates each Class in the list with the code
+  (where &quot;names&quot; is a String array):</p>
+  <blockquote>
+    <p>try {<br>
+    &nbsp;&nbsp;&nbsp; // load the class and get a new instance <br>
+    &nbsp;&nbsp;&nbsp; ClassLoader.loadClass(names[i]).newInstance();
+    <br>
+    } </p>
+  </blockquote>
+  <p>Tymeac catches exceptions prints and logs the associated messages and continues.</p>
+  <p><a name="hang"></a>
+  <img src="Images/Caution.gif" alt="Caution.gif (1012 bytes)" width="20" height="20"> All the exits execute
+  within the main Tymeac system, not as separate threads, therefore, any code that
+  &quot;hangs&quot; will naturally hang that part of Tymeac where it executes (start up or
+  shut down.)&nbsp; This is not a design flaw.&nbsp;One uses these exits to establish and
+  terminate private sub-systems that run inside the Tymeac Server persistent storage.
+  Failures starting or terminating these private sub-systems are fatal.</p>
+  <h3 style="text-align: justify">Start Up Exit</h3>
+  <blockquote>
+    <p>The start up exit is at the completion of the basic Tymeac environment build but before
+    any &quot;remote centric&quot; code (Basic RMI, IIOP, POA, Jini etc.) The basic Tymeac environment is all the tables (queue,
+    function, etc.) and threads (monitor, etc.) that Tymeac needs to execute.&nbsp;However, it
+    is before instantiating the RMI Implementation Classes and interfacing with the Registries 
+    or ORB's (when necessary.)&nbsp;</p>
+    <p>Tymeac instantiates any Classes in the user start up list.</p>
+    <p>The Tymeac Server may not be fully available at this time for Tymeac Functions (see 
+    Start up Functions in the following section. See also the TymeacInfo.getInstance().getTymeac() 
+    method comments.) </p>
+    <p>In addition, the <a href="TymeacInfo.html">TymeacInfo</a> Singleton class only has limited value at this time.</p>
+  </blockquote>
+  <h3 style="text-align: justify">Start up Functions</h3>
+  <blockquote>
+    <p>The <a href="StartUpFunctions.html">start up functions</a>, although not part of the
+    exit structure, are mentioned here since they logically group in this section.</p>
+  </blockquote>
+  <h3 style="text-align: justify">Shut Down, Stage 1 Exit</h3>
+  <blockquote>
+    <p>The stage 1 shut down exit is at the beginning of the Tymeac shut down
+    sequence.&nbsp;Shut down may be as a result of a user shut down request or from deactivation
+    when executing as an Activatable Remote Object.&nbsp;First, Tymeac marks the System in
+    shut down mode so that no new requests may process. Then Tymeac instantiates any
+    Classes in the user stage 1 shut down list.</p>
+    <p>The Tymeac Server is available to currently executing threads, however, no new Tymeac
+    Functions may initiate.</p>
+    <p>It is recommended that stage 1 be the place to gracefully shut down, or 
+    at least start to shut down, internal sub-systems created in the start-up 
+    classes.</p>
+    <p>How can this exit determine whether the shutdown is the result of a Tymeac
+    shutRequest() or from deactivation when executing as an Activatable Remote Object?</p>
+    <blockquote>
+      <p>The <a href="TymeacInfo.html">com.tymeac.base.TymeacInfo</a> Singleton Class contains
+      information on the currently executing Tymeac Server:</p>
+      <blockquote>
+        <p>if&nbsp; (TymeacInfo.getInstance().getShutOrigin() == TymeacInfo.DEACTIVATION) {</p>
+        <blockquote>
+          <p>// Shutting down because of deactivation</p>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <h3 style="text-align: justify">Shut Down, Stage 2 Exit</h3>
+  <blockquote>
+    <p>
+  <img src="Images/Caution.gif" alt="Caution.gif (1012 bytes)" width="20" height="20"> Stage 1 shut 
+    down user exits must finish before stage 2 may begin.</p>
+    <p>The stage 2 shut down exit is at the end of the Tymeac shut down sequence. This 
+    may be:</p>
+    <ul>
+      <li>after all Queue Threads terminate, or</li>
+      <li>if all Queue Threads haven't terminated, when shut down with force was 
+      requested, or</li>
+      <li>when running as an Activatable Remote 
+    Object, immediately after the stage 1 shut down exit.</li>
+    </ul>
+    <p>Tymeac instantiates 
+    any Classes in the user stage 2 shut down list.&nbsp;</p>
+    <p>The Tymeac Server is unavailable for starting new Tymeac Functions. If 
+    this is a shut-with-force shutdown, there may be Queue Threads alive. 
+    Interaction with any of these threads is unpredictable. This can happen when 
+    using internal sub-systems created in the start-up classes.</p>
+    <p>Tymeac shut down continues with statistics writing and logging. Both the 
+    statistics repository and log are then closed.</p>
+  </blockquote>
+  <h3 style="text-align: justify">Embedded Data Base Exit</h3>
+  <blockquote>
+  <p>
+  <img src="Images/Caution.gif" alt="Caution.gif (1012 bytes)" width="20" height="20"> Stage 2 shut 
+  down user exits must finish before this exit may begin.</p>
+  <p>Although this exit was designed for use with <a href="DBMS.html#embedShut">
+  embedded databases,</a> there is no reason you can't use it for anything else.</p>
+  <p>You specify the name of the class with a <a href="StartUp.html#options">
+  command line option</a> <b>-edbsd</b>.</p>
+  <p>Tymeac instantiates this Class at the end of Tymeac shut down just before starting the
+    <a href="Shutdown.html#shuthread">shut down thread</a> (when required.) </p>
+  <p>This is, after executing any optional, stage-2 shut down Classes and 
+  writing the system statistics. Tymeac logging is no longer active. You may print on the console window 
+  (it's your code to do that.) If your code hangs for any reason, then Tymeac 
+  will not start the shut down thread. This is the same condition as for user 
+  exits, see above.</p>
+  </blockquote>
+  <h3 style="text-align: justify">Why not shut down Functions?</h3>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Shut down means just that -- stop processing and shut down the Server.&nbsp;There are
+    start up functions since, after start up, the Server is available for processing.<ol>
+      <li>If one needs to execute a <u>Processing Application Class</u> during shut down exit
+        processing then it is a simple task. Tymeac uses reflection to execute these classes since
+        Tymeac does not know the names of these classes at compile time.&nbsp;Since it is logical
+        that you would know the name of the class at compile time, you may simply specify:</li>
+    </ol>
+    <blockquote>
+      <p>Object obj = MyClass.main(args[]).<ul>
+        <li>The class is in the classpath for the Tymeac Server so there is no problem locating the
+          class at execution time.</li>
+        <li>The args[] refers to an Object array.&nbsp;The first element is anything you may wish to
+          pass to the method.&nbsp;The second element is a reference to the Tymeac Server
+          RemoteObject (TymeacInterface).&nbsp;You may use the <a href="StartUpFunctions.html">start
+          up functions</a> to place a reference to this in your persistent storage.</li>
+      </ul>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <ol>
+      <li type="disc" value="2"><a name="frontend"></a>One may also front-end the Tymeac Shut Down
+        function with a private shut down user Function.</li>
+    </ol>
+    <blockquote>
+      <blockquote>
+        <p>Create a user function, MyShutDown. The Processing Application Class may do that which
+        is necessary to terminate the private user environment.</p>
+        <p>The Processing Application Class may then recursively call the Tymeac Shut Down
+        function:</p>
+        <blockquote>
+          <p>(TymeacInterface)args[1].shutRequest();</p>
+        </blockquote>
+        <p>See the <a href="Samples.html">sample code</a> we provide for com.tymeac.serveruser.<a href="DemoRecur.html">DemoRecur.java</a> and
+        com.tymeac.demo.client.TyDemoClient_Shutdown.java</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

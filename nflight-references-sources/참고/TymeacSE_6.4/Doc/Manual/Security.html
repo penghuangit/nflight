@@ -1,0 +1,298 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Security</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Security</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>This section describes the security requirements/options for the Tymeac System.</p>
+      <p><a href="#Purpose">Purpose</a><br>
+      <a href="#Usage">Usage</a><br>
+&nbsp;&nbsp; <a href="#ssl">&nbsp;SSL</a><br>
+&nbsp;&nbsp;&nbsp; <a href="#tybasic">Tymeac Basic Security</a><br>
+      <a href="#LoginServers">Login Servers</a><br>
+      <a href="#issues">Issues:</a></p>
+    </blockquote>
+  </blockquote>
+  <hr>
+</blockquote>
+
+<h2><a name="Purpose"></a>Purpose</h2>
+
+<blockquote>
+      <p>The Java2 platform requires: &quot;Policy-based, easily-configurable, fine-grained
+      access control&quot;. This is totally up to the using installation. We supply an ALL
+      policy file just to get you up and running. You naturally must set policies in accordance
+      with your needs.</p>
+</blockquote>
+
+<h2><a name="Usage"></a>Usage</h2>
+
+<blockquote>
+  <p>Tymeac ships with login security suppressed. Security is a touchy subject. 
+  It also requires an in-depth knowledge of Java based SSL security. The Java 
+  API has a section (.../docs/guide/security/index.html) on how Java security is 
+  set up and how to use it.</p>
+  <p>If you are not interested in SSL security, skip the next section, SSL, and 
+  go to <a href="#tybasic">Tymeac Basic Security</a>.</p>
+  <h3><a name="ssl"></a>SSL</h3>
+  <p>We supply KeyStores, a Trust Store and the certificates used to create the trust store,
+  pass word files and login configurations just to get you up and running for <strong>SSL</strong>
+  security. You naturally must set up your own files in accordance with your needs
+  (including Kerberos). The supplied files are:</p>
+  <p>KeyStores:</p>
+  <blockquote>
+    <p>tymeacclient.keystore - password is tyclient<br>
+    tymeacserver.keystore - password is tyserver<br>
+    tymeacreggie.keystore - password is tyreggie<br>
+    tymeacphoenix.keystore - password is typhoenix</p>
+  </blockquote>
+  <p>TrustStore:</p>
+  <blockquote>
+    <p>tymeac.truststore - password is tytrust</p>
+  </blockquote>
+  <p>SelfCertificates exported from the above KeyStores:</p>
+  <blockquote>
+    <p>tymeacclient.cer<br>
+    tymeacserver.cer<br>
+    tymeacreggie.cere<br>
+    tymeacphoenix.cer</p>
+  </blockquote>
+  <p>Un-encrypted Password files for the above:</p>
+  <blockquote>
+    <p>tymeacclient.password - password is tyclient<br>
+    tymeacserver.password - password is tyserver<br>
+    tymeacreggie.password - password is tyreggie<br>
+    tymeacphoenix.password - password is typhoenix</p>
+  </blockquote>
+  <p>Login configurations:</p>
+  <blockquote>
+    <p>tymeac-ssl-server.login<br>
+    tymeac-jini-ssl-server.login<br>
+    tymeac-ssl-client.login<br>
+    tymeac-jini-ssl-client.login</p>
+  </blockquote>
+  <p><a name="on"></a>To turn on login security:<ul>
+    <li>For the RMI, CSF and IIOP Servers -- <ul>
+        <li>StandAlone Mode -- use the <a href="UserVariables.html">TymeacUserVariables</a> GUI or
+          enter the login context String &quot;com.tymeac.TymeacServer&quot; in the
+          TymeacUserVariables Class (and recompile.)<br>
+&nbsp;</li>
+        <li>DBMS Mode -- use the <a href="TyCfg.html">Tymeac ConfigurationData</a>
+          (java.util.prefs.Preferences or GUI.)<br>
+          <br>
+        </li>
+      </ul>
+    </li>
+    <li>For the non-jini Clients -- enter the String &quot;com.tymeac.TymeacClient&quot; in the
+      Class<br>
+      &nbsp;&nbsp;&nbsp; com.tymeac.client.ClientSecurityModule<br>
+      <br>
+      <ul>
+        <li><font SIZE="2" COLOR="#3f7f5f">// put your login context here<br>
+          </font><font SIZE="2" COLOR="#7f0055"><b>private</b></font><font SIZE="2"> </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2"> </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2"> String myContext = </font><font SIZE="2" COLOR="#2a00ff">&quot;com.tymeac.TymeacClient&quot;</font><font SIZE="2">;</font><font SIZE="2" COLOR="#3f7f5f"> <br>
+          <br>
+          </font></li>
+      </ul>
+    </li>
+    <li>For the Jini Servers and Clients -- edit the configuration files (.config) in the config
+      directory and<br>
+      for the Servers, remove the comment&nbsp; characters /* */<br>
+      &nbsp;&nbsp;&nbsp; /*&nbsp; loginContext = new
+      LoginContext(&quot;com.tymeac.TymeacServer&quot;); */<br>
+      <br>
+      for the Clients, remove the comment&nbsp; characters /* */<br>
+      &nbsp;&nbsp;&nbsp; /*&nbsp; loginContext = new
+      LoginContext(&quot;com.tymeac.TymeacClient&quot;); */</li>
+  </ul>
+  <p>As noted below in <a href="#issues">issues</a>, Tymeac uses only basic security
+  methods. There is a login for the Server but no logout. Each Client GUI/Non-GUI button
+  access requires a separate login and there is no logout.</p>
+  <p>To alter the base security environment you may alter the security modules Tymeac uses
+  for Servers and Clients by putting your own code in the security modules and recompiling.</p>
+  <blockquote>
+    <p>com.tymeac.base.ServerSecurityModule<br>
+    com.tymeac.client.ClientSecurityModule<br>
+    com.tymeac.jini.base.JiniSecurityModule</p>
+    <p>For the demonstration system:<br>
+    com.tymeac.demo.SecurityModule</p>
+  </blockquote>
+  <p><strong>Server Side LoginContext</strong></p>
+  <blockquote>
+    <p>You may specify a login context in the Tymeac <a href="TyCfg.html">Cfg file</a> (when
+    using a DBMS) or in the <a href="UserVariables.html">User Classes</a> (when using the
+    stand alone mode). We ship the product with a login context suppressed in the User Class
+    as: <strong>com.tymeac.TymeacServer</strong>. The login configurations are as below.</p>
+    <p>The Jini modules use a net.jini.config.Configuration file <strong>in place of the above</strong>.
+    You may alter this before running the application.</p>
+    <p>When Tymeac finds a non-null login context String, it tries to login. You must specify
+    the authorization within the Java properties.</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>-Djava.security.auth.login.config=config\tymeac-ssl-server.login<br>
+        -Djavax.net.ssl.trustStore=config\tymeac.truststore</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>We supply a basic ssl login in file tymeac-ssl-server.login (The clients are the same
+      with the word &quot;client&quot; in place of &quot;server&quot;.)</p>
+      <blockquote>
+        <p>com.tymeac.TymeacServer {<br>
+        &nbsp;&nbsp;&nbsp; com.sun.security.auth.module.KeyStoreLoginModule required<br>
+        &nbsp;&nbsp;&nbsp; keyStoreAlias=&quot;tymeacserver&quot;<br>
+        &nbsp;&nbsp;&nbsp; keyStoreURL=&quot;file:config/tymeacserver.keystore&quot;<br>
+        &nbsp;&nbsp;&nbsp; keyStorePasswordURL=&quot;file:config/tymeacserver.password&quot;;<br>
+        };</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <p><strong>Client Side LoginContext</strong></p>
+  <blockquote>
+    <p>The client is outside the scope of the package. How one protects against outsiders is
+    beyond what we can know. We provide examples in the com.tymeac.demo and
+    com.tymeac.jini.client directories for accessing Tymeac Server with security. See the <a href="#on">note above</a> for turning on login checking.</p>
+    <p>They use a command line option: <strong>-secure</strong> to initiate login and require
+    the same Java properties as for the Server Side. The login for clients requires a password
+    response to a pop-up Dialog box. The password is: tyclient as mentioned above in the
+    KeyStore section.</p>
+    <p>The Jini modules use a net.jini.config.Configuration file <strong>in place of the above</strong>.
+    You may alter this at run time.</p>
+  </blockquote>
+  <blockquote>
+    <p>Just to demonstrate this, we ship the shut down script for Tymeac Server with a command
+    line including -secure.</p>
+  </blockquote>
+  <hr color="#000000">
+
+<h3 align="left"><a name="tybasic"></a>Tymeac Basic Security</h3>
+
+  <ol>
+    <li>Tymeac Server security options are compatible with SDK1.4.2 +</li>
+    <li>Tymeac Server uses a Class Loader and loads local classes with a findSystemClass() or a URLClassLoader. 
+    Therefore, you must allow the use of a Class Loader.</li>
+    <li>The <a href="RunTime.html#notify">notification</a> system and user classes doing
+      recursion, within the Tymeac Server, act as a Tymeac Clients. This can be 
+    an interesting situation if part of the Server needs to use Client 
+    parameters.</li>
+    <li>We supply SSL login security</li>
+    <li>We do not supply Kerberos login security.</li>
+  </ol>
+  <p><a name="rmi"></a><u>For RMI</u>, the Tymeac Server attempts to
+  load the class: <strong>TyServerRMISecMgr</strong>. This class is in the Processing
+  Application Class (com.tymeac.serveruser) <a href="Directories.html#server-pac">directory</a>.
+  Two exceptions are caught:<ol>
+    <li><strong>Exception</strong>:&nbsp; The exception message prints/logs and Tymeac Server
+      aborts the start up.</li>
+    <li><strong>java.lang.ClassNotFoundException</strong>:&nbsp; The exception message
+      prints/logs and Tymeac Server continues the start up.</li>
+  </ol>
+  <blockquote>
+    <p>This means that you may eliminate the TyServerRMISecMgr.class file from the <a href="Directories.html#server-pac">Server-User</a> directory and Tymeac Server continues.
+    However, no security manager is in effect.</p>
+  </blockquote>
+  <blockquote>
+    <p>You set the security requirements for your installation.&nbsp;We supply the <a href="Samples.html">source code</a> for the TyServerRMISecMgr class.&nbsp;You may code
+    this in any way you wish.</p>
+  </blockquote>
+  <blockquote>
+    <p>For Tymeac Installation Verification, we supply a &quot;grant all permissions&quot;
+    policy file in the <a href="Directories.html#security">Security</a> directory.</p>
+  </blockquote>
+</blockquote>
+
+    <h2><a name="LoginServers"></a>LoginServers</h2>
+  <blockquote>
+    <p>One simple way to login to the RMI Server is by using a front end login 
+    remote object.  </p>
+    <blockquote>
+    <p>The RMI Server builds it's regular remote object and exports 
+    it to the run time. The RMI Server also builds a login remote object that 
+    implements a simple interface with one method: login().</p>
+    <p>The RMI Server binds 
+    that remote object to the RMI Registry. When a client retrieves the remote 
+    object using the standard name, the client gets the login remote object. The 
+    client sends login information to the login method of the Server.</p>
+    <p>If the 
+    Server approves, the server then returns the regular remote object to the 
+    client. The client then communicates normally with the Server. This bypasses 
+    the problem, raised above in basic security, item 3, of recursive calls to 
+    Tymeac.</p>
+    </blockquote>
+    <p>That sounds simple enough, but the set up is a little complicated. We 
+    provide a demonstration <a href="LoginServers.html">here</a>.</p>
+  </blockquote>
+
+<h2><a name="issues"></a>Issues</h2>
+
+<blockquote>
+  <p>A major issue is how to secure resources on the Server from unauthorized access by a
+  Client. This is an issue only you can resolve. There are many options. One is to have each
+  Client pass a &quot;Subject Object&quot; to the Processing Application Class and have that
+  class authorize the request. Another is JERI (Jini Extensible Remote Invocation) where you
+  intercept the request at one of the Client or Server levels (invocation
+  handler/dispatcher, etc.)</p>
+  <p>The second big issue is the reverse of the secure Server; how to protect the Client.
+  Once again, this is an issue only you can resolve. JERI is leading the way.</p>
+  <p>The following is a list of Tymeac features as they relate to security:</p>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li>When the Tymeac Server is started directly, (non-activatable either standard, IIOP or
+      Jini), it stays up until you <a href="Shutdown.html">shut it down</a>.</li>
+  </ul>
+  <ul>
+    <li>When the Tymeac Server is started as an activatable remote object, it stays up until the
+      <a href="TyCfg.html#activate">non-activity time</a> elapses or until you <a href="Shutdown.html">shut it down</a>.</li>
+  </ul>
+  <ul>
+    <li>Tymeac Server does not communicate with any other Tymeac Servers.</li>
+  </ul>
+  <ul>
+    <li>Tymeac Server loads local classes from the local file system only: findSystemClass() and
+      non-local classes using a URLClassLoader.</li>
+  </ul>
+  <ul>
+    <li>You may load a new version of a Processing Application Class, (<a href="TyNewCopy.html">TyNewCopy</a>).
+      This functionality uses a new name space for the new class and once again it loads only
+      from the local file system or from a URLClassLoader.</li>
+  </ul>
+  <ul>
+    <li>Tymeac Server itself may act as a Tymeac Client with the <a href="RunTime.html#notify">notification</a>
+      system.</li>
+  </ul>
+  <ul>
+    <li>User Processing Application Classes may act as Tymeac Clients when using recursion
+      processing.</li>
+  </ul>
+  <ul>
+    <li>User Processing Application Classes may use any facility that requires security.</li>
+  </ul>
+  <ul>
+    <li>If you use the URLClassLoader option, then you must provide security permission for this
+      feature.&nbsp;See the <a href="ClassNameFormat.html">class naming and URL</a> document.</li>
+  </ul>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

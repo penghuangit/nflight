@@ -6,7 +6,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.Env;
+import com.abreqadhabra.nflight.application.Globals;
 import com.abreqadhabra.nflight.application.server.ServerImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
@@ -40,24 +40,24 @@ public class ServiceLauncher implements Launcher {
 		if (cmdLineArgs.length == 0) {
 			LOGGER.logp(Level.FINEST, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					"Settings specified in the default property file : "
-							+ Env.FILE_BOOT_PROPERTIES);
+							+ Globals.FILE_BOOT_PROPERTIES);
 
 			// Settings specified in the default property file
-			props = PropertyFile.readPropertyFilePath(Env.FILE_BOOT_PROPERTIES);
+			props = PropertyFile.readPropertyFilePath(Globals.FILE_BOOT_PROPERTIES);
 
 		} else if (cmdLineArgs.length > 1
-				&& cmdLineArgs[0].equals(Env.BOOT_OPTION_CONF)) {
+				&& cmdLineArgs[0].equals(Globals.BOOT_OPTION_CONF)) {
 
 			LOGGER.logp(Level.FINEST, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					"Settings specified in a property file : "
-							+ Env.FILE_BOOT_PROPERTIES);
+							+ Globals.FILE_BOOT_PROPERTIES);
 
 			String propsPath = cmdLineArgs[0];
-			Path path = Env.CODE_BASE_PATH.resolve(propsPath);
+			Path path = Globals.CODE_BASE_PATH.resolve(propsPath);
 			// Settings specified in a property file
 			props = PropertyFile.readPropertyFilePath(path);
 		} else if (cmdLineArgs.length > 0
-				&& cmdLineArgs[0].startsWith(Env.BOOT_OPTION_PREFIX)) {
+				&& cmdLineArgs[0].startsWith(Globals.BOOT_OPTION_PREFIX)) {
 
 			LOGGER.logp(
 					Level.FINEST,

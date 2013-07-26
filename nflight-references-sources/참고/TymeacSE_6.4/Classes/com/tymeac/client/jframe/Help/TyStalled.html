@@ -1,0 +1,117 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Display Stalled Asynchronous Requests</title>
+
+</head>
+
+<body>
+
+<h1>Display Stalled Async Requests</h1>
+
+<blockquote>
+  <p>This frame class displays any stalled Asynchronous Requests and provides a way of
+  dealing with them.</p>
+  <p>The non-frame version of this class is <u>TyUserPurge</u>, and <u>TyUserReSchedule</u>,
+  below.</p>
+</blockquote>
+
+<h3><strong>Elements</strong></h3>
+
+<blockquote>
+  <h3><strong>List</strong> -- This is a List of any stalled requests:</h3>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>reason</strong> -- This is the reason why a request stalled.&nbsp; This may be
+    the result of a scheduling failure or an excessive time in the system.&nbsp; See return
+    codes in the Usage document.&nbsp; See also the section on when requests may stall in the
+    Stalled document.</p>
+    <p><strong>(Id)</strong> -- This is the Request Id returned as part of the original AR
+    request, <br>
+    Tymeac AR(0000)[MilliTime, Id]. </p>
+  </blockquote>
+  <blockquote>
+    <p><strong>Entered</strong> -- The date and time entered into the system.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>Function Name</strong> -- The Tymeac Function associated with the request.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Queues Not Responding </strong>-- This is a List of the names of the Tymeac
+  Queues that have not finished processing.&nbsp; When there is an Output Agent Queue, then
+  that Queue name is first in the list.&nbsp; The list is loaded with the Details Button,
+  below.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Usually, after correcting the problem with the non-performing Queue and enabling,
+    (below), all the Threads, the request will continue. &nbsp; However, since the request has
+    been in the system for an excessive length of time, the entry remains, here, until
+    finished.&nbsp; When necessary, the Purge Button can purge the request.</p>
+  </blockquote>
+</blockquote>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>REFRESH</strong> -- Refreshes the display.</p>
+  <p><strong>ReSCHD OA</strong> -- Re-schedule the output agent queue.</p>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>When a request stalls due to the Output Agent Queue failing scheduling, then this
+        button may re-schedule the Output Agent Queue.</p>
+        <p>This button is only valid when all normal Queues finished processing and the Output
+        Agent is the only remaining Queue in the request.</p>
+        <p>Why the original schedule failed must be investigated and settled.</p>
+        <blockquote>
+          <p>A failure to schedule due to insufficient Wait List Entries is one common reason for a
+          failure to schedule.&nbsp; <u>Adding more entries</u> or waiting until the Queue is under
+          a lesser load may solve this problem.</p>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>PURGE</strong> -- Select a line[s] and press.&nbsp; The stalled request[s] is
+  purged from the Tymeac System.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>DETAILS</strong> -- Select a line and press.&nbsp; This loads the List of
+  Queues not Responding.</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- This is an information message:</p>
+
+<blockquote>
+  <p><u>Connection failure</u> -- The RMI connection failed or the Tymeac Server returned an
+  invalid message.</p>
+  <p><u>No requests are stalled</u> -- As stated.</p>
+  <p><u>Make a selection</u> -- Select a line for Details or Purge.</p>
+  <p><u>Selected item is no longer active</u> -- The request finished or was purged by
+  another.&nbsp; Use the Refresh Button.</p>
+  <p><u>Use refresh button first</u> -- Use the Refresh button before the others.</p>
+  <p><u>Selected item is not an Output Agent</u> -- The request does not contain an Output
+  Agent Queue.</p>
+  <p><u>All normal Queues have not finished</u> -- The request has pending normal Queues.</p>
+  <p><u>Output Agent is a bad Queue</u> -- This is an internal error.&nbsp; The Output Agent
+  Queue is damaged.</p>
+  <p><u>Output Agent is already scheduled</u> -- The request is in a Wait List on the Output
+  Agent Queue.</p>
+  <p><u>Scheduling failed with return code=(nnnn)</u> -- See the list of reasons why the
+  request failed in the Usage document.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;</body></html>

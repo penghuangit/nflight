@@ -1,0 +1,13 @@
+PreferredResources-Version: 1.0
+
+Name: com/tymeac/jini/base/TymeacInterface.class
+Preferred: true
+
+Name: com/tymeac/jini/base/JiniTymeacProxy.class
+Preferred: true
+
+Name: com/tymeac/jini/base/JiniTymeacProxy_Stub.class
+Preferred: true
+
+Name: com/tymeac/jini/base/JiniTymeacServer.class
+Preferred: true

@@ -1,0 +1,208 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Test T3</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Testing Class,<br>
+&nbsp;&nbsp;&nbsp;&nbsp; com.tymeac.demo.jframe.TyDemoT3</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This source code supplied class demonstrates Tymeac
+    functionality.</p>
+  </blockquote>
+  <blockquote>
+    <p>This Class is a complement to the <a href="Demo.html">Demonstration
+    System</a>.</p>
+    <p>The Swing Class was generated with Sun's 
+    NetBeans5.0.&nbsp;If you wish to change the source, then you should use 
+    NetBeans. We supply both the source and form files for you.  </p>
+    <p>In order to 
+    execute this class, you also need the <u>supplied</u> NetBeans jar file in 
+    the classpath, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+    swing-layout1.0.4.jar<br>
+    The script we supply has this in the classpath.</p>
+    <p>We supply this jar file in the classes\lib 
+    directory. The <a href="Scripts.html#t3">script file </a>for this class 
+    includes the additional jar file in the classpath.</p>
+    <p>To build this class using Eclipse or another 
+    IDE, copy the classes\lib directory to your project. Such as:<br>
+    \workplace\YourProject. Then add the additional jar file to the project.</p>
+    <p>If this proves too much to handle, we supply 
+    the old source in the directory: \Source\com\tymeac\demo\jframe\OldDemoGui.</p>
+    <hr noshade size="3">
+  </blockquote>
+</blockquote>
+
+<p align="center"><a href="Images/TyDemoT3.jpg">
+<img border="2" src="Images/TyDemoT3_small.jpg" xthumbnail-orig-image="Images/TyDemoT3.jpg" width="100" height="111"></a>&nbsp; (click to link to full image)</p>
+
+<h3>Elements:</h3>
+
+<blockquote>
+  <p><strong>Number of Threads:&nbsp;&nbsp; </strong>Enter any digits from 1 to ??. Where ??
+  is up to the maximum load your system can sustain of threads (T3Thread). Each thread does
+  multiple requests to Tymeac.</p>
+  <blockquote>
+    <p><img src="Images/Caution.gif" alt="Caution.gif (1012 bytes)" width="20" height="20"> <strong>One should
+    carefully consider the processor limits for cycles, RMI connections, and storage in
+    determining the number of threads to start.</strong></p>
+  </blockquote>
+  <blockquote>
+    <p><strong>What to do if you start too many:</strong><ul>
+      <li>Close this window.&nbsp;The frame closing method calls System.exit(0) which ends the
+        Java Virtual Machine with all the threads.</li>
+      <li>Use an operating system tool to kill the java process.&nbsp;This ends the Java Virtual
+        Machine with all the threads.</li>
+      <li>Shut down Tymeac Server.&nbsp;The loop is broken in each thread when the return code
+        from Tymeac Server is non-zero.</li>
+    </ul>
+  </blockquote>
+  <p><strong>List:&nbsp;&nbsp; </strong>This displays information about each of the threads:</p>
+  <blockquote>
+    <p><strong>Status:&nbsp;&nbsp; </strong>&quot;Working&quot; or &quot;__Fini__&quot;.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>RC:&nbsp;&nbsp;&nbsp; </strong>The <a href="Usage.html">return code</a> from
+    Tymeac, or, 9000 for a connection error and 8xxx from the full_checking 
+    variable <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (see below in Class <strong>com.tymeac.demo.jframe.TyDemoT3Thread</strong>.)</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>Times used:&nbsp;&nbsp; </strong>The number of times the thread, T3Thread,
+    completed normally, (with return code zero).</p>
+  </blockquote>
+  <p><img src="Images/note.gif" alt="note.gif (236 bytes)" width="40" height="40"> The Demonstration ships with an
+  average number of threads and Wait Lists for the Queues.&nbsp;There is always the balance
+  of load to resources.&nbsp; If the resources are insufficient for the load, then increase
+  the resources. The <a href="Usage.html">return code</a> from Tymeac indicates either
+  success or failure.</p>
+  <p>When the failure is due to a shortage of Wait List entries, (<a href="SchdFail.html#wait">scheduling failure</a>):</p>
+  <blockquote>
+    <p>First determine which Queues require more Wait List entries.<ol>
+      <li>The <a href="Usage.html#schd">return code</a>, for scheduling failures, includes the
+        Queue number of the failing Queue, or</li>
+      <li>You may use the Wait List Display Class, <a href="TyWlData.html">TyWlData</a>. When a
+        Wait List had a secondary overflow and there is no subsequent Wait List, then the number
+        of secondary overflows for that Wait List is the number of requests that failed
+        scheduling.</li>
+    </ol>
+  </blockquote>
+  <blockquote>
+    <p>Use the <a href="TyQueData.html">Que Data</a> Display/Update to temporarily increase
+    the number of Wait Lists in this Queue.</p>
+  </blockquote>
+  <p>When the failure is due to a shortage of threads, (<a href="SchdFail.html#thread">scheduling
+  failure</a>): then update the <a href="UserQueues.html">Queue Class</a> and
+  recompile.&nbsp; You must then shutdown and restart Tymeac.</p>
+</blockquote>
+
+<h3>Buttons:</h3>
+
+<blockquote>
+  <p><strong>START:<br>
+  </strong>After filling in the number of threads to start, press this button to begin
+  processing.&nbsp; Thread scheduling begins and the List, (above) displays.&nbsp; Since
+  there is a delay, (about 1/2 second), between starting each thread, the List may show
+  number of times used of zero (0) for some threads.&nbsp; As each new thread becomes active
+  and does a request, it fills in the number of times used. &nbsp; Use the Refresh Button,
+  below, to see this.</p>
+  <p><strong>STOP:<br>
+  </strong>Press this button to terminate processing. &nbsp; Processing is complete when the
+  status of all threads is &quot;__Fini__&quot;.</p>
+  <p><strong>REFRESH:</strong><br>
+  Press this button to refresh the List.</p>
+</blockquote>
+
+<p>Class <strong>com.tymeac.demo.jframe.TyDemoT3Bean</strong> is a complement to T3.</p>
+
+<blockquote>
+  <p><strong>public int getStartResult()</strong> -- Accessor.&nbsp; Returns the result of
+  the startButton. 0-NG 1-OK.</p>
+  <p><strong>public void refreshButton()</strong> -- Updates the List.</p>
+  <p><strong>public void startButton()</strong> -- Initializes the <strong>TyDemoT3Base</strong>
+  Class that starts all the threads.&nbsp; Calls the refreshButton to display the list.</p>
+  <p><strong>public void stopButton()</strong> -- Calls the shutdown method in the
+  TyDemoT3Base Class.</p>
+</blockquote>
+
+<p>Class <strong>com.tymeac.demo.jframe.TyDemoT3Base</strong> is the base storage for the
+test.</p>
+
+<blockquote>
+  <p><strong>constructor</strong> -- Initializes the common array.&nbsp; Starts the
+  TyDemoT3Instant thread.</p>
+  <p><strong>public int[][] getList()</strong> -- Accessor. Returns the base array.</p>
+  <p><strong>public boolean getShutdown()</strong> -- Accessor.&nbsp; Returns the shutdown
+  status.</p>
+  <p><strong>public synchronized void setDone()</strong> -- Mutator.&nbsp; Sets the
+  individual thread finished.</p>
+  <p><strong>public void setShutdown()</strong> -- Mutator.&nbsp; Sets the global shutdown
+  indicator.</p>
+  <p><strong>public synchronized void setUpdate()</strong> -- Mutator.&nbsp; Updates the
+  individual thread data.&nbsp; See the note in the code about Synchronization.</p>
+</blockquote>
+
+<p>Class <strong>com.tymeac.demo.jframe.TyDemoT3Instant</strong> is the thread that starts
+all the working threads for the test.&nbsp; Without this intermediate thread, the List
+would remain empty until all the threads start.&nbsp; With this intermediate thread, after
+the TyDemoT3Base constructor starts this thread, it can return immediately.</p>
+
+<blockquote>
+  <p><strong>constructor</strong> --&nbsp; Saves the instance fields.</p>
+  <p><strong>run()</strong> -- Waits 500 milli-seconds, (you may need to increase this if
+  threads fail to get a connection.)&nbsp; Starts the TyDemoT3Thread thread.</p>
+</blockquote>
+
+<p>Class <strong>com.tymeac.demo.jframe.TyDemoT3Thread</strong> is the individual thread.</p>
+
+<blockquote>
+  <p><b>Instance variable</b> <font SIZE="2" COLOR="#7f0055"><b>private</b></font><font SIZE="2">
+  </font><font SIZE="2" COLOR="#7f0055"><b>boolean</b></font><font SIZE="2">
+  </font><font SIZE="2" COLOR="#0000c0">full_checking</font><font SIZE="2"> =
+  </font><font SIZE="2" COLOR="#7f0055"><b>false</b></font><font SIZE="2">;
+  </font>Default setting. <br>
+&nbsp;&nbsp;&nbsp;&nbsp; Set to true it randomly develops a passed input to 
+  Tymeac and checks for proper results from Tymeac. A lot of overhead.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; Set to false, a null input is passed to Tymeac. This 
+  eliminates work on the server side and all checking on the client side.</p>
+  <p><b>Instance variable</b> <font SIZE="2" COLOR="#7f0055"><b>private</b></font><font SIZE="2">
+  </font><font SIZE="2" COLOR="#7f0055"><b>boolean</b></font><font SIZE="2">
+  <font color="#0000C0">new_priority</font>=
+  </font><font SIZE="2" COLOR="#7f0055"><b>false</b></font><font SIZE="2">;
+  </font>Default setting. <br>
+&nbsp;&nbsp;&nbsp; Set this to true to enable this thread to calculate a new 
+  priority for each request. The priority is&nbsp; generated randomly.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When testing priority wait lists, this is usefull.<br>
+&nbsp;&nbsp;&nbsp; Set this to false to disable calculating a new priority for 
+  each request. <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A value of 1 is passed as&nbsp; the priority to 
+  the Server for every request.</p>
+  <p><strong>constructor</strong> -- super(with name TyT3- + seq #).&nbsp; Set up the <a href="TymeacParm.html">TymeacParm</a>. &nbsp; Get an instance of <a href="TySvrComm.html">TySvrComm</a>.</p>
+  <p><strong>public void run()</strong> -- This is a continuous loop until shutdown or the
+  return code from the Tymeac Server Request is not zero.&nbsp; Do a request.&nbsp; All
+  seven <a href="Demo.html">Demonstration System</a> functions are used.&nbsp;
+  Comment/Uncomment the sequence suitable for your installation.</p>
+  <p><strong>private int syncRequest()<br>
+  private int asyncRequest()</strong> -- Do a request to Tymeac.&nbsp; The return string
+  [cast from an Object] from Tymeac is: Tymeac XX(nnnn) + additional information. &nbsp;
+  Where XX is SR for syncRequest and AR for asyncRequest.&nbsp; nnnn is the Tymeac return
+  code. Zero is normal.&nbsp; Others are found in <a href="Usage.html#rc">Tymeac Return
+  Codes</a>.&nbsp; 9000 is for an invalid return Object.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

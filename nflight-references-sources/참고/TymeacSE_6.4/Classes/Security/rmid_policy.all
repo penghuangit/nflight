@@ -1,0 +1,17 @@
+grant {
+    permission com.sun.rmi.rmid.ExecPermission
+        "<<ALL FILES>>" ;
+
+    permission com.sun.rmi.rmid.ExecOptionPermission
+        "*";
+
+    permission com.sun.rmi.rmid.ExecOptionPermission
+        "-Djava.security.debug=*";
+
+    permission com.sun.rmi.rmid.ExecOptionPermission
+        "-Dsun.rmi.*";
+				
+		permission java.security.AllPermission "", "";		
+};
+
+

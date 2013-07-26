@@ -1,0 +1,113 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Asynchronous Process Manager</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/wheat.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1 align="center">Backend Process Manager</h1>
+
+<p align="center"><img src="Images/topbar.gif" alt="topbar.gif (1003 bytes)" width="345" height="17"></p>
+
+<blockquote>
+  <p><strong>Tymeac<sup><small>&#153;</small></sup></strong> is a Backend Server -- the base
+  for persistent storage.<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This is what operating systems call a
+  &quot;process&quot;.<br>
+  &nbsp;&nbsp;&nbsp; <a href="Separate.html">Why separate the connection from the process?</a></p>
+  <div align="center"><center><table border="0" cellspacing="1" width="600">
+    <tr>
+      <td valign="top" align="left"><br>
+      You define queues for your requests and the maximum number of application threads to
+      process those requests.&nbsp;These are what are known as logical processes.<p>Since
+      logical processes and client processes can run independently of each other, the
+      interaction is asynchronous.</p>
+      <p>An asynchronous process requires a degree of management necessary to make it
+      self-reliant.</td>
+      <td valign="middle" align="left"><p align="center"><strong><big>Tymeac</big><sup><small>&#153;</small></sup><big>
+      Server</big><br>
+      </strong><img src="Images/Process.gif" alt="Process.gif (3967 bytes)" width="256" height="220"></td>
+    </tr>
+  </table>
+  </center></div>
+  <blockquote>
+    <p>When considering a multi-threading application, you should be aware of
+    <a href="Shadow.htm">The Shadow</a>. You should also have a good understanding of threading
+  and how to <a href="Beast.html">Tame the Beast</a>.</p>
+  </blockquote>
+  <p><strong>Tymeac<sup><small>&#153;</small></sup></strong> is a management
+  facility for queues and threads.&nbsp; Frequently Asked Questions, gives a description of
+  an <a href="FAQ.html#async">asynchronous-process</a>, <a href="FAQ.html#what">asynchronous-threads</a>
+  and a <a href="FAQ.html#backend">backend service</a>.</p>
+  <p><strong>Tymeac<sup><small>&#153;</small></sup></strong> separates a request into its
+  component parts (request brokering) and places each part into a component queue.&nbsp;Each
+  queue has one or more associated application threads that can concurrently process
+  requests.<strong> Tymeac<sup><small>&#153;</small></sup></strong> then either returns the
+  response to the requester or passes the response to another process.</p>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li>You may simply pass a request to <strong>Tymeac<sup><small>&#153;</small></sup></strong>
+      and receive the concatenated return Objects of all the components (a Synchronous Request.)</li>
+  </ul>
+  <ul>
+    <blockquote>
+      <p>A simple request requires parallel queries to a marketing database and a sales
+      database.</p>
+      <p><strong>Tymeac<sup><small>&#153;</small></sup></strong> places the request into two
+      separate component queues.&nbsp;A thread on the marketing queue accesses the marking
+      database.&nbsp;A thread on the sales queue accesses the sales database.&nbsp;<strong>Tymeac<sup><small>&#153;</small></sup></strong>
+      returns the response from these accesses to the requester.</p>
+    </blockquote>
+    <p align="justify"><img src="Images/Mfig1.gif" alt="Mfig1.gif (2856 bytes)" width="358" height="97"></p>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p>&nbsp;<ul>
+    <li><a name="async"></a>You may pass a request to <strong>Tymeac<sup><small>&#153;</small></sup></strong>
+      and not wait for the reply (an Asynchronous Request.)</li>
+  </ul>
+  <blockquote>
+    <blockquote>
+      <p>A Complex request requires the combined information from three processes as input to a
+      compute intensive process and the result sent to the requester on a dynamically acquired
+      session (callback.)</p>
+      <p><strong>Tymeac<sup><small>&#153;</small></sup></strong> places the request into three
+      separate component queues and returns control to the requester. When all three processes
+      complete, <strong>Tymeac<sup><small>&#153;</small></sup></strong> schedules the compute
+      intensive process.&nbsp;When that process completes, <strong>Tymeac<sup><small>&#153;</small></sup></strong>
+      schedules an Agent to send the response to the requester on a dynamically acquired
+      session.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p align="justify">
+      <img src="Images/Mfig3.gif" alt="Mfig3.gif (4586 bytes)" width="493" height="187"></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li><a href="BExPur.html">Document System Example</a></li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p><big><em>The possibilities are endless.</em></big></p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

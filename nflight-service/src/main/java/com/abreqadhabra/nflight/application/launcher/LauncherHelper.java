@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.app.core.Profile;
 import com.abreqadhabra.nflight.app.core.exception.NFBootException;
-import com.abreqadhabra.nflight.application.Env;
+import com.abreqadhabra.nflight.application.Globals;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 
@@ -23,11 +23,11 @@ public class LauncherHelper {
 
 		LOGGER.logp(Level.FINEST, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 				"Settings specified in the default security policy file : "
-						+ Env.FILE_BOOT_POLICY);
+						+ Globals.FILE_BOOT_POLICY);
 
 		System.setProperty(
-				Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(),
-				Env.FILE_BOOT_POLICY.toString());
+				Globals.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(),
+				Globals.FILE_BOOT_POLICY.toString());
 
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());

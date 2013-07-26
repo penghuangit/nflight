@@ -1,0 +1,151 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<title>Thread Management</title>
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Thread Management</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+
+<p>Article: <a href="../Articles/J2SEArticle.html">Managing Threads in Java SE</a></p>
+
+<p>There are two major issues with Java Threads:</p>
+      <ol>
+        <li>Concurrency</li>
+        <li>Control</li>
+      </ol>
+    <blockquote>
+    <p>Just as there are two similar issues with juggling balls.</p>
+<ol>
+  <li>
+  <p align="left">When the balls are in the air, the balls may try to occupy the same space at the same time. A 
+  concurrency issue.</li>
+  <li>
+  <p align="left">When launching and catching the balls one needs to tightly 
+  coordinate the throw/catch so that a hand is free when a ball needs catching. A control issue.</li>
+</ol>
+</blockquote>
+<p>Failure to address both these issues means the endeavor will fail sooner or 
+later.</p>
+    </blockquote>
+  </blockquote>
+
+<h3>Concurrency</h3>
+  <blockquote>
+
+<p>The good folks at the JSR166 expert group are doing a superb job of&nbsp;dealing with this issue. The current java.util.concurrent package and the soon 
+to be released fork-join package represent many years of effort in development. 
+Hats off to these people.</p>
+  </blockquote>
+
+<h3><a name="control"></a>Control</h3>
+  <blockquote>
+    <p>Java threads are most difficult to control. What if a thread gets stuck in a blocking method? What if something is 
+    wrong and the thread doesn't get CPU time? What if there is a bug? There are 
+    lots of 'what if'' situations. See for example
+    <a href="../Brochure/Shadow.htm">the Shadow.</a></p>
+    <p>Tymeac is a superb implementation of a very simple concept:</p>
+    <blockquote>
+      <h4><font color="#000080">Put requests in queues for processing by 
+      asynchronous threads.</font></h4>
+    </blockquote>
+    <p>Tymeac comprises queues with each queue having its own 
+    pool of threads. However, Tymeac Queue Threads are not your traditional pool 
+    threads. Every Queue Thread has its own
+    <a href="InternalStructure.html#areaDetail">management structure</a>. Each 
+    event in the life of a Queue Thread <a href="Disabled.html#five">is timed</a>. 
+    Although there is no way to stop a thread, Tymeac handles the run-a-way or 
+    blocking-forever thread problems as best as can be handled at the 
+    application level.</p>
+    <p><b>Interrupt</b><br>
+    Thread &quot;interrupt()&quot; is a disaster. The original developers probably had 
+    a vision that programmers would want to interrupt an executing thread. But 
+    they never perfected that vision. What we have now are threads interrupting 
+    themselves as well as other threads sometimes with erroneous results.</p>
+    <blockquote>
+      <p>Lets say you create thread “A” and you expect that thread to complete 
+      some work within a time limit. </p>
+      <ul>
+        <li>You execute a timed wait for thread “A”. </li>
+        <li>Thread “A” does not complete within the time limit, 
+        <ul>
+          <li>the time expires and </li>
+          <li>you regain control. </li>
+          <li>Your code continues with other work.</li>
+        </ul>
+        </li>
+        <li>Then you have a second timed wait for another thread “B”. </li>
+        <li>If thread “A” then issues interrupt(), it interrupts the caller at 
+        the second wait.</li>
+      </ul>
+      <p>This can easily happen with packages you acquire and cannot alter, 
+      especially message-writer methods. It is common practice to make a 
+      message-writer a separate thread so it doesn’t affect the main thread if 
+      it hangs or causes an exception.</p>
+      <p>If you have a multi-thread environment (i.e. thread “C”, “D” etc.), 
+      then using interrupt() only exacerbates the problem.</p>
+      <p>interrupt() is like getting kicked in the butt – you know you’ve been 
+      kicked but you don’t know who did it, when or why.</p>
+    </blockquote>
+    <p>Tymeac does not use &quot;interrupt()&quot;. All communication with Queue Threads 
+    is done through the thread's management structure.</p>
+    <p><b>NotifyAll</b><br>
+    Both
+    NotifyAll() and SignalAll() are shot gun methods. Having multiple threads 
+    waiting on a single object is a course grained solution. When the group 
+    awakens every thread must do some work to find out if it is needed. Even if 
+    each thread is running on a separate CPU it still requires operating system 
+    CPU cycles to get the threads running and put the unnecessary threads back 
+    into a blocking state.</p>
+    <p>Tymeac notifies each thread individually – only when it is needed. By 
+    having a management structure for each Queue Thread, Tymeac knows the exact 
+    status of each Queue Thread so there are no wasted cycles notifying 
+    unnecessary threads.</p>
+    <p><b>Thread Pool</b><br>
+    <a href="Tuning.html#pool">Tymeac's approach to the thread pool</a> is to 
+    have only the minimum number of threads running at any given time so that 
+    Tymeac <a href="Tuning.html#nice">plays nice</a> with other applications.</p>
+    <p><b>Tuning</b><br>
+    <a href="Tuning.html">Tymeac is tunable</a>. Trying to manage traditional 
+    pool threads is 
+    like trying to herd cats.</p>
+    <p><b>Monitoring</b><br>
+    Since Java threads execute at the application level there is no high level 
+    manager to supervise the environment. Tymeac uses a
+    <a href="Monitor.html">Monitor</a> (daemon) at the application level that 
+    periodically scans the environment looking for problems.</p>
+    <p>&nbsp;<b>Exceptions</b><br>
+    When thread exceptions occur, Tymeac doesn't just let the system print an ugly 
+message and kill the thread. Tymeac catches exceptions (including with an uncaught exception 
+    handler), prints and
+<a href="RunTime.html#log">logs</a> meaningful messages with
+<a href="Messages.html">full documentation</a>, and <a href="RunTime.html#notify">
+notifies</a> administrators of the problem.</p>
+    <blockquote>
+    <p>Since most errors are with the user-written Classes (<a href="Develop.html#pap">Developing Your Applications</a> 
+    discusses this in detail), Tymeac allows 
+    dynamic repair and reload of those Classes with/without a <a href="TyNewCopy.html">
+    GUI </a>and restarting of the disabled threads with/without a
+    <a href="TyQueThd.html">GUI</a>.</p>
+    </blockquote>
+  </blockquote>
+
+<p><b><font size="4">Tymeac</font></b> controls threads the best they can be.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

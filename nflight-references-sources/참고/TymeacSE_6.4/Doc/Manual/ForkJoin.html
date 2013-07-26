@@ -1,0 +1,87 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Fork-Join</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Fork Join</h1>
+<blockquote>
+  <blockquote>
+      <p>With the proliferation of multi-core possessors, having a way to use 
+      all the CPU's is necessary. The academic/scientific communities have enjoyed vector processors for 
+      decades. They have multi-tasked their needs with FORTRAN and specialized 
+      languages almost from the beginning.</p>
+      <p>The general application development community can also participate in this most 
+      difficult endeavor with the Java language.</p>
+      <p>Article: <a href="../Articles/ForkJoinArticle.html">Fork-Join 
+      Development in Java SE</a></p>
+  </blockquote>
+      <h3 align="left">Fork-Join</h3>
+      <p align="left">What is Fork-Join? Think of a <i>fork</i> in the road where each path eventually comes back 
+      together - <i>joins</i>.</p>
+      <p>Fork-Join breaks your application into several parts for parallel 
+      processing and joins the results at the end.</p>
+      <blockquote>
+      <p><b>Tymeac</b> comes in two flavors:</p>
+        <ol>
+          <li>Fork-Join as part of a distributed computing system (this 
+          product,) </li>
+          <li>Fork-Join as a Divide-and-Conquer computing system, described 
+          below.</li>
+        </ol>
+  </blockquote>
+      <blockquote>
+      <p>Let’s say we have an array of one thousand numbers. We need to do a 
+      procedure on each of these numbers and add the total.</p>
+      <blockquote>
+        <table id="AutoNumber1" style="BORDER-COLLAPSE: collapse" borderColor="#111111" cellSpacing="0" cellPadding="0" width="274" border="1">
+          <tr>
+            <td width="272" bgColor="#cccccc" height="49">&nbsp;
+            <font color="#7f0055" size="2"><b>for</b></font> <font size="2">(</font><font color="#7f0055" size="2"><b>int</b></font>
+            <font size="2">i = 0; i &lt; 1000; i++) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; total += doProcedure(array[i]);<br>
+            &nbsp; }</font></td>
+          </tr>
+        </table>
+      </blockquote>
+      <p>If the procedure takes one second to complete, then it is going to take 
+      one thousand seconds (over 16 <font face="Times New Roman">½</font> 
+      minutes) to complete this task.</p>
+      <p>Fork-Join could</p>
+      <ul>
+        <li>separate<i> (fork)</i> the large array into ten arrays of one hundred elements each,</li>
+        <li>processes each array on a separate CPU and</li>
+        <li><i>join</i> the results when finished.</li>
+      </ul>
+      <p>That would take one hundred seconds (just over 1
+      <font face="Times New Roman">½</font> minutes)-- one tenth of the original time. 
+      The more CPU's available, the faster the result.</p>
+      </blockquote>
+      <p>For an article describing the Divide-and-Conquer method see here:
+      <a href="../Articles/ConquerArticle.html">A Java Fork-Join 
+      Conqueror</a> and you can download the TymeacDSE product from 
+      SourceForge.net.</p>
+  
+</blockquote>
+    
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+
+</html>

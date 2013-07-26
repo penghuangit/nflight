@@ -1,0 +1,179 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>New Copy of Queue Processing Applicartion Class </title>
+
+</head>
+
+<body>
+
+<h1>New Copy of Application Class</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This frame class either reloads a Queue's Processing Application Class or loads an
+    alternate Queue's Processing Application Class.</p>
+  </blockquote>
+</blockquote>
+
+<p>Changes to the processing code are sometimes necessary.&nbsp; This process allows
+immediate reflection of those changes without taking the Tymeac Server down.&nbsp; This is
+useful when using version numbers as part of the Class Name.&nbsp; For <strong>example</strong>:</p>
+
+<blockquote>
+  <p>Class, AccountPost_431, is the original Class.</p>
+  <p>Class, AccountPost_432, is the new Class.</p>
+  <p>Specify a New Class as AccountPost_432 and load this new Class as the Processing
+  Application Class for the Queue.</p>
+  <p>If something goes wrong with this new Class, then simply restore the original,
+  AccountPost_431, as the New Class and load this original as the Processing Application
+  Class for the Queue.</p>
+</blockquote>
+
+<p><img src="Images/Caution.gif" alt="Caution.gif (1012 bytes)" WIDTH="20" HEIGHT="20">
+However, there is a <font color="#FF0000">caution</font>.&nbsp; All processing for a Queue
+must cease before using this procedure.</p>
+
+<blockquote>
+  <p>Tymeac checks to see if any thread on the Queue is busy processing a request in a
+  Processing Application Class and rejects the request when true. You may simply retry the
+  procedure until successful.</p>
+  <p>If a Tymeac Queue Thread is hanging in the application class, then you must kill that
+  thread.&nbsp; The Id of the thread is in TyQueThd.&nbsp; TyQueMaint details the full name
+  of the thread.&nbsp; Failure to do this may have undesirable side effects.&nbsp; The
+  instance of the hanging application class, java.lang.reflect.Method, is lost and may be
+  garbage collected.</p>
+</blockquote>
+
+<p><strong>If you do not use the Java2 platform, then you may not use URL's for locating
+the Processing Application Classes.</strong></p>
+
+<p><strong>N.B.</strong> When using the URL option, the Processing Application Class may
+not be within the CLASSPATH or Java will load the class from the CLASSPATH and ignore the
+URL option.&nbsp; ALL classes instantiated by this Processing Application Class must also
+NOT be on the CLASSPATH but within the URL list.</p>
+
+<p>There are three options: 
+
+<ol>
+  <li>Reload a Processing Application Class from the current URL.&nbsp; Tymeac instantiates a
+    new URLClassLoader using the URL array of the current URLClassLoader. Tymeac loads the
+    Processing Application Class as found in the Queue. &nbsp; In this way, the class loads
+    into a new NameSpace and immediately reflects any changes from compiling.&nbsp; ALL
+    classes instantiated by this Processing Application Class are loaded by the same
+    URLClassLoader.<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Specify only the Queue Name.</li>
+  <li>Load a new or the same Processing Application Class from a URL list.&nbsp; Tymeac
+    instantiates a new URLClassLoader using the URL array specified with the Class Name.
+    Tymeac loads the Processing Application Class as found in the (new) Class Name.&nbsp; The
+    original Processing Application Class may have been on the CLASSPATH.&nbsp; By using this
+    option, you set a URLClassLoader as the new default.<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Specify both a Queue Name and a (new)
+    Processing Application Class with a URL list.</li>
+  <li>Load a new Processing Application Class from the CLASSPATH.<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Specify both a Queue Name and a (new)
+    Processing Application Class</li>
+</ol>
+
+<p>The follow was taken from the class naming and URL document.</p>
+
+<p>You specify a class name in two parts: The class name and the <em>optional</em> URL
+list where the class resides.&nbsp; Separating the parts is a double colon, <big>::</big>
+(a scope resolution operator from C++).</p>
+
+<blockquote>
+  <p>A class without a URL list is simply a class name, (i.e. com.tymeac.serveruser.Demo1).</p>
+  <p>A URL list is a list of URL's, each URL separated by the semicolon, <big>;</big>
+  character, <br>
+  (i.e. file:/files/myclasses/;file:/files/otherclasses/) or <br>
+  (i.e. file:c:/myappl1/myclasses/;file:c:/myappl2/myclasses/) </p>
+  <blockquote>
+    <p>With classpath options, normally the semicolon separates directories as in Windows<br>
+    c:\one;d:\two;c:\three</p>
+    <p>This is not a classpath option, these are URL's and each URL must be a properly
+    formatted URL with a protocol as the first word -- file:</p>
+  </blockquote>
+  <p>Each URL must be a properly formatted URL with a protocol, host, port, file. See the
+  JavaDoc for the class: java.net.URL, constructor 1, (public <b>URL</b>(String&nbsp;spec).</p>
+  <p>Any URL that ends with a '/' is assumed to refer to a directory. Otherwise, the URL is
+  assumed to refer to a JAR file which will be opened as needed. See the JavaDoc for the
+  class, java.net.URLClassLoader.</p>
+  <p>For the Windows environment, normally a backslash, (\), separates directories, however,
+  this is not the case with a URL.&nbsp; As above, use the normal slash, (/).</p>
+</blockquote>
+
+<p>Examples:</p>
+
+<blockquote>
+  <p>Without a URL list:</p>
+  <blockquote>
+    <p>com.tymeac.serveruser.Demo1</p>
+  </blockquote>
+  <p>With a single URL, (windows):</p>
+  <blockquote>
+    <p>com.tymeac.serveruser.Demo1::file:c:/myappl1/myclasses/</p>
+  </blockquote>
+  <p>With multiple URL's, (windows):</p>
+  <blockquote>
+    <p>com.tymeac.serveruser.Demo1::file:c:/myappl1/myclasses/;file:c:/myappl2/myclasses/</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>With a single URL, (Solaris):</p>
+  <blockquote>
+    <p>com.tymeac.serveruser.Demo1::file:/files/myclasses/</p>
+  </blockquote>
+  <p>With multiple URL's, (Solaris):</p>
+  <blockquote>
+    <p>com.tymeac.serveruser.Demo1::file:/files/myclasses/;file:/files/otherclasses/</p>
+  </blockquote>
+</blockquote>
+
+<h3><strong>Elements</strong></h3>
+
+<blockquote>
+  <p><strong>Queue Name</strong> -- Enter the name of the Tymeac Queue.&nbsp;</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>(new) Appl. Class</strong> -- OPTIONALLY, enter a new Class name and then use
+  the Load button.</p>
+</blockquote>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>LOAD</strong> -- Loads the New Application Class.</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- This is an information message:</p>
+
+<blockquote>
+  <p><u>Connection failure</u> -- The RMI connection failed or the Tymeac Server returned an
+  invalid message.</p>
+  <p><u>Enter a New Class Name</u> -- Required for the classpath option.</p>
+  <p><u>Enter a Queue Name</u> -- This is always required.</p>
+  <p><u>New Class load error</u> -- The load failed for the new Class.</p>
+  <p><u>Queue name invalid</u> -- As indicated. </p>
+  <p><u>Original load was not with a URLClassLoader</u> -- For option 1, when only entering
+  a Queue Name the Original<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class must have been
+  loaded with a URLClassLoader.</p>
+  <p><u>Re-load of original class, load error</u>&nbsp; -- For Option 1, the load failed for
+  the original Class.</p>
+  <p><u>Invalid Class::URL format</u> -- See the class naming and URL document for how to
+  specify this information.</p>
+  <p><u>Invalid URL format</u> -- See the JavaDoc for how to specify a java.net.URL() with a
+  single String constructor.</p>
+  <p><u>New class name same as original</u> -- For option 3, cannot reload a class on the
+  classpath.</p>
+  <p><u>Threads are busy, try later</u> -- Thread(s) are busy.&nbsp; Wait for all threads to
+  finish, or, disabled those threads necessary with the TyQueThd display.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;</body></html>

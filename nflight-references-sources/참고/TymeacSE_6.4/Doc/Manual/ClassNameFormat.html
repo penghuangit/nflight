@@ -1,0 +1,98 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Class Name Formats</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Class Name and URL Formats</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>In this section we discuss the naming convention for Java class names in the Tymeac
+      environment.</p>
+    </blockquote>
+  </blockquote>
+  <p>Tymeac loads classes in one of two ways:<ol>
+    <li><p align="left">If Java finds a class on the CLASSPATH, whether the system or using the
+      runtime -cp option, then Java loads that class permanently. There is no &quot;unload&quot;
+      option.&nbsp;There is no way to get a new version of the Processing Application Class by
+      recompiling.&nbsp;The only way to change the class in the Tymeac environment is to shut
+      down and restart the Server.</p>
+    </li>
+    <li>If Java does not find a class on the CLASSPATH and Tymeac is using a URLClassLoader,
+      then Java loads the class from the URL list of the URLClassLoader.&nbsp;Using the <a href="TyNewCopy.html">new copy GUI</a>, you may recompile the Processing Application Class
+      and get a new version without shutting down the Server.</li>
+  </ol>
+</blockquote>
+
+<blockquote>
+  <p>For every user-written class in the Tymeac environment (Processing Application Classes,
+  Startup/Shutdown Class lists, Log/Statistics Classes) you have the option of placing the
+  class in the CLASSPATH or of using a URLClassLoader with a list of URL's from which Java
+  may find the class.&nbsp;Tymeac determines which method to use depending on the format of
+  the class name.</p>
+  <p>You specify a class name in two parts: The class name and the <em>optional</em> URL
+  list where the class resides.&nbsp; Separating the parts is a double colon, <big>::</big>
+  (a scope resolution operator from C++).</p>
+  <blockquote>
+    <p>A class without a URL list is simply a class name (i.e. com.tymeac.serveruser.Demo1).</p>
+    <p>A URL list is a list of URL's, each URL separated by the semicolon, <big>;</big>
+    character, <br>
+    (i.e. file:/files/myclasses/;file:/files/otherclasses/) or <br>
+    (i.e. file:c:/myappl1/myclasses/;file:c:/myappl2/myclasses/) </p>
+    <blockquote>
+      <p>With classpath options, normally the semicolon separates directories as in Windows<br>
+      c:\one;d:\two;c:\three</p>
+      <p>This is not a classpath option, these are URL's and each URL must be a properly
+      formatted URL with a protocol as the first word -- file:</p>
+    </blockquote>
+    <p>Each URL must be a properly formatted URL with a protocol, host, port, file. See the
+    JavaDoc for the class: java.net.URL, constructor 1 (public <b>URL</b>(String&nbsp;spec).</p>
+    <p>Any URL that ends with a '/' is assumed to refer to a directory. Otherwise, the URL is
+    assumed to refer to a JAR file which will be opened as needed. See the JavaDoc for the
+    class, java.net.URLClassLoader.</p>
+    <p>For the Windows environment, normally a backslash, (\), separates directories, however,
+    this is not the case with a URL.&nbsp;As above, use the normal slash, (/).</p>
+  </blockquote>
+  <p>Examples:</p>
+  <blockquote>
+    <p>Without a URL list:</p>
+    <blockquote>
+      <p>com.tymeac.serveruser.Demo1</p>
+    </blockquote>
+    <p>With a single URL (windows):</p>
+    <blockquote>
+      <p>com.tymeac.serveruser.Demo1::file:c:/myappl1/myclasses/</p>
+    </blockquote>
+    <p>With multiple URL's (windows):</p>
+    <blockquote>
+      <p>com.tymeac.serveruser.Demo1::file:c:/myappl1/myclasses/;file:c:/myappl2/myclasses/</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>With a single URL (Unix):</p>
+    <blockquote>
+      <p>com.tymeac.serveruser.Demo1::file:/files/myclasses/</p>
+    </blockquote>
+    <p>With multiple URL's (Unix):</p>
+    <blockquote>
+      <p>com.tymeac.serveruser.Demo1::file:/files/myclasses/;file:/files/otherclasses/</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

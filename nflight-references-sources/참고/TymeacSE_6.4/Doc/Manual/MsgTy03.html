@@ -1,0 +1,274 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Messages, Monitor Ty03</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Messages: Monitor Ty03</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This section details the <a href="Monitor.html">Tymeac Monitor</a> messages.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>(<strong>P</strong>) Printed to System.out.println(), (this is <a href="TyCfg.html">optional</a>).<br>
+    (<strong>L</strong>) Sent to the Tymeac <a href="RunTime.html#log">Log</a>.<br>
+    (<strong>N</strong>) Sent to the Tymeac <a href="RunTime.html#notify">Notification</a>
+    Function.</p>
+  </blockquote>
+</blockquote>
+
+<hr>
+
+<p align="left">001 </p>
+
+<blockquote>
+  <p align="left">Thread disabled reason (Ty03001)</p>
+  <blockquote>
+    <p align="left">The thread used excessive time (see <a href="Disabled.html">
+    how a thread gets disabled</a> and the timing thereof.) The thread was 
+    cancelled. On the next run of the Monitor, the Monitor sets this thread to 
+    Disabled with this status code. See also 019 below.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">005 C (<strong>N</strong>) (<strong>L</strong>) </p>
+
+<blockquote>
+  <p align="left">Stalled asynchronous request are pending action.</p>
+  <blockquote>
+    <p align="left">On the tenth cycle and every tenth cycle thereafter, when the monitor
+    finds a stalled request, it writes this message.&nbsp; See <a href="Stalled.html">how</a>
+    a request becomes stalled.&nbsp; <a href="TyStalled.html">Purge</a> the requests if
+    needed.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">013 I (<strong>N</strong>) (<strong>P</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">The monitor interval is xxx[, with inactivity deactivation in nnn
+  minutes.]</p>
+  <blockquote>
+    <p align="left">The Monitor interval is xxx seconds. When using the activation system,
+    deactivation will occur in nnn minutes.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">015 I (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">New stall table entry: xx</p>
+  <blockquote>
+    <p align="left">When the Monitor finds an asynchronous request that it believes is <a href="Stalled.html">stalled</a>, it logs this message.&nbsp; xx is the <a href="TymeacParm.html#return">Request Id</a></p>
+  </blockquote>
+</blockquote>
+
+<p align="left">019 I (<b>N</b>)(<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server a thread is disabled in Queue (xxxx), Disabled 
+  by reason yyyy, from cancelled reason zzzz</p>
+  <blockquote>
+    <p align="left">When the Monitor finds a cancelled thread, it sets that 
+    thread to disabled. xxxx is the Queue.</p>
+    <p align="left">yyyy is the reason for the disable [this is usually Ty03001, 
+    see above] but it could be <a href="Usage.html#monitor">found here</a>.</p>
+    <p align="left">zzzz is the previous cancel reason. This has to do with the 
+    thread using excessive time (see <a href="Disabled.html">
+    how a thread gets disabled</a> and the timing thereof.) </p>
+    <blockquote>
+    <p align="left">EXCESSIVE_PROCESSING: In a thread processing state for 
+    excessive time.<br>
+    <br>
+    EXCESSIVE_APPL_PROCESSING_DEFAULT: In the application class state for 
+    excessive time when no override in <a href="TyQueMaint.html#timeout">
+    time-out</a> in the Queue.<br>
+    <br>
+    EXCESSIVE_APPL_PROCESSING_SPECIFIC: In the application class state for 
+    excessive time when using the override <a href="TyQueMaint.html#timeout">
+    time-out</a> in the Queue.<br>
+    <br>
+    EXCESSIVE_SCHD_INTERVAL: The Queue Thread is scheduling the Output Agent. In 
+    this state for excessive time.<br>
+    <br>
+    EXCESSIVE_POSTING_INTERVAL: The thread wait waiting for work and was 
+    awakened. In this state for excessive time. <br>
+    <br>
+    EXCESSIVE_STARTED_INTERVAL: No thread was attached. A new thread was started 
+    but had not begun execution. In this state for excessive time.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>020 I (<strong>N</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>All threads are disabled in Queue [name]</p>
+  <blockquote>
+    <p>The Queue in not capable of processing any requests.&nbsp; When the Monitor first
+    encounters this problem it writes this message.</p>
+    <p>When the Processing Application Class is faulty:<ul>
+      <li>You can repair and compile the code.&nbsp; Shut down the Tymeac Server.&nbsp; Start up
+        the Tymeac Server.</li>
+      <li>You can repair, rename the class and compile the new code.&nbsp; Without shutting down
+        the Tymeac Server you may use the New Copy Class, <a href="TyNewCopy.html">TyNewCopy</a>
+        to load the new Class for the Queue.&nbsp; Use the Queue Thread Class, <a href="TyQueThd.html">TyQueThd</a> to enable the threads.</li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<p>025 I (<strong>N</strong>) (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>All threads are disabled in Queue [name]</p>
+  <blockquote>
+    <p>This is identical to 020, above.&nbsp;However, the problem persists for more than a
+    cycle of the Monitor.</p>
+  </blockquote>
+</blockquote>
+
+<p>098 I&nbsp; (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server, unregister complete for MilliTime= xx</p>
+  <blockquote>
+    <p align="left">The Server is shut down by a shut down request and unregistered from the
+    Activation System.&nbsp; xx is the Tymeac Server start up time in milliseconds as found on
+    the start up message, Ty00001I.</p>
+  </blockquote>
+</blockquote>
+
+<p>099 I&nbsp; (<strong>L</strong>)</p>
+
+<blockquote>
+  <p align="left">Tymeac Server, inactivation complete for MilliTime= xx</p>
+  <blockquote>
+    <p align="left">The Server is shut down by deactivation, not a shut down request.&nbsp; xx
+    is the Tymeac Server start up time in milliseconds as found on the start up message,
+    Ty00001I.</p>
+  </blockquote>
+</blockquote>
+
+<p>100 I&nbsp; (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>The String message for an UnknownObjectException</p>
+  <blockquote>
+    <p>No activity transpired for the requested period or a shutdown was requested.&nbsp; The
+    monitor issued the method: java.rmi.activation.Activatable.inactive() / or
+    unregister().&nbsp;RMI&nbsp; threw an UnknownObjectException.</p>
+    <p>The server exits with a System.exit().</p>
+  </blockquote>
+</blockquote>
+
+<p>105 I&nbsp; (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>The String message for a RemoteException</p>
+  <blockquote>
+    <p>No activity transpired for the requested period or a shutdown was requested.&nbsp; The
+    monitor issued the method: java.rmi.activation.Activatable.inactive() / or
+    unregister().&nbsp;RMI threw a RemoteException.</p>
+    <p>The server exits with a System.exit().</p>
+  </blockquote>
+</blockquote>
+
+<p>110 I&nbsp; (<strong>L</strong>)</p>
+
+<blockquote>
+  <p>The String message for an ActivationException</p>
+  <blockquote>
+    <p>No activity transpired for the requested period or a shutdown was requested.&nbsp; The
+    monitor issued the method: java.rmi.activation.Activatable.inactive() / or
+    unregister().&nbsp; RMI threw an ActivationException.</p>
+    <p>The server exits with a System.exit().</p>
+  </blockquote>
+</blockquote>
+
+<p>115 I&nbsp; (<strong>P</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, Logging NO longer in use from exception=</p>
+  <blockquote>
+    <p>A log error occurred (the exception follows =).</p>
+    <p>Logging is no longer supported for this session.</p>
+  </blockquote>
+</blockquote>
+
+<p>120 I&nbsp; (<strong>P</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, Statistics NO longer in use from exception=</p>
+  <blockquote>
+    <p>A statistics error occurred (the exception follows =).</p>
+    <p>Statistics are no longer supported for this session.</p>
+  </blockquote>
+</blockquote>
+
+<p>201 I&nbsp; (<strong> L, N</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, activatable shut down may be stalled.</p>
+  <blockquote>
+    <p>The Monitor had no activity for the time specified in the
+    <a href="UserVariables.html">inactivate time</a>. The server attempted to 
+    inactivate by running the shut down sequence but found that another task had 
+    previously started a normal shut down. Even after several attempts to 
+    continue, the Monitor is still waiting for the original shut down, stage 1, 
+    to complete.</p>
+    <p>When using shut down stage 1 <a href="UserExits.html">user exits</a>, one 
+    of these Classes may hang, thereby stalling the shut down.</p>
+    <p>Manual intervention may be required.</p>
+  </blockquote>
+</blockquote>
+
+<p>202 I&nbsp; (<strong> L, N</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, activatable shut down stage 2 may be stalled.</p>
+  <blockquote>
+    <p>The Monitor had no activity for the time specified in the
+    <a href="UserVariables.html">inactivate time</a>. The server attempted to 
+    inactivate by running the shut down sequence but found that another task had 
+    previously started a normal shut down. Even after several attempts to 
+    continue, the Monitor is still waiting for the original shut down, stage 2, 
+    to complete.</p>
+    <p>When using shut down stage 2 <a href="UserExits.html">user exits</a>, one 
+    of these Classes may hang, thereby stalling the shut down.</p>
+    <p>Manual intervention may be required.</p>
+  </blockquote>
+</blockquote>
+
+<p>901 S&nbsp; (<strong>L, N</strong>)</p>
+
+<blockquote>
+  <p>Tymeac Server, Unexpected Shut Down from Monitor uncaught exception= </p>
+  <blockquote>
+    <p>The Monitor threw an unhandled exception (the exception is after the =). 
+    A stack trace follows.</p>
+    <p>Tymeac cannot run without the Monitor. Therefore, the exception handler 
+    tries to shut down the system three times (normal shut down 
+    shutRequest(false) with a delay in between each request.) The exception 
+    handler then forces shut down with shutRequest(true).</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

@@ -1,0 +1,142 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Messages, Queue Thread Ty06</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Messages: Queue Thread Ty06</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This section details the Queue Thread messages.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>(<strong>P</strong>) Printed to System.out.println(), (this is <a href="TyCfg.html">optional</a>).<br>
+    (<strong>L</strong>) Sent to the Tymeac <a href="RunTime.html#log">Log</a>.<br>
+    (<strong>N</strong>) Sent to the Tymeac <a href="RunTime.html#notify">Notification</a>
+    Function.</p>
+  </blockquote>
+</blockquote>
+
+<hr>
+
+<p align="left">005 S (<strong>N</strong>) (<strong>L</strong>) (<strong>P</strong>) </p>
+
+<blockquote>
+  <p align="left">Thread [name] in Queue [name] disabled by IllegalAccessException</p>
+  <blockquote>
+    <p align="left">The thread uses a try block on: java.lang.reflect.Method.invoke() to
+    access the Processing Application Class.</p>
+    <p align="left">See also <a href="Usage.html#threads">return code</a>.</p>
+    <p align="left">This exception was caught.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">010 S (<strong>N</strong>) (<strong>L</strong>) (<strong>P</strong>)&nbsp; </p>
+
+<blockquote>
+  <p align="left">Thread [name] in Queue [name] disabled by InvocationTargetException</p>
+  <blockquote>
+    <p align="left">The thread uses a try block on: java.lang.reflect.Method.invoke() to
+    access the Processing Application Class.</p>
+    <p align="left">See also <a href="Usage.html#threads">return code</a>.</p>
+    <p align="left">This exception was caught.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">015 S (<strong>N</strong>) (<strong>L</strong>) (<strong>P</strong>) </p>
+
+<blockquote>
+  <p align="left">Thread [name] in Queue [name] disabled by IllegalArgumentException</p>
+  <blockquote>
+    <p align="left">The thread uses a try block on: java.lang.reflect.Method.invoke() to
+    access the Processing Application Class.</p>
+    <p align="left">See also <a href="Usage.html#threads">return code</a>.</p>
+    <p align="left">This exception was caught.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">020 S (<strong>N</strong>) (<strong>L</strong>) (<strong>P</strong>) </p>
+
+<blockquote>
+  <p align="left">Thread [name] in Queue [name] disabled by ThrownException</p>
+  <blockquote>
+    <p align="left">The thread uses a try block on: java.lang.reflect.Method.invoke() to
+    access the Processing Application Class.</p>
+    <p align="left">See also <a href="Usage.html#threads">return code</a>.</p>
+    <p align="left">This exception was caught.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">025 C (<strong>L</strong>) (<strong>P</strong>) </p>
+
+<blockquote>
+  <p align="left">Thread nnn in Queue qqq Output Agent Scheduling failure=xxxx, Request rrrr
+  is stalled.</p>
+  <blockquote>
+    <p align="left">All Queues in the List of Queues for the Function finished processing.
+    While attempting to schedule the Output Agent Queue for <a href="TymeacParm.html#return">Request
+    Id</a> rrrr, the schedule failed. xxxx is the <a href="Usage.html#schd">return code</a>.</p>
+    <p align="left">nnn is the Queue Thread number.</p>
+    <p align="left">qqq is the Queue name.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">026 I (<strong>L</strong>) (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Request rrrr, Output Agent is [name]&nbsp; </p>
+  <blockquote>
+    <p align="left">This is a compliment to  025.&nbsp; Match the rrrr here with the yyyy in
+    
+    025.</p>
+    <p align="left">The reason for the second message is that the 6024/5 message is very long.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">090 S (<strong>L</strong>) (<strong>P</strong>)</p>
+
+<blockquote>
+  <p align="left">Thread [name] in Queue [name] Expunged</p>
+  <blockquote>
+    <p align="left">The Tymeac status of the thread was &quot;disabled&quot; 
+    (see <a href="Disabled.html#five">how threads become disabled.</a>)</p>
+    <p align="left">An administrator used the <a href="TyQueThd.html#enable">
+    ENABLE ALL</a> button on the Queue Thread display to enable all disabled threads. 
+    This button sets the instance reference of the thread (in the thread 
+    management structure) to null. A new thread may or may not have taken the 
+    place of the thread writing this message.</p>
+    <p align="left">When the thread writing this message resumes, it finds its 
+    instance reference either null or that another thread has taken its place, 
+    it writes this message and terminates quickly (exits in the run() method.)</p>
+  </blockquote>
+</blockquote>
+
+<p align="left">901 S (<strong>L</strong>) (<strong>P</strong>) (<strong>N</strong>)</p>
+
+<blockquote>
+  <p align="left">Thread [name] Failed with uncaught Exception=xxxx</p>
+  <blockquote>
+    <p align="left">This exception (xxxx) was caught by the uncaught exception 
+    handler. </p>
+    <p align="left">The thread is logically disabled and the physical thread 
+    terminates.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

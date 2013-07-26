@@ -1,0 +1,524 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Demonstration System</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Demonstration System</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The Tymeac Demonstration System is an example of the <a href="UserClass.html">User Classes</a>.&nbsp; Tymeac accesses the User Classes when no
+      Configuration file is present at Tymeac Start Up.</p>
+      <p>We fill in the User Classes (part of the samples) with
+      the following to demonstrate Tymeac functionality.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><big>The demonstration system consists of twelve basic queues: </big><ul>
+    <li>AAAA&nbsp; BBBB&nbsp; CCCC&nbsp; DDDD&nbsp; EEEE</li>
+    <li>Notify</li>
+    <li>CancelQueue</li>
+    <li>JQue1&nbsp; JQue2&nbsp; JQue3&nbsp; JQue4
+      &nbsp; JQueAgent</li>
+  </ul>
+  <p><font size="4">eleven</font><big> basic functions: </big><ul>
+    <li>Function_1 -- Function_8</li>
+    <li>TyNotify</li>
+    <li>CancelDemo</li>
+    <li>JFunction_1</li>
+  </ul>
+  <p><font size="4">twelve</font><big> basic Processing Application Classes:</big>&nbsp; [prefix <big>com.tymeac.serveruser</big>]
+  <ul>
+    <li>Demo1&nbsp; Demo2&nbsp;&nbsp;Demo3&nbsp; DemoRecur
+      &nbsp; DemoAgent1</li>
+    <li>DemoNotify</li>
+    <li>DemoCancel</li>
+    <li>JDemo1&nbsp; JDemo2&nbsp; JDemo3&nbsp; JDemo4
+      &nbsp; JDemoAgent</li>
+  </ul>
+  <p><strong>and tree frame Classes with accompanying Beans: </strong>[prefix <big>com.tymeac.demo.[j]frame</big>]
+  <ul>
+    <li>TyDemoT1 -- TyDemoT1Bean</li>
+    <li>TyDemoT3 -- TyDemoT3Bean, TyDemoT3Base,
+      TyDemoT3Instant, TyDemoT3Thread</li>
+    <li>TyDemoJiniT1 -- TyDemoJiniT1Bean</li>
+  </ul>
+  <p><b>and one AWT frame Class with accompanying Beans [</b>prefix <big>com.tymeac.demo</big>]
+  </p>
+  <ul>
+    <li>TyDemoAWTCancel -- TyDemoAWTCancelBean<ul>
+    <li>TyDemoAWTCancelThread1</li>
+    <li>TyDemoAWTCancelThread2</li>
+  </ul>
+    </li>
+  </ul>
+</blockquote>
+
+<hr>
+
+<blockquote>
+  <p>Tymeac provides the Demonstration System to exhibit the flow of Tymeac functionality.
+  The supplied application Classes take very simple input fields and form a very simple
+  output message.</p>
+  <p>Tymeac provides the source code for all the above classes.&nbsp;The code is available
+  for altering by the user to suit particular needs.</p>
+</blockquote>
+
+<h3><strong>Processing Application Classes</strong></h3>
+
+<blockquote>
+  <p>Classes Demo1, Demo2, and Demo3 are the <a href="Definitions.html#pap">Processing
+  Application Classes</a> for Queues AAAA, BBBB, and CCCC respectively.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>The input String to these Classes is a stream of digits: 112233445566778899.</p>
+  </blockquote>
+  <blockquote>
+    <p>These digits reflect the concatenated stream captured by the Frame Class, T1.  The
+    digits are logically grouped into three groups of two digits each.&nbsp; </p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>That is, digits 11 are the A1 digits, <br>
+      digits 22 are the A2 digits, <br>
+      digits 33 are the A3 digits.&nbsp; <br>
+      This follows for the B and C groups.&nbsp; </p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Class<strong> Demo1</strong> is the processing application Class for Queue AAAA.&nbsp;
+  It uses the &quot;A&quot; group, (first six, 112233), of digits.&nbsp; The output String
+  from this Class is:</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>#Demo1: A1(11) + A2(22) + A3(33) = (66)# </p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Class <strong>Demo2</strong> is the processing application Class for Queue BBBB. It
+  uses the &quot;B&quot; group, (second six, 445566), of digits.&nbsp; The output String
+  from this Class is:</p>
+</blockquote>
+
+<blockquote>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #Demo2: B1(44) + B2(55) + B3(66) = (165)#</p>
+</blockquote>
+
+<blockquote>
+  <p>Class <strong>Demo3</strong> is the processing application Class for Queue CCCC. It
+  uses the &quot;C&quot; group, (third six, 778899), of digits.&nbsp; The output String from
+  this Class is:</p>
+</blockquote>
+
+<blockquote>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #Demo3: C1(77) + C2(88) + C3(99) = (264)#</p>
+  <p>Class <strong>DemoAgent1</strong> is the <a href="Definitions.html#oa">Output Agent</a>
+  for Functions 4, 5, and 6.&nbsp;It takes the Object array from Queue's AAAA, BBBB, and
+  CCCC and does nothing with them.&nbsp;It is the user's responsibility to add code to do
+  that which is desired, or remove the commented println(S).</p>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <blockquote>
+          <blockquote>
+            <blockquote>
+              <hr>
+            </blockquote>
+          </blockquote>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Class <strong>DemoRecur</strong> is the processing application Class for Queue
+  EEEE.&nbsp; It is the recursive demonstration.&nbsp; The Class forms the String:</p>
+</blockquote>
+
+<blockquote>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #DemoRecur: A1(11) + A2(22) + A3(33) = (66)#</p>
+</blockquote>
+
+<blockquote>
+  <p>It then requests Tymeac processing for Function_2 with a String,
+  &quot;223344556677889911&quot; (this uses the Demo1 processing application class) and
+  appends that output String to its own forming:</p>
+</blockquote>
+
+<blockquote>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #DemoRecur: A1(11) + A2(22) + A3(33) =
+  (66)#Tymeac<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SR(0000)#Demo1:
+  A1(22)+ A2(33) + A3(44) = (88)#</p>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <blockquote>
+          <blockquote>
+            <blockquote>
+              <hr>
+            </blockquote>
+          </blockquote>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <p>Class <strong>DemoNotify</strong> is the sample Notification Processing Application
+  Class. It takes the String, cast to an Object, generated by Tymeac internal
+  processing and does nothing with it. It is the user's responsibility to add code to
+  do that which is desired, or remove the commented println(). </p>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <blockquote>
+          <blockquote>
+            <blockquote>
+              <hr>
+            </blockquote>
+          </blockquote>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <p>Class <strong>DemoCancel</strong>&nbsp; the processing application Class 
+  for Queue CancelQueue. It demonstrates how to cancel a synchronous request 
+  using a GUI.</p>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <blockquote>
+          <blockquote>
+            <blockquote>
+              <hr>
+            </blockquote>
+          </blockquote>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <p>Classes JDemo1, JDemo2, JDemo3, and Demo4 are the <a href="Definitions.html#pap">Processing
+  Application Classes</a> for Queues JQue1, JQue2, JQue3, and JQue4 respectively.</p>
+  <blockquote>
+    <p>The &quot;J&quot; Series is the Jini Document Service. These classes perform no
+    work. They return a String, cast to an Object simply to demonstrate logic flow.</p>
+  </blockquote>
+  <p>Class <strong>JDemoAgent</strong> is the <a href="Definitions.html#oa">Output Agent</a>
+  for JFunction_1.&nbsp;It takes the Object array from Queue's JQue1, JQue2, JQue3, and
+  JQue4 and does nothing with them.  It is the user's responsibility to add code to do
+  that which is desired.</p>
+</blockquote>
+
+<h3><a name="functions"></a><strong>The demonstration Functions are as follows:</strong></h3>
+
+<blockquote>
+  <p><strong>Function_1 </strong>-- Queue's AAAA, AAAA, AAAA.&nbsp; (This demonstrates using
+  the same Queue multiple times.)</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Function_2</strong> -- Queue AAAA</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Function_3</strong> -- Queue's AAAA, BBBB.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Function_4</strong> -- Queue's AAAA, BBBB, CCCC.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Function_5</strong> -- Queue AAAA, with Output Agent Queue, DDDD.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Function _6</strong> -- Queue's AAAA, BBBB,with Output Agent Queue, DDDD.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Function_7</strong> -- Queue's AAAA, BBBB, CCCC, with Output Agent Queue, DDDD.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Function_8</strong> -- Queue EEEE.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>TyNotify</strong>&nbsp;&nbsp;&nbsp; -- Queue Notify.</p>
+  <p><strong>DemoCancel</strong>&nbsp;&nbsp;&nbsp; -- Queue CancelQueue.</p>
+  <p><strong>JFunction_1 </strong>-- Queue's JQue1, JQue2, JQue3, and JQue4, .with Output
+  Agent Queue, JQueAgent.</p>
+</blockquote>
+
+<blockquote>
+  <p>Functions 2, 3, and 4 are redundant.</p>
+</blockquote>
+
+<blockquote>
+  <p>Functions 5, 6, and 7 are the same as Functions 2, 3, and 4 with the addition of an
+  Output Agent Queue, (DDDD). Since the Output Agent Queue is only relevant to Asynchronous
+  Requests, Functions 5, 6, and 7 are sufficient to demonstrate both <a href="Definitions.html#sync">Synchronous </a>and <a href="Definitions.html#async">Asynchronous
+  </a>processing.</p>
+</blockquote>
+
+<blockquote>
+  <p>Functions 2, 3 and 4 simply exemplify functions without an Output Agent Queue. It is
+  the user-written request (Tymeac Remote Object Method invoked) that determines
+  Synchronous or Asynchronous processing.</p>
+  <p>JFunction_1 is actually called from within a Jini Service. It performs the same as any
+  other Tymeac Function. Since the Output Agent Queue is only relevant to Asynchronous
+  Requests, this Functions is sufficient to demonstrate both <a href="Definitions.html#sync">Synchronous
+  </a>and <a href="Definitions.html#async">Asynchronous </a>processing.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Tymeac Queue's are unconcerned with the overall processing requirements; they just
+    execute their methods. Tymeac Functions simply tie together the Queues and pass input to,
+    and take output from, the Processing Application Classes. This separates the programs from
+    the computer complex.</p>
+  </blockquote>
+</blockquote>
+
+<h3><strong>The JFrame Classes</strong></h3>
+
+<blockquote>
+  <p>Tymeac provides source code for all these classes.</p>
+</blockquote>
+
+<blockquote>
+  <p>Class <a href="TyDemoT1.html">TyDemoT1</a> is the single event request.&nbsp;Enter any
+  one of the Function names, above.&nbsp;Enter values for groups A1-3, B1-3, and C1-3
+  (only two digits in each group are needed).&nbsp; Press SEND.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Result: displays the result.&nbsp;When requesting Functions with multiple Queues, the
+    result message consists of the concatenated output of each Queue <u>in the order that each
+    Queue finishes processing</u>. Execution variables determine the order of completion. </p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Class TyDemoT1Bean is the Bean in support of this Frame.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Class <a href="TyDemoT3.html">TyDemoT3 </a>is the multiple event request.&nbsp;This
+  Class provides a &quot;load&quot; on the system.&nbsp;It starts as many threads as
+  desired. Each thread does multiple requests to Tymeac.<strong>One should carefully
+  consider the processor limits for cycles, RMI,&nbsp; and storage in determining the number
+  of threads to start. </strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Class TyDemoT3Bean is the Bean in support of this Frame.&nbsp;Class TyDemoT3Base is
+    the base storage used by all the started threads.&nbsp;Class TyDemoT3Instant is an
+    intermediary between instantiating all the threads and starting those threads. Class
+    TyDemoT3Thread is the thread Class.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Class <a href="TyDemoJiniT1.html">TyDemoJiniT1</a> is the Jini Client
+  Demonstration. Enter the name of a document and either press the send-with-wait
+  button or the send-without-wait button.</p>
+</blockquote>
+
+  <h3><strong>The Frame Classes</strong></h3>
+<blockquote>
+  <p><a name="cancel"></a>Canceling a synchronous request is difficult to 
+  understand. We provide this simple AWT GUI to demonstrate how this works.</p>
+  <p>Swing requires modification of the GUI fields on the Event Queue. 
+  Therefore, we provide this class using basic AWT.</p>
+  <p><b>TyDemoAWTCancel</b> is the GUI<br>
+  <b>TyDemoAWTCancelBean</b> is the logic module for processing the button logic<br>
+  <b>TyDemoAWTCancelThread1</b> is the thread to handle the syncRequest() to 
+  Tymeac<br>
+  <b>TyDemoAWTCancelThread2</b> is the thread to handle the cancelSyncReq() 
+  to Tymeac</p>
+</blockquote>
+  <p align="center"><a href="Images/TyDemoAWTCancel.jpg">
+  <img border="0" src="Images/TyDemoAWTCancel_small.jpg" xthumbnail-orig-image="Images/TyDemoAWTCancel.jpg" width="100" height="60"></a><br>
+  (click for full image)</p>
+<blockquote>
+  <h3>Send Button</h3>
+  <blockquote>
+  <p>When pressed, a syncRequest() is sent to Tymeac. The timeout is 40 seconds. 
+  If you do nothing else, the Result: will display the result of processing at 
+  the Server.</p>
+  <p>If you cancel a request and send another request and just wait, the second 
+  send will timeout. The server is still processing the first request (currently 
+  a sleep() of 30 seconds.)</p>
+  <p>You can do Send/Cancel repeatedly.</p>
+  <p>You cannot do Send, Send, Cancel. </p>
+  <blockquote>
+  <p>Each Send generates a new cancel word and the logic does not save this 
+  field. When you try to Send a second time and the Send Thread is waiting for a 
+  reply, it ignores subsequent calls.</p>
+  </blockquote>
+  </blockquote>
+  <h3>Cancel Button</h3>
+  <blockquote>
+  <p>When pressed after the Send Button, a cancelSyncReq() is sent to 
+  Tymeac. The Result: will display the result of canceling the request.</p>
+  </blockquote>
+  <h3>System.out </h3>
+  <blockquote>
+  <p>Displays messages from both buttons.</p>
+  </blockquote>
+  <h3>Threads</h3>
+  <blockquote>
+  <p>Both calls to Tymeac are done in separate threads.</p>
+  </blockquote>
+  <h3>N.B.</h3>
+  <blockquote>
+  <p>The logic in this demonstration is rudimentary. It's just a simple 
+  show-how. Yes we know it's ugly.</p>
+  </blockquote>
+  <h3>&nbsp;Scripts</h3>
+  <blockquote>
+  <p>We provide a <a href="Scripts.html#cancel">script</a> to run this demo.</p>
+  </blockquote>
+</blockquote>
+
+<h3>The Command Line Classes</h3>
+
+<blockquote>
+  <p>[prefix <big>com.tymeac.demo.</big>]</p>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac provides source code for all these classes.</p>
+  <p><strong>DemoClientBase</strong> is the base class from which all the other classes
+  extend. It is the place where all the processing logic lives.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>DemoClient_1-4&nbsp;&nbsp; </strong>Each of these classes invokes the
+  Synchronous Request method of the Tymeac Server for Function_1-4 respectively, and
+  println()'s the result. </p>
+</blockquote>
+
+<blockquote>
+  <p><strong>DemoClient_5-7&nbsp;&nbsp; </strong>Each of these classes invokes the
+  Asynchronous Request method of the Tymeac Server for Function_5-7 respectively, and
+  println()'s the result. </p>
+</blockquote>
+
+<blockquote>
+  <p><strong>DemoClient_8&nbsp;&nbsp; </strong>This class invokes the Synchronous Request
+  method of the Tymeac Server for Function_8 and println()'s the result. This is the
+  recursive test.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>TyDemoClient_multi&nbsp;&nbsp; </strong>This class invokes the Synchronous
+  Request method of the Tymeac Server for Function_1, 2, 3, and 4, invokes the Asynchronous
+  Request method of the Tymeac Server for Function_5, 6, and 7, and println()'s the result
+  of each.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>DemoClient_Shutdown&nbsp;&nbsp; </strong>This class invokes the shutdown
+  Request method of the Tymeac Server and println()'s the result.&nbsp; To fully shutdown
+  the system run this class several times.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>TyDemoClient_getStatus&nbsp;&nbsp; </strong>This class queries Tymeac for the
+  status of a prior Asynchronous Request.&nbsp; Before running this class, fill in the
+  MilliTime and Request Id, and, recompile.&nbsp; The return String is the same as the Frame
+  Class, <a href="TyReqStatus.html">TyReqStatus</a>.</p>
+</blockquote>
+
+<hr noshade>
+
+<p><big>Additionally, the demonstration system provides source code for twelve queues:</big></p>
+
+<blockquote>
+  <p><big>As part of the Tymeac Tutorial:</big><ul>
+    <li><strong style="font-weight: 400">Cylinder_Queue&nbsp; Refill_Queue &nbsp;
+      TopCap_Queue&nbsp; BottomCap_Queue&nbsp; CostAgent_Queue</strong></li>
+    <li><strong style="font-weight: 400">Tube_Queue&nbsp; Ink_Queue&nbsp; MetalTip_Queue
+      &nbsp; Ball_Queue</strong></li>
+  </ul>
+  <p><big>As part of the Callback demonstration:</big></p>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li>CALA&nbsp;&nbsp; CALB&nbsp;&nbsp; CALC &nbsp;&nbsp;
+      CALD</li>
+  </ul>
+</blockquote>
+
+<p><big>three additional functions:</big></p>
+
+<blockquote>
+  <p><big>As part of the Tymeac Tutorial:</big><ul>
+    <li>PenCost&nbsp; RefillCost</li>
+  </ul>
+  <p><big>As part of the Callback demonstration:</big><ul>
+    <li>Function_Callback</li>
+  </ul>
+</blockquote>
+
+<p><big>thirteen additional Processing Application Classes: </big>[prefix <big>com.tymeac.serveruser.</big>]</p>
+
+<blockquote>
+  <p><big>As part of the Tymeac Tutorial:</big></p>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li>CostofCylinder&nbsp; CostofRefill&nbsp; CostofTopCap
+      &nbsp; CostofBottomCap&nbsp; CostofTube&nbsp; CostofInk&nbsp; CostofMetalTip &nbsp;
+      CostofBall&nbsp; CostAgent</li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p><big>As part of the Callback demonstration: </big>[prefix <big>com.tymeac.serveruser.</big>]</p>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li>DemoCallback1&nbsp; DemoCallback2&nbsp; DemoCallback3
+      &nbsp; DemoAgentCallback</li>
+  </ul>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

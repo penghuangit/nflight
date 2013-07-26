@@ -1,0 +1,126 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Data Base Management System</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Data Base Management System</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This section describes the DBMS requirements for the Tymeac System.</p>
+  </blockquote>
+</blockquote>
+
+<h2>Purpose</h2>
+
+<blockquote>
+  <p>A relational database is necessary to permanently store the Tymeac <a href="Definitions.html#function">Functions</a> and <a href="Definitions.html#queue">Queues</a>
+  for use in your systems, as well as the optional <a href="RunTime.html#stats">Statistics</a>
+  and <a href="RunTime.html#log">Log</a>.</p>
+</blockquote>
+
+<h2>Usage</h2>
+
+<blockquote>
+  <p>Tymeac uses the JDBC methods to communicate with this database, therefore, you must
+  install the necessary driver for this database.</p>
+  <p>Tymeac only supports one DBMS per session. If you want the Functions and 
+  Queues to be in one DBMS and the Log and/or Statistics Repository in another 
+  DBMS, then file a request for an enhancement. You may have the Log and/or 
+  Statistics Repository in a local file or in a user defined class (where you 
+  can support another DBMS yourself.)</p>
+  <p><a name="embedded"></a><b>Embedded databases.</b></p>
+  <blockquote>
+  <p>Tymeac supports the Derby data base both as a network server and as an 
+  embedded data base. Derby is part of the Apache Derby project and may be 
+  downloaded from the apache.org website. We define the steps necessary to use 
+  Derby in a <a href="Derby.html">separate document</a>.</p>
+  <p>Tymeac supports the Hsql data base both as a network server and as an 
+  embedded data base. Hsql may be 
+  downloaded from the hsqldb.org website. We define the steps necessary to use 
+  Hsql in a <a href="Hsql.html">separate document</a>.</p>
+  <p>By no means are these the only databases for using Tymeac. Tymeac was 
+  originally built using DB2, so that works just fine too. Since Tymeac is open 
+  source, we choose two open source databases that work both as a network server and 
+  as an embedded server.</p>
+  <p><b><a name="embedShut"></a>Embedded database shutdown:</b></p>
+  <blockquote>
+  <p>You normally shutdown network databases when they are no longer necessary 
+  for anyone to access. Embedded databases should be shut down before the JVM 
+  exits so that checkpoints, etc. may be taken.</p>
+  <p>Tymeac cannot know what type of database you have and so Tymeac cannot 
+  supply code to shut it down gracefully when Tymeac closes. Therefore, we 
+  provide a hook, at the very end of Tymeac execution, for you to add your own code.</p>
+  <p>You specify the Class you want Tymeac to instantiate at Tymeac shutdown as 
+  a command line option:</p>
+    <blockquote>
+  <p>
+    <b>-edbsd</b> followed by your fully qualified Class name for shut down. 
+  Such as:<br>
+&nbsp;&nbsp;&nbsp; -edbsd com.tymeac.serveruserDerbyEmbeddedShutdown</p>
+    </blockquote>
+  <p>When set, Tymeac will instantiate your Class exactly the same as with a
+    <a href="UserExits.html">user exit</a>. That is, the class must have a 
+  no-argument constructor where you put the code you want to execute. The class 
+  name must be fully qualified (com.tymeac, etc) and may have URL's, see the <a href="ClassNameFormat.html">naming and URL</a> document.</p>
+  <p>Tymeac instantiates this Class at the end of Tymeac shut down just before starting the
+    <a href="Shutdown.html#shuthread">shut down thread</a> (when required.) This 
+  is, after executing any optional, stage-2 shut down Classes and writing the 
+  system statistics. Tymeac logging is no longer active. You may print on the console window (it's your code 
+  to do that.) If your code hangs for any reason, then Tymeac will not start the 
+  shut down thread. This is the <a href="UserExits.html#hang">same condition as 
+  for user exits.</a></p>
+  <p>We supply two examples for this in the /serveruser directory:<br>
+&nbsp;&nbsp;&nbsp; com.tymeac.serveruser.DerbyEmbeddedShutdown<br>
+&nbsp;&nbsp;&nbsp; com.tymeac.serveruser.HsqlEmbeddedShutdown</p>
+  </blockquote>
+  </blockquote>
+  <h3>Definitions</h3>
+  <blockquote>
+    <p>The Queue Table is defined <a href="DBMSQue.html">here</a>.
+    <font color="#FF0000">New column in release 6.0.</font></p>
+  </blockquote>
+  <blockquote>
+    <p>The Function Table is defined <a href="DBMSFunc.html">here</a>.&nbsp; The List of
+    Queues for each Function is defined <a href="DBMSList.html">here</a>.</p>
+  </blockquote>
+  <blockquote>
+    <p>The Statistics Table is defined <a href="DBMSStats.html">here</a>.
+    <font color="#FF0000">Column name changes in release 5.1.</font></p>
+  </blockquote>
+  <blockquote>
+    <p>The Log Table is defined <a href="DBMSLog.html">here</a>.&nbsp;
+    <font color="#FF0000">Column name changes in release 5.1.</font></p>
+    <p><b>The tables are pre-defined for easy insertion. Look in the /scripts/sql 
+    directory.</b></p>
+  </blockquote>
+  <h3>Maintenance</h3>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Tymeac locates these tables by String names in the <a href="TyCfg.html">Configuration
+    File</a>.</p>
+    <p>The Queue Table is maintained <a href="TyQueMaint.html">here</a>.</p>
+    <p>The Function and List Tables are maintained <a href="TyFuncMaint.html">here</a>.</p>
+    <p>Tymeac does not provide standard maintenance functions for the optional tables. 
+    Sorting, printing, merging, purging, etc. are unique for each customer. 
+    However, there are simple utilities in the <b>com.tymeac.test</b> directory 
+    that customer's can alter for their use.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

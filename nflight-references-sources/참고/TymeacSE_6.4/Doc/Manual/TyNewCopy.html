@@ -1,0 +1,164 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>New Copy of Queue Processing Applicartion Class </title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>New Copy of Application Class, <br>
+&nbsp;&nbsp;&nbsp; com.tymeac.client.jframe.TyNewCopy</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>This frame class either reloads a Queue's Processing Application Class or loads an
+      alternate Queue's Processing Application Class.</p>
+      <p>The non-frame version of this class is <a href="#non">TyNewCopyClient</a>, below.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Changes to the processing code are sometimes necessary.&nbsp;This process allows
+  immediate reflection of those changes without taking the Tymeac Server down. Naturally,
+  this is useful during testing.&nbsp;However, this is useful when using version numbers as
+  part of the Class Name.&nbsp; For <strong>example</strong>:</p>
+  <blockquote>
+    <p>Class, AccountPost_431, is the original Class.</p>
+    <p>Class, AccountPost_432, is the new Class.</p>
+    <p>Specify a New Class as AccountPost_432 and load this new Class as the Processing
+    Application Class for the Queue.</p>
+    <p>If something goes wrong with this new Class, then simply restore the original,
+    AccountPost_431, as the New Class and load this original as the Processing Application
+    Class for the Queue.</p>
+  </blockquote>
+  <p><img src="Images/Caution.gif" alt="Caution.gif (1012 bytes)" width="20" height="20">&nbsp; <font color="#FF0000">
+  Caution</font>.&nbsp; All processing for a Queue <i>should</i> cease before using
+  this procedure.</p>
+  <blockquote>
+    <p>Tymeac does not check to see if any thread on the Queue is busy 
+    processing a request in a Processing Application Class. If threads are busy 
+    working through the wait lists then the change may take effect in the middle 
+    of the lists causing interesting results.</p>
+    <p>If a Tymeac Queue Thread is hanging in the application class, then you must kill that
+    thread.&nbsp;The Id of the thread is in <a href="TyQueThd.html">TyQueThd</a>.&nbsp;<a href="TyQueMaint.html">TyQueMaint</a> 
+    details the full name of the thread.&nbsp;Failure to do this may have undesirable 
+    side effects.</p>
+  </blockquote>
+  <p><strong>N.B.</strong> When using the URL option, the Processing Application Class may
+  not be within the CLASSPATH or Java will load the class from the CLASSPATH and ignore the
+  URL option.&nbsp;ALL classes instantiated by this Processing Application Class must also
+  NOT be on the CLASSPATH but within the URL list.</p>
+  <p>There are three options:<ol>
+    <li>
+    <p align="left">Reload a Processing Application Class from the current URL.&nbsp;Tymeac instantiates a
+      new URLClassLoader using the URL array of the current URLClassLoader. Tymeac loads the
+      Processing Application Class as found in the Queue. In this way, the class loads into a
+      new NameSpace and immediately reflects any changes from compiling. ALL classes
+      instantiated by this Processing Application Class are loaded by the same URLClassLoader.<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Specify only the Queue Name.</li>
+    <li>
+    <p align="left">Load a new or the same Processing Application Class from a URL list.&nbsp;Tymeac
+      instantiates a new URLClassLoader using the URL array specified with the Class Name.
+      Tymeac loads the Processing Application Class as found in the (new) Class Name. The
+      original Processing Application Class may have been on the CLASSPATH.&nbsp; By using this
+      option, you set a URLClassLoader as the new default.<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Specify both a Queue Name and a (new)
+      Processing Application Class with a URL list.</li>
+    <li>
+    <p align="left">Load a new Processing Application Class from the CLASSPATH.<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Specify both a Queue Name and a (new)
+      Processing Application Class.</li>
+  </ol>
+  <blockquote>
+    <hr noshade size="3">
+  </blockquote>
+</blockquote>
+
+<p align="center"><a href="Images/TyNewCopy.jpg">
+<img src="Images/TyNewCopy_small.jpg" alt="TyNewCopy.jpg (23031 bytes)" border="2" width="100" height="66"></a>&nbsp; (click to link to full image)</p>
+
+<h3><strong>Elements</strong></h3>
+
+<blockquote>
+  <p><strong>Queue Name</strong> -- Enter the name of the Tymeac Queue.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>(new) Appl. Class</strong> -- Enter a new Class name and optional URL list, see
+  the <a href="ClassNameFormat.html">class naming and URL</a> document.</p>
+</blockquote>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>LOAD</strong> -- Loads the new Application Class.</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- (xx) is the return code for the non-gui
+class. This is an information message:</p>
+
+<blockquote>
+  <p>(0)&nbsp; <u>Successful</u> -- Completed successfully.</p>
+  <p>(-1)&nbsp; <u>Connection failure</u> -- The RMI connection failed or the Tymeac Server
+  returned an invalid message.</p>
+  <p>(1)&nbsp; <u>Enter a New Class Name</u> -- Required for the classpath option.</p>
+  <p>(2)&nbsp; <u>New Class load error</u> -- The load failed for the new Class.</p>
+  <p>(3)&nbsp; <u>Queue name invalid</u> -- As indicated. </p>
+  <p>(5)&nbsp; <u>Enter a Queue Name</u> -- This is always required.</p>
+  <p>(6)&nbsp; <u>Original load was not with a URLClassLoader</u> -- For option 1, when only
+  entering a Queue Name the Original Class must have been
+  loaded with a URLClassLoader.</p>
+  <p>(7)&nbsp; <u>Re-load of original class, load error</u>&nbsp; -- For Option 1, the load
+  failed for the original Class.</p>
+  <p>(8)&nbsp; <u>Invalid Class::URL format</u> -- See the <a href="ClassNameFormat.html">class
+  naming and URL</a> document for how to specify this information.</p>
+  <p>(9)&nbsp; <u>Invalid URL format</u> -- See the JavaDoc for how to specify a
+  java.net.URL() with a single String constructor.</p>
+  <p>(10)&nbsp; <u>New class name same as original</u> -- For option 3, cannot reload a
+  class on the classpath.</p>
+</blockquote>
+
+<hr>
+
+<h3><a name="non"></a>com.tymeac.client.TyNewCopyClient (<a href="../JavaDoc/com/tymeac/client/TyNewCopyClient.html">JavaDoc</a>)</h3>
+
+<blockquote>
+  <blockquote>
+    <p>This is the Non-GUI equivalent of the GUI Class, above. An example of how to use this
+    class is: com.tymeac.demo.TyDemoClient_NewCopy.java in the
+    &lt;TymeacHome&gt;source/com/tymeac/demo directory.</p>
+  </blockquote>
+  <p>Constructor 1 -- has no arguments. This is for the RMI Server. The constructor gets a
+  new instance of&nbsp;a Tymeac internal class that is similar to <a href="TySvrComm.html">TySvrComm</a></p>
+</blockquote>
+
+<blockquote>
+  <p>Constructor 2--&nbsp; is for the internal server. The single argument is the Tymeac
+  Server Interface, TymeacInterface.</p>
+</blockquote>
+
+<p><strong>Instance Methods</strong> --</p>
+
+<blockquote>
+  <p>public int load(String que, String new_class) {</p>
+  <blockquote>
+    <p>Returns an integer return code, see message block, above.</p>
+    <p>Parameters are the name of the que and the name of the new class. See elements, above.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

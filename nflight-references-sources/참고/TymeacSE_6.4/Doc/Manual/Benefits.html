@@ -1,0 +1,329 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Benefits Exemplified</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Benefits Exemplified</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>This section gives details and examples of the <a href="../Brochure/Bennies.html">Benefits</a>
+      of using the Tymeac System found in the Product description.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h2 style="text-align: justify"><a name="control"></a>Control for Asynchronous Threads</h2>
+
+<blockquote>
+  <p>See Product description, <a href="../Brochure/Bennies.html#threads">Control for
+  Asynchronous Threads</a>.</p>
+  <p>Multi-threading goes back to the 1950's.&nbsp;Even languages like FORTRAN support
+  multi-threading.</p>
+  <p>What they do not support is a way to manage the threads, see <a href="../Brochure/BExPur.html#manage">problems</a>.&nbsp; </p>
+  <p>An example of unmanaged threads is the Demonstration System multiple event Class.&nbsp;
+  </p>
+  <blockquote>
+    <p style="text-align: justify"><a href="TyDemoT3.html">TyDemoT3</a> is the Demonstration
+    Class that can put a load on your system.</p>
+    <blockquote>
+      <p>TyDemoT3Bean, TyDemoT3Base, TyDemoT3Instant and TyDemoT3Thread are Classes in support
+      thereof.&nbsp; </p>
+    </blockquote>
+    <p>TyDemoT3 does not manage the synchronous threads (TyDemoT3Thread).&nbsp;If something
+    goes wrong, so what. Just kill the process and start over. This is simply a demonstration.
+    We provide the source code.&nbsp;You can add/alter that which you like. Make the base
+    array volatile.&nbsp;Add synchronized methods. This is not mission critical.</p>
+  </blockquote>
+  <p>Tymeac can handle your mission critical applications.</p>
+  <p>When applications run on servers in remote locations there is no easy way to kill the
+  process and start over.&nbsp; When applications need multi phase commits across the
+  network or handle money, they must be secure, reliable, manageable and fault tolerant.</p>
+  <p style="text-align: justify"><strong>Tymeac is secure.</strong></p>
+  <blockquote>
+    <p>Tymeac runs on each server without direct connections to any other server [single
+    affinity].</p>
+    <p>Tymeac has no communication facilities.&nbsp;All RMI and ClassLoader
+    processing within Tymeac is for local resources, only (<a href="TyVariables.html">TyVariables</a>,
+    url_name).&nbsp; <a href="Develop.html#pap">Processing Application Classes</a> load with a
+    custom loader for the local system only (findSystemClass()). Even <a href="TyNewCopy.html">new versions</a> of Processing Application Classes use a custom
+    loader for the local system only (and a new Name Space).</p>
+    <p>This ensures that no unauthorized modules enter the system.</p>
+    <p>While it is true that your Processing Application Classes may violate encapsulation,
+    Tymeac itself is secure.</p>
+  </blockquote>
+  <p style="text-align: justify"><strong>Tymeac is reliable.</strong></p>
+  <blockquote>
+    <p>Tymeac<sup><small>&#153;</small></sup> was originally designed to manage asynchronous
+    tasks in the transaction processing environment.</p>
+    <p>This is the 24/7 arena of international credit authorization, money transfers and all
+    mission-critical applications.</p>
+    <p>Tymeac<sup><small>&#153;</small></sup> grew up with the principal of &quot;no
+    excuses&quot;.&nbsp;Today, all the features that make Tymeac<sup><small>&#153;</small></sup>
+    a highly reliable, fully mission-critical software product are available for the Java<sup><small>&#153;</small></sup>
+    Virtual Machine.<ul>
+      <li>total number of 'threads per Queue' limits to prevent thread overload,</li>
+      <li>thread creation / destruction as necessary,</li>
+      <li>thread activation according to thresholds, not chance,</li>
+      <li>prioritized Queues for requests,</li>
+      <li>extensive monitoring of the thread environment to pinpoint stalls,</li>
+      <li>integrated re-scheduling for stalled requests,</li>
+      <li>interfacing with user-controlled notification systems when problems arise,</li>
+      <li>support for synchronous (timed) requests as well as asynchronous (background) requests,</li>
+      <li>GUI support to monitor and alter the environment for system personnel,</li>
+      <li>logging of statistics at shutdown and on request,</li>
+      <li>support for any DBMS through JDBC, to optionally store parameters and logs,</li>
+      <li>support for any embedded DBMS,</li>
+      <li>support for non-DBMS parameters for a minimal footprint.</li>
+    </ul>
+  </blockquote>
+  <p style="text-align: justify"><strong>Tymeac is manageable.</strong></p>
+  <blockquote>
+    <p>Tymeac's <a href="TyFuncMaint.html">Functions</a> and <a href="TyQueMaint.html">Queues</a>
+    were designed for manageability. </p>
+    <p>Adding or removing a Queue (Normal or Output Agent) from a Function is only a matter of
+    a table change.</p>
+    <p>Changing the Processing Application Class that executes within a thread is only a
+    matter of a table change.</p>
+    <p>Adding or removing threads from a Queue is only a matter of a table change.</p>
+    <p>Tymeac provides almost unlimited control for managing the <a href="TyQueMaint.html#threshold">new thread algorithm</a>.&nbsp;This assures that only
+    those threads that are immediately necessary to process requests are active, saving <a href="Tuning.html#threads">valuable processor resources</a>.&nbsp; </p>
+  </blockquote>
+  <blockquote>
+    <p><a href="Tuning.html#waitlists">Prioritized Wait Lists</a> provide the means to
+    properly schedule requests and to assure users that the hot request gets immediate
+    attention.</p>
+    <p>The entire execution environment is viewable (<a href="TyQueThd.html">Threads</a>, <a href="TyWlData.html">Wait Lists</a>). <a href="TyQueThd.html">Thread status</a> is
+    alterable.&nbsp;<a href="TyQueData.html">Queue data</a> including the number of&nbsp;
+    Wait List entries is alterable.</p>
+    <p>System statistics log at <a href="Shutdown.html">shut down</a> and <a href="TyStats.html">on request</a>.</p>
+  </blockquote>
+  <p style="text-align: justify"><strong>Tymeac is <a href="Benefits.html#failure">fault
+  tolerant</a>.</strong></p>
+  <blockquote>
+    <p>Optional <a href="TymeacParm.html">timing</a> of user requests provides 
+    immediate notification of an abnormal event.</p>
+    <p>Automatic <a href="SchdFail.html">back out</a> provides for intermediate component
+    failure.</p>
+  </blockquote>
+  <blockquote>
+    <p>A Monitor thread thoroughly examines the system at set intervals reallocating and
+    freeing resources, and, notifying the user&#146;s <a href="TyNotify.html">early warning
+    system </a>of potential problems.</p>
+  </blockquote>
+  <p>Tymeac is the easiest way to run a background process.&nbsp;The background process, or,
+  back end -- back room, is common in the Enterprise. The Tymeac <a href="TySvrComm.html">Asynchronous
+  Request</a> method is the means to feed the background task. The <a href="Definitions.html#client">Tymeac Client</a> accepts data and <a href="TymeacParm.html">passes</a> the Object to the Tymeac Server.&nbsp;The background
+  process executes without any intervention from the requesting Tymeac Client.&nbsp;The <a href="ex1.html">examples</a>, revalue portfolio, is also an example of background
+  processing.</p>
+</blockquote>
+
+<h2 style="text-align: justify">Reduced Processor Overhead</h2>
+
+<blockquote>
+  <p>See Product description, <a href="../Brochure/Bennies.html#overhead">Reduced Processor
+  Overhead</a>.</p>
+  <p>The Messaging API and the DataBase API (JDBC) provide two prime examples of how Tymeac
+  can cut overhead in your processing environment.</p>
+  <p>Set up a Center (Messaging, DataBase, etc).&nbsp;Access to the Center is through a
+  transport mechanism (RMI and CORBA are two such transports).&nbsp;When the first request
+  arrives for a particular service, open the service and place the request therein.&nbsp; As
+  each new request arrives, place the request therein. When at a threshold (either request
+  limit or time-out) close the service.</p>
+  <p>In this way, multiple requests can process between the open and the close.</p>
+  <p>See the <a href="Demo.html">Demonstration System</a>.&nbsp;The Tymeac Functions for
+  asynchronous processing with an Output Agent Queue are Functions 5, 6, and 7. The Output
+  Agent Processing Application Class for these Tymeac Functions is DemoAgent1. Alter this
+  Class to send the results of local processing to your Center.</p>
+</blockquote>
+
+<h2 style="text-align: justify">Scalability</h2>
+
+<blockquote>
+  <p style="text-align: justify">See Product description, <a href="../Brochure/Bennies.html#scale">Scalability</a></p>
+  <p>How many threads does a logical process need?&nbsp;The answer depends on the number of
+  outstanding requests (load). The higher the load, the more threads may be needed to
+  process requests.</p>
+  <p>Tymeac<sup><small>&#153;</small></sup> provides four <a href="TyQueMaint.html#threshold">thresholds</a> to give designers control over this
+  parameter. Tymeac<sup><small>&#153;</small></sup> <a href="TyQueMaint.html#start">creates
+  a new thread</a> either at start up or when first needed (threshold processing) and <a href="TyQueMaint.html#kill">destroys the thread</a> either after an idle period or never.
+  This is a dynamic response to an ever changing environment.</p>
+</blockquote>
+
+<h2 style="text-align: justify">Facilitated Recursion Processing</h2>
+
+<blockquote>
+  <p>See Product description, <a href="../Brochure/Bennies.html#recursion">Nested Processing</a></p>
+  <p>See pattern, <a href="Patterns.html#recursion">Recursion</a>.</p>
+  <p>Recursion is taught in compiler theory courses.&nbsp;The standard example is the
+  parenthesis processor.&nbsp;Most languages support recursion, even going back as far as
+  PL/1.</p>
+  <p>What is not standard is how a separate, executing &quot;process&quot;, can call itself
+  or another as a new thread. Just keeping track of the levels is exhausting. Add in
+  component failures and stalls, and you need Tymeac.</p>
+  <p>The <a href="Demo.html">Demonstration System</a> contains an example of recursion.
+  Function_8 is the recursive processing <a href="Develop.html#function">Function</a>.
+  The <a href="ex1.html">examples</a>, revalue portfolio, is also an example of how
+  to use Tymeac recursion.</p>
+  <p>The <a href="TyNotify.html">Notification System </a>is a recursive example. The <a href="Monitor.html">Tymeac Monitor</a>, when it finds a problem, calls itself, the Tymeac <a href="Definitions.html#broker">Server</a>, as a Tymeac <a href="Definitions.html#client">Client</a>.</p>
+</blockquote>
+
+<h2 style="text-align: justify">Simplified Application Development</h2>
+
+<blockquote>
+  <p>See Product description, <a href="../Brochure/Bennies.html#repository">Concurrent
+  Development</a>.</p>
+  <p>Tymeac supports the construction of simple, single process objects. These <a href="Develop.html#pap">Processing Application Classes</a> run under Tymeac Threads.
+  The object gets the input message from Tymeac, executes the process, and returns the
+  output message back to Tymeac.</p>
+  <p>Tymeac allows object development to proceed in a concurrent manor.&nbsp;Tymeac allows
+  incremental prototyping and development of all tasks simultaneously. The design,
+  construction, and testing of objects in a vacuum simplifies the entire
+  process.&nbsp;Redesign of the object does not effect other objects and can proceed without
+  shutting down the <a href="TyNewCopy.html">system</a>.&nbsp;Since Tymeac allows objects to
+  execute as separate threads, the vacuum development environment reflects the real world
+  environment.</p>
+  <p>Once written and tested, these objects then become part of your repository.&nbsp;Since
+  they are Java<sup><small>&#153;</small></sup> objects, and Tymeac itself is a 100% pure
+  application, they can run on any hardware, anywhere.&nbsp;See design pattern, <a href="Patterns.html#sharing">Use-Sharing</a>.</p>
+  <p>See the <a href="Demo.html">Demonstration System</a>.&nbsp;Each <a href="Develop.html#pap">Processing Application Class</a> is small, single purpose. Getting
+  a final result is simply a matter of stringing together the Tymeac <a href="Develop.html#queue">Queues</a> into a Tymeac <a href="Develop.html#function">Function</a>.</p>
+  <p>Reuse has become a reality.</p>
+</blockquote>
+
+<h2 style="text-align: justify"><a name="failure"></a>Failure Containment</h2>
+
+<blockquote>
+  <p>See Product description, <a href="../Brochure/Bennies.html#failure">Failure Containment</a></p>
+  <p>Failures propagate up the chain.&nbsp;They also propagate sideways, downward, halfway
+  in between and around. Anyone who writes programs outside the stand-alone world
+  knows this.</p>
+  <p>Other industries have means to limit exposure from the harmful:</p>
+  <blockquote>
+    <p>The nuclear industry has containment vessels to hold the radio active material.</p>
+    <p>The biological industry has sealed laboratories to contain the deadly germs.</p>
+  </blockquote>
+  <p>Until the day comes that computer programs can be 100% thoroughly tested in all
+  situations, then a means for isolating code is desirable.</p>
+  <p>Tymeac provides the means to isolate the code.&nbsp;Each <a href="Develop.html#pap">Processing
+  Application Class</a> is separate from the other Processing Application Classes (see
+  pattern, <a href="Patterns.html#mediator">Mediator</a>).&nbsp;Each Processing Application
+  Class can fail without affecting any other Processing Application Class. Tymeac
+  automatically backs out intermediate component failures when Queues <a href="SchdFail.html">fail to schedule</a>.&nbsp;Tymeac <a href="Develop.html#testing">testing</a>
+  is easier than the traditional approach.</p>
+  <p>When your Processing Application Class is a front end for Messaging, Data Base, or
+  transport mechanisms, then the isolation environment of Tymeac can save your business
+  immeasurable hours of debugging.&nbsp;There is no need to sift through extraneous elements
+  of the matrix.&nbsp;See also <a href="Benefits.html#gateway">Gateway</a>, below.</p>
+</blockquote>
+
+<h2>The Web Servides Solution</h2>
+
+<blockquote>
+  <p>See Product description, <a href="../Brochure/Bennies.html#jini">The Web Service
+  Solution</a>.</p>
+  <p>The major problem facing application developers in the Web Service environment is that
+  they must deal with an asynchronous-process in addition to the networking and proxy
+  management of a Jini or UDDI Service.</p>
+  <p>Tymeac solves the asynchronous-process, application development problem.</p>
+</blockquote>
+
+<h2>Reduced Response Times</h2>
+
+<blockquote>
+  <p>See Product description, <a href="../Brochure/Bennies.html#parallel">Reduced Response
+  Times</a>.</p>
+  <p>The requirement today is for modularized, functionally isolated code so that the
+  hardware, network, and framework can function with parallel processing to significantly
+  reduce response times.</p>
+  <p>See the <a href="Demo.html">Demonstration System</a>.&nbsp;The Tymeac Functions 1, 3,
+  4, 6, and 7 use multiple Tymeac Queues that are active simultaneously.&nbsp;The order of
+  completion is irrelevant as well as the order of dispatch.</p>
+  <p>See also the <a href="ex1.html">examples</a>. Both these examples use multiple Tymeac
+  Queues pulling together to solve the problem.</p>
+  <p>For your needs, almost any situation where multiple modules can work on the problem
+  without temporal concurrency, parallel processing with Tymeac is available.</p>
+</blockquote>
+
+<h2>Separately Tunable JVM's</h2>
+
+<blockquote>
+  <p ALIGN="JUSTIFY" style="text-align: justify">See Product description, <a href="../Brochure/Bennies.html#tunable">Tunable JVM's</a>.</p>
+  <p align="justify" style="TEXT-ALIGN: justify">Tymeac Server runs in its own Java Virtual
+  Machine, separate from your application Client, Data Base Management System, Jini Service
+  or other middle tier layer.&nbsp;This advantage lets you:</p>
+  <ul>
+    <li><p align="left">Use separate security property and/or classpath options.&nbsp;You can
+      have the same process resident in several JVM's each with its own -Dsecurity.policy.file
+      or -classpath.&nbsp; In this way, you can control who does what, where, and when.</p>
+    </li>
+    <li><p align="left">Personnel may quickly move the JVM to the most advantageous machine when
+      needed. This is as easy as changing a script file and moving it to another machine along
+      with the Tymeac class files.</p>
+    </li>
+    <li><p align="left">Personnel may add a debugging interface or profiling option. Since each
+      JVM is separate, stopping the processing of one does not impact any other.</p>
+    </li>
+    <li><p align="left">Personnel may change memory allocation or other non-standard start up
+      options.&nbsp;Non-standard options are good for debugging and tuning. However, Sun may not
+      support each indefinitely or in the same way. Using a separate JVM gives you the option of
+      using what is best now.</p>
+    </li>
+  </ul>
+</blockquote>
+
+<h2><a name="gateway"></a>Gateway to Distributed Computing</h2>
+
+<blockquote>
+  <p>See Product description, <a href="../Brochure/Bennies.html#gateway">Gateway</a>.</p>
+  <p>Tymeac uses an n-tiered architecture.&nbsp;The <u>Tymeac process</u> is separate from
+  the <u>database</u> and the <u>user interface</u>.</p>
+  <p>Each Tymeac component process executes as a separate thread. The communication,
+  application and database interface dependencies normally found in large, multi-function
+  processes do not exist.&nbsp;See pattern, <a href="Patterns.html#adapter">Adapter</a>.</p>
+  <p>As Java<sup><small>&#153;</small></sup> expands into transaction processing, the
+  Logical Unit of Work (LUW) becomes a factor. A complex process (Tymeac Function) can have
+  multiple logical units of work (threads in Tymeac Queues). Each LUW may interface with
+  [including the Java Native Interface] and hold locks on, a different resource.</p>
+  <p>Physically distributing the work is the key to Distributed Computing.&nbsp;Once the
+  work is in separate threads, each independent thread may use any method for transport
+  (RMI, CORBA, etc.) to another location.&nbsp;Each thread is in isolation from the other
+  threads.&nbsp;This also simplifies testing and debugging, see <a href="Benefits.html#failure">Failure Containment</a>, above.</p>
+  <p>The <a href="ex1.html">examples</a>, revalue portfolio, is also an example of how to
+  distribute the work.</p>
+</blockquote>
+
+<h2>Ability to Multi-Process</h2>
+
+<blockquote>
+  <p>See Product description, <a href="../Brochure/Bennies.html#multiprocess">Multi
+  Processing</a>.</p>
+  <p>Multi Processing is the ability to put different threads on different CPU's within the
+  same box.&nbsp;This does not happen by magic.&nbsp;Even FORTRAN must segment the program
+  explicitly.</p>
+  <p>Separating the work into threads is mandatory.&nbsp;Managing those threads is Tymeac.
+  See <a href="Benefits.html#control">Control</a>, above.</p>
+  <p>Trying to manage multiple processes in an MPP or SMP environment is difficult.&nbsp;Tymeac manages multiple processes in unique <a href="Develop.html#queue">Queues</a>.
+  The developer&nbsp;codes the method without concern for the execution environment.</p>
+  <p>Tymeac lets the operating system, Java<sup><small>&#153;</small></sup>, and access
+  methods schedule, monitor and control the use of resources by separating complex requests
+  into component threads.</p>
+  <p>See the <a href="Demo.html">Demonstration System</a>.&nbsp;Any Tymeac Queue can run on
+  any CPU and produce the proper result.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

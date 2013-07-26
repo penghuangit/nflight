@@ -1,0 +1,622 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Scripts</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Scripts</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>We supply scripts (both .bat and sometimes .sh) to run the basic Tymeac features. Unfortunately,
+      we were only able to test the Windows (.bat) scripts for the releases 
+      prior to 5.0.</p>
+      <p><a href="#env">SET_ENV</a> -- The environment variables.<br>
+      <a href="#jini">SET_JINI</a> -- The environment variables when using Jini<br>
+      <a href="#derby">SET_DERBY</a> -- The environment variables when using 
+      Derby database<br>
+      <a href="#hsql">SET_HSQL</a> -- The environment variables when using 
+      Hsql database</p>
+      <p><br>
+      <a href="#rmi">RMIServer</a> -- The Tymeac Server using RMI<br>
+      <a href="#csf">CSFServer</a> -- The Tymeac Server using Custom Socket Factories<br>
+      <a href="#iiop">IIOPServe</a>r -- The Tymeac Server using IIOP<br>
+      <a href="#poa">POAServer</a> -- The Tymeac Server using IIOP (Portable Object Adapter)<br>
+      <a href="#internal">InternalServer</a>-- The internal server as a demonstration<br>
+      <a href="#act">ActStart</a> -- The start up for the Activatable Tymeac Server<br>
+      <a href="#jserver">JiniServer</a> -- The Tymeac Server as a Jini Service<br>
+      <a href="#jact1">JiniAct1</a> -- The first start up script for running the Jini Service as
+      Activatable<br>
+      <a href="#jact2">JiniAct2</a> -- The second start up script for running the Jini Service
+      as Activatable<br>
+      <a href="#doc">JiniDoc</a> --This is the Demo Document Service upgraded to Jini2.<br>
+      <a href="#j1">JTest1</a> -- A Client demonstration of the Jini document service.<br>
+      <a href="#menu">menu</a> -- The Main Tymeac Menu<br>
+      <a href="#shut">Shut</a> -- A quick Server shut down script<br>
+      <a href="#kill">ShutForce</a> -- A quick Server shut down by force script<br>
+      <a href="#t1">T1</a> -- The Single Client access<br>
+      <a href="#t3">T3</a> -- The Multiple Client access<br>
+      <a href="#jf2">JiniF2</a> -- A Client demonstration using Jini<br>
+      <a href="#cfg">JiniShut</a> -- A quick Server shut down using Jini<br>
+      <a href="#cfg">CfgToXml </a>-- Conversion for the old cfg file to new xml.<br>
+      <a href="#cancel">CancelDemo</a> -- Cancel a sync request GUI</p>
+      <p><b><br>
+      There are also scripts for using Derby and Hsql that are the same as many 
+      here but with the DERBY_PATH / HSQL_PATH appended to the classpath.</b></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<p><a name="env"></a><strong>SET_ENV</strong> -- These are the environment variables. You
+must alter these for your location.</p>
+
+<blockquote>
+  <div align="left"><table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td valign="top"><strong>TYMEAC_HOME&nbsp;&nbsp;&nbsp;&nbsp; </strong></td>
+      <td>This is the place you installed Tymeac plus the Classes directory. You must have the
+      /classes (or \classes) at the end. We do not ship jar files. All the classes are in the
+      Classes directory.<br>
+      usr/local/tymeac4.0.1/classes<br>
+      x::\tymeac4.0.1\classes<p>default: none</td>
+    </tr>
+  </table>
+  </div><p>&nbsp;</p>
+  <div align="left"><table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td valign="top"><strong>TYMEAC_IIOP_PORT&nbsp;&nbsp;&nbsp;&nbsp; </strong></td>
+      <td>This is for use with the IIOP/POA server. This port number must be in sync with the
+      orb daemon or transient name server (tnameserv for backward compatibility)<p>orbd -ORBInitialPort
+      <b> <em>nameserverport</em></b> options [ commands ] <br>
+      tnameserv&nbsp; (the default port.is 900)<br>
+      ---------------------------------------------------------------------------------</p>
+      <p>The Well Known Ports:<br>
+      omginitialrefs 900/tcp OMG Initial Refs<br>
+      omginitialrefs 900/udp OMG Initial Refs</p>
+      <p>The default is 900.</td>
+    </tr>
+  </table>
+  </div>
+</blockquote>
+
+<blockquote>
+  <p>&nbsp;</p>
+  <div align="left"><table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td valign="top"><strong>TYMEAC_RMI_PORT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></td>
+      <td>This is the optional exporting port number for the RMI/CSF Servers.When no port number
+      is specified, Tymeac exports to the anonymous port.<br>
+      ----------------------------------------------------------------------------------<br>
+      The port numbers are divided into three ranges: the Well Known Ports,<br>
+      the Registered Ports, and the Dynamic and/or Private Ports.<p>The Well Known Ports are those from 0 through 1023.<br>
+      The Registered Ports are those from 1024 through 49151<br>
+      The Dynamic and/or Private Ports are those from 49152 through 65535 -- 
+      This is where you should pick port numbers for Tymeac Server.</p>
+      <p>The default is
+      50001.</td>
+    </tr>
+  </table>
+  </div>
+</blockquote>
+
+<blockquote>
+  <p>&nbsp;</p>
+  <div align="left"><table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td valign="top"><strong>TYMEAC_HTTP_PORT&nbsp;&nbsp;&nbsp;&nbsp; </strong></td>
+      <td>Codebase http port<br>
+      This is the port number for the codebase http server This is the same port number you use
+      to start your http server. For Jini this may be:<p>&nbsp; -jar %JINI_HOME%/lib/tools.jar -port 8080
+      </p>
+      <p>The default is 8080.</td>
+    </tr>
+  </table>
+  </div>
+</blockquote>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><strong><a name="jini"></a>SET_JINI</strong> -- These are the environment variables 
+for using Jini. You
+must alter these for your location.</p>
+
+<blockquote>
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td valign="top"><strong>JINI_HOME&nbsp;&nbsp;&nbsp;&nbsp; </strong></td>
+      <td>This is the place where you installed Jini<p>These are appended to the classpath TYMEAC uses for running. </p>
+      <p>default: none</td>
+    </tr>
+  </table>
+  </blockquote>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><strong><a name="derby"></a>SET_DERBY</strong> -- These are the environment variables 
+for using Derby database. You
+must alter these for your location.</p>
+
+<blockquote>
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td valign="top"><strong>DERBY_PATH&nbsp;&nbsp;&nbsp;&nbsp; </strong></td>
+      <td>These are the paths (one for each) to each of the Derby jar's:<blockquote>
+        <p>lib/derby.jar<br>
+        lib/derbynet.jar<br>
+        lib/derbyclient.jar<br>
+        lib/derbytools.jar</p>
+      </blockquote>
+      <p>These are appended to the classpath TYMEAC uses for running. </p>
+      <p>default: none</td>
+    </tr>
+  </table>
+  </blockquote>
+
+<p align="left">&nbsp;</p>
+
+<p align="left"><strong><a name="hsql"></a>SET_HSQL</strong> -- These are the environment variables 
+for using Hsql database. You
+must alter these for your location.</p>
+
+<blockquote>
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td valign="top"><strong>HSQL_PATH&nbsp;&nbsp;&nbsp;&nbsp; </strong></td>
+      <td>This is the path to the HsqlDB jar:<blockquote>
+        <p>lib/hsqldb.jar</p>
+      </blockquote>
+      <p>These are appended to the classpath TYMEAC uses for running. </p>
+      <p>default: none</td>
+    </tr>
+  </table>
+  </blockquote>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<p><a name="rmi"></a><strong>RMI Server</strong> -- The Tymeac Server using RMI</p>
+
+<blockquote>
+  <p>This launches the Tymeac Server using the RMI Registry.<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.base.RMIServer -port %TYMEAC_RMI_PORT% -s</p>
+  <blockquote>
+    <p>Prerequisites: The RMI Registry must be running and have access to the tymeac stub
+    (com.tymeac.TymeacInterface).</p>
+    <p>Command line options: <br>
+    -port 'port number' (export the remote object on this port)<br>
+    -s (run in stand alone mode, no DBMS)</p>
+  </blockquote>
+</blockquote>
+
+    <p><b>Derby Server</b> -- Same as above, but with the DERBY_PATH appended to 
+    the classpath.</p>
+
+    <p><b>Hsql Server</b> -- Same as above, but with the HSQL_PATH appended to 
+    the classpath.</p>
+    <p>&nbsp;</p>
+
+<p><a name="csf"></a><strong>CSF Server</strong> -- The Tymeac Server using RMI and Custom
+Socket Factories.</p>
+
+<blockquote>
+  <p>This is the demonstration version since custom means you write your own socket
+  factories.</p>
+  <p>This launches the Tymeac Server using the RMI Registry.<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.demo.CSFServer -port %TYMEAC_RMI_PORT% -s</p>
+  <blockquote>
+    <p>Prerequisites: The RMI Registry must be running and have access to the tymeac stub
+    (com.tymeac.TymeacInterface).</p>
+    <p>Command line options: <br>
+    -port 'port number' (export the remote object on this port)<br>
+    -s (run in stand alone mode, no DBMS)</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="iiop"></a><strong>IIOP Server</strong> -- The Tymeac Server using IIOP</p>
+
+<blockquote>
+  <p>This launches the IIOP Tymeac Server using the JNDI Registry.<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.base.IIOPServer -s</p>
+  <blockquote>
+    <p>Prerequisites: The JNDI Registry must be running.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: <br>
+    -s (run in stand alone mode, no DBMS)</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="poa"></a><strong>POA Server</strong> -- The Tymeac Server using IIOP (Portable
+Object Adapter)</p>
+
+<blockquote>
+  <p>This launches the POA Tymeac Server using the ORB Daemon.<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.demo.TyDemoPOAServer -s</p>
+  <blockquote>
+    <p>Prerequisites:</p>
+    <blockquote>
+      <p>You must write your own export() method since this is an adapter. This script is for
+      the demo version.</p>
+    </blockquote>
+    <blockquote>
+      <p>ORB Daemon must be running.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: <br>
+    -s (run in stand alone mode, no DBMS)</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="internal"></a><strong>Internal Server</strong> -- The Tymeac Server as an
+internal process demonstration.</p>
+
+<blockquote>
+  <p>This launches the demonstration window of how one might use an internal Tymeac Server.<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.demo.jframe.TyDemoInternalTest</p>
+  <blockquote>
+    <p>Prerequisites: none</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: <br>
+    none</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="act"></a><strong>ActStart</strong> -- The Tymeac Server as an Activatable
+remote object.</p>
+
+<blockquote>
+  <p>This launches the demonstration of an Activatable Tymeac Server.<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.demo.TyDemoBaseRMI</p>
+  <blockquote>
+    <p>Prerequisites:<br>
+    You must have previously edited com.tymeac.demo.TyDemoActivationBase.java for the values
+    specific to your installation.<br>
+    The RMI Registry must be running.<br>
+    The Activation System must be running.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: <br>
+    none</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="jserver"></a><strong>Jini Server</strong> -- The Tymeac Server as a Jini
+Service</p>
+
+<blockquote>
+  <p>This launches the Tymeac Server as a Jini Service.<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.jini.base.JiniServer</p>
+  <blockquote>
+    <p>Prerequisites: <br>
+    &nbsp;&nbsp;&nbsp; An http server must be running.<br>
+    &nbsp;&nbsp;&nbsp; A look up service (reggie) must be running.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: (3)<br>
+    &nbsp;&nbsp;&nbsp; -config<br>
+    &nbsp;&nbsp;&nbsp; config/tymeac-jini-ssl-server.config <br>
+    &nbsp;&nbsp;&nbsp; com.tymeac.TymeacServer</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="jact1"></a><strong>Jini Act1</strong> -- Part 1 of starting the Tymeac Server
+as an Activatable Jini Service</p>
+
+<blockquote>
+  <p>This launches the first stage of creating the backend remote object, registering it
+  with the activation service and the RMI Registry.<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.jini.base.JiniActivationCreate1</p>
+  <blockquote>
+    <p>Prerequisites: <br>
+    &nbsp;&nbsp;&nbsp; An http server must be running.<br>
+    &nbsp;&nbsp;&nbsp; A look up service (reggie) must be running.<br>
+    &nbsp;&nbsp;&nbsp; The RMI Registry must be running.<br>
+    &nbsp;&nbsp;&nbsp; The activation system must be running.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: (3)<br>
+    &nbsp;&nbsp;&nbsp; -config <br>
+    &nbsp;&nbsp;&nbsp; config\tymeac-jini-activatable-ssl-server.config <br>
+    &nbsp;&nbsp;&nbsp; com.tymeac.TymeacServer</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="jact2"></a><strong>Jini Act2</strong> -- Part 2 of starting the Tymeac Server
+as an Activatable Jini Service</p>
+
+<blockquote>
+  <p>This launches the second stage of&nbsp; retrieving the backend remote object from the
+  RMI Registry and registering it with a Jini lookup service.<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.jini.base.JiniActivationCreate2</p>
+  <blockquote>
+    <p>Prerequisites: <br>
+    &nbsp;&nbsp;&nbsp; An http server must be running.<br>
+    &nbsp;&nbsp;&nbsp; A look up service (reggie) must be running.<br>
+    &nbsp;&nbsp;&nbsp; The RMI Registry must be running.<br>
+    &nbsp;&nbsp;&nbsp; The activation system must be running.<br>
+    &nbsp;&nbsp;&nbsp; Part 1 must have been successful</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: (3)<br>
+    &nbsp;&nbsp;&nbsp; -config <br>
+    &nbsp;&nbsp;&nbsp; config\tymeac-jini-activatable-ssl-server.config <br>
+    &nbsp;&nbsp;&nbsp; com.tymeac.TymeacServer</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="doc"></a><strong>JiniDoc</strong> -- This is the Demo Document Service
+upgraded to Jini2.</p>
+
+<blockquote>
+  <p>This launches the internal server as part of a Jini Service<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.demo.jini2.base.TyDemoJiniDocService</p>
+  <blockquote>
+    <p>Prerequisites: <br>
+    &nbsp;&nbsp;&nbsp; An http server must be running.<br>
+    &nbsp;&nbsp;&nbsp; A look up service (reggie) must be running.<br>
+    &nbsp;&nbsp;&nbsp; The RMI Registry must be running</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: (3)<br>
+    &nbsp;&nbsp;&nbsp; -config <br>
+    &nbsp;&nbsp;&nbsp; config\tymeac-jini-ssl-server.config <br>
+    &nbsp;&nbsp;&nbsp; com.tymeac.TymeacServer</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="j1"></a><strong>JTest1</strong> -- A Client demonstration of the Jini document
+service</p>
+
+<blockquote>
+  <p>This launches a Client Window for adding documents, <a href="TyDemoJiniT1.html">see
+  here</a>.<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.demo.jini2.client.TyDemoJiniT1 </p>
+  <blockquote>
+    <p>Prerequisites: <br>
+    &nbsp;&nbsp;&nbsp; An http server must be running.<br>
+    &nbsp;&nbsp;&nbsp; A look up service (reggie) must be running.<br>
+    &nbsp;&nbsp;&nbsp; The RMI Registry must be running.<br>
+    &nbsp;&nbsp;&nbsp; A Document Service must be running, (above.)</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: (2)<br>
+    &nbsp;&nbsp;&nbsp; -config <br>
+    &nbsp;&nbsp;&nbsp; config\tymeac-jrmp-client.config </p>
+  </blockquote>
+</blockquote>
+
+<p><a name="menu"></a><strong>Menu </strong>-- This is the Tymeac main menu.</p>
+
+<blockquote>
+  <p>This launches the Window of menu options<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.client.jframe.TyMenu</p>
+  <blockquote>
+    <p>Prerequisites: <br>
+    &nbsp;&nbsp;&nbsp; The RMI Registry must be running. OR<br>
+    &nbsp;&nbsp;&nbsp; The JNDI Registry must be running for the IIOP Server.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: none.</p>
+  </blockquote>
+</blockquote>
+
+    <p><b>Derby Menu </b>-- Same as above, but with the DERBY_PATH appended to 
+    the classpath.</p>
+
+<blockquote>
+  <blockquote>
+    <p>&nbsp;</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="shut"></a><strong>Shut </strong>-- This is a command line shut down of the
+Tymeac Server.</p>
+
+<blockquote>
+  <p>This does a shut down<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.demo.DemoClientShut</p>
+  <blockquote>
+    <p>Prerequisites: <br>
+    &nbsp;&nbsp;&nbsp; The RMI Registry must be running. OR<br>
+    &nbsp;&nbsp;&nbsp; The JNDI Registry must be running for the IIOP Server.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: none.</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="kill"></a><strong>ShutForce </strong>-- This is a command line shut down by
+force of the Tymeac Server.</p>
+
+<blockquote>
+  <p>This does a shut down<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.demo.DemoClientShutForce</p>
+  <blockquote>
+    <p>Prerequisites: <br>
+    &nbsp;&nbsp;&nbsp; The RMI Registry must be running. OR<br>
+    &nbsp;&nbsp;&nbsp; The JNDI Registry must be running for the IIOP Server.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: none.</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="t1"></a><strong>T1 </strong>-- This is the single client access to the
+Demonstration system..</p>
+
+<blockquote>
+  <p>This launches <a href="TyDemoT1.html">T1</a><br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.demo.jframe.TyDemoT1</p>
+  <blockquote>
+    <p>Prerequisites: <br>
+    &nbsp;&nbsp;&nbsp; The RMI Registry must be running. OR<br>
+    &nbsp;&nbsp;&nbsp; The JNDI Registry must be running for the IIOP Server.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: none.</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="t3"></a><strong>T3 </strong>-- This is the multiple client access to the
+Demonstration system..</p>
+
+<blockquote>
+  <p>This launches <a href="TyDemoT3.html">T3</a><br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.demo.jframe.TyDemoT3</p>
+  <blockquote>
+    <p>Prerequisites: <br>
+    &nbsp;&nbsp;&nbsp; The RMI Registry must be running. OR<br>
+    &nbsp;&nbsp;&nbsp; The JNDI Registry must be running for the IIOP Server.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: none.</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="jf2"></a><strong>Jini F2</strong> -- A Client demonstration using Jini</p>
+
+<blockquote>
+  <p>This launches a Client that accesses Function_2 on the Tymeac Server by way of a Jini
+  lookup<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.jini.client.JiniClientF2</p>
+  <blockquote>
+    <p>Prerequisites: <br>
+    &nbsp;&nbsp;&nbsp; An http server must be running.<br>
+    &nbsp;&nbsp;&nbsp; A look up service (reggie) must be running.<br>
+    &nbsp;&nbsp;&nbsp; The RMI Registry must be running.<br>
+    &nbsp;&nbsp;&nbsp; [The activation system must be running for activation.]<br>
+    &nbsp;&nbsp;&nbsp; A Tymeac Server Service must be running</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: (2)<br>
+    &nbsp;&nbsp;&nbsp; -config <br>
+    &nbsp;&nbsp;&nbsp; config\tymeac-jrmp-client.config </p>
+  </blockquote>
+</blockquote>
+
+<p><a name="jshut"></a><strong>Jini Shut</strong> -- A Client shut down using Jini</p>
+
+<blockquote>
+  <p>This launches a Client that accesses for shut down of the Tymeac Server by way of a
+  Jini lookup<br>
+  &nbsp;&nbsp;&nbsp; com.tymeac.jini.client.JiniClientShutDown</p>
+  <blockquote>
+    <p>Prerequisites: <br>
+    &nbsp;&nbsp;&nbsp; An http server must be running.<br>
+    &nbsp;&nbsp;&nbsp; A look up service (reggie) must be running.<br>
+    &nbsp;&nbsp;&nbsp; The RMI Registry must be running.<br>
+    &nbsp;&nbsp;&nbsp; [The activation system must be running for activation.]<br>
+    &nbsp;&nbsp;&nbsp; A Tymeac Server Service must be running</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Command line options: (3)<br>
+    &nbsp;&nbsp;&nbsp; -config<br>
+    &nbsp;&nbsp;&nbsp; config\tymeac-jrmp-client.config <br>
+    &nbsp;&nbsp;&nbsp; -secure</p>
+    <p>Security: When <a href="Security.html#on">security is active</a>, the -secure option,
+    above, brings up a dialog window asking for the pass word. You must enter -- tyclient (in
+    lower case.)</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="cfg"></a><strong>CfgToXml</strong> -- Conversion for the old cfg 
+file to new xml format. The class is in the default directory (no package.)</p>
+
+<blockquote>
+  <p>This launches a standalone program that converts the file format. It uses a 
+  dialog to get the directory and filename of the old and new files.</p>
+  <blockquote>
+    <p>Prerequisites: <br>
+    &nbsp;&nbsp;&nbsp; none</p>
+  </blockquote>
+  <blockquote>
+    <p>Command line options:<br>
+    &nbsp;&nbsp;&nbsp; none</p>
+  </blockquote>
+</blockquote>
+
+<p><b><a name="cancel"></a>CancelDemo</b> -- Cancel a synchronous request.</p>
+
+<blockquote>
+
+<p>This launches an AWT GUI to demonstrate canceling a sync request.</p>
+
+  <blockquote>
+    <p>Prerequisites: <br>
+    &nbsp;&nbsp;&nbsp; The server must be running</p>
+  </blockquote>
+  <blockquote>
+    <p>Command line options:<br>
+    &nbsp;&nbsp;&nbsp; -secure -- to use SSL Security</p>
+  </blockquote>
+</blockquote>
+
+<p><b>Various Others</b> -- Helpful scripts for your use.</p>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

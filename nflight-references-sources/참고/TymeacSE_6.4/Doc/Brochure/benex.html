@@ -1,0 +1,350 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Real World Examples</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/wheat.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1 align="left">Real World Examples</h1>
+
+<h2><a name="top"></a>Contents</h2>
+
+<p><a href="#thresholds">Thresholds</a><br>
+<a href="#hot">Hot Requests</a><br>
+<a href="#timing">Timing Requests</a><br>
+<a href="#async">Asynchronous Requests</a><br>
+<a href="#flood">Flood and Ebb</a><br>
+<a href="#inter">Intermediate Back-out</a><br>
+<a href="#multi">Multiple Requests</a><br>
+<a href="#recursion">Recursion</a><br>
+<a href="#containment">Failure Containment</a><br>
+<a href="#parallel">Parallel Processing</a><br>
+<a href="#gateway">Gateway</a><br>
+<a href="#agent">The Agent</a><br>
+<a href="#call">Call-Back/Forward</a></p>
+
+<p>&nbsp;</p>
+
+<blockquote>
+  <h2><a name="thresholds"></a>Thresholds</h2>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>An application on the RMI Server has components that use a proprietary DBMS.</p>
+    <p><strong>Problem</strong></p>
+    <blockquote>
+      <p>Each DBMS connection can only handle one request at a time but there are multiple
+      connections available for each DBMS. By using several connections simultaneously,
+      throughput can be greatly increased.</p>
+    </blockquote>
+    <p><strong>Solution</strong></p>
+    <blockquote>
+      <p>Set up a Tymeac<sup><small>&#153;</small></sup> Queue with multiple threads for each
+      component. Tymeac<sup><small>&#153;</small></sup> supports four thresholds:<ol>
+        <li>When the number of outstanding requests in all wait lists exceeds an amount.</li>
+        <li>When the number of outstanding requests in an individual wait list exceeds an amount.</li>
+        <li>When the number of outstanding requests in an individual wait list plus a weighted
+          factor exceeds an amount.</li>
+        <li>When the number of outstanding requests in the average of all wait lists plus a weighted
+          factor and considering the number of currently executing threads exceeds an amount.</li>
+      </ol>
+      <p>As the load on a Queue exceeds a threshold, Tymeac<sup><small>&#153;</small></sup>
+      creates a new thread to balance the load.</p>
+    </blockquote>
+    <p><!--webbot bot="ImageMap" rectangle="(0,3) (31, 21)  #top" src="Images/top2.gif" alt="top" border="0" startspan --><MAP NAME="FrontPageMap"><AREA SHAPE="RECT" COORDS="0, 3, 31, 21" HREF="#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/benex.html/map"><img src="Images/top2.gif" alt="top" border="0" ismap width="32" height="22" usemap="#FrontPageMap"></a><!--webbot bot="ImageMap" endspan i-checksum="14015" --></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h2><a name="hot"></a>Hot Request</h2>
+  <blockquote>
+    <p>An application uses the backend process to schedule work on a document storing system.</p>
+    <p><strong>Problem</strong></p>
+    <blockquote>
+      <p>Most of the time the processing is a FIFO. However, the 'hot' request needs to head
+      queue.</p>
+    </blockquote>
+    <p><strong>Solution</strong></p>
+    <blockquote>
+      <p>Set up a Tymeac<sup><small>&#153;</small></sup> Queue with prioritized wait lists. The
+      Tymeac<sup><small>&#153;</small></sup> Function normally places the request into wait list
+      two (normal priority). When a high priority document enters the system, simply use
+      priority one. The Tymeac<sup><small>&#153;</small></sup> Function places the request into
+      waitlist one and the Queue Thread picks it up before the other requests.</p>
+    </blockquote>
+    <p><!--webbot bot="ImageMap" rectangle="(0,3) (31, 21)  #top" src="Images/top2.gif" alt="top" border="0" startspan --><MAP NAME="FrontPageMap1"><AREA SHAPE="RECT" COORDS="0, 3, 31, 21" HREF="#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/benex.html/map1"><img src="Images/top2.gif" alt="top" border="0" ismap width="32" height="22" usemap="#FrontPageMap1"></a><!--webbot bot="ImageMap" endspan i-checksum="20018" --></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h2><a name="timing"></a>Timing Requests</h2>
+  <blockquote>
+    <p>An application needs a service but can only wait three seconds for a response.</p>
+    <p><strong>Problem</strong></p>
+    <blockquote>
+      <p>Timing sounds easy; when the time limit expires, end the unit of work. Building timing
+      into each service is a lot of work. Each thread of execution must interrupt its work to
+      see if it is over the time limit. Additionally, some accesses use blocking and there is no
+      way to break out of the blocking until the access is complete.</p>
+    </blockquote>
+    <p><strong>Solution</strong></p>
+    <blockquote>
+      <p>Tymeac<sup><small>&#153;</small></sup> supports timing as a standard feature. All
+      services in Tymeac<sup><small>&#153;</small></sup> are with application threads.
+      Therefore, whether the application thread is blocking or not is irrelevant.</p>
+    </blockquote>
+    <p><!--webbot bot="ImageMap" rectangle="(0,3) (31, 21)  #top" src="Images/top2.gif" alt="top" border="0" startspan --><MAP NAME="FrontPageMap2"><AREA SHAPE="RECT" COORDS="0, 3, 31, 21" HREF="#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/benex.html/map2"><img src="Images/top2.gif" alt="top" border="0" ismap width="32" height="22" usemap="#FrontPageMap2"></a><!--webbot bot="ImageMap" endspan i-checksum="20155" --></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h2><a name="async"></a>Asynchronous (autonomous) Requests</h2>
+  <blockquote>
+    <p>An application simply needs to log the result of processing. It isn't always practical
+    to stop, do the log and then continue. The application just wants to push the request off
+    to a background process to do the logging.</p>
+    <p><strong>Problem</strong></p>
+    <blockquote>
+      <p>Each &quot;push&quot; requires a new thread to process the request. Eventually the
+      Virtual Machine runs out of threads or the thread create/destroy overhead bogs down all
+      the processing.</p>
+    </blockquote>
+    <p><strong>Solution</strong></p>
+    <blockquote>
+      <p>Tymeac<sup><small>&#153;</small></sup> supports autonomous processing as a standard
+      feature. Set up a single Tymeac<sup><small>&#153;</small></sup> Queue with one or two
+      threads. Push the request into this Queue and let Tymeac<sup><small>&#153;</small></sup>
+      manage the processing.</p>
+    </blockquote>
+    <p><!--webbot bot="ImageMap" rectangle="(0,3) (31, 21)  #top" src="Images/top2.gif" alt="top" border="0" startspan --><MAP NAME="FrontPageMap3"><AREA SHAPE="RECT" COORDS="0, 3, 31, 21" HREF="#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/benex.html/map3"><img src="Images/top2.gif" alt="top" border="0" ismap width="32" height="22" usemap="#FrontPageMap3"></a><!--webbot bot="ImageMap" endspan i-checksum="20292" --></p>
+  </blockquote>
+  <h2><a name="flood"></a>Flood and Ebb</h2>
+  <blockquote>
+    <p>A company's call centers are spread out over four time zones.</p>
+    <p><strong>Problem</strong></p>
+    <blockquote>
+      <p>At 0730 local time each call center logs into corporate headquarters to establish
+      communication and at 2030 local time the call center logs out. This results in a flood of
+      activity but only for a few minutes in the morning and evening in each time zone. (E.G.
+      0730 at headquarters, time zone one floods; 0830 at headquarters, time zone two floods,
+      etc.) Thereafter, the activity is on an &quot;as needed&quot; basis.</p>
+    </blockquote>
+    <p><strong>Solution</strong></p>
+    <blockquote>
+      <p>Tymeac<sup><small>&#153;</small></sup> supports thread creation/destruction on an as
+      needed basis. You simply specify the maximum number of threads each Queue needs, when to
+      create the thread (at Tymeac<sup><small>&#153;</small></sup> startup or when first needed)
+      and how long to keep the thread alive when the activity wanes (a few seconds or forever).</p>
+      <p>In this way, as each time zone floods headquarters with activity, there are sufficient
+      threads to process the requests. When the active period is over, the threads cease as
+      well.</p>
+    </blockquote>
+    <p><!--webbot bot="ImageMap" rectangle="(0,3) (31, 21)  #top" src="Images/top2.gif" alt="top" border="0" startspan --><MAP NAME="FrontPageMap4"><AREA SHAPE="RECT" COORDS="0, 3, 31, 21" HREF="#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/benex.html/map4"><img src="Images/top2.gif" alt="top" border="0" ismap width="32" height="22" usemap="#FrontPageMap4"></a><!--webbot bot="ImageMap" endspan i-checksum="20429" --></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h2><a name="inter"></a>Intermediate Back-out</h2>
+  <blockquote>
+    <p>An application is binary -- all components of the request succeed or the request is a
+    failure.</p>
+    <p><strong>Problem</strong></p>
+    <blockquote>
+      <p>Sometimes a component of the request does not schedule because the wait lists are full
+      for that component or there are no threads available, etc. In this binary scenario when
+      one component does not schedule, then the request is a failure. Cancel this request at the
+      earliest possible time.</p>
+    </blockquote>
+    <p><strong>Solution</strong></p>
+    <blockquote>
+      <p>Tymeac<sup><small>&#153;</small></sup> supports intermediate back-out as a standard
+      feature. Un-scheduling the other components not only gets the response back to the client
+      sooner it cuts down on processor cycles.</p>
+    </blockquote>
+    <p><!--webbot bot="ImageMap" rectangle="(0,3) (31, 21)  #top" src="Images/top2.gif" alt="top" border="0" startspan --><MAP NAME="FrontPageMap5"><AREA SHAPE="RECT" COORDS="0, 3, 31, 21" HREF="#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/benex.html/map5"><img src="Images/top2.gif" alt="top" border="0" ismap width="32" height="22" usemap="#FrontPageMap5"></a><!--webbot bot="ImageMap" endspan i-checksum="20566" --></p>
+  </blockquote>
+  <h2><a name="multi"></a>Multiple Requests</h2>
+  <blockquote>
+    <p>An application has a need to access several proprietary systems: data base, message
+    queuing and networking. All these systems are all able to process many request from many
+    sources simultaneously.</p>
+    <p><strong>Problem</strong></p>
+    <blockquote>
+      <p>An application must &quot;connect&quot; to each of these systems. When the application
+      finishes the instant request, it must &quot;disconnect&quot; from each system. This
+      connect/disconnect results in a huge overhead.</p>
+    </blockquote>
+    <p><strong>Solution</strong></p>
+    <blockquote>
+      <p>Tymeac<sup><small>&#153;</small></sup> supports common user storage as a standard
+      feature. Within this common storage users may place counts of how many requests may pass
+      to a sub-system before a disconnect, users may keep connection pools and any other
+      utilities necessary to control access to proprietary systems.</p>
+      <blockquote>
+        <p>Think of this like a batch processing system. Your application fetches a request from
+        the queue, processes that request and fetches the next request from the queue. Simple and
+        straightforward.</p>
+      </blockquote>
+    </blockquote>
+    <p><!--webbot bot="ImageMap" rectangle="(0,3) (31, 21)  #top" src="Images/top2.gif" alt="top" border="0" startspan --><MAP NAME="FrontPageMap6"><AREA SHAPE="RECT" COORDS="0, 3, 31, 21" HREF="#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/benex.html/map6"><img src="Images/top2.gif" alt="top" border="0" ismap width="32" height="22" usemap="#FrontPageMap6"></a><!--webbot bot="ImageMap" endspan i-checksum="20703" --></p>
+  </blockquote>
+  <h2><a name="recursion"></a>Recursion</h2>
+  <blockquote>
+    <p>A shop sets up a standard application that notifies a set of users when there is a new
+    document in the system that may be of interest to them.</p>
+    <p><strong>Problem</strong></p>
+    <blockquote>
+      <p>The notifying should be done in an asynchronous manner without the direct knowledge of
+      each application. We don't want each application to include a class for this notify.</p>
+    </blockquote>
+    <p><strong>Solution</strong></p>
+    <blockquote>
+      <p>Tymeac<sup><small>&#153;</small></sup> supports recursive calls as a standard feature.
+      Tymeac<sup><small>&#153;</small></sup> passes the reference to itself to every processing
+      application class so that application may call the Tymeac<sup><small>&#153;</small></sup>
+      Server as a client. Set up the notify as a Tymeac<sup><small>&#153;</small></sup>
+      Function. Any application that needs to notify users simply calls the Tymeac<sup><small>&#153;</small></sup>
+      Server with a new Function. All the work is handled asynchronously.</p>
+    </blockquote>
+    <p><!--webbot bot="ImageMap" rectangle="(0,3) (31, 21)  #top" src="Images/top2.gif" alt="top" border="0" startspan --><MAP NAME="FrontPageMap7"><AREA SHAPE="RECT" COORDS="0, 3, 31, 21" HREF="#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/benex.html/map7"><img src="Images/top2.gif" alt="top" border="0" ismap width="32" height="22" usemap="#FrontPageMap7"></a><!--webbot bot="ImageMap" endspan i-checksum="20840" --></p>
+  </blockquote>
+  <h2><a name="containment"></a>Failure Containment</h2>
+  <blockquote>
+    <p>An imaging application comprises access to three data bases to store an image in three
+    formats. Each component has no relationship to the other components, it is completely
+    independent.</p>
+    <p><strong>Problem</strong></p>
+    <blockquote>
+      <p>Independent components have unique requirements for error recovery. Generally, when one
+      part of a request fails it has an affect on the other parts and severely complicates
+      recovery. The more components, the bigger the mess.</p>
+    </blockquote>
+    <p><strong>Solution</strong></p>
+    <blockquote>
+      <p>Tymeac<sup><small>&#153;</small></sup> Queues are completely independent of each other.
+      Each processing application may do anything in any way without affecting any other
+      application. If one imaging access fails, the error recovery logic is contained within
+      only that application.</p>
+    </blockquote>
+    <p><!--webbot bot="ImageMap" rectangle="(0,3) (31, 21)  #top" src="Images/top2.gif" alt="top" border="0" startspan --><MAP NAME="FrontPageMap8"><AREA SHAPE="RECT" COORDS="0, 3, 31, 21" HREF="#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/benex.html/map8"><img src="Images/top2.gif" alt="top" border="0" ismap width="32" height="22" usemap="#FrontPageMap8"></a><!--webbot bot="ImageMap" endspan i-checksum="20977" --></p>
+  </blockquote>
+  <h2><a name="parallel"></a>Parallel Processing</h2>
+  <blockquote>
+    <p>When a customer calls customer service, he needs a wide range of information from many
+    sources. The customer service GUI is basically very simple: each pane has the information
+    from a source.</p>
+    <p><strong>Problem</strong></p>
+    <blockquote>
+      <p>The application must get this information from many different sources: file, DBMS etc.
+      With a serial approach, the next access cannot start until the current access is complete.
+      This results in long response times even for the panels where the information is local.</p>
+    </blockquote>
+    <p><strong>Solution</strong></p>
+    <blockquote>
+      <p>Parallel processing in Tymeac<sup><small>&#153;</small></sup> is standard. Set up a
+      Tymeac<sup><small>&#153;</small></sup> Queue with one thread for each component. A Tymeac<sup><small>&#153;</small></sup>
+      Function places the request into each of these Queues. Since the processing is in
+      parallel, as each processing application finishes, its information is available for
+      display.</p>
+    </blockquote>
+    <p><!--webbot bot="ImageMap" rectangle="(0,3) (31, 21)  #top" src="Images/top2.gif" alt="top" border="0" startspan --><MAP NAME="FrontPageMap9"><AREA SHAPE="RECT" COORDS="0, 3, 31, 21" HREF="#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/benex.html/map9"><img src="Images/top2.gif" alt="top" border="0" ismap width="32" height="22" usemap="#FrontPageMap9"></a><!--webbot bot="ImageMap" endspan i-checksum="21114" --></p>
+  </blockquote>
+  <h2><a name="gateway"></a>Gateway</h2>
+  <blockquote>
+    <p>Similarly to the <a href="#multi">multiple requests</a> and <a href="#containment">failure
+    containment</a> above, this application needs access to legacy systems that are not part
+    of Java<sup><small>&#153;</small></sup>.</p>
+    <p><strong>Problem</strong></p>
+    <blockquote>
+      <p>An application must &quot;get access&quot; to each of these systems through the Java
+      Native Interface. Any failure here certainly means the destruction of the thread and
+      possible corruption of the immediate environment.</p>
+    </blockquote>
+    <p><strong>Solution</strong></p>
+    <blockquote>
+      <p>Tymeac<sup><small>&#153;</small></sup> supports any type of application. Tymeac<sup><small>&#153;</small></sup>
+      has automated error recovery as well as manual error recovery when human intervention is
+      necessary. Part of the manual recovery gives you the ability to terminate unresponsive
+      threads and create new threads for each Queue.</p>
+    </blockquote>
+    <p><!--webbot bot="ImageMap" rectangle="(0,3) (31, 21)  #top" src="Images/top2.gif" alt="top" border="0" startspan --><MAP NAME="FrontPageMap10"><AREA SHAPE="RECT" COORDS="0, 3, 31, 21" HREF="#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/benex.html/map10"><img src="Images/top2.gif" alt="top" border="0" ismap width="32" height="22" usemap="#FrontPageMap10"></a><!--webbot bot="ImageMap" endspan i-checksum="25839" --></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h2><a name="agent"></a>The Agent</h2>
+  <blockquote>
+    <p>This application has multiple components that pass information to other systems.
+    However, some of those systems pass back receipts and depending on the results, further
+    action may need to be taken.</p>
+    <p><strong>Problem</strong></p>
+    <blockquote>
+      <p>There are a huge number of requests and no reply is necessary for the requester. Some
+      of the components need load balancing (number of threads processing) while others need to
+      process multiple requests between an open/close sequence (networking and message queuing
+      systems). Additionally, some Queues need a synchronous access to other systems to wait for
+      the receipt and need to make decisions depending on the outcome.</p>
+    </blockquote>
+    <p><strong>Solution</strong></p>
+    <blockquote>
+      <p>Set up a Tymeac<sup><small>&#153;</small></sup> Queue with multiple threads for each
+      component and an output Agent. A Tymeac<sup><small>&#153;</small></sup> Function places
+      the request into each of these Queues. The processing is parallel. Tymeac<sup><small>&#153;</small></sup>
+      balances the thread load in each Queue with thresholds. By using Tymeac<sup><small>&#153;</small></sup>
+      common storage, threads within a queue may keep track of how many requests process between
+      the open/close sequence.</p>
+      <p>When the last Queue finishes processing, Tymeac<sup><small>&#153;</small></sup>
+      activates the output Agent. This Agent may parse the results of the other Queues and take
+      any further action when needed.</p>
+    </blockquote>
+    <p><!--webbot bot="ImageMap" rectangle="(0,3) (31, 21)  #top" src="Images/top2.gif" alt="top" border="0" startspan --><MAP NAME="FrontPageMap11"><AREA SHAPE="RECT" COORDS="0, 3, 31, 21" HREF="#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/benex.html/map11"><img src="Images/top2.gif" alt="top" border="0" ismap width="32" height="22" usemap="#FrontPageMap11"></a><!--webbot bot="ImageMap" endspan i-checksum="25880" --></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h2><a name="call"></a>Call-Back/Forward</h2>
+  <blockquote>
+    <p>This application has multiple components that pass information to other systems and
+    some of those systems pass back receipts and depending on the results, further action
+    needs to be taken. That action is a network request to a remote system when all went well
+    or a callback to the requester when there is an anomaly.</p>
+    <p><strong>Problem</strong></p>
+    <blockquote>
+      <p>There are a huge number of requests and no reply MAY BE necessary for the requester.
+      Some of the components need load balancing (number of threads processing) while others
+      need to process multiple requests between an open/close sequence (networking and message
+      queuing systems). Additionally, some Queues need a synchronous access to other systems to
+      wait for the receipt and need to make decisions depending on the outcome.</p>
+      <p>When the outcome is normal, the application passes a message to a remote system. When
+      the outcome is abnormal, the application passes a message back to the requester.</p>
+    </blockquote>
+    <p><strong>Solution</strong></p>
+    <blockquote>
+      <p>Set up a Tymeac<sup><small>&#153;</small></sup> Queue with multiple threads for each
+      component and an output Agent. A Tymeac<sup><small>&#153;</small></sup> Function places
+      the request into each of these Queues. The processing is parallel. Tymeac<sup><small>&#153;</small></sup>
+      balances the thread load in each Queue with thresholds. By using Tymeac<sup><small>&#153;</small></sup>
+      common storage, threads within a queue may keep track of how many requests process between
+      the open/close sequence.</p>
+      <p>When the last Queue finishes processing, Tymeac<sup><small>&#153;</small></sup>
+      activates the output Agent. This Agent parses the results of the other Queues and uses RMI
+      to pass the outcome either to the remote system (call-forward) to back to the requester
+      (call-back).</p>
+    </blockquote>
+    <p><!--webbot bot="ImageMap" rectangle="(0,3) (31, 21)  #top" src="Images/top2.gif" alt="top" border="0" startspan --><MAP NAME="FrontPageMap12"><AREA SHAPE="RECT" COORDS="0, 3, 31, 21" HREF="#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/benex.html/map12"><img src="Images/top2.gif" alt="top" border="0" ismap width="32" height="22" usemap="#FrontPageMap12"></a><!--webbot bot="ImageMap" endspan i-checksum="25921" --></p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

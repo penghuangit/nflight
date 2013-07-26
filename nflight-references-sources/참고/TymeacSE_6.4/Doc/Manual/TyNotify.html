@@ -1,0 +1,66 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Notification Function</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Notification Function</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+    <p style="text-align: justify">Tymeac Notification is based on the principle that things
+    can go wrong and those responsible for the smooth operation of a computer facility need an
+    early warning system.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>The notification system is optional. For the Demonstration System, Tymeac
+provides:</p>
+
+<blockquote>
+  <p>a sample notification Function, TyNotify, <br>
+  a sample notification Queue, Notify, and <br>
+  a sample Notification Class, com.tymeac.serveruser.DemoNotify.</p>
+  <p>There is a second sample that is the same as above with a 2 appended to the 
+  end (TyNotify2, etc.) You may use this to swap between notification functions
+  <a href="TyNewRTNotification.html">dynamically</a>.</p>
+</blockquote>
+
+<p>The <a href="Monitor.html">Tymeac Monitor</a>&nbsp; examines the internal structure
+looking for actual or potential problems.&nbsp;An actual problem is that all Queue Threads
+are 'disabled'. A potential problem is that a thread's processing or wait time is
+excessive. The Monitor sends a String message describing the problem to this Tymeac
+Function as an Asynchronous Request.&nbsp;Further processing is your option.</p>
+
+<p>During Tymeac start up, the Server verifies that the Notification Function is 
+valid. The Server sends a null message to this Tymeac Function as a Synchronous 
+Request and examines the return String for the Tymeac return code.</p>
+
+<blockquote>
+  <p><img src="Images/Caution.gif" alt="Caution.gif (1012 bytes)" width="20" height="20"> Therefore, when writing
+  your own Notification Class, handle the null or zero length message and just return.
+  The sample Notification Class, DemoNotify, does this.</p>
+</blockquote>
+
+<p>The name of the Notification Function is set in the Tymeac Configuration File, <a href="TyCfg.html">TyCfg</a> or <a href="UserVariables.html">UserVariables </a>Class.&nbsp;You
+can use our sample class as a starting point for developing your own early warning system
+or as an interface to an existing system.</p>
+
+<p>Notification is <a href="TyNewRTNotification.html">dynamically alterable</a>.</p>
+
+<p>&nbsp;</p>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

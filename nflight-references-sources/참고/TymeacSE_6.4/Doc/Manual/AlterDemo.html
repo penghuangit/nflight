@@ -1,0 +1,155 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Alterring the Demonstration Classes</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1><a name="top"></a>Altering the Demonstration Classes</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>In this section we suggest ways to alter our Demonstration System examples as an aid in
+      leaning the best ways to use Tymeac. </p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h2>Altering the <a href="Samples.html">Samples</a></h2>
+
+<blockquote>
+  <h3>Processing Application Classes:</h3>
+  <blockquote>
+    <p>The purpose of a demonstration Class is to:<ol>
+      <li>Prove that data sent to the Class got to the Class, and</li>
+      <li>Do something with the data.</li>
+    </ol>
+    <p>We prove that data gets to the Class by sending it back.&nbsp;We do something by
+    summing those digits.</p>
+    <p>Ways to alter these Classes are only limited by imagination.<ul>
+      <li>Use a math function on the digits either in a separate static method, or as an
+        instantiated class.</li>
+      <li>Inherit another Class to alter the digits or add a little extra.</li>
+      <li>Change the return String message.</li>
+    </ul>
+  </blockquote>
+  <h3>Queues:</h3>
+  <blockquote>
+    <p>Queues are the base of your Processing Application Class, the logical anchor points for
+    threads, the Wait Lists of pending requests and the Thresholds for activating a new
+    thread..</p>
+    <blockquote>
+      <p>You may alter the base Class for processing:<ul>
+        <li>in the DBMS Table, maintained by frame Class, <a href="TyQueMaint.html">TyQueMaint</a>,</li>
+        <li>in the User Class, <a href="UserQueues.html">TyUserQueues</a>, or</li>
+        <li>dynamically at execution time in Class, <a href="TyNewCopy.html">TyNewCopy</a>. </li>
+      </ul>
+      <p>You may alter the number of threads in a Queue:<ul>
+        <li>in the DBMS Table, maintained by frame Class, <a href="TyQueMaint.html">TyQueMaint</a>,</li>
+        <li>in the User Class, <a href="UserQueues.html">TyUserQueues</a>.</li>
+      </ul>
+      <p>You may alter the number of Wait Lists in a Queue:<ul>
+        <li>in the DBMS Table, maintained by frame Class, <a href="TyQueMaint.html">TyQueMaint</a>,</li>
+        <li>in the User Class, <a href="UserQueues.html">TyUserQueues</a>, or</li>
+        <li>dynamically at execution time in Class, <a href="TyQueData.html">TyQueData</a>.</li>
+      </ul>
+      <p>You may alter the new thread Thresholds:<ul>
+        <li>in the DBMS Table, maintained by frame Class, <a href="TyQueMaint.html">TyQueMaint</a>,</li>
+        <li>in the User Class, <a href="UserQueues.html">TyUserQueues</a>, or</li>
+        <li>dynamically at execution time in Class, <a href="TyQueData.html">TyQueData</a>.</li>
+      </ul>
+    </blockquote>
+    <p>It is the interplay of all these parts that make Tymeac such a benefit.&nbsp;Once
+    again, the ways to alter these parts are only limited by imagination.</p>
+    <blockquote>
+      <p><strong>How many threads do we really need in a Queue?</strong>&nbsp; The on request /
+      shut down <a href="Stats.html">statistics</a> give usage by thread. This is of prime
+      importance in a production system and very useful for development.&nbsp;See also <a href="Tuning.html#threads">Tuning</a>.</p>
+      <blockquote>
+        <p>Set up the <a href="TyQueMaint.html">Queue</a> with more than a sufficient number of
+        Wait List entries so that there will not be an overflow. (An overflow is when the desired
+        Wait List is full, Tymeac puts the request into the next higher Wait List.) When there is
+        an overflow, Tymeac activates a new thread.&nbsp;One way to ensure this is to only use a
+        single Wait List.&nbsp;That way when the list is full, a new requests fails to schedule.</p>
+        <p>Set up the <a href="TyQueMaint.html#threshold">Thresholds</a> with values of 0.0 for
+        Overall, Individual, and Average.&nbsp;Tymeac ignores zero, (float 0.0), values.</p>
+        <p>Alter T3Thread (sample code) to request <u>your</u> Function, not the Demonstration
+        Functions.&nbsp;Also to ignore <a href="Usage.html">return code</a> of &quot;no Wait List
+        Available&quot;.&nbsp;This is optional.</p>
+        <p>Start frame Class, <a href="TyDemoT3.html">TyDemoT3</a>.&nbsp;Start sufficient threads
+        to put a load on your system.</p>
+        <p>Observe the load on the Wait List with the frame Class, <a href="TyWlData.html">TyWlData</a>.</p>
+        <p>Observe the load on your system with tools specific to your application.</p>
+        <p>End and restart frame Class, TyDemoT3 as necessary to achieve the desired result.</p>
+        <p>Alter the Thresholds dynamically with the frame Class, <a href="TyQueData.html">TyQueData</a>.&nbsp;
+        When a Wait List exceeds a Threshold, Tymeac activates a new thread.</p>
+        <p>Observe the thread usage in frame Class, <a href="TyQueThd.html">TyQueThd</a>.</p>
+        <p>Repeat as necessary.</p>
+      </blockquote>
+      <p><strong>How many Wait Lists do we need in a Queue?&nbsp;</strong>&nbsp; The on request
+      / shut down <a href="Stats.html">statistics</a> give usage by Wait List. This is of prime
+      importance in a production system and very useful for development. Foremost, is the number
+      of requests that overflowed without a next Wait List. These are the requests that failed
+      scheduling.</p>
+      <p>We discuss how to use Wait Lists in the <a href="TyQueMaint.html">Queue </a>Maintenance
+      Class and in <a href="Tuning.html#waitlists">Tuning</a>.</p>
+      <blockquote>
+        <p>Since the number of Wait Lists is fixed at Tymeac Start Up, experimenting with this
+        number requires shutting down Tymeac, altering the number and restarting Tymeac.</p>
+        <p>Alter T3Thread (sample code) to request<u> your</u> Function, not the Demonstration
+        Functions.&nbsp;Also to ignore <a href="Usage.html">return code</a> of &quot;no Wait List
+        Available&quot;.&nbsp;This is optional.</p>
+        <p>Start frame Class, <a href="TyDemoT3.html">TyDemoT3</a>. Start sufficient threads to
+        put a load on your system.</p>
+        <p>Observe the load on the Wait Lists with the frame Class, <a href="TyWlData.html">TyWlData</a>.</p>
+        <p>Alter the number of Wait Lists in Queue Maintenance.</p>
+        <p>Shut down / restart Tymeac.</p>
+        <p>Repeat as necessary.</p>
+      </blockquote>
+      <p><strong>How many entries, (pending requests), in Wait Lists do we need?</strong>&nbsp;&nbsp;The
+      on request / shut down <a href="Stats.html">statistics</a> give usage by Wait
+      List.&nbsp;This is of prime importance in a production system and very useful for
+      development.&nbsp;Foremost, is the number of requests that overflowed. However, threads
+      may also activate because of <a href="TyQueMaint.html#threshold">Threshold</a> exceptions.</p>
+      <blockquote>
+        <p>Set up the <a href="TyQueMaint.html">Queue</a> with more or less than the sufficient
+        number of Wait List entries so that there may be overflows. (An overflow is when the
+        desired Wait List is full, Tymeac puts the request into the next higher Wait List.)</p>
+        <p>Alter T3Thread (sample code) to request <u>your</u> Function, not the Demonstration
+        Functions.&nbsp;Also to ignore <a href="Usage.html">return code</a> of &quot;no Wait List
+        Available&quot;. This is optional.</p>
+        <p>Start frame Class, <a href="TyDemoT3.html">TyDemoT3</a>. Start sufficient threads to
+        put a load on your system.</p>
+        <p>Observe the load on the Wait Lists with the frame Class, <a href="TyWlData.html">TyWlData</a>.</p>
+        <p>Alter the number of Wait List entries dynamically with the frame Class, <a href="TyQueData.html">TyQueData</a>.&nbsp;You may not decrease the number of entries below
+        that which are already active in any Wait List.</p>
+        <p>Repeat as necessary.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <h3>Functions:</h3>
+  <blockquote>
+    <p>Functions are lists of Queues. We <a href="Demo.html">demonstrate</a> using the same
+    Queue multiple times in a Function.&nbsp; Functions with Output Agents. Functions without
+    Output Agents.</p>
+    <blockquote>
+      <p>There is no foreseeable scenario outside the Demonstration System to experiment with
+      Functions.&nbsp;Mix and match Queues in any order.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

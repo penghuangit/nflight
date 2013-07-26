@@ -1,0 +1,99 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac User Functions</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac User Functions</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The purpose of this Class is a replacement for the Function and List Tables in a data
+      base management system and the maintenance of that table by the frame Class, <a href="TyFuncMaint.html">TyFuncMaint</a>.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Since this is a user maintained Class, we provide a simple, <a href="Samples.html">source
+      code</a> Class, (<strong>FunctionChecker</strong>), with which you may check the validity
+      of this Class before starting the TymeacServer.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <blockquote>
+    <p>Since maintaining this class by hand can result in errors, we provide a GUI with which
+    you may maintain this class. This is a binary &quot;use the GUI or do it by hand&quot;. If
+    you use the GUI, then you should not try to edit the resulting java file. The GUI is very
+    simple -- it reads a java file without comments or formatting. </p>
+    <p>In either case, once you create the TymeacUserFunctions.java file, you must compile it
+    into the com/tymeac/serveruser directory.</p>
+    <p>The GUI class is <strong>com.tymeac.jframe.TyUserFunctions</strong>.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><a href="Images/TyUserFunctions.jpg">
+<img src="Images/TyUserFunctions_small.jpg" alt="TyUserFunctions.jpg (37061 bytes)" border="2" width="100" height="77"></a><br>
+(Click for full image)</p>
+
+<blockquote>
+  <blockquote>
+    <p>It require access to the java file, TymeacUserFunctions.java. You may not substitute
+    another file name in the dialog box.</p>
+    <p>The editing for the fields is the same as the
+    DBMS Functions GUI, <a href="TyFuncMaint.html">TyFuncMaint</a> except that there is no
+    verification of output agent and normal Queues.</p>
+    <p>The rest of this document explains the java file format.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<h3>Instance Fields</h3>
+
+<blockquote>
+  <p>Int total_functions - The total number of Tymeac Functions in the system.</p>
+  <p><a href="IndividFunction.html">com.tymeac.base.TymeacIndividualFunction</a>[] tif -
+  This array contains each Function.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<h3>Constructor</h3>
+
+<blockquote>
+  <p>This is where you set the values for the above instance variables.</p>
+  <p style="text-align: justify">You may either use the no-argument constructor for the
+  TymeacIndividualFunction Class and set all the fields with mutators, or use the argument
+  constructor to set the field values.&nbsp; The source code we supply with the product
+  demonstates both methods.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<h3>Instance Methods</h3>
+
+<blockquote>
+  <p>These are accessors for all the above instance fields.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

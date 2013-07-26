@@ -1,0 +1,219 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Requirements</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/wheat.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac<sup><small>&#153;</small></sup> Requirements</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This section lists the requirements for using the Tymeac<sup><small>&#153;</small></sup>
+    system.</p>
+    <p>Tymeac<sup><small>&#153;</small></sup> supports the latest functionality of Java. Since
+    Tymeac<sup><small>&#153;</small></sup> is an Open Source product with many prior releases,
+    you may always download the source code for a prior release if you are not on the current
+    Java SDK.</p>
+  </blockquote>
+</blockquote>
+
+<h2>Computer</h2>
+
+<blockquote>
+  <p>The current release was compiled with Eclipse on JDK1.6.0_20 
+  and Jini2.1.  
+  In order to use this release, you must have SDK1.6 installed.</p>
+  <p>Version 5.5 supports JDK1.5 and Jini2.1.</p>
+  <p>As of version 4.x we no longer support SDK1.1,. If you need to run under that level,
+  then download a version 3.x release of Tymeac<sup><small>&#153;</small></sup>. </p>
+  <p>Version 4.x was compiled with Ant on JDK1.4.2 and Jini2.0_001.</p>
+  <blockquote>
+    <p>If you use a prior level of Java and have unsupported functionality, then download the
+    source code and recompile Tymeac<sup><small>&#153;</small></sup> using your JDK level.</p>
+  </blockquote>
+  <p>Tymeac<sup><small>&#153;</small></sup>, for the Demonstration System (supplied with the
+  Product) requires approximately 2MB of memory including the JVM. The amount of computer
+  memory, for a user system, naturally depends on the number of Functions, Queues, and
+  Threads.</p>
+  <p>Tymeac<sup><small>&#153;</small></sup> requires disk storage for the Classes, Samples,
+  and Documentation of approximately 8.0MB.</p>
+</blockquote>
+
+<h2>Environment</h2>
+
+<blockquote>
+  <p>Tymeac<sup><small>&#153;</small></sup> runs in three environments: <br>
+  &nbsp;&nbsp;&nbsp; As a non-Activatable Remote Object, <br>
+  &nbsp;&nbsp;&nbsp; as an Activatable Remote Object and <br>
+  &nbsp;&nbsp;&nbsp; as an Internal non-RMI Server.</p>
+  <h3><strong>Non-Activatable Remote Object:</strong></h3>
+  <blockquote>
+    <p><strong>As an RMI Server using the RMI Registry with and without Custom Socket
+    Factories:</strong></p>
+    <blockquote>
+      <p>The requirements are SDK1.2, minimally.</p>
+    </blockquote>
+    <blockquote>
+      <p>The attributes are:</p>
+    </blockquote>
+    <blockquote>
+      <ul>
+        <li>Tymeac<sup><small>&#153;</small></sup> Server is started as a new process from an
+          operating system command line.</li>
+        <li>A reference to the Remote Object is registered with the RMI Registry.</li>
+        <li>Tymeac<sup><small>&#153;</small></sup> Server remains active until shut down either by
+          request or an operating system action.</li>
+        <li>Tymeac<sup><small>&#153;</small></sup> Clients retrieve a reference to the Tymeac<sup><small>&#153;</small></sup>
+          Server through the RMI Registry.</li>
+      </ul>
+    </blockquote>
+    <p><strong>As an RMI-IIOP Server using the JNDI Registry:</strong></p>
+    <blockquote>
+      <p>The requirements are SDK1.3, minimally.</p>
+    </blockquote>
+    <blockquote>
+      <p>The attributes are:</p>
+    </blockquote>
+    <blockquote>
+      <ul>
+        <li>Tymeac<sup><small>&#153;</small></sup> Server is started as a new process from an
+          operating system command line.</li>
+        <li>A reference to the Remote Object is registered with the CosNaming Server.</li>
+        <li>Tymeac<sup><small>&#153;</small></sup> Server remains active until shut down either by
+          request or an operating system action.</li>
+        <li>Tymeac<sup><small>&#153;</small></sup> Clients retrieve a reference to the Tymeac<sup><small>&#153;</small></sup>
+          Server through the JNDI Registry.</li>
+      </ul>
+    </blockquote>
+    <p><strong>As an Jini Server:</strong></p>
+    <blockquote>
+      <p>The requirements are SDK1.4.2, and Jini2.0 minimally.</p>
+    </blockquote>
+    <blockquote>
+      <p>The attributes are:</p>
+    </blockquote>
+    <blockquote>
+      <ul>
+        <li>Tymeac<sup><small>&#153;</small></sup> Server is started as a new process from an
+          operating system command line.</li>
+        <li>The start up uses a Configuration Provider rather than hard coded parameters within the
+          Classes.</li>
+        <li>All protocols for exporting are supported by a Configuration file.</li>
+        <li>A reference to the Remote Object is embedded in a proxy and registered with a Discovery
+          Manager.</li>
+        <li>Tymeac<sup><small>&#153;</small></sup> Server remains active until shut down either by
+          request or an operating system action.</li>
+        <li>Tymeac<sup><small>&#153;</small></sup> Clients retrieve a reference to the Tymeac<sup><small>&#153;</small></sup>
+          Server through a Discovery Manager.</li>
+      </ul>
+    </blockquote>
+  </blockquote>
+  <h3><strong>Activatable Remote Object:</strong></h3>
+  <blockquote>
+    <p><strong>As an RMI Server with and without Custom Socket Factories:</strong></p>
+    <blockquote>
+      <p>The requirements are JDK 1.2,&nbsp; minimally.</p>
+      <p>The attributes are:<ul>
+        <li>Tymeac<sup><small>&#153;</small></sup> is started by the Activation System, (rmid), when
+          either first required, (lazy), or when the Activation System starts, (restart.)</li>
+        <li>Requires registration with the Activation System by a front end process, (user-written
+          class).</li>
+        <li>A reference to the Remote Object may be registered with the RMI Registry.</li>
+        <li>A reference to the Remote Object may be wrapped in a proxy and the proxy registered with
+          a Jini<sup><small>&#153;</small></sup> Lookup Service.</li>
+        <li>A reference to the Remote Object may remain within the back-end, (activatable remote
+          object) process of a Jini<sup><small>&#153;</small></sup> Service so that remote clients
+          are unaware of Tymeac<sup><small>&#153;</small></sup> functionality.</li>
+        <li>Remains active until:<br>
+          <ul>
+            <li>Shut down either by request or an operating system action.</li>
+            <li>When lazy activation specified, when the inactive time expires.</li>
+            <li>When restart activation specified, when the Activation System stops.</li>
+          </ul>
+        </li>
+        <li>Communication between Tymeac<sup><small>&#153;</small></sup> Server and Tymeac<sup><small>&#153;</small></sup>
+          Clients is through:<br>
+          <ul>
+            <li>The RMI Registry.</li>
+            <li>Jini<sup><small>&#153;</small></sup> Lookup Service.</li>
+            <li>Within the Jini<sup><small>&#153;</small></sup> Service back-end process.</li>
+          </ul>
+        </li>
+      </ul>
+    </blockquote>
+    <p><strong>As an Jini Server:</strong></p>
+    <blockquote>
+      <p>The requirements are JDK 1.4.2 and Jini2.0,&nbsp; minimally.</p>
+      <p>The attributes are:<ul>
+        <li>Tymeac<sup><small>&#153;</small></sup> is started by the Activation System, (rmid or
+          phoenix), when either first required, (lazy), or when the Activation System starts,
+          (restart.)</li>
+        <li>Registration with the Activation System is by a front end process.</li>
+        <li>A reference to the Remote Object is temporarily registered with the RMI Registry.</li>
+        <li>The Remote Object is wrapped in a proxy and the proxy registered with a Jini<sup><small>&#153;</small></sup>
+          Lookup Service.</li>
+        <li>Remains active until:<br>
+          <ul>
+            <li>Shut down either by request or an operating system action.</li>
+            <li>When lazy activation specified, when the inactive time expires.</li>
+            <li>When restart activation specified, when the Activation System stops.</li>
+          </ul>
+        </li>
+        <li>Communication between Tymeac<sup><small>&#153;</small></sup> Server and Tymeac<sup><small>&#153;</small></sup>
+          Clients is through:<br>
+          <ul>
+            <li>Jini<sup><small>&#153;</small></sup> Lookup Service.</li>
+          </ul>
+        </li>
+      </ul>
+    </blockquote>
+  </blockquote>
+  <h3><strong>Non-RMI Server:</strong></h3>
+  <blockquote>
+    <p>The requirements are JDK 1.2,&nbsp; minimally.</p>
+    <p>The attributes are:<ul>
+      <li>Tymeac<sup><small>&#153;</small></sup> is started by your application.</li>
+      <li>A reference to the Server is returned by the createServer() method.</li>
+      <li>Your application calls methods on the Server similarly as with a remote object.</li>
+      <li>Tymeac<sup><small>&#153;</small></sup> Server remains active until shut down.</li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<h2>Mode</h2>
+
+<blockquote>
+  <p>Tymeac<sup><small>&#153;</small></sup> functions in two modes (selectable at start up):
+  DBMS and Stand-Alone.</p>
+  <blockquote>
+    <p><big><strong>DBMS Mode</strong></big> requires a relational data base management
+    system, a JDBC driver for that data base and either preferences data or one local file:<ul>
+      <li>To permanently store the Tymeac<sup><small>&#153;</small></sup> Functions and Queues,</li>
+      <li>To store the Tymeac<sup><small>&#153;</small></sup> run time log and statistics.</li>
+      <li>Access to either preferences data or one local file for start up variables and the names
+        of the DBMS Tables.</li>
+    </ul>
+    <p><big><strong>Stand-Alone Mode</strong></big> is without a DBMS or access to a local
+    file.&nbsp;This mode is ideal for small servers or anytime when limiting access to
+    resources is necessary. <ul>
+      <li>The user maintains the Tymeac<sup><small>&#153;</small></sup> Functions and Queues in
+        User Classes</li>
+      <li>In all other respects this mode functions the same as DBMS Mode.</li>
+      <li>The Demonstration System, (supplied with the Product), is an example of Stand-Alone
+        Mode. &nbsp; This permits a fast installation and verification.</li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

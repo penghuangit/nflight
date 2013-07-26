@@ -1,0 +1,74 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Multi-Threading Shadow</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/wheat.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1 align="center">Multi-Threading Has a Shadow</h1>
+
+<p align="center">
+<img src="../Manual/Images/Poison.gif" alt="Poison.gif (2811 bytes)" width="61" height="61"></p>
+
+<blockquote>
+  <p>When you start a thread of execution what you are really doing is starting a
+  backend-process (some operating systems call threads light-weight processes.) Think of a
+  backend-process as something taking place in another room of your house. You're sitting in
+  the den and the new thread is working in the basement. What is it doing down there? Is it
+  still alive? What happened to the last request I asked it to work on?</p>
+  <p>Every backend-process needs to address these common threading issues:<ul>
+    <li>What if a thread hangs in a never-ending loop?</li>
+    <li>What if a thread abnormally terminates?</li>
+    <li>What if a thread needs a new thread itself?</li>
+    <li>What if the thread create/destroy overhead bogs down the application processing?</li>
+    <li>What if a thread needs timing? </li>
+    <li>What if a thread needs canceling?<table cellSpacing="0" cellPadding="5" width="30%" align="right" border="1">
+        <tr>
+          <td style="FONT-SIZE: smaller; FONT-FAMILY: Arial, sans-serif" vAlign="top" align="left" background="../Manual/Images/bg-gold.gif">This is the thread overload problem (i.e. where so many
+          threads are executing that the System cannot sustain anymore threads or these threads
+          cause so much competition for resources that the environment effectively stalls.)</td>
+        </tr>
+      </table>
+    </li>
+    <li>What if the System cannot handle any more threads? (see sidebar)</li>
+    <li>What is the status of the current request?</li>
+    <li>What is the status of a prior request?</li>
+    <li>Where is the congestion?</li>
+    <li>How to notify someone when an error occurs in a thread?</li>
+    <li>How to detect and recover from stalls?</li>
+    <li>How to tune this multi-threading environment?</li>
+    <li>How can others inquire about the overall health of the environment?</li>
+    <li>How may the threading environment quiesce and shut down gracefully?</li>
+  </ul>
+  <p>Multi-Threading has been around for a long time. Developers have been answering these
+  questions with in-house and proprietary software for decades. The key to handling these
+  problems is to build a backend process manager.</p>
+  <p>The way to building a backend-process manager is: <ul>
+    <li>to separate the threading logic from the application logic, </li>
+    <li>to individually control each thread and </li>
+    <li>to build GUI and non-GUI interfaces into the environment. </li>
+  </ul>
+  <p>That sounds simple enough. At least until we try it. A mission-critical,
+  backend-process manager must answer all the common threading issues, above, and have the
+  ability to handle: <ul>
+    <li><u>components</u> (a request with multiple parts), </li>
+    <li><u>recursion</u> (when nested levels of access are necessary), </li>
+    <li><u>persistence</u> (for shared objects between threads), </li>
+    <li><u>runtime alteration</u> (to provide a dynamic response to an ever changing
+      environment.),</li>
+    <li><u>extensions</u> to the base logic (start-up/shutdown&nbsp; hooks and exits), </li>
+    <li><u>logging</u> (of errors and events), </li>
+    <li>and, never forget <u>debugging</u>. </li>
+  </ul>
+  <p>Welcome to Tymeac, the backend process manager.</p>
+</blockquote>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

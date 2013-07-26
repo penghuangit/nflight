@@ -1,0 +1,136 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Login Servers</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Login Servers</h1>
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The RMI Server builds it's regular remote object and exports 
+    it to the run time. The RMI Server also builds a login remote object that 
+    implements a simple interface with one method: login(). </p>
+      <p>The RMI Server binds 
+    that remote object to the RMI Registry. When a client retrieves the remote 
+      object using the standard name, the client gets the login remote object. 
+      The client sends login information to the login method of the Server. </p>
+      <p>If the Server approves, the server then returns the regular remote 
+      object to the client. The client then communicates normally with the 
+      Server.</p>
+      <p>The source code is not provided separately in the compiled download. 
+      Since the LoginServer extends the RMIServer, having one without the other 
+      is unworkable. The source code may be downloaded from the place where you downloaded the 
+      product.</p>
+    </blockquote>
+  </blockquote>
+    <p>We implement this scenario for you with both the RMIServer and the 
+    CSFServer. We do not provide this scenario for the IIOP servers. Using ORBs 
+    may require a much different procedure.</p>
+    <blockquote>
+      <font SIZE="2" COLOR="#7f0055"><b>
+      <p ALIGN="LEFT">public</b></font><font SIZE="2"> </font>
+      <font SIZE="2" COLOR="#7f0055"><b>interface</b></font><font SIZE="2"> 
+      TymeacLogin <br>
+&nbsp;&nbsp; </font><font SIZE="2" COLOR="#7f0055"><b>&nbsp;&nbsp;&nbsp; extends</b></font><font SIZE="2"> 
+      Remote {</p>
+      <p ALIGN="LEFT"></p>
+      </font>
+      <font SIZE="2" COLOR="#7f0055"><b>
+      <blockquote>
+        <p ALIGN="LEFT">public</b></font><font SIZE="2"> TymeacInterface 
+        login(Object[] obj) <br>
+&nbsp;&nbsp; </font><font SIZE="2" COLOR="#7f0055"><b>&nbsp;&nbsp;&nbsp; throws</b></font><font SIZE="2"> 
+        java.rmi.RemoteException; </p>
+      </blockquote>
+      </font>
+    </blockquote>
+    <p>The implementation, for demonstration purposes only, simply returns the 
+    Tymeac remote object: </p>
+    <blockquote>
+      <font SIZE="2" COLOR="#7f0055"><b>
+      <p ALIGN="LEFT">public</b></font><font SIZE="2"> </font>
+      <font SIZE="2" COLOR="#7f0055"><b>class</b></font><font SIZE="2"> 
+      TymeacLoginImpl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font>
+      <font SIZE="2" COLOR="#7f0055"><b>implements</b></font><font SIZE="2"> 
+      TymeacLogin {</p>
+      <p ALIGN="LEFT"></p>
+      <blockquote>
+        <p ALIGN="LEFT"></font><font SIZE="2" COLOR="#3f7f5f">// base of tymeac 
+        shared storage<br>
+        </font><font SIZE="2" COLOR="#7f0055"><b>private</b></font><font SIZE="2"> 
+        TyBase </font><font SIZE="2" COLOR="#0000c0">T</font><font SIZE="2"> =
+        </font><font SIZE="2" COLOR="#7f0055"><b>null</b></font><font SIZE="2">;</font></p>
+      </blockquote>
+      <font SIZE="2" COLOR="#7f0055"><b>
+      <p ALIGN="LEFT">&nbsp;&nbsp;&nbsp; public</b></font><font SIZE="2"> 
+      TymeacLoginImpl (TyBase ty) {</p>
+      <p ALIGN="LEFT"></p>
+      <blockquote>
+        <p ALIGN="LEFT"></font><font SIZE="2" COLOR="#3f7f5f">// save pointer<br>
+        </font><font SIZE="2" COLOR="#0000c0">T</font><font SIZE="2"> = ty;</p>
+      </blockquote>
+      <p ALIGN="LEFT"></p>
+      <p ALIGN="LEFT">&nbsp;&nbsp;&nbsp; } </font>
+      <font SIZE="2" COLOR="#3f7f5f">// end-constructor</p>
+      </font><font SIZE="2">
+      <p ALIGN="LEFT"></p>
+      </font>
+      <p ALIGN="LEFT"><font SIZE="2">&nbsp;</font><font SIZE="2" COLOR="#7f0055"><b>&nbsp;&nbsp;&nbsp; 
+      public</b></font><font SIZE="2"> TymeacInterface login (Object[] obj )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font>
+      <font SIZE="2" COLOR="#7f0055"><b>throws</b></font><font SIZE="2"> 
+      RemoteException {</p>
+      <p ALIGN="LEFT"></p>
+      <blockquote>
+        <p ALIGN="LEFT"></font><font SIZE="2" COLOR="#3f7f5f">// Say we got here</font><font SIZE="2"><br>
+        msgOut(</font><font SIZE="2" COLOR="#2a00ff">&quot;Did a user login&quot;</font><font SIZE="2">, 
+        10); </p>
+        <p ALIGN="LEFT"></p>
+        <p ALIGN="LEFT"></font><font SIZE="2" COLOR="#3f7f5f">// add logic 
+        before<br>
+        </font><font SIZE="2" COLOR="#7f0055"><b>return</b></font><font SIZE="2">
+        </font><font SIZE="2" COLOR="#0000c0">T</font><font SIZE="2">.getTi();</p>
+      </blockquote>
+      <p ALIGN="LEFT"></p>
+      <p ALIGN="LEFT">&nbsp;&nbsp;&nbsp; } </font>
+      <font SIZE="2" COLOR="#3f7f5f">// end-method</p>
+      </font>
+</blockquote>
+    <p>The Server extends com.tymeac.base.RMIServer[or CSFServer] and overrides 
+    the rebind() method. to export the login remote object. We provide working 
+    source code to accomplish this scenario. We also provide the stub class (and 
+    source) so you can run right away.</p>
+    <p>The names of the servers are:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LoginCSFServer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LoginRMIServer</p>
+    <p>The names of the clients are:<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DemoClientBaseLogin<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DemoClientShutLogin</p>
+    <p>The names of the client scripts are:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LoginCSFServer.bat -- starts the 
+    Custom Socket Factory RMI Server<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LoginRMIServer.bat -- starts the 
+    Standard RMI Server<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LoginShut.bat -- does a shut down</p>
+  
+</blockquote>
+    
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+
+</html>

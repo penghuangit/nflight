@@ -1,0 +1,127 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Recursion Example</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body bgcolor="#FFFFFF" background="Images/wheat.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Recursion Examples</h1>
+
+<blockquote>
+  <p style="text-align: justify">An example of recursion is a manufacturing company that
+  makes a ball point pen.</p>
+  <p style="text-align: justify">The ball point pen in made up of four components:<ol>
+    <li><p style="text-align: justify">The <u>refill</u>, (which itself has components, called a
+      sub-assembly),<ol type="a">
+        <li>A <u>plastic tube</u> in which the ink resides,</li>
+        <li>the <u>ink</u>,</li>
+        <li>the <u>metal tip</u> at the bottom of the tube in which the ball resides,</li>
+        <li>the <u>ball</u>.<br>
+          <br>
+        </li>
+      </ol>
+    </li>
+    <li><p style="text-align: justify">the <u>cylinder</u> in which the refill resides,</p>
+    </li>
+    <li><p style="text-align: justify">a <u>top cap</u> that plugs the top of the cylinder.</p>
+    </li>
+    <li><p style="text-align: justify">a <u>bottom cap</u> that protects the refill tip and
+      sports a clip for holding the pen in a shirt pocket.</p>
+    </li>
+  </ol>
+</blockquote>
+
+<blockquote>
+  <p>A hierarchy picture of this:</p>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <blockquote>
+          <blockquote>
+            <blockquote>
+              <p><u>Finished good, Pen<br>
+              </u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | </p>
+            </blockquote>
+          </blockquote>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <blockquote>
+          <p><u>refill</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>cylinder</u>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>top cap</u>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>bottom cap<br>
+          </u>&nbsp; |</p>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p><u>tube</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>ink</u>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>metal tip</u>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>ball</u></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>&nbsp;</p>
+  <p style="text-align: justify">In order to find the low-level cost to the company of
+  manufacturing the pen, we need to find the cost of each component and add those costs
+  together.</p>
+  <p style="text-align: justify">For the non-Tymeac<sup><small>&#153;</small></sup>
+  environment, this is a nightmare.&nbsp; The method to get the cost of the <u>refill</u>
+  must now &quot;save its storage, pointers, etc&quot; and execute another process to
+  compute the inner costs.&nbsp; It is tedious, time consuming and the chaining of storage
+  areas has lead to more null pointer exceptions and stack overflows then are countable.
+  &nbsp; (Also, for every other application where recursion is necessary, the programmers
+  must develop a custom solution.)</p>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" WIDTH="100" HEIGHT="5"></p>
+
+<blockquote>
+  <p>For the Tymeac<sup><small>&#153;</small></sup> environment, this is a piece of cake.
+  &nbsp; One sets up:<ul>
+    <li><p style="text-align: justify">eight Tymeac<sup><small>&#153;</small></sup> Queues --
+      &nbsp; one for each of the four top-level get-Cost methods and one for each of the four
+      sub-assembly, (<u>refill</u>), get-Cost methods,</p>
+    </li>
+  </ul>
+  <ul>
+    <li><p style="text-align: justify">two Tymeac<sup><small>&#153;</small></sup> Functions --
+      one for the list of top-level Queues necessary to complete the request and one for the
+      list of the sub-assembly, (<u>refill</u>), Queues necessary to complete the request.</p>
+    </li>
+  </ul>
+  <p style="text-align: justify">The client uses a remote method call for the top-level
+  Tymeac<sup><small>&#153;</small></sup> Function to process the request.</p>
+  <blockquote>
+    <p style="text-align: justify">The top-level method to get the cost of the <u>refill</u>
+    simply uses a remote method call for the sub-assembly Tymeac<sup><small>&#153;</small></sup>
+    Function to process the inner request.</p>
+  </blockquote>
+  <p>The saving/restoring, coordinating, timing, scheduling, monitoring, and managing are
+  handled by Tymeac<sup><small>&#153;</small></sup>.</p>
+  <p>The system architect can concentrate on solving business problems.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

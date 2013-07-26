@@ -1,0 +1,491 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Development Tutorial</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1><a name="top"></a>Development Tutorial</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>This section details the steps necessary to develop you own systems.</p>
+      <p>You will not have to write any code. We supply all the Java code and 
+      Tymeac User Class entries necessary for this tutorial.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h2 style="text-align: justify">Development of a Simple Example</h2>
+
+<blockquote>
+  <p>For this example we use a stationery manufacturing company and the following
+  description of one of its products: a ball point pen:</p>
+  <blockquote>
+    <blockquote>
+      <p><strong>Request:</strong> What is the cost to us of a ball point pen?</p>
+      <blockquote>
+        <p>To know the cost of the finished good, pen, it is necessary to know the cost of each
+        component part of the ball point pen:<ul>
+          <li>Cylinder Cost...................................$ .05</li>
+          <li>Refill Cost........................................... 15</li>
+          <li>Top Cap Cost......................................01</li>
+          <li>Bottom Cap with holder Cost..............<u>.02</u></li>
+        </ul>
+        <p>Sum the individual component part costs.&nbsp;&nbsp; $0.23</p>
+      </blockquote>
+      <p><strong>Response:</strong> $.23 is the cost to us of a ball point pen.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p>The goal is to find our cost of a ball point pen. However, there are two scenarios:<ol>
+    <li>The refill is purchased from a supplier.&nbsp;Therefore, the cost of the refill is
+      simply the cost of purchasing the item.&nbsp; This we call Part 1.</li>
+    <li>The refill is manufactured in house.&nbsp;Therefore, the cost of the refill is the cost
+      of each of the components that make up the refill. Since this requires another Tymeac
+      Function, it is here that we demonstrate the construction of a recursive call.&nbsp;This
+      we call Part 2.</li>
+  </ol>
+</blockquote>
+
+<blockquote>
+  <p>We will need two types of access to this:</p>
+</blockquote>
+
+<blockquote>
+  <ol>
+    <li>A <a href="Definitions.html#sync">Synchronous Request</a> in which the requestor waits
+      for a reply,</li>
+    <li>An <a href="Definitions.html#async">Asynchronous Request</a> in which the requestor does
+      not wait for a reply.&nbsp;For this example, the results of each individual request are
+      written to the Tymeac Server Console.</li>
+  </ol>
+</blockquote>
+
+<h3 align="center">Part 1</h3>
+
+<blockquote>
+  <p>Since the pen constructs from components, we need to find the cost of each component
+  and add those costs together to accomplish our goal. Before beginning, we summarize the
+  steps necessary to accomplish this goal:</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>1.</strong>&nbsp; You will need to write a <a href="Definitions.html#pap">Processing
+    Application Class</a>. (a base Class with supporting Classes, when necessary), to find the
+    cost, for each of these components.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>2.</strong>&nbsp; You will need a return object from these Processing
+    Application Classes that gives the Tymeac Client Class the costing information.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>3.</strong>&nbsp; You will need to write a Tymeac Client (a base Class with
+    supporting Classes, when necessary) to call the remote method on the Tymeac Server to
+    perform this task and process the results.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>4.</strong>&nbsp; Since access is both by a synchronous request and an
+    asynchronous request, you will need to write an Output Agent Processing Application
+    Class.&nbsp;This class is similar to the Tymeac Client in that it receives the results of
+    processing from the other Processing Application Classes.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><strong>5.</strong>&nbsp; Next you will need to define the environment in which the
+    Processing Application Class resides, the Tymeac <a href="Definitions.html#queue">Queue</a>.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>6.</strong>&nbsp; Next you will need to define the <a href="Definitions.html#function">Function</a> for the list of Queues and the Output Agent
+    Queue.</p>
+    <p><strong>7.</strong>&nbsp; Lastly, for part 1, you will need to test this creation.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <blockquote>
+    <p>Individual design methods vary, therefore, the task order for you may be 
+    different than pictured here.</p>
+  </blockquote>
+  <p><strong>Task 1</strong> is to define the costing Processing Application
+  Classes.&nbsp;This is the heart of the system. How one determines the cost of a component.
+  We know there are four components. These are the names of those Classes:<ul>
+    <li>Cylinder Cost...................................Class name is
+      com.tymeac.serveruser.CostofCylinder</li>
+    <li>CylinderRefill Cost...........................Class name is
+      com.tymeac.serveruser.CostofRefill</li>
+    <li>Top Cap Cost..................................Class name is
+      com.tymeac.serveruser.CostofTopCap</li>
+    <li>Bottom Cap with holder Cost...........Class name is
+      com.tymeac.serveruser.CostofBottomCap</li>
+  </ul>
+  <blockquote>
+    <p>Each Processing Application Classes accepts a single Object array (this is what
+    currency to use) and returns the <u>com.tymeac.serveruser.CostObject</u>, cast to a
+    java.lang.Object.&nbsp;(The task of creating the CostObjec<u>t</u> Class is next.&nbsp;
+    Depending on your design method, top down, bottom up, etc., you may do the next task
+    first.)</p>
+  </blockquote>
+  <blockquote>
+    <p>The code for these classes is in &lt;home&gt;\com\tymeac\serveruser directory.</p>
+  </blockquote>
+  <p><strong>Task 2</strong>&nbsp; You need a return object from these Processing
+  Application Classes that gives the Tymeac Client Class information as to:</p>
+  <blockquote>
+    <ul>
+      <li>The name of the component.</li>
+      <li>The result of processing, (did all go well, etc.),</li>
+      <li>The cost of the component.</li>
+    </ul>
+  </blockquote>
+  <blockquote>
+    <p>The code for this class <strong>com.tymeac.serveruser.CostObject</strong>, 
+    is in &lt;home&gt;\com\tymeac\serveruser directory.</p>
+    <blockquote>
+      <p>The class has three instance fields:<ol>
+        <li>A String for the name of the component,</li>
+        <li>An integer for the return code from the processing,</li>
+        <li>A float for the cost of the component.</li>
+      </ol>
+      <p>The class has two constructors:<ol>
+        <li>With no parameters.</li>
+        <li>With a String, int, and float parameters.</li>
+      </ol>
+      <p>The class has accessors and mutators for each of the instance fields.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p>Since testing in a threading environment is sometimes difficult, we provide a way to
+  test your Processing Application Classes without using the Tymeac Server. This is using
+  the class, <u>DemoTesting</u>, found in the <a href="Samples.html">source</a> classes we
+  ship.</p>
+  <blockquote>
+    <p>Alter the class field, private static String class_name = &quot;CostofCylinder&quot;;</p>
+    <p>Alter the main() field, String x = &quot;US$&quot;; // for US Dollars</p>
+    <p>Compile this class into a test directory.</p>
+    <p>When you run this class, access to both the CostofCylinder Class and the CostObject
+    Class is necessary.</p>
+    <p>To test the other Processing Application Classes, substitute those names for the
+    CostofCylinder Class name.</p>
+  </blockquote>
+  <p><strong>Task 3</strong>&nbsp; You need to write a Tymeac Client (a base Class with
+  supporting Classes, when necessary) to call the remote method on the Tymeac Server and
+  process the results.</p>
+  <blockquote>
+    <p>This Class must:<ul>
+      <li>Form the <a href="TymeacParm.html">parameter</a> for the Tymeac Server,</li>
+      <li>Call the <a href="TySvrComm.html#request">[a]syncRequest()</a> method on the Tymeac
+        Server,</li>
+      <li>Analyze the return message from the Tymeac Server,</li>
+      <li>Analyze the CostObjects from the component Processing Application Classes,</li>
+      <li>Display the results.</li>
+    </ul>
+    <p>The code
+    for this class, <strong>com.tymeac.demo.CostClient</strong> is in 
+    &lt;home&gt;\com\tymeac\serveruser directory.</p>
+    <p>This Class contains both a synchronous and asynchronous calls to the Tymeac Server.</p>
+  </blockquote>
+  <p><strong>Task 4</strong>&nbsp; You need to write an Output Agent Processing Application
+  Class for the accesses that are asynchronous.&nbsp; This class is similar to the Tymeac
+  Client in that it receives the results of processing from the other Processing Application
+  Classes.</p>
+  <blockquote>
+    <p>This Processing Application Classes accepts a single Object array (this is the results
+    of the other Processing Application Classes).</p>
+    <p>The code must:<ul>
+      <li>Analyze the CostObjects from the component Processing Application Classes,</li>
+      <li>Display the results on the Java Console [or what ever you wish].</li>
+    </ul>
+    <p>The code for this Processing Application Class <strong>com.tymeac.serveruser.CostAgent</strong>, 
+    is in &lt;home&gt;\com\tymeac\serveruser directory.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Task 5</strong>&nbsp; You need to define the environment in which each <u>Processing
+  Application Class</u> resides, the Tymeac <a href="Definitions.html#queue">Queue</a>.&nbsp;When
+  using a DBMS, the GUI, <a href="TyQueMaint.html">TyQueMaint</a>, defines the Queue. <a href="UserQueues.html">TymeacUserQueue</a> is for the non-DBMS definitions.</p>
+  <blockquote>
+    <p>For this example there are four normal <u>Queues</u>:</p>
+    <blockquote>
+      <p><strong>Clyinder_Queue</strong> for the CostofCylinder <u>Processing Application Class</u></p>
+      <p><strong>Refill_Queue</strong> for the CostofRefill <u>Processing Application Class</u></p>
+      <p><strong>TopCap_Queue</strong> for the CostofTopCap <u>Processing Application Class</u></p>
+      <p><strong>BottomCap_Queue</strong> for the CostofBottomCap <u>Processing Application
+      Class</u></p>
+    </blockquote>
+    <p>Additionally, you need an <a href="Definitions.html#oa">Output Agent Queue </a>for the
+    CostAgent <u>Processing Application Class</u>.&nbsp; This is almost identical to the
+    normal Queues, above. There is one <a href="TyQueMaint.html#agent">flag</a> in the <u>Queue</u>
+    definition for this designation. The name of this queue is <strong>CostAgent_Queue</strong>.</p>
+    <p>The <u>Processing Application Class</u> is the name (Costof...) from above.</p>
+
+<p>We supply the TutorialTymeacUserFunctions and Queues java files that contain all the 
+queues and functions you need to run this demo, both part 1 and 2. These are in the <b>/com.tymeac.serveruser</b> 
+directory.</p>
+      <blockquote>
+
+<p>What you need to do is save the original TymeacUserFunctions and Queues java 
+files and rename the Tutorial... files mentioned above leaving off the prefix &quot;Tutorial&quot;</p>
+      </blockquote>
+
+    <p>Save the TymeacUserQueues Class and recompile into the &lt;home&gt;\Server-User
+    directory.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Task 6&nbsp; </strong>Next you need to define the <a href="Definitions.html#function">Function</a>
+  for the list of <u>Queues</u> and the <u>Output Agent Queue</u>.&nbsp;The name of this
+  Function is <strong>PenCost</strong>.&nbsp; When using a DBMS, the GUI, <a href="TyFuncMaint.html">TyFuncMaint</a>, defines the Queue.&nbsp; <a href="UserFunctions.html">TymeacUserFunction</a> is for the non-DBMS definitions. Only one
+  Function is necessary.&nbsp; The Client Class determines either synchronous or
+  asynchronous access.&nbsp;A Synchronous Request does not use an Output Agent, therefore,
+  the presents of one is irrelevant.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>This is just what it says:&nbsp; a list of <u>Queues</u>.</p>
+  </blockquote>
+  <blockquote>
+    <ul>
+      <li>Clyinder_Queue</li>
+      <li>Refill_Queue</li>
+      <li>TopCap_Queue</li>
+      <li>BottomCap_Queue</li>
+    </ul>
+    <p>Additionally, the <u>Output Agent Queue</u>, CostAgent.</p>
+    <p>See above for renaming the Tutorial... classes.</p>
+    <p>Save the TymeacUserFunctions Class and recompile into the &lt;home&gt;\Server-User
+    directory.</p>
+  </blockquote>
+  <p><strong>Task 7</strong>&nbsp; Testing:</p>
+  <blockquote>
+    <p>You may test each of these Processing Application Classes separately, without the
+    Tymeac threading environment.&nbsp;We discuss this above, at the end of Task 2, and in the
+    section, Developing Your Systems, <a href="Develop.html#testing">testing</a>.</p>
+    <p>Within the section, Developing Your Systems, <a href="Develop.html#testing">testing</a>,
+    is a recommendation to to set up a single Queue with a single thread just for
+    testing.&nbsp;The method of testing is purely user oriented.&nbsp;It is best suited for
+    complex projects.</p>
+  </blockquote>
+  <blockquote>
+    <p>In any case, you must start the RMI Registry.&nbsp; [Start the activation daemon,
+    rmid.] &nbsp; <a href="StartUp.html">Start Tymeac</a>.</p>
+  </blockquote>
+  <blockquote>
+    <p>Run your application.&nbsp;You may create a script file similar to one of the Tymeac
+    Client procedures, (i.e. T1.bat[sh]), or simply use the command line.&nbsp;The Class is <strong>com.tymeac.demo.CostClient</strong>,
+    the directory is &lt;home&gt; unless you are using an IDE.&nbsp;With an IDE, you may set
+    break points and watch the execution.</p>
+    <blockquote>
+        <p>We provide a GUI, <a href="TyQueData.html">TyQueData</a>, that alters slots and
+        thresholds during execution.</p>
+        <p>We provide a GUI, <a href="TyQueThd.html">TyQueThd</a>, that displays thread usage.</p>
+        <p>We provide a GUI, <a href="TyWlData.html">TyWlData</a>, that displays Wait List usage.</p>
+        <p>We provide a GUI, <a href="TyNewCopy.html">TyNewCopy</a>, that alters the Processing
+        Application Class during execution.</p>
+    </blockquote>
+  </blockquote>
+  <p>This completes Part 1.</p>
+</blockquote>
+
+<h3 align="center">Part 2.</h3>
+
+<blockquote>
+  <p>For this scenario, the refill is manufactured in house. Therefore, the cost of the
+  refill is the cost of each of the components that make up the refill.&nbsp;We describe
+  this in the Product Description, <a href="../Brochure/Recursion.html">recursion example</a>.</p>
+  <blockquote>
+    <p>To know the cost of the sub-assembly, refill, it is necessary to know the cost of each
+    component part of the refill:<ul>
+      <li>Tube Cost....................$..05</li>
+      <li>Ink Cost......................... .02</li>
+      <li>Metal Tip Cost.................02</li>
+      <li>Ball Cost.........................<u>.02</u></li>
+    </ul>
+    <p>Sum the individual component part costs.&nbsp;&nbsp; $0.11</p>
+    <p>In this case, the cost of the refill is $.11, compared to $.15 in part 1.</p>
+  </blockquote>
+  <p>Since the refill constructs from components, we need to find the cost of each component
+  and add those costs together to accomplish our goal. Before beginning, we summarize the
+  steps necessary to accomplish this goal:</p>
+  <blockquote>
+    <p><strong>1.</strong>&nbsp; You will need to write a <a href="Definitions.html#pap">Processing
+    Application Class</a>. (a base Class with supporting Classes, when necessary) to find the
+    cost, for each of these components.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>2.</strong>&nbsp; You will need to write a <a href="Definitions.html#pap">Processing
+    Application Class</a>. (a base Class with supporting Classes, when necessary) in place of
+    the CostofRefill Class from part 1.This new class will use recursion.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>3.</strong>&nbsp; Next you will need to define the environment in which the
+    Processing Application Class resides, the Tymeac <a href="Definitions.html#queue">Queues</a>.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>4.</strong>&nbsp; Next you will need to define the <a href="Definitions.html#function">Function</a> for the list of Queues.</p>
+    <p><strong>5.</strong>&nbsp; Lastly, for part 2, you will need to test this creation.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p><strong>Task 1</strong> is to define the costing Processing Application
+  Classes.&nbsp;This is the heart of the system.&nbsp;How one determines the cost of each
+  refill component.&nbsp;We know there are four components.&nbsp;These are the names of
+  those Classes:<ul>
+    <li>Tube Cost.........Class name is com.tymeac.serveruser.CostofTube</li>
+    <li>Ink Cost............Class name is com.tymeac.serveruser.CostofInk</li>
+    <li>Metal Tip..........Class name is com.tymeac.serveruser.CostofMetalTip</li>
+    <li>Ball Cost...........Class name is com.tymeac.serveruser.CostofBall</li>
+  </ul>
+  <blockquote>
+    <p>Each Processing Application Classes accepts a single Object array (this is what
+    currency to use) and returns the <u>com.tymeac.serveruser</u>.<u>CostObject</u>, cast to a
+    java.lang.Object.&nbsp;This is the same as in Part 1.</p>
+  </blockquote>
+  <blockquote>
+    <p>The code for these classes is in &lt;home&gt;\com\tymeac\serveruser directory.</p>
+  </blockquote>
+  <p><strong>Task 2</strong>&nbsp; You need to write a replacement for the CostofRefill
+  Class, from part 1, that uses recursion to access the Tymeac Server as a Tymeac Client and
+  to process the results.</p>
+  <p>This Class must:<ul>
+    <li>Form the <a href="TymeacParm.html">parameter</a> for the Tymeac Server,</li>
+    <li>Call the <a href="TySvrComm.html#request">syncRequest()</a> method on the Tymeac Server,</li>
+    <li>Analyze the return message from the Tymeac Server,</li>
+    <li>Analyze the CostObjects from the component Processing Application Classes,</li>
+    <li>Sum the costs from each of the components,</li>
+    <li>Return the <strong>com.tymeac.serveruser.CostObject</strong> of the components to the
+      caller.</li>
+  </ul>
+  <p>The code for this class <strong>com.tymeac.serveruser.CostofRefillRecur</strong> 
+  is in &lt;home&gt;\com\tymeac\serveruser directory.</p>
+  <blockquote>
+    <p><strong>Note</strong>:&nbsp; This is a Processing Application Class that
+    &quot;resides&quot; in a Tymeac Queue.&nbsp;You may alter the Queue, Refill_Queue, from
+    part 1 by replacing the String &quot;CostofRefill&quot; to CostofRefillRecur&quot;.&nbsp;
+    However, we suggest you do not alter this Queue, yet. During testing for this part 2, you
+    will alter the Refill_Queue dynamically.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Task 3</strong>&nbsp; You need to define the environment in which each <u>Processing
+  Application Class</u> resides, the Tymeac <a href="Definitions.html#queue">Queue</a>.&nbsp;When
+  using a DBMS, the GUI, <a href="TyQueMaint.html">TyQueMaint</a>, defines the Queue.&nbsp; <a href="UserQueues.html">TymeacUserQueue</a> is for the non-DBMS definitions.</p>
+  <blockquote>
+    <p>For this example there are four normal <u>Queues</u>:</p>
+    <blockquote>
+      <p><strong>Tube_Queue</strong> for the CostofTube <u>Processing Application Class</u></p>
+      <p><strong>Ink_Queue</strong> for the CostofInk <u>Processing Application Class</u></p>
+      <p><strong>MetalTip_Queue</strong> for the CostofMetal <u>Processing Application Class</u></p>
+      <p><strong>Ball_Queue</strong> for the CostofBall <u>Processing Application Class</u></p>
+    </blockquote>
+    <p>The <u>Processing Application Class</u> is the name (Costof...) from above.</p>
+    <p>The
+    user-classes (that is, no DBMS) were done in Part 1.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Task 4 </strong>Next you need to define the <a href="Definitions.html#function">Function</a>
+  for the list of <u>Queues</u>.&nbsp;The name of this Function is <strong>RefillCost</strong>.&nbsp;
+  When using a DBMS, the GUI, <a href="TyFuncMaint.html">TyFuncMaint</a>, defines the
+  Queue.&nbsp;<a href="UserFunctions.html">TymeacUserFunction</a> is for the non-DBMS
+  definitions.&nbsp;Only one Function is necessary.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>This is just what it says:&nbsp; a list of <u>Queues</u>.</p>
+  </blockquote>
+  <blockquote>
+    <ul>
+      <li>Tube_Queue</li>
+      <li>Ink_Queue</li>
+      <li>MetalTip_Queue</li>
+      <li>Ball_Queue</li>
+    </ul>
+    <p>The procedure was done in Part 1.</p>
+  </blockquote>
+  <p><strong>Task 5</strong>&nbsp; Testing:</p>
+  <blockquote>
+    <p>You may test each of these Processing Application Classes separately, without the
+    Tymeac threading environment.&nbsp;We discuss this above, at the end of Part 1, Task 2,
+    and in the section, Developing Your Systems, <a href="Develop.html#testing">testing</a>.</p>
+    <p>Within the section, Developing Your Systems, <a href="Develop.html#testing">testing</a>,
+    is a recommendation to to set up a single Queue with a single thread just for
+    testing.&nbsp;The method of testing is purely user oriented.&nbsp; It is best suited for
+    complex projects.</p>
+  </blockquote>
+  <blockquote>
+    <p>In any case, you must start the RMI Registry.&nbsp; [Start the activation daemon,
+    rmid.] &nbsp; <a href="StartUp.html">Start Tymeac</a>.</p>
+  </blockquote>
+  <blockquote>
+    <p>Run your application exactly as in Part 1. (You may create a script file similar to one
+    of the Tymeac Client procedures, (i.e. T1.bat[sh]), or simply use the command line. The
+    Class is <strong>CostClient</strong>, the directory is &lt;home&gt;\Demo, unless you are
+    using an IDE.&nbsp;With an IDE, you may set break points and watch the execution.)</p>
+    <p>Using the <a href="TyNewCopy.html">TyNewCopy</a> GUI, you will alter the Processing
+    Application Class currently in Queue Refill_Queue as CostofRefill to the new Class you
+    created in part 2, Task 2, above, to be <strong>CostofRefillRecur</strong>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>As a new process, execute the java class, TyNewCopy or press the TyNewCopy button on
+      the <a href="TyMenu.html">TyMenu</a> frame.</p>
+      <p>In the TextField, &quot;Queue Name&quot;, enter <strong>Refill_Queue</strong></p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>In the TextField, &quot;(new) appl. Class Name&quot;, enter <strong>com.tymeac.serveruser.CostofRefillRecur</strong></p>
+      <p>Press the Load button.</p>
+      <p>The message at the bottom of the frame should say &quot;Successful&quot;. &nbsp; If
+      not, than take the appropriate action.</p>
+    </blockquote>
+    <p>Rerun your application. Notice that the println() message now includes the refill
+    components, the sum for the refill cost is now $.11 instead of $.15 and that the total
+    cost of the pen in now $.19 instead of $.23.&nbsp;With an IDE, you may set break points
+    and watch the execution.</p>
+  </blockquote>
+  <p>This completes Part 2.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

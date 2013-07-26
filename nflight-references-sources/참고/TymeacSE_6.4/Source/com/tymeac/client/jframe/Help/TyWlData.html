@@ -1,0 +1,71 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Wait List Display</title>
+
+</head>
+
+<body>
+
+<h1>Queue Wait List Display</h1>
+
+<blockquote>
+  <p>This frame class displays the data of an active Queue's Wait Lists.</p>
+</blockquote>
+
+<h3><strong>Elements</strong></h3>
+
+<blockquote>
+  <p><strong>Queue Name</strong> -- Enter a queue name.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Lists </strong>-- These are List rows.&nbsp; The top is Wait List 1, the second
+  is Wait List 2, etc.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><u>In Use</u> --&nbsp; The number of currently active entries.</p>
+  </blockquote>
+  <blockquote>
+    <p><u>Times Used</u> -- The number of times this Wait List was used.</p>
+    <p><u>High Used</u> -- The maximum number of requests pending at any one 
+    time. (High water mark.)</p>
+  </blockquote>
+  <blockquote>
+    <p><u>Nbr Reset</u> -- The number of (a)sync Requests failed and backed out.</p>
+  </blockquote>
+  <blockquote>
+    <p><u>Over Pri</u> -- The number of primary overflows.&nbsp; A request goes into the Wait
+    List of choice.&nbsp; Priority 1 goes in Wait List 1.&nbsp; When the desired Wait List if
+    full, the request goes into the next higher Wait List.&nbsp; This is a primary overflow.</p>
+  </blockquote>
+  <blockquote>
+    <p><u>Over Sec</u> -- The number of secondary overflows.&nbsp; After a primary overflow,
+    when the next higher Wait List is also full, the request goes into the following Wait
+    List. &nbsp; This is a secondary overflow.&nbsp; </p>
+  </blockquote>
+</blockquote>
+
+<h3><strong>Butons</strong></h3>
+
+<blockquote>
+  <p><strong>REFRESH</strong> -- Refreshes the display.</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- This is an information message:</p>
+
+<blockquote>
+  <p><u>Connection failure</u> -- The RMI connection failed or the Tymeac Server returned an
+  invalid message.</p>
+  <p><u>Tymeac shutting down</u> -- Tymeac Server is in shut down mode.</p>
+  <p><u>Invalid Queue Name</u> -- The Queue Name does not exist.</p>
+  <p><u>Refresh when ready</u> -- As stated.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;</body></html>

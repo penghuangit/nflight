@@ -1,0 +1,745 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta name="generator" content=
+"Microsoft FrontPage 5.0" />
+<meta http-equiv="Content-Language" content="en-us" />
+<meta name="ProgId" content="FrontPage.Editor.Document" />
+<meta name="description" content=
+"High Performance Priority Queues in Java SE" />
+<meta name="keywords" content=
+"Java, edward harned, threads, high performance, priority queue, multi-threading, concurrency, queuing, fork join, Tymeac, Tymeacse, Tymeacme, Tymeacand, android, software developer" />
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii" />
+<meta name="ROBOTS" content="index, follow" />
+<title>High Performance Priority Queues in Java SE</title>
+
+<style type="text/css">
+/*<![CDATA[*/
+<!--
+h1
+        {margin-top:12.0pt;
+        margin-right:0in;
+        margin-bottom:3.0pt;
+        margin-left:0in;
+        page-break-after:avoid;
+        font-size:16.0pt;
+        font-family:Arial;
+        }
+-->
+/*]]>*/
+</style>
+</head>
+<body>
+<p align="center"><font face=
+"Arial, Helvetica"><big><big><big><strong><span class=
+"atitle"><font size="5">High Performance Priority Queues in Java
+SE</font></span></strong></big></big></big></font></p>
+<h3 align="center"><span class="atitle"><strong><font face=
+"Arial, Helvetica" size="3">Using Wait Lists for
+Efficiency</font></strong></span></h3>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">The priority
+queue is one of the oldest structures in modern computer software.
+Many crucial user applications
+require high performance priority queues but genuinely high
+performance priority queues are not readily available in Java
+SE, Java ME and Android.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">This article
+presents a high performance option using Wait Lists as
+an alternative to maps, trees, heaps and skip lists. (2900
+words)</font></p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><a href=
+"#author">Edward Harned</a> (<a href=
+"mailto:eh%20at%20coopsoft%20dot%20com">eh at coopsoft dot
+com</a>)<br />
+Senior Developer, Cooperative Software Systems, Inc.<br />
+January, 2010</font></p>
+<h3><font face="Arial, Helvetica">Queue</font></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">A queue is a
+list of elements waiting for retrieval by a thread. Queuing
+discipline is the rule that determines who goes next. FIFO, for
+"first-in-first-out," is the simplest queuing discipline. The most
+general queuing discipline is priority queuing in which each
+element has a priority and the element with the highest priority
+goes first, regardless of the order of arrival.</font></p>
+<p align="center"><b><font face="Arial, Helvetica" size=
+"2"><a name="Fig1"></a>Figure 1: Priority Queue
+Structure</font></b></p>
+<p align="center"><img border="0" src="i/priorityQue.gif" width=
+"466" height="253" alt="Priority Queue Structure" /></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">The three
+universal operations are:</font></p>
+<ol>
+<li><font face="Verdana, Arial, Helvetica" size="2">Add &#8211; add
+an element to the queue with an associated priority.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Poll &#8211;
+remove the element from the queue that has the highest priority and
+return it.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Peek &#8211;
+look at the element with highest priority without removing
+it.</font></li>
+</ol>
+<h3><b><font face="Arial, Helvetica">High
+Performance</font></b></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">An High
+performance priority queues differ from standard priority queues in
+that operations on the queue must be fast and the duration of
+elements inside the queue is short. For example:</font></p>
+<blockquote><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Standard</b></font> <font face="Verdana" size=
+"2">&#8212;</font> <font face="Verdana, Arial, Helvetica" size=
+"2">A queue of print requests does not need speedy operations and
+the elements remain in the queue until the prior request completely
+prints.</font>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>High
+Performance</b></font> <font face="Verdana" size="2">&#8212;</font>
+<font face="Verdana, Arial, Helvetica" size="2">A queue of credit
+card verification requests needs paramount speed and the elements
+only remain in the queue for a millisecond or less.</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Concurrency is
+usually a requirement in high performance priority queues since a
+thread pool is the fastest way to service the queue. That is,
+threads try to rip elements out of the queue as fast as the
+elements go in the queue.</font></p>
+<h3><b><font face="Arial">Implementations</font></b></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Associative
+Array or Map</b><br />
+One method is to keep an associative array mapping each
+priority to a list of elements with that priority. When using
+association lists or hash tables to implement the associative
+array, adding an element takes constant time but removing or
+peeking at the element of highest priority takes linear time,
+because we must search all keys for the largest one. Not the most
+desirable feature for high performance.</font></p>
+<p align="center"><b><font face="Arial, Helvetica" size="2">Figure
+3:</font> <font face="Arial" size="2">Associative
+Array</font></b></p>
+<p align="center"><img border="0" src="i/assocArray.gif" width=
+"180" height="256" alt="Associative Array" /></p>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Trees</b><br />
+The hard part of dealing with tree-like data structures is
+retaining the various aspects that keep it tree-like rather than
+degenerating into something abysmally slow such as a list.
+Maintaining the balance seriously influences performance so this is
+not a desirable feature for high performance.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Binary
+trees</b> work well when inserting the elements in a random order.
+Inserting the elements in a sorted order produces a degenerate data
+structure that gives very poor performance.</font></p>
+<p align="center"><b><font face="Arial, Helvetica" size="2">Figure
+4:</font></b> <font face="Arial" size="2"><b>Binary
+Tree</b></font></p>
+<p align="center">&nbsp;</p>
+<p align="center"><img border="0" src="i/binaryTree.jpg" width=
+"559" height="288" alt="Binary Tree" /></p>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Balanced
+tree</b> algorithms re-arrange the tree as they perform operations
+to maintain certain balance conditions and assure good performance;
+but maintaining the balance seriously influences performance so
+this is not a desirable feature for high performance.</font></p>
+<p align="center"><b><font face="Arial, Helvetica" size="2">Figure
+5:</font> <font face="Arial" size="2">Balanced Tree</font></b></p>
+<p align="center"><img border="0" src="i/balancedTree.png" width=
+"576" height="342" alt="Balanced Tree" /></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2"><b>Heaps</b><br />
+There are many types of priority queue heaps</font> <font face=
+"Verdana" size="2">&#8212;</font> <font face=
+"Verdana, Arial, Helvetica" size="2">Binary heap [<a href=
+"#1">1</a>], Fibonacci heap [<a href="#2">2</a>], Binomial heap
+[<a href="#3">3</a>], Relaxed heap[<a href="#4">4</a>], 2-3 heap
+[<a href="#5">5</a>], Skew heap [<a href="#6">6</a>], Calendar
+Queue [<a href="#7">7</a>], Lazy Queue [<a href="#8">8</a>], Ladder
+Queue [<a href="#9">9</a>], Parallel Access Skew Heap [<a href=
+"#10">10</a>]</font> <font face="Verdana" size="2">&#8212;</font>
+<font face="Verdana, Arial, Helvetica" size="2">to name a few. Java
+does not support cache-aware priority queues so we mention none
+here.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">The binary heap
+uses O(log <i>n</i>) time for Add and Poll operations, but allows
+Peeking in constant time. Binomial heaps add several more
+operations, but require O(log <i>n</i>) time for Peeking. Fibonacci
+heaps can Add elements, Peek at the maximum priority element, and
+decrease an element's priority in amortized constant time
+(deletions are still O(log <i>n</i>)).</font></p>
+<p align="center"><b><font face="Arial, Helvetica" size="2">Figure
+6:</font> <font face="Arial" size="2">Heap</font></b></p>
+<p align="center"><img border="0" src="i/heapArray.png" width="362"
+height="361" alt="Heap" /></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Heaps do not
+need locking to rebalance the heap and Add operations on a heap can
+proceed from bottom to root, thus minimizing contention along their
+concurrent traversal paths. (See
+java.util.concurrent.PriorityBlockingQueue for a JDK
+version.)</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Once again,
+maintaining the balance and dealing with elements with equal
+priority seriously influence performance making a heap undesirable
+for high performance.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2"><b>Skip
+List</b><br />
+A skip list is a heap data structure for storing a sorted list of
+items using a hierarchy of linked lists that connect increasingly
+sparse subsequences of the items. These auxiliary lists allow item
+lookup with efficiency comparable to balanced binary search trees.
+Skip lists use a random number generator to balance the list. Skip
+lists have balance properties similar to that of search trees built
+by random insertions, yet do not require random insertions. Thus,
+the skip list is a prime candidate for high performance priority
+queues. (See java.util.concurrent.ConcurrentSkipListMap for a JDK
+version.)</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">However,
+priority depends on comparisons of the key element with other
+elements in the list, and, both maintaining the balance of the list
+and dealing with elements with equal priority may seriously degrade
+performance.</font></p>
+<p align="center"><b><font face="Arial, Helvetica" size="2">Figure
+7:</font></b> <font face="Arial" size="2"><b>Skip
+List</b></font></p>
+<p align="center"><img border="0" src="i/skipList.png" width="778"
+height="125" alt="Skip List" /></p>
+<p align="center">&nbsp;</p>
+<p><font face="Verdana, Arial, Helvetica" size="2">There is a wide
+body of literature addressing the design of concurrent priority
+queue algorithms. They mostly work for &#8220;general" queues, ones
+that have an unlimited range of priorities</font></p>
+<h3><b><font face="Arial">Problems</font></b></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">Just what are
+the biggest problems with lists, arrays, trees, heaps and skip
+lists when it comes to high performance?</font></p>
+<ol>
+<li><font face="Verdana, Arial, Helvetica" size="2">Sorting a
+priority of unlimited range is the biggest headache. Priority can
+be anything; names, dates, locations and may even be made up of
+non-contiguous fields. A priority of unlimited range makes for a
+headache of unlimited ache.<br />
+&nbsp;</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Another major
+problem is maintaining the order. Either you take a hit when adding
+a new element into the structure or you have to search the
+structure for the highest priority when polling. Neither of these
+scenarios makes for high performance.<br />
+&nbsp;</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">For most
+structures, locking the queue for concurrent access is essential. A
+skip list can avoid locking but a skip list still requires sorting
+and sometimes extensive searching.</font></li>
+</ol>
+<h4><b><font face="Arial">Headaches number one and
+two</font></b></h4>
+<p><font face="Verdana, Arial, Helvetica" size="2">What if we could
+come up with a priority queue that did not need sorting?</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Let&#8217;s look
+at priority in detail. Remember, we&#8217;re talking about high
+performance priority queues where operations on the queue must be
+fast and the elements sit in the queue for a very short
+period.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Priority queues
+are like priority threads. Java threads support up to ten
+priorities, 1-10, with 1 being the highest. What that really means
+is a priority 1 may (depending on the thread/CPU mix) get execution
+time more often then a priority 10 <i>and</i> <i>very little
+else</i>. The difference between a priority 4 and 5 is negligible,
+not worth considering. The same standard holds true for high
+performance priority queues. It doesn&#8217;t matter if one element
+with a similar priority is fetched a microsecond before or after
+another. Therefore, a precise, unlimited range of priorities is of
+little importance for high performance priority queues.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">If we could
+compress the fields that comprise the priority and limit the range
+of priorities, we could get a handle on our biggest headaches. Go
+back and take another look at <a href="#Fig1">Figure 1</a>. The
+"Enqueueing Operation" is a unique algorithm for each
+queue.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">For an
+application that sends out birthday cards, the exact day of the
+month is important and the ordering must include the month and day
+of birth. However, for similar applications we may be able to group
+elements by zodiac sign (astrology.) Here, the month and day can be
+converted into an integer from 1 to 12 for ordering.</font></p>
+<blockquote>
+<p align="left"><b><font face="Arial, Helvetica" size="2">Listing
+1:</font> <font face="Arial" size="2">zodiac
+configuration</font></b></p>
+<table bgcolor="#CCCCCC" border="1" cellpadding="5" cellspacing="0"
+width="502" height="20">
+<tr>
+<td style="font-family: Verdana" height="8" width="488"><font size=
+"2">&nbsp;<br />
+&nbsp; priority = configure(</font><font size="2" color=
+"#7F0055"><b>int</b></font> <font size="2">month,</font>
+<font size="2" color="#7F0055"><b>int</b></font> <font size=
+"2">day)<br />
+&nbsp;</font></td>
+</tr>
+</table>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">In this way, we
+can create twelve lists of waiting elements (Wait Lists.) Each list
+represents a priority (zodiac sign) and the elements within each
+list are in FIFO order. The lists are ordered, but we no longer
+have an unlimited range of priorities.</font></p>
+<p align="center"><b><font face="Arial, Helvetica" size="2">Figure
+8:</font></b> <font face="Arial" size="2"><b>Wait
+Lists</b></font></p>
+<p align="center"><img border="0" src="i/WaitLists1.jpg" width=
+"321" height="147" alt="Wait Lists" /></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Could we do this
+for a credit card verification application? Sure. We could have ten
+Wait Lists, just like Java threads. We want to group elements
+according to the resources it takes to process an element. Domestic
+verification takes fewer resources then foreign verification so
+domestic gets a higher priority then foreign. Cash advances are the
+most risky transactions and require more resources so these get a
+lower priority then merchant transactions. Jewelry stores are also
+risky transactions since jewelry can easily convert into cash so
+these get a lower priority then shoe stores. We can come up with a
+simple function:</font></p>
+<blockquote>
+<p align="left"><b><font face="Arial, Helvetica" size="2">Listing
+2:</font> <font face="Arial" size="2">verification
+configuration</font></b></p>
+<table bgcolor="#CCCCCC" border="1" cellpadding="5" cellspacing="0"
+width="547" height="20">
+<tr>
+<td style="font-family: Verdana" height="8" width="533"><font size=
+"2">&nbsp;<br />
+&nbsp; priority = configure(</font><font size="2" color=
+"#7F0055"><b>int</b></font> <font size="2">location,</font>
+<font size="2" color="#7F0055"><b>int</b></font> <font size=
+"2">type,</font> <font size="2" color="#7F0055"><b>int</b></font>
+<font size="2">merchant, ...)</font><br />
+&nbsp;</td>
+</tr>
+</table>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">We take a small
+hit in processing time developing the priority but then we
+eliminate both the sorting and maintaining the order.</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Each
+&#8220;priority&#8221; goes into its respective Wait List.<br />
+The elements are in FIFO order and never need
+rearranging.</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Could we do this
+for other applications? Absolutely. We can hash a String into an
+integer and randomize that integer into any limited range. Any
+competent professional can develop an algorithm that returns an
+integer of limited range.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Now, our threads
+look for work starting at Wait List number one and proceed onto the
+next Wait List when the current Wait List is empty. We have a
+&#8220;priority queue&#8221; without the headaches of sorting and
+maintaining the order.</font></p>
+<h4><b><font face="Arial">Headache number
+three</font></b></h4>
+<p><font face="Verdana, Arial, Helvetica" size="2">Locks are a
+killer to high performance. Dead/live locks, priority inversion,
+starvation, convoying and overhead are some of the problems of
+using locks. By having Wait Lists, we can store the elements of
+each Wait List in a standard Java non-locking queue based on the
+high performance Classes in the concurrency package:</font></p>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size=
+"2">java.util.concurrent.ConcurrentLinkedQueue (JDK1.5, 1.6)<br />
+java.util.concurrent.LinkedTransferQueue (JDK1.7).</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Both these
+Classes</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">Use fast atomic
+(java.util.concurrent.atomic package) methods for Add, Poll and
+Peek.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Use linked
+nodes that the queue re-links after polling thereby averting all
+reordering. Simple and fast.</font></li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size="2">We&#8217;ve
+eliminated all our biggest headaches with simple Wait
+Lists.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Now it gets
+interesting.</font></p>
+<h3><font face="Arial">Wait Lists</font></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">Wait Lists
+should be bounded.</font></p>
+<table width="331" align="right" border="0" cellpadding="0"
+cellspacing="0" summary="spacer">
+<tr>
+<td width="10"><font face="Verdana, Arial, Helvetica" size=
+"2"><img alt="." src="i/space1.gif" width="1" height=
+"1" /></font></td>
+<td width="321">
+<table border="1" cellpadding="5" cellspacing="0" summary=
+"Add slots to WaitList" style="border-collapse: collapse" bordercolor="#111111">
+<tbody>
+<tr>
+<td bgcolor="#EEEEEE"><font face="Verdana, Arial, Helvetica" size="2">
+Dynamically adding more slots is one solution.</font></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</table>
+<p><font face="Verdana, Arial, Helvetica" size="2">When adding
+elements to an unbounded queue we run out of memory before we know
+there is a problem. A &#8220;no slot available [in any Wait
+List]&#8221; condition is a recoverable exception while an out of
+memory error usually kills all processing.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">In a bounded
+environment, Wait Lists may support elements overflowing from one
+Wait List to the next as the best way not to reject a request. If
+it doesn't fit exactly where you want it and there is a place
+anywhere to put it, then put it there. It may not be exactly where
+you want it, but it's close. Since the request should only be in
+the queue a very short time period, it shouldn&#8217;t
+matter.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">By having Wait
+Lists, we can easily support thresholds for controlling the number
+of threads executing at any given time.</font></p>
+<h3><b><font face="Arial">Thresholds for the Thread
+Pool</font></b></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">When a thread
+can process an element in a short time period (what high
+performance is all about), then using more than the minimum number
+of threads for a lightly loaded queue is a waste of resources and
+may even slow down overall processing due to contention for memory,
+cycles and other assets.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Threads block
+(consuming minuscule resources) until there is work. With the
+standard priority queue and a thread pool of three (3) threads,
+when there are three or more elements in the queue, then all three
+threads are working. There is no way to control the number of
+threads working when there is more than one element in the
+queue.</font></p>
+<table width="40%" align="right" border="0" cellpadding="0"
+cellspacing="0" summary="spacer">
+<tr>
+<td width="10"><font face="Verdana, Arial, Helvetica" size=
+"2"><img alt="." src="i/space1.gif" width="1" height=
+"1" /></font></td>
+<td>
+<table border="1" cellpadding="5" cellspacing="0" summary=
+"High Contention" align="right">
+<tbody>
+<tr>
+<td bgcolor="#EEEEEE"><font size="2" face=
+"Verdana, Arial, Helvetica">High contention can play havoc with
+Connections,
+locks/semaphores, cache coherency and others. (<a href="#references">see&nbsp; 
+Fork-Join Development in Java SE</a>)</font></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</table>
+<p><font face="Verdana, Arial, Helvetica" size="2">The &#8220;use
+all available threads&#8221; paradigm may easily degrade the entire
+computer when those threads are working on similar tasks. Severe
+contention is often a major problem with dynamic decomposition
+methods.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Thresholds solve
+the problem.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">A threshold is
+simply a boundary after which an event should take place. For the
+threads in a pool of threads, when adding a new element to the
+queue results in more then a &#8220;threshold&#8221; number of
+waiting elements, then engage a new thread to handle the
+load.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">A Threshold
+could be:</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">a percentage of
+total elements in all Wait Lists,</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">the single
+percentage of elements waiting in the Wait List into which the last
+element went,</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">the single
+percentage of elements waiting in the Wait List into which the last
+element went using a weighted factor (i.e. a priority 1 may be more
+significant than a priority 3),</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">a percentage of
+elements in currently busy Wait Lists that also considers the
+active thread count,</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">or any other
+configuration necessary for your processing.</font></li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size="2">In the above
+example, we have a thread pool of three threads. Assume one active
+thread, ten (10) elements maximum in each bounded Wait List and a
+Single Wait List Threshold of 30%. When we add the third element to
+Wait List 1, we haven&#8217;t exceeded the 30% threshold so we
+would not engage a new thread. When the next element comes in
+pushing the number of waiting elements in Wait List 1 past 30%,
+then we engage a new thread to reduce the load on the
+queue.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">In this manner
+you <u>manage</u> the threading, rather then the threading
+occurring by chance. The way you set up these thresholds is only
+limited by imagination. You might have two numbers associated with
+your Wait Lists:</font></p>
+<ol>
+<li><font face="Verdana, Arial, Helvetica" size="2">The number of
+physical elements in Wait Lists (bounded, but high)</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">The number of
+logical elements in Wait Lists (used for threshold processing).
+Think of logical as the normal top load on a Queue.</font></li>
+</ol>
+<blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">For example: A
+single Wait List should not have more then twenty (20) pending
+elements at any time. Make the logical size 20 and to be extra,
+extra safe, make the physical size 60. Now you can drive
+percentages using the number twenty (20) knowing that an overflow
+is very unlikely.</font></p>
+</blockquote>
+<p><font face="Verdana, Arial, Helvetica" size="2">Your high
+performance priority queue is on the road to total
+tune-ability.</font></p>
+<h3><b><font face="Arial">Simple</font></b></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">Sooner or later
+every software developer learns about KISS. That is, if you don't
+<u>K</u>eep <u>I</u>t <u>S</u>imple, you're <u>S</u>tupid. Heaps,
+skip lists etc. are incredibly complex structures especially when
+trying to handle duplicate entries (that priority of unlimited
+range problem again.) Whenever possible, competent software
+developers utilize the language's basic templates and simply build
+extensions thereon.</font></p>
+<p>We can keep the Wait Lists in a simple ArrayList. Adding an
+element is as simple as the add() method in <font face=
+"Verdana, Arial, Helvetica" size="2">the appropriate
+java.util.concurrent Queue. Polling and Peeking are simple searches
+for the first non-null element in the Queue.</font></p>
+<p align="left"><b><font face="Arial, Helvetica" size="2">Listing
+3:</font> <font face="Arial" size="2">searching Wait
+Lists</font></b></p>
+<table bgcolor="#CCCCCC" border="1" cellpadding="5" cellspacing="0"
+width="611" height="20">
+<tr>
+<td style="font-family: Verdana" height="8" width="597"><font size=
+"2">&nbsp;<br />
+&nbsp;</font> <font size="2" color="#7F0055"><b>private</b></font>
+<font size="2">ArrayList&lt;WaitList&gt;</font> <font size="2"
+color="#0000C0">details</font><font size="2">;</font>
+<p align="left"><font size="2" color="#7F0055"><b>&nbsp;</b></font>
+<font size="2" color="#7F0055"><b>protected</b></font> <font size=
+"2">Request getFirstBusy () {<br /></font><font size="2" color=
+"#3F7F5F">&nbsp;&nbsp;&nbsp;</font> <font size="2">Request req
+=</font> <font size="2" color=
+"#7F0055"><b>null</b></font><font size="2">;</font> <font size="2"
+color="#3F7F5F">// return value</font></p>
+<p align="left"><font size="2">&nbsp;</font><font size="2" color=
+"#3F7F5F">&nbsp;</font> <font size="2" color=
+"#7F0055"><b>&nbsp;for</b></font> <font size="2">(WaitList WL
+:</font> <font size="2" color="#0000C0">details</font><font size=
+"2">) {&nbsp;</font> <font size="2" color="#3F7F5F">// look in each
+wait list for the first used<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font> <font size="2">req =
+WL.fetchFirstBusy();&nbsp;</font> <font size="2" color="#3F7F5F">//
+picks up the top of the queue (poll())<br /></font><font size=
+"2">&nbsp;</font> <font size="2" color=
+"#3F7F5F">&nbsp;&nbsp;</font> <font size="2" color=
+"#7F0055"><b>&nbsp;if</b></font> <font size="2">(req !=</font>
+<font size="2" color="#7F0055"><b>null</b></font><font size=
+"2">)</font> <font size="2" color="#7F0055"><b>return</b></font>
+<font size="2">req;</font> <font size="2" color="#3F7F5F">// When
+found one, give back</font><font size="2"><br />
+&nbsp;&nbsp;&nbsp; }<br /></font><font size="2" color=
+"#3F7F5F">&nbsp;&nbsp;</font> <font size="2" color=
+"#7F0055"><b>&nbsp;return</b></font> <font size="2" color=
+"#7F0055"><b>null</b></font><font size="2">;</font> <font size="2"
+color="#3F7F5F">// no requests in wait lists</font><font size=
+"2"><br />
+&nbsp; }</font></p>
+</td>
+</tr>
+</table>
+<p><font face="Verdana, Arial, Helvetica" size="2">Simple is fast.
+Simple is easy. Simple is good.</font></p>
+<h3><b><font face="Arial">Statistics</font></b></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">The statistics
+possible with Wait Lists serviced by a thread pool are:</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many times
+were threads instantiated?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many
+requests did each thread process?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many times
+was a thread notified?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many waits
+[for work] expired?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many
+problems were caught?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many times
+was expunging necessary?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How did the
+thread thresholds perform?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many
+requests were processed for each priority?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">What was the
+high-water mark for each priority?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many times
+was there an overflow in a Wait List?</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">How many times
+was a request removed before processing?</font></li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size="2">Professionals
+accumulate statistics. Since we&#8217;ve broken the priority queue
+of unlimited range into separate Wait Lists, we can easily
+accumulate statistics on every event in the structure. Statistics
+are the basis for performance analysis and management.</font></p>
+<h3><b><font face="Arial">Management</font></b></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">Now that you
+have statistical details on the Wait Lists, you can develop GUI and
+non-GUI interfaces so users may view:</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">The maximum
+number of requests pending at any one time. (High water
+mark.)</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">The number of
+requests processed for each Wait List.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">The number of
+currently active entries in each Wait List.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">The number of
+requests that failed and were backed out.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">The number of
+overflows from one Wait List to another.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">The number of
+times no slots were available in any Wait List.</font></li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size="2">And you may
+dynamically alter parameters:</font></p>
+<ul>
+<li><font face="Verdana, Arial, Helvetica" size="2">Change the
+physical bounds limit for Wait Lists.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Change the
+logical bounds limit for Wait Lists.</font></li>
+<li><font face="Verdana, Arial, Helvetica" size="2">Change the
+threshold values.</font></li>
+</ul>
+<p><font face="Verdana, Arial, Helvetica" size="2">Naturally, you
+may also develop on-request and shutdown statistics printing
+classes.</font></p>
+<h3><b><font face="Arial">Building such a structure could take
+years</font></b></h3>
+<p><font face="Verdana" size="2">Yes, and it did.</font></p>
+<p><font face="Verdana" size="2">Happily, there are general-purpose, high performance priority queues using Wait Lists,
+totally controlled threads (<a href="#references">see Managing Threads in Java 
+SE</a>) and
+full documentation in open-source products for Java SE, Java ME and Android available
+today.</font></p>
+<table border="0" cellspacing="0" style="border-collapse: collapse"
+bordercolor="#111111" id="AutoNumber8" summary="Tymeac">
+<tr>
+<td><font face="Verdana, Arial, Helvetica" size=
+"2">Tymeac</font><font face="Verdana" size="2">&#8482;</font>
+<font face="Verdana, Arial, Helvetica" size="2">for the Java
+Standard Edition, Micro Edition and Android are Open Source Software products maintained on 
+SourceForge.net
+and you can download the latest editions there.</font></td>
+<td><font face="Verdana, Arial, Helvetica" size="2"><img border="0"
+src="i/space1.gif" alt="." width="1" height=
+"1" /></font></td>
+<td align="left" width="125"><a href=
+"http://www.sourceforge.net/projects/tymeacse/"><font face=
+"Verdana, Arial, Helvetica" size="2"><img border="0" src=
+"i/sflogo1.jpg" width="125" height="37" alt=
+"SourceForge.net" /></font></a></td>
+</tr>
+</table>
+<h3><span style="font-weight: 400"><font face=
+"Verdana, Arial, Helvetica" size="2">Tymeac</font><font face=
+"Verdana" size="2">&#8482; supports both high performance
+requirements as well as standard queue needs when developers want
+total control over their environment.</font></span></h3>
+<h3><b><font face="Arial" size="4">Conclusion</font></b></h3>
+<p><font face="Verdana" size="2">To perform at top speed, high
+performance priority queues must break the sorted,
+unlimited-range-of-priorities mold.</font></p>
+<p><font face="Verdana" size="2">Using Wait Lists not only breaks
+that pattern, it opens the door to unparalleled performance and
+management for any application.</font></p>
+<h3><b><font face="Arial" size="4"><a name="references"></a>References</font></b></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2">Download the
+latest <b>SE</b> edition of <a href=
+"http://www.sourceforge.net/projects/tymeacse/">Tymeac here</a>. With all the documentation,
+scripts, classes and source.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Download the
+latest <b>ME</b> edition of
+<a href="http://www.sourceforge.net/projects/tymeacme/">Tymeac here</a>. With all the documentation,
+scripts, classes and source.</font></p>
+<p><font face="Verdana, Arial, Helvetica" size="2">Download the
+latest <b>AND</b> edition of
+<a href="http://www.sourceforge.net/projects/tymeacand/">Tymeac here</a>. With 
+all the documentation, activities and service.</font></p>
+<p><font face="Verdana" size="2"><a href=
+"http://coopsoft.com/ar/j2searticle.html">Managing Threads in Java
+SE</a> (the thread pool controlling article)</font></p>
+<p><font face="Verdana" size="2">
+<a href="http://coopsoft.com/ar/AndroidArticle.html">Managing Threads in Android</a> (the 
+Android thread management article)</font></p>
+<p><font face="Verdana" size="2">
+<a href="http://coopsoft.com/ar/ForkJoinArticle.html">Fork-Join Development in Java
+SE</a> (the multi-core development article)</font></p>
+<p><font face="Verdana" size="2">[<a name="1">1</a>] Binary heap
+&#8212; <a href=
+"http://en.wikipedia.org/wiki/Binary_heap">http://en.wikipedia.org/wiki/Binary_heap</a></font></p>
+<p><font face="Verdana" size="2">[<a name="2">2</a>] Fibonacci heap
+&#8212;&nbsp; <a href=
+"http://en.wikipedia.org/wiki/Fibonacci_heap">http://en.wikipedia.org/wiki/Fibonacci_heap</a></font></p>
+<p><font face="Verdana" size="2">[<a name="3">3</a>] Binomial heap
+&#8212;&nbsp; <a href=
+"http://en.wikipedia.org/wiki/Binomial_heap">http://en.wikipedia.org/wiki/Binomial_heap</a></font></p>
+<p><font face="Verdana" size="2">[<a name="4">4</a>] Relaxed
+Fibonacci heaps &#8212;&nbsp; <a href=
+"http://portal.acm.org/citation.cfm?id=50096">http://portal.acm.org/citation.cfm?id=50096</a></font></p>
+<p><font face="Verdana" size="2">[<a name="5">5</a>] 2-3 heap
+&#8212;&nbsp; <a href=
+"http://en.wikipedia.org/wiki/2-3_heap">http://en.wikipedia.org/wiki/2-3_heap</a></font></p>
+<p><font face="Verdana" size="2">[<a name="6">6</a>] Skew heap
+&#8212;&nbsp; <a href=
+"http://en.wikipedia.org/wiki/Skew_heap">http://en.wikipedia.org/wiki/Skew_heap</a></font></p>
+<p><font face="Verdana" size="2">[<a name="7">7</a>] Calendar queue
+&#8212; <a href="http://xlinux.nist.gov/dads/HTML/calendarQueue.html">
+http://xlinux.nist.gov/dads/HTML/calendarQueue.html</a></font></p>
+<p><font face="Verdana" size="2">[<a name="8">8</a>] Lazy queue
+&#8212; <a href=
+"http://portal.acm.org/citation.cfm?id=306860">http://portal.acm.org/citation.cfm?id=306860</a></font></p>
+<p><font face="Verdana" size="2">[<a name="9">9</a>] Ladder queue
+&#8212;&nbsp; <a href=
+"http://portal.acm.org/citation.cfm?id=1103324&amp;dl=GUIDE&amp;coll=GUIDE&amp;CFID=64044102&amp;CFTOKEN=68722971">
+http://portal.acm.org/citation.cfm?id=1103324&amp;dl=GUIDE&amp;coll=GUIDE&amp;CFID=64044102&amp;CFTOKEN=68722971</a></font></p>
+<p><font face="Verdana" size="2">[<a name="10">10</a>] Parallel
+Access Skew Heap &#8212;&nbsp; <a href=
+"http://portal.acm.org/citation.cfm?id=275368&amp;dl=GUIDE&amp;coll=GUIDE&amp;CFID=63991224&amp;CFTOKEN=64733375">
+http://portal.acm.org/citation.cfm?id=275368&amp;dl=GUIDE&amp;coll=GUIDE&amp;CFID=63991224&amp;CFTOKEN=64733375</a></font></p>
+<h3><a name="author"></a><font face="Arial, Helvetica">About the
+Author</font></h3>
+<p><font face="Verdana, Arial, Helvetica" size="2"><a href=
+"mailto:eh%20at%20coopsoft%20dot%20com">Edward Harned</a> is a
+software developer with over thirty years industry experience. He
+first led projects as an employee in major industries and then
+worked as an independent consultant. Today, Ed is a senior
+developer at <a href="http://www.coopsoft.com/">Cooperative
+Software Systems, Inc</a>., where, for the last twelve years, he
+has used Java programming to bring multi-threading solutions to a
+wide range of tasks.</font></p>
+</blockquote>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac User Class Function Maintenance</title>
+
+</head>
+
+<body>
+
+<h1>Tymeac Function Maintenance</h1>
+
+<blockquote>
+  <p>This is the means to add, change and delete Tymeac User Class Functions. </p>
+</blockquote>
+
+<hr>
+
+<h3><strong>Elements</strong></h3>
+
+<blockquote>
+  <p><strong>Function Name</strong> -- This is a String.&nbsp; Any unique sequence. However,
+  please see how to name Functions and the Function name checking class, FunctionChecker in
+  the sample code.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Output Agent Queue (optional)</strong> -- The name of the Output Agent Queue
+  for this Function, if any.&nbsp;This Queue must exist in the TymeacUserQueues Class, as an
+  <u>Output Agent Queue</u>, see Queue Maintenance, TyQueMaint.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Queue Name to Add</strong> -- The name of a Queue to add to the list. This
+  Queue must exist in the TymeacUserQueues Class as a <u>normal Queue</u>, not as an Output
+  Agent Queue, see Queue Maintenance, TyQueMaint.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Queue List</strong> -- This is a List of the Queue Names associated with this
+  Function.&nbsp;Tymeac schedules Queues in the order found here.&nbsp;However, as with all
+  asynchronous processing, execution variables determine dispatching and completion.</p>
+</blockquote>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>IMPORT</strong> -- The button brings up the FileDialog Menu for the
+  TymeacUserFunctions.java File.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>DELETE</strong> -- This button deletes the current Function. When there is no
+  current function, it brings up the FileDialog Menu for the TymeacUserFunctions.java File</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>ADD</strong> -- This button adds a Queue to the list.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>REMOVE</strong> -- This button removes the <strong>selected</strong> Queue from
+  the list .</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>FINISH</strong> -- This button updates the TymeacUserFunctions.java File</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> This is an information message.</p>
+
+<blockquote>
+  <p><u>Function &quot;name of function' deleted</u> -- The function was deleted.</p>
+  <p><u>Function not found for delete | update | import</u> --&nbsp; The Function does not
+  exist.</p>
+  <p><u>File&nbsp; error</u> -- An error occurred.&nbsp; Check the console for additional
+  information.</p>
+  <p><u>OK</u> -- The requested procedure completed successfully.</p>
+  <p><u>List is empty</u> -- The List of Queue's for this Function could not be found.</p>
+  <p><u>Function already exists</u> -- You cannot add an existing function or make changes
+  to an existing function without first importing it.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;</body></html>

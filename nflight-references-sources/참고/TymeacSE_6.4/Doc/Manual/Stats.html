@@ -1,0 +1,242 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<title>Tymeac Statistics Message Structure</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Statistics Message Structure</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This section details the message structure of the Tymeac Shut Down and On Request
+    statistics messages.</p>
+  </blockquote>
+</blockquote>
+
+<h3>Prefix:</h3>
+
+<blockquote>
+  <p>For the DBMS Statistics Table:</p>
+  <blockquote>
+    <p>Each row contains six integers of the Year, Month, Day, Hour, Minute, and Second. This
+    is the<u> local</u> date and time of writting the statistics.&nbsp;All rows for the series
+    contain the same values for this date and time. This is in order to group the statistics
+    by a common value.</p>
+  </blockquote>
+  <p>For the File:</p>
+  <blockquote>
+    <p>Each line begins with a date/time stamp of: <br>
+    &nbsp;&nbsp;&nbsp; Year/Month/Day Hour:Minute:Second.<br>
+    This is the<u> local</u> date and time of writting the statistics.&nbsp;All lines for the
+    series contain the same values for this date and time.&nbsp;This is in order to group the
+    statistics by a common value. Each line ends with an end-of-line character.</p>
+  </blockquote>
+  <p>For the Alternative Class:</p>
+  <blockquote>
+    <p>Each String message begins with a date/time stamp of:<br>
+    &nbsp;&nbsp;&nbsp; Year/Month/Day Hour:Minute:Second.<br>
+    This is the<u> local</u> date and time of writting the statistics. All lines for the
+    series contain the same values for this date and time. This is in order to group the
+    statistics by a common value.</p>
+  </blockquote>
+</blockquote>
+
+<h3><strong>Message Structure</strong></h3>
+
+<blockquote>
+  <p>The message identifier is enclosed in brackets, []. This is followed by one or more
+  values enclosed in parenthesis, ().&nbsp; There are no spaces in-between and 
+  all values are on a single line. We show the
+  values on different lines here for ease of viewing. (The S on the end stands 
+  for Start, the E for End.)</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>For <strong>shut down</strong> the statistics start with [FINS] and end with [FINE].</p>
+    <p>For <strong>deactivation</strong> the statistics start with [ACTS] and end with [ACTE].</p>
+    <p>For <strong>on request</strong> the statistics start with [ONRS] and end with [ONRE].</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Both the start and end messages contain the Tymeac Start Up (MilliTime).</p>
+    <p>The end message contains an approximate duration of Server up time. The 
+    statistics are written while the Server is still alive so the &quot;duration&quot; 
+    reflects the time now, not when the Server physically ends. When using an 
+    embedded shut down exit, the exit Classes execute after the statistics are 
+    written. The time in seconds should be very close to that which appears on 
+    the console window. </p>
+  </blockquote>
+</blockquote>
+
+<hr>
+
+<h3><strong>Tymeac Shut down / DeActivation / On Request</strong></h3>
+
+<blockquote>
+  <h4>Shut Down</h4>
+  <blockquote>
+    <p>[FINS]<br>
+    (MilliTime)</p>
+    <p>[FINE]<br>
+    (MilliTime)<br>
+    (Duration in hh:mm:ss)</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h4>DeActivation</h4>
+  <blockquote>
+    <p>[ACTS]<br>
+    (MilliTime)</p>
+    <p>[ACTE]<br>
+    (MilliTime)<br>
+    (Duration in hh:mm:ss)</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h4>On Request</h4>
+  <blockquote>
+    <p>[ONRS]<br>
+    (MilliTime)</p>
+    <p>[ONRE]<br>
+    (MilliTime)<br>
+    (Duration in hh:mm:ss)</p>
+  </blockquote>
+</blockquote>
+
+<h3><strong>Tymeac Functions:</strong></h3>
+
+<blockquote>
+  <p>[FUNC]<br>
+  (Function name)<br>
+  (Times used)</p>
+</blockquote>
+
+<h3><strong>Tymeac Queues:</strong></h3>
+
+<blockquote>
+  <h4>1. Queue identification:</h4>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>[QUE1]<br>
+    (Queue Name)<br>
+    (Type 0-normal, 2-output agent)<br>
+    (Number of &nbsp; threads)<br>
+    (Number of Waitlists)<br>
+    (Number of Waitlist slots)<br>
+    (Total times reached Overall <a href="TyQueMaint.html#threshold">Threshold</a>)<br>
+    (Total times reached Individual <a href="TyQueMaint.html#threshold">Threshold</a>)<br>
+    (Total times reached Weighted Average <a href="TyQueMaint.html#threshold">Threshold</a>)<br>
+    (Total times a new thread was started because of a
+    <a href="TyQueMaint.html#waitlist">waitlist overflow</a>)<br>
+    (Total times a new thread was started because no other threads were busy)
+    <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This is just informational. The first 
+    request in a queue starts a new thread<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; because none were busy. This also 
+    happens when all threads are inactive.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h4>2. Thread identification:&nbsp;&nbsp;&nbsp; </h4>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>[QUE2]<br>
+    (Queue Name)<br>
+    (Thread number starting at zero)<br>
+    (Total requests processed)<br>
+    (Total waits expired)<br>
+    (Total times notified)<br>
+    (Total times reactivated)<br>
+    (Total times instantiated)<br>
+    (Total times caught a problem)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When the invoked Processing 
+    Application Class threw an exception, Tymeac<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; logs the message and disables the 
+    thread. This is the total number of times<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; that happened.<br>
+    (Total times in wrong instance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When the Monitor flags the thread for 
+    taking excessive time the thread eventually<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; becomes disabled. <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Using the
+    <a href="TyQueThd.html#enable">TyQueThd/ENABLE ALL</a> button you may enable 
+    those disabled<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; threads. Enabling sets the instance 
+    reference to the thread to null.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If you start a new 
+    thread (instantiate) to take the place of the disabled thread,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; that new thread gets a new 
+    instance number. If the old thread returns<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; to an active state, it checks it's 
+    instance number with the current and when they<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; don't match, the old thread 
+    increments this count and ends its execution.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h4>3. WaitList identification:</h4>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>[QUE3]<br>
+    (Queue Name)<br>
+    (Priority starting at one)<br>
+    (Times used)<br>
+    (Highest used is the maximum number of requests pending at any one time )<br>
+    (Times reset)<br>
+    (Times overflowed primary)<br>
+    (Times overflowed secondary)</p>
+  </blockquote>
+</blockquote>
+
+<h3><strong>Tymeac Stalled Requests:</strong></h3>
+
+<blockquote>
+  <h4>1. Heading:</h4>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>[STL1]<br>
+    (Number unprocessed)</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h4>2. Detail:</h4>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>[STL2]<br>
+    (Time stalled in Milliseconds)<br>
+    (<a href="TymeacParm.html#return">Request</a> id)</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

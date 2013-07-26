@@ -1,0 +1,263 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Installation Verification Procedure</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Installation Verification Procedure</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+      <p>The purpose of this section is to verify that Tymeac installed fully.&nbsp;Total
+      functionality, beyond verification, requires using the Demonstration System and altering
+      the sample application classes we supply with the product.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<h3 style="text-align: justify">Preliminary:</h3>
+
+<blockquote>
+  <p>The product ships for the SDK1.6.+ environment. If you use a prior version, then you
+  should download a prior version of Tymeac. (version 5.5 supported JDK1.5)</p>
+  <p>We supply script files for the major functions of the product. It is much easier to run
+  a script than to enter a series of characters on the command line.&nbsp;Although these
+  scripts are optional, it may be beneficial to edit those scripts here rather than as they
+  become necessary.</p>
+  <p>The scripts, (both .bat and .sh), follow the directory structure mentioned
+  previously.&nbsp;At the minimum, you <strong>must edit</strong> <b>the SET_ENV script 
+  to put in where you installed the Tymeac Classes. You should do this NOW</b>: See
+  the <a href="Scripts.html">scripts document.</a></p>
+  <p>The two scripts necessary for this IVP (and two others that are necessary shortly
+  thereafter) are:<ul>
+    <li><p>RMIServer&nbsp; --&nbsp; Starts the Tymeac Server.</p>
+    </li>
+    <li><p>T1&nbsp; --&nbsp; Tymeac Client access for a single
+      request </p>
+    </li>
+    <li><p>T3&nbsp; --&nbsp;&nbsp; Tymeac Client access for a
+      multiple requests </p>
+    </li>
+    <li><p>menu&nbsp;&nbsp; --&nbsp;&nbsp;Starts the menu of Tymeac
+      frame classes<strong> </strong></p>
+    </li>
+  </ul>
+</blockquote>
+
+<h3 style="text-align: justify">The Registry:</h3>
+
+<blockquote>
+  <p>This version of Tymeac is an RMI Server.&nbsp;Therefore, the RMI Registry must be
+  running. </p>
+  <blockquote>
+  <p> <b>If you do not have a network, then you must use the internal
+  server. You may wish to use the internal server just to verify that the 
+  classes are in order. Then return here for RMI.</b></p>
+    <blockquote>
+  <p><b><font size="4"><a href="SetUpInternal.html#running">Running the internal 
+  server</a></font>.</b></p>
+    </blockquote>
+  </blockquote>
+  <p>Your <strong>CLASSPATH</strong> must have at least the <strong>&lt;home&gt;</strong>
+  directory so that the RMI Registry may find the stub class for
+  marshaling.&nbsp;Alternatively, you may start the RMI Registry from the &lt;home&gt;
+  directory (this is then the current directory for the Registry.)</p>
+  <p>The <strong>CLASSPATH</strong> for the registry is the single most reason for RMI
+  failure. If you start the Server and get a<br>
+  &nbsp;&nbsp;&nbsp; java.rmiServerException <br>
+  &nbsp;&nbsp;&nbsp; java.rmiUnmarshalException<br>
+  &nbsp;&nbsp;&nbsp; java.lang.ClassNotFoundException
+  com.tymeac.base.TymeacStandardImpl_Stub<br>
+  Then you have a <strong>CLASSPATH</strong> error.</p>
+  <blockquote>
+    <p>After you verify installation, you may use code base or any other method for finding
+    remote objects.</p>
+  </blockquote>
+  <p>Starting the RMI Registry is different for each operating system.&nbsp;The terminology
+  is different for each operating system, but it requires starting the registry as a
+  separate &quot;process&quot;, &quot;application&quot;, &quot;window&quot;,
+  &quot;task&quot;, etc. We mention several operating systems here:</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p style="text-align: justify"><strong>Windows<sup><small>&#153;</small></sup> :</strong>
+    start rmiregistry<br>
+    <strong>Unix<small><sup>®</sup></small> :</strong> rmiregistry &amp;</p>
+  </blockquote>
+  <p align="center">
+  <img src="../Brochure/Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+</blockquote>
+
+<p>Using &quot;frames&quot;, &quot;windows&quot;, &quot;screens&quot; is different in each
+operating environment. In order to use the frame classes in Tymeac your environment must
+be &quot;window oriented&quot;.&nbsp;On some systems, such as a Unix<small><sup>®</sup></small>
+variant, you must enable the window environment with a command such as: startx.</p>
+
+<p>Tymeac Server writes messages to the console. This is System.out.println(). (After
+Verification you can suppress this on the Command Line <a href="StartUp.html">Start-up</a>.)&nbsp;Therefore,
+enabling a console or Standard Out is helpful.</p>
+
+<p>For this discussion, we use the Windows format of a back slash, (\).</p>
+
+<hr width="60%" noshade size="4">
+
+<h3 style="text-align: justify">Tymeac Server:</h3>
+
+<blockquote>
+  <p style="text-align: justify"><a name="startup"></a>Start Tymeac, Java Class is <strong>com.tymeac.base.RMIServer</strong>.</p>
+  <blockquote>
+    <p>We supply a script to start the TymeacServer: <a href="Scripts.html#rmi">RMIServer</a>.bat[sh].</p>
+  </blockquote>
+  <p>Tymeac Message structure is<a href="Messages.html"> here</a>.&nbsp;<br>
+  Tymeac Server Start
+  Up messages are detailed <a href="MsgTy00.html">here</a>. <br>
+  The one you need is that the
+  start up is successful.&nbsp;</p>
+  <blockquote>
+  <p>Ty00099I Tymeac Server initialized successfully, MilliTime=1168010322254</p>
+  </blockquote>
+  <p>MilliTime is the System time in milliseconds since
+  1970. (The words <u>MilliTime</u> and <u>Session</u> are synonymous for 
+  Tymeac.)&nbsp;<br>
+  MilliTime appears on the successful start up message, the shut down message,
+  and within all return messages for Asynchronous Requests.<br>
+  It is the way to identify
+  this session of Tymeac.</p>
+  <blockquote>
+    <p>Missing Classes or &quot;something not found&quot; usually means that the path to
+    Tymeac Classes is not proper or a spelling or case sensitive error.</p>
+  </blockquote>
+  <p>For <u>verification</u>, Tymeac uses no logging or statistics.</p>
+  <p><strong><big>Note:</big></strong>&nbsp; Tymeac starts various threads during start up
+  to perform necessary functions.&nbsp;Each of these threads writes its own
+  messages.&nbsp;Therefore, the order of these messages is unpredictable.</p>
+</blockquote>
+
+<hr width="60%" noshade size="4">
+
+<h3 style="text-align: justify">Tymeac Client:</h3>
+
+<blockquote>
+  <p>Tymeac Client access is in Frame Class, <a href="TyDemoT1.html">TyDemoT1</a>. You may
+  refer to the <a href="Demo.html">demonstration</a> document.</p>
+  <blockquote>
+    <p>We supply a script file for this, <a href="Scripts.html#t1">T1</a>.bat [sh].</p>
+    <p><img src="Images/red_triangle.gif" alt="red_triangle.gif (857 bytes)" width="15" height="15">&nbsp; Fill in a <u>Case
+    Sensitive</u> Function Name: &quot;<strong>Function_2</strong>&quot;. [<a href="Demo.html#functions">We supply</a> Function_1 through Function_8].&nbsp; </p>
+    <blockquote>
+      <blockquote>
+        <p style="text-align: justify">The F in Function is a Capital F<br>
+        Since this is a String, there must not be any trailing spaces.</p>
+      </blockquote>
+    </blockquote>
+    <p style="text-align: justify">
+    <img src="Images/red_triangle.gif" alt="red_triangle.gif (857 bytes)" width="15" height="15"> Press the &lt;SEND&gt; button.</p>
+    <p style="text-align: justify">
+    <img src="Images/red_triangle.gif" alt="red_triangle.gif (857 bytes)" width="15" height="15">&nbsp; The result should be: <strong>Tymeac
+    SR(0000)#Demo1:A1(00)+A2(00)+A3(00)=(0)#</strong><ul>
+      <li><strong>Tymeac</strong> is the prefix.</li>
+      <li><strong>SR</strong> stands for Synchronous Request.</li>
+      <li><strong>(nnnn)</strong> Return code, should be 0000.&nbsp; When the number in
+        parentheses is not zero, then check the <a href="Usage.html">return code</a> document for
+        the failure reason.</li>
+      <li><strong># ... #</strong> the message within the pound signs is dependent on the values
+        in the A, B, and C TextFields.&nbsp; For details, see the <a href="TyDemoT1.html">TyDemoT1</a>
+        document .</li>
+    </ul>
+    <p style="text-align: justify">
+    <img src="Images/red_triangle.gif" alt="red_triangle.gif (857 bytes)" width="15" height="15">&nbsp; As long as you get a return message, the
+    installation is successful.</p>
+    <blockquote>
+      <p>Communication errors:&nbsp;If you have connection problems, then you may alter the <em>catch</em>
+      (Exception e) code in Methods in the Tymeac Server Communication Class, <a href="TySvrComm.html">TySvrComm</a>, by removing the commenting on the print statements.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <hr width="60%" noshade size="4">
+  </blockquote>
+</blockquote>
+
+<h3 style="text-align: justify">Shut down:</h3>
+
+<blockquote>
+  <p>The graceful termination of Tymeac Server is possible.&nbsp;RMI Servers start a thread
+  that never ends. (The Tymeac Server also issues a never ending wait() so that necessary
+  variables do not get garbage collected.) This is so that the Server is persistent until
+  manually shut down.&nbsp;Tymeac starts a termination thread during shut down, when all
+  threads are complete. The thread calls System.exit(0) which terminates the Java Virtual
+  Machine.</p>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac <a href="Shutdown.html">shuts down</a> in two stages.&nbsp;The first informs any
+  live Queue Threads to complete and terminate.&nbsp;The second forces termination of any
+  remaining Queue Threads and starts the termination thread.&nbsp;Therefore, you may have to
+  request shut down at least twice (if Queue Threads were alive) and sometimes three times.
+  (If necessary, see the discussion of Output Agent Queue Threads in the <a href="Shutdown.html">shut down</a> section.)</p>
+</blockquote>
+
+<blockquote>
+  <p>Two methods for shutting down Tymeac Server are available.&nbsp;A Frame Class (from the
+  main menu) and a command line Class.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p style="text-align: justify"><strong>Frame:</strong>&nbsp;
+    <a href="TyMenu.html">Menu</a></p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p style="text-align: justify">We supply a script file for this,
+      <a href="Scripts.html#menu">Menu</a>.bat [sh].</p>
+      <p style="text-align: justify">Select the Shut Down button.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+      <p style="text-align: justify">Press the SHUT Button.<br>
+      &nbsp;&nbsp;&nbsp; Observer the message and if necessary<br>
+      Press the SHUT Button.<br>
+      &nbsp;&nbsp;&nbsp;&nbsp; Observer the message.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p style="text-align: justify"><strong>Command Line:</strong>&nbsp; Using the script, <a href="Scripts.html#shut">shut</a>.</p>
+    <blockquote>
+      <p style="text-align: justify">Do this twice, if necessary.</p>
+    </blockquote>
+  </blockquote>
+  <p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+</blockquote>
+
+<blockquote>
+  <p>The ungraceful termination of Tymeac Server is possible by just killing the Tymeac
+  Server process.</p>
+</blockquote>
+
+<blockquote>
+  <p>As of this writing, the authors know of no non-programming way to gracefully shut down
+  the RMI Registry.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

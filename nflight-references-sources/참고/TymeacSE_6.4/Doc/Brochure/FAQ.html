@@ -1,0 +1,481 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Frequently Asked Questions</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/wheat.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Frequently Asked Questions</h1>
+
+<p>&nbsp;</p>
+
+<h2><a name="top"></a>Contents:</h2>
+
+<blockquote>
+  <ol>
+    <li><a href="#async">What is an Asynchronous Process?</a></li>
+    <li><a href="#what">What is an Asynchronous Thread?</a></li>
+    <li><a href="FAQ.html#backend">What is a backend service?</a></li>
+    <li><a href="FAQ.html#use">When would I use it?</a></li>
+    <li><a href="FAQ.html#limit">Why limit the number of threads in a Queue?</a></li>
+    <li><a href="FAQ.html#reflection">How can my component application execute inside a thread?</a></li>
+    <li><a href="FAQ.html#rmi">How can we control which applications run on each machine?</a></li>
+    <li><a href="FAQ.html#speed">RMI is too slow.&nbsp; How can we speed this up?</a></li>
+    <li><a href="#callback">Does Tymeac</a><sup><small><a href="FAQ.html#activatable">&#153;</a></small></sup><a href="#callback"> support call-back?</a></li>
+    <li><a href="#cancel">Can I cancel an in-progress request?</a></li>
+    <li><a href="FAQ.html#activatable">Is Tymeac<sup><small>&#153;</small></sup> activatable?</a></li>
+    <li><a href="#corba">Does Tymeac<sup><small>&#153;</small></sup> support IIOP?</a> </li>
+    <li><a href="FAQ.html#jini">Does Tymeac<sup><small>&#153;</small></sup> support Jini<sup><small>&#153;</small></sup></a></li>
+    <li><a href="#delay">Does Tymeac<sup><small>&#153;</small></sup> support delayed processing?</a></li>
+    <li><a href="#buy">I can do this myself. Why should I buy this product?</a></li>
+  </ol>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<h3><a name="async"></a>What is an Asynchronous Process?</h3>
+
+<blockquote>
+  <p>Other names for this are the Backend Process, Background Process, Attendant Process, or
+  Daemon.</p>
+  <p>The classic example is printing.&nbsp; Rather than tying up a foreground process with
+  physically printing a document, the foreground process creates a new background process
+  that handles the logic and I/O for the printer.</p>
+  <p>It is when the application becomes mission-critical and/or more complex that designing
+  a full feature asynchronous process becomes a major undertaking.<ul>
+    <li>Providing prioritized queues for the requests,</li>
+    <li>providing multiple threads to process the queues and the thread management that goes
+      with it,</li>
+    <li>providing synchronous access, (wait until complete), and asynchronous access with
+      call-back,</li>
+    <li>providing automated error recovery,</li>
+    <li>providing back-out and restart,</li>
+    <li>providing inquiry and modification to the execution environment.</li>
+  </ul>
+  <p>This major design and implementation may cost so much in time and resources that the
+  team looks for easier alternatives.</p>
+  <p>It is for these reasons that there is Tymeac<sup><small>&#153;</small></sup>.</p>
+  <p><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap"></a><!--webbot bot="ImageMap" endspan i-checksum="35724" --></p>
+</blockquote>
+
+<h3><a name="what"></a>Q.&nbsp; What is an Asynchronous Thread?</h3>
+
+<blockquote>
+  <p style="text-align: justify">Tymeac<sup><small>&#153;</small></sup> is an asynchronous
+  process / thread manager.</p>
+  <p style="text-align: justify"><a name="sync"></a><strong>Synchronous threads</strong> are
+  the threads you control yourself.</p>
+  <blockquote>
+    <p style="text-align: justify">A simple thread class:&nbsp; ... MyThread extends Thread
+    ...</p>
+    <p style="text-align: justify">Instantiated:&nbsp; new MyThread().start();</p>
+  </blockquote>
+  <p style="text-align: justify">That is as easy as it is to multi-thread in Java<sup><small>&#153;</small></sup>.&nbsp;What
+  is not so easy is synchronizing the threads, timing the threads, recovering from thread
+  errors, etc. These are the 'what if' factors in <a href="BExPur.html#manage">problems</a>.</p>
+  <p style="text-align: justify">Tymeac<sup><small>&#153;</small></sup> solves these
+  problems with asynchronous threads.</p>
+  <p style="text-align: justify"><strong>Asynchronous threads</strong> are the threads
+  Tymeac<sup><small>&#153;</small></sup> controls on an RMI Server.&nbsp;(These are similar
+  to Daemons or any thread that runs in the background.)&nbsp;Tymeac<sup><small>&#153;</small></sup>
+  relieves you of the burden of managing threads.&nbsp; </p>
+  <p style="text-align: justify">You set up a Tymeac<sup><small>&#153;</small></sup> Queue
+  for each component application specifying the maximum number of threads.<ul>
+    <li>Tymeac<sup><small>&#153;</small></sup> balances work among those threads so that they
+      use the minimum amount of resources.</li>
+    <li>Tymeac<sup><small>&#153;</small></sup> handles the recovery from anomalies, (a huge
+      burden for applications.)</li>
+    <li>Tymeac<sup><small>&#153;</small></sup> synchronizes all the threads, (another huge
+      burden for applications.)&nbsp; </li>
+    <li>Tymeac<sup><small>&#153;</small></sup> offers timing of requests (a synchronous request
+      is when you wait for completion of all Tymeac<sup><small>&#153;</small></sup> Queues.)
+      &nbsp; </li>
+    <li>Tymeac<sup><small>&#153;</small></sup> offers background processing (an asynchronous
+      request is when you schedule a request and do not wait for it to complete.)</li>
+    <li>Tymeac<sup><small>&#153;</small></sup> invokes your user-written application class to
+      execute the application logic.</li>
+  </ul>
+  <p style="text-align: justify">Most developers see threading as part of the application.
+  That is, where the application class extends java.lang.Thread or implements the
+  java.lang.Runnable interface. Handling the thread logic in addition to the application
+  logic requires two different thought patterns to merge as one. Tymeac<sup><small>&#153;</small></sup>
+  separates the thread logic from the application logic so that any application class may
+  easily plug-in to a thread structure.</p>
+</blockquote>
+
+<blockquote>
+  <p><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap1"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map1"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap1"></a><!--webbot bot="ImageMap" endspan i-checksum="19899" --></p>
+</blockquote>
+
+<h3><a name="backend"></a>Q.&nbsp; What is a backend service?</h3>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Back-ends are the opposite of front-ends.</p>
+    </blockquote>
+    <blockquote>
+      <p style="text-align: justify">Front-ends are GUI services or any application that one
+      considers a client.</p>
+    </blockquote>
+    <p style="text-align: justify">Back-ends are generally hidden from the user of the
+    application. These are any applications that one considers a server.&nbsp; In addition,
+    the server itself may require &quot;services&quot; (similar to Beans.) This is where
+    Tymeac<sup><small>&#153;</small></sup> fits in.</p>
+    <p style="text-align: justify">Tymeac<sup><small>&#153;</small></sup> is a remote object
+    service.&nbsp;That is, the Tymeac<sup><small>&#153;</small></sup> Server Class uses
+    java.rmi.server methods or extends java.rmi.activation.Activatable. Tymeac<sup><small>&#153;</small></sup>
+    runs in a separate Java<sup><small>&#153;</small></sup> Virtual Machine than your
+    application (hence the &quot;remote&quot;.)&nbsp;Communication from your application to
+    Tymeac<sup><small>&#153;</small></sup> is by your application executing a [remote] method
+    on the Tymeac<sup><small>&#153;</small></sup> Server.&nbsp;This is called Remote Method
+    Invocation. (The Java<sup><small>&#153;</small></sup> version of the Remote Procedure
+    Call.)</p>
+    <p style="text-align: justify">Your application acquires a reference to the remote Tymeac<sup><small>&#153;</small></sup>
+    Server by a request to the Java<sup><small>&#153;</small></sup> Remote Object Registry or
+    other Remote Java<sup><small>&#153;</small></sup> Services (inside a Jini<sup><small>&#153;</small></sup>
+    proxy.)&nbsp; Thereafter, Tymeac<sup><small>&#153;</small></sup> Server is a backend
+    service for your application.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap2"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map2"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap2"></a><!--webbot bot="ImageMap" endspan i-checksum="20157" --></p>
+</blockquote>
+
+<h3><a name="use"></a>Q.&nbsp; When would I use it?</h3>
+
+<blockquote>
+  <p>Anytime an asynchronous process and/or threading is desirable.&nbsp;The list is only
+  limited by imagination. [See also the <a href="details.html">details for segregating</a>
+  an application.]</p>
+  <p><strong>See also <a href="benex.html">Real World Examples</a></strong></p>
+  <p><strong>To make use of persistent storage.</strong></p>
+  <blockquote>
+    <p style="text-align: justify">Tymeac<sup><small>&#153;</small></sup> is an RMI Server
+    environment.&nbsp;Once Tymeac<sup><small>&#153;</small></sup> starts, the storage acquired
+    by threads within this environment persists as long as a reference to the storage is
+    active.&nbsp;[We demonstrate how to do this in our sample classes.]</p>
+  </blockquote>
+  <p><strong>As a backend, activatable remote object in a Jini<sup><small>&#153;</small></sup></strong>
+  <strong>Service.</strong> </p>
+  <blockquote>
+    <p>See our example of a <a href="BExPur.html">Document Service</a>.</p>
+  </blockquote>
+  <p><strong>For parallel processing:</strong></p>
+  <blockquote>
+    <p style="text-align: justify"><a name="example"></a>A process requires access to two
+    databases, (customer and pricing).&nbsp; </p>
+    <p style="text-align: justify">Set up a Tymeac<sup><small>&#153;</small></sup> Queue for
+    each database access.&nbsp;Set up a Tymeac<sup><small>&#153;</small></sup> Function that
+    uses these two Queues. [This is as easy as filling in the blanks.] When the client
+    application uses this Tymeac<sup><small>&#153;</small></sup> Function, both Queues are
+    active simultaneously.</p>
+  </blockquote>
+  <p><strong>To time a request:</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p style="text-align: justify">In the above example, simply tell Tymeac<sup><small>&#153;</small></sup>
+    how long to wait for completion of all Queues before purging the request.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>To run an autonomous request with call-back:</strong></p>
+  <blockquote>
+    <p style="text-align: justify">In the above example, tell Tymeac<sup><small>&#153;</small></sup>
+    not to wait for completion. The client is free to perform other work.&nbsp;When the last
+    Queue finishes, it may optionally schedule an Output Agent.&nbsp;The Agent may take the
+    responses from the Queues and send them anywhere.</p>
+  </blockquote>
+  <p><strong>To separate components:</strong></p>
+  <blockquote>
+    <p style="text-align: justify">See the key benefit, <a href="Bennies.html#gateway">Gateway</a>.&nbsp;
+    </p>
+    <p style="text-align: justify">In the above example, the application requires two database
+    accesses. Each of these may be for a different vendor's database or even legacy
+    applications.&nbsp;Incompatibilities between products and/or applications is irrelevant.
+    Tymeac<sup><small>&#153;</small></sup> segregates logical units of work.</p>
+  </blockquote>
+  <p><strong>To separate client from server:</strong></p>
+  <blockquote>
+    <p style="text-align: justify">One of the <a href="BEssential.html">essentials</a> of
+    Tymeac<sup><small>&#153;</small></sup> is the ability to separate the Web-based interface
+    from the rest of the company.&nbsp; </p>
+    <p style="text-align: justify">In the above example, this 'process' may be the back-end
+    for an Internet/Intranet front-end.&nbsp;You can put security, or anything else, in each
+    component without ever touching the front-end.</p>
+  </blockquote>
+  <p><strong>To isolate failures:</strong></p>
+  <blockquote>
+    <p style="text-align: justify">See the key benefit, <a href="Bennies.html#failure">Containment</a>.&nbsp;
+    </p>
+    <p style="text-align: justify">In the above example, if one database access 'hangs' or
+    abnormally terminates, recovery is easier.&nbsp; There is no need to handle every
+    possibility in relation to every other possibility. Tymeac<sup><small>&#153;</small></sup>
+    isolates components.&nbsp; </p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap3"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map3"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap3"></a><!--webbot bot="ImageMap" endspan i-checksum="20415" --></p>
+</blockquote>
+
+<h3><a name="limit"></a>Q.&nbsp; Why limit the number of threads in a Queue?</h3>
+
+<blockquote>
+  <p style="text-align: justify"><u>Resources</u>:&nbsp; Less threads means less memory and
+  less cycles.</p>
+  <p style="text-align: justify"><u>Competition</u>:&nbsp; Threads, whether operating system
+  threads or logical threads, compete with each other within a Tymeac<sup><small>&#153;</small></sup>
+  Queue, with other threads in Java<sup><small>&#153;</small></sup>, and with other
+  processes in the Box. Sometimes adding more threads slows down overall processing because
+  of resource limits, (memory, cycle, network, locks, blocking, etc.)</p>
+  <p style="text-align: justify">Let's say you have an application that uses two (2)
+  additional threads such as the prior <a href="FAQ.html#example">example</a>.</p>
+  <blockquote>
+    <p style="text-align: justify">In an n-tier application server you may have one hundred
+    (100) of these applications active at one time.&nbsp;That means that there are two hundred
+    (200) threads for these applications competing with each other for resources.</p>
+  </blockquote>
+  <p style="text-align: justify">Now the same application with Tymeac<sup><small>&#153;</small></sup>.</p>
+  <blockquote>
+    <p style="text-align: justify">You set up a Tymeac<sup><small>&#153;</small></sup> Queue
+    for each database access component.&nbsp;For this example we set ten (10) as the maximum
+    number of threads for each Queue.</p>
+  </blockquote>
+  <blockquote>
+    <p style="text-align: justify">When one hundred (100) applications are active, the maximum
+    number of&nbsp; threads for these processes is twenty (20), not two hundred (200). That
+    means that there are one hundred and eighty (180) LESS threads competing with each other
+    for resources.</p>
+  </blockquote>
+  <p style="text-align: justify">When no thread is immediately available to process a
+  request, Tymeac<sup><small>&#153;</small></sup> places the request in a prioritized wait
+  list, (your request designates the priority).&nbsp;This assures that the &quot;hot&quot;
+  request processes first.&nbsp;When a thread finishes a request, it looks in the wait lists
+  for more work.</p>
+  <p style="text-align: justify">Of course this means that requests &quot;stack
+  up&quot;.&nbsp;This is the <a href="BStructure.html#balance">balance</a>:&nbsp; How many
+  requests may stack up before it is better to have another thread? &nbsp;</p>
+  <blockquote>
+    <p style="text-align: justify"><u>You</u> have the option of specifying the maximum number
+    of threads for each Queue.</p>
+    <p style="text-align: justify"><u>You</u> have the option of specifying when a new thread
+    becomes a participant in processing through new thread thresholds.</p>
+    <p style="text-align: justify"><u>You</u> have the option of specifying thread creation
+    time (at Tymeac<sup><small>&#153;</small></sup> start up or when first needed) and thread
+    destruction (after an idle period or never.)</p>
+    <p style="text-align: justify"><u>You</u> have the option of timing requests.</p>
+    <p style="text-align: justify"><u>You</u> have the option of prioritizing requests.</p>
+    <p style="text-align: justify"><u>You</u> are in control, not chance. </p>
+  </blockquote>
+  <p style="text-align: justify">Tymeac<sup><small>&#153;</small></sup> keeps detailed
+  information about each Queue and Function. Tymeac<sup><small>&#153;</small></sup> provides
+  tools to monitor, alter, and log these statistics dynamically and statically.</p>
+</blockquote>
+
+<blockquote>
+  <p><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap4"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map4"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap4"></a><!--webbot bot="ImageMap" endspan i-checksum="20673" --></p>
+</blockquote>
+
+<h3><a name="reflection"></a>Q.&nbsp; Ok.&nbsp; Functions contain Queues.&nbsp; Queues
+have wait lists and threads. &nbsp; How can my application component execute inside a
+thread?</h3>
+
+<blockquote>
+  <p style="text-align: justify">Reflection is the answer.&nbsp;You set up a base Class with
+  a static main method that accepts an Object array and optionally returns an Object.</p>
+  <blockquote>
+    <blockquote>
+      <p style="text-align: justify">public static Object main(Object[] args) ...</p>
+    </blockquote>
+  </blockquote>
+  <p style="text-align: justify">Tymeac<sup><small>&#153;</small></sup> Queue Threads invoke
+  your main method with Java<sup><small>&#153;</small></sup> Reflection.</p>
+  <p style="text-align: justify">Your base class may extend a Class, implement any
+  interface, and have instances of other Classes.&nbsp;It is just a starting point.</p>
+  <p style="text-align: justify">Tymeac<sup><small>&#153;</small></sup> provides a new
+  version capability (the &quot;hot&quot; change.)&nbsp;There is no need to shut down the
+  Tymeac<sup><small>&#153;</small></sup> System to change a Tymeac<sup><small>&#153;</small></sup>
+  Queue from one base Class to another.&nbsp;For the Enterprise environment, this is
+  mandatory.&nbsp;For testing environments, this saves time. </p>
+</blockquote>
+
+<blockquote>
+  <p><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap5"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map5"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap5"></a><!--webbot bot="ImageMap" endspan i-checksum="20931" --></p>
+</blockquote>
+
+<h3><a name="rmi"></a>Q.&nbsp; If RMI is for remote locations on network servers, then how
+can we control what application components run on each machine?</h3>
+
+<blockquote>
+  <p style="text-align: justify">The &quot;R&quot; in RMI stands for remote.&nbsp;The
+  definition of remote is any object that is not in the same Java<sup><small>&#153;</small></sup>
+  Virtual Machine.&nbsp;Tymeac<sup><small>&#153;</small></sup> runs as another Virtual
+  Machine on the same Server as your requesting client.&nbsp;Tymeac<sup><small>&#153;</small></sup>
+  uses the local host option for all Remote Object functions.&nbsp;Tymeac<sup><small>&#153;</small></sup>
+  Server does not communicate with other Tymeac<sup><small>&#153;</small></sup> Servers,
+  anywhere.</p>
+  <p style="text-align: justify">All requests for loading application classes are for the
+  local system, only.&nbsp;The Method is findSystemClass().&nbsp;This ensures that no
+  foreign code may infect your system.</p>
+  <p style="text-align: justify">Tymeac<sup><small>&#153;</small></sup> is <a href="Properties.html#secure">secure</a>.</p>
+</blockquote>
+
+<blockquote>
+  <p><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap6"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map6"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap6"></a><!--webbot bot="ImageMap" endspan i-checksum="21189" --></p>
+</blockquote>
+
+<h3><a name="callback"></a>Q.&nbsp; Does Tymeac&#153; support call-back?</h3>
+
+<blockquote>
+  <p style="text-align: justify">Yes, Tymeac<sup><small>&#153;</small></sup> supports
+  call-back programmatically.&nbsp;That is, Tymeac&#153; does not limit call-back to RMI.</p>
+  <p style="text-align: justify">Tymeac<sup><small>&#153;</small></sup> provides an
+  Asynchronous Request (schedule the request and do not wait for it to complete). Within the
+  request is how to contact the client when the request completes. Upon request completion,
+  Tymeac<sup><small>&#153;</small></sup> schedules an Agent. It is within this Agent that
+  one may put the code to perform a call-back either with RMI or any other method.</p>
+  <blockquote>
+    <p style="text-align: justify">See our example of an <a href="Bjorb.html#async">Asynchronous
+    Request</a>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap7"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map7"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap7"></a><!--webbot bot="ImageMap" endspan i-checksum="21447" --></p>
+</blockquote>
+
+<h3><a name="cancel"></a>Q.&nbsp; Can I cancel an in-progress request?</h3>
+
+<blockquote>
+  <p>Yes, both standard and micro editions support canceling synchronous and asynchronous
+  requests.</p>
+  <p>This way you may never &quot;hang&quot; waiting for a request to complete.</p>
+  <p><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap8"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map8"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap8"></a><!--webbot bot="ImageMap" endspan i-checksum="21705" --></p>
+</blockquote>
+
+<h3><a name="activatable"></a>Q.&nbsp; Is Tymeac&#153; activatable?</h3>
+
+<blockquote>
+  <p>Absolutely.</p>
+</blockquote>
+
+<blockquote>
+  <p>You may run Tymeac<sup><small>&#153;</small></sup> as a non-activatable remote object
+  or as an activatable remote object.&nbsp;We supply the implementation of the Tymeac<sup><small>&#153;</small></sup>&nbsp;
+  Interface for both. We also supply detail set-up classes so you may be up and running
+  quickly even if you have never developed activatable remote objects before.</p>
+</blockquote>
+
+<blockquote>
+  <p><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap9"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map9"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap9"></a><!--webbot bot="ImageMap" endspan i-checksum="21963" --></p>
+</blockquote>
+
+<h3><a name="corba"></a>Q.&nbsp; Does Tymeac<sup><small>&#153;</small></sup> support IIOP?</h3>
+
+<blockquote>
+  <p>Yes.&nbsp; CORBA support is through the Internet Inter-Orb Protocol both as an IIOP
+  Server and as a Portable Object Adapter.</p>
+  <p style="TEXT-ALIGN: justify">You may use the JNDI Registry to store the remote object
+  for Clients.</p>
+  <p style="TEXT-ALIGN: justify">For pure CORBA Clients, you may use the Java<sup><small>&#153;</small></sup>
+  IDL to build a front end, convert the IDL to Java with the IDLtoJAVA compiler and then use
+  the standard Remote Method Invocation to communicate with the Tymeac<sup><small>&#153;</small></sup>
+  Server.</p>
+  <p><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap10"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map10"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap10"></a><!--webbot bot="ImageMap" endspan i-checksum="23029" --></p>
+</blockquote>
+
+<h3 style="text-align: justify"><a name="speed"></a>Q.&nbsp; Our requirement is to process
+a request in no more than two seconds.&nbsp; RMI is too slow.&nbsp; How can we speed this
+up?</h3>
+
+<blockquote>
+  <p style="text-align: justify">RMI has overhead. The naming lookup itself has
+  overhead.&nbsp; However, it is the thread creation on both the RMI Registry and the Server
+  connection, for each request, that takes the bulk of the time.</p>
+  <p style="text-align: justify">The solution is the proverbial Front End (FE).</p>
+  <p style="text-align: justify">Build a process (FE) that establishes an RMI link to Tymeac<sup><small>&#153;</small></sup>
+  and is kept alive by a thread that never ends. The client passes the request to the FE.
+  The FE quickly passes the request to Tymeac<sup><small>&#153;</small></sup> and&nbsp;
+  receives the response.&nbsp; This is fast because no thread creation/destroy is necessary.</p>
+  <p style="text-align: justify">If the client is not in the same Virtual Machine as the FE,
+  then you can build a native interface between the two.</p>
+  <p style="text-align: justify">You can even build a full body FE that handles multiple
+  clients and multiple connections to Tymeac<sup><small>&#153;</small></sup>.</p>
+  <p><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap11"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map11"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap11"></a><!--webbot bot="ImageMap" endspan i-checksum="23042" --></p>
+</blockquote>
+
+<h3><a name="jini"></a>Q.&nbsp; Does Tymeac<sup><small>&#153;</small></sup> support Jini<sup><small>&#153;</small></sup>?</h3>
+
+<blockquote>
+  <p style="text-align: justify"><strong>Tymeac<sup><small>&#153;</small></sup> supports
+  &nbsp; Jini<sup><small>&#153;</small></sup> as both an activatable and non-activatable
+  Service.</strong></p>
+  <p style="text-align: justify">This means that you may wrap a reference to this
+  activatable Remote Object in a Jini<sup><small>&#153;</small></sup> proxy and pass the
+  proxy to a Jini<sup><small>&#153;</small></sup> Lookup Service.&nbsp;Jini<sup><small>&#153;</small></sup>
+  Clients may retrieve this reference and use Tymeac<sup><small>&#153;</small></sup> the
+  same as if the reference came from the Java<sup><small>&#153;</small></sup> Remote Object
+  Registry.</p>
+  <p style="text-align: justify">You may also embed a reference to this activatable Remote
+  Object in your own Jini<sup><small>&#153;</small></sup> Service, back-end activatable
+  Remote Object.&nbsp;The Jini<sup><small>&#153;</small></sup> Service, back-end, may use
+  Tymeac<sup><small>&#153;</small></sup> the same as if the reference came from the &nbsp;
+  Java<sup><small>&#153;</small></sup> Remote Object Registry. (Like a back-end to the
+  back-end.)&nbsp;In this way, Jini<sup><small>&#153;</small></sup> Clients are unaware of
+  Tymeac<sup><small>&#153;</small></sup> processing.</p>
+</blockquote>
+
+<blockquote>
+  <p><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap12"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map12"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap12"></a><!--webbot bot="ImageMap" endspan i-checksum="23055" --></p>
+</blockquote>
+
+<h3><a name="delay"></a>Q.&nbsp; Does Tymeac<sup><small>&#153;</small></sup> support
+delayed processing?</h3>
+
+<blockquote>
+  <p style="text-align: justify">No, Tymeac<sup><small>&#153;</small></sup> is a process now
+  system.&nbsp;Delaying the processing is outside the scope of an asynchronous process
+  manager.</p>
+  <p style="text-align: justify">However, there are numerous middleware, message-queuing
+  systems on the market. The scope of these systems is that one sends a message (this could
+  be the parameters for Tymeac<sup><small>&#153;</small></sup>) to a Queue with instructions
+  to deliver the message to another Queue at a later time.</p>
+  <p style="text-align: justify"><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap13"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map13"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap13"></a><!--webbot bot="ImageMap" endspan i-checksum="23068" --></p>
+</blockquote>
+
+<h3><a name="buy"></a>Q.&nbsp; I can do this myself. Why should I buy this product?</h3>
+
+<blockquote>
+  <p>Tymeac<sup><small>&#153;</small></sup> is not rocket science. Tymeac<sup><small>&#153;</small></sup>
+  is grunt software.</p>
+  <p>Any reasonably capable programming team can write software that manages queues and
+  threads. What Tymeac<sup><small>&#153;</small></sup> does is:<ul>
+    <li>Manage the asynchronous-process environment very, very well.</li>
+    <li>Provide a generalized management framework for all your asynchronous-process work so
+      that you do not have to write custom code for each application.</li>
+    <li>It is written -- saving you months or years of development time.</li>
+    <li>The price is right.</li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p><!--webbot bot="ImageMap" rectangle="(1,4) (31,21) FAQ.html#top" src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" startspan --><MAP NAME="FrontPageMap14"><AREA SHAPE="RECT" COORDS="1, 4, 31, 21" HREF="FAQ.html#top"></MAP><a href="../_vti_bin/shtml.exe/Brochure/FAQ.html/map14"><img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" ismap width="32" height="22" usemap="#FrontPageMap14"></a><!--webbot bot="ImageMap" endspan i-checksum="23081" --></p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

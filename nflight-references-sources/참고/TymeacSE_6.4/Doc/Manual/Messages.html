@@ -1,0 +1,113 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Messages</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Messages</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This section details the Tymeac Message structure.</p>
+  </blockquote>
+</blockquote>
+
+<p><strong>STRUCTURE</strong></p>
+
+<blockquote>
+  <p>Messages have a message number followed by text.</p>
+</blockquote>
+
+<blockquote>
+  <p>All message numbers begin with the letters, <strong>Ty</strong>.</p>
+</blockquote>
+
+<blockquote>
+  <p>The next two digits identify the component:</p>
+</blockquote>
+
+<blockquote>
+  <p>00 - Start up<br>
+  01 - Start up, extended for the Configuration Provider<br>
+  02 - Shut down<br>
+  03 - Monitor<br>
+  04 - Request Brokering<br>
+  05 - Scheduling<br>
+  06 - Queue Thread<br>
+  07 - Output Agent Thread<br>
+  08 - General Tymeac Component<br>
+  09 - User Modification</p>
+</blockquote>
+
+<blockquote>
+  <p>The next three digits is a unique number within each component.</p>
+</blockquote>
+
+<blockquote>
+  <p>The last letter denotes the severity of the message:</p>
+</blockquote>
+
+<blockquote>
+  <p>I - Information<br>
+  C - Conditional<br>
+  S - Severe</p>
+</blockquote>
+
+<p><strong>FORMAT</strong></p>
+
+<blockquote>
+  <p>Messages are grouped by component.&nbsp; Messages are sent to any of three mediums: (<strong>P</strong>)
+  Printed to System.out.println(), (this is <a href="StartUp.html">optional</a>).&nbsp; (<strong>L</strong>)
+  Sent to the Tymeac <a href="RunTime.html#log">Log</a>. (<strong>N</strong>) Sent to the
+  Tymeac <a href="RunTime.html#notify">Notification</a> Function.</p>
+</blockquote>
+
+<blockquote>
+  <p>The message unique identifier and severity are followed by a (P), (L), (N) to denote
+  where the message is sent. <br>
+  This is followed by the Text of the message.<br>
+  Any explanation and recommendation follows thereafter. </p>
+</blockquote>
+
+<blockquote>
+  <p>E.G. <br>
+  Ty00001I (P) (L) <br>
+  Tymeac Server ..................</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>is a Tymeac message for the Start up.&nbsp; The message number is 001.&nbsp; It is an
+    information only message.&nbsp; It is printed and sent to the Log.</p>
+  </blockquote>
+</blockquote>
+
+<h3>COMPONENTS</h3>
+
+<blockquote>
+  <p><strong>Start Up</strong> (<a href="MsgTy00.html">Ty00</a>)</p>
+  <p><strong>Start Up, extended</strong> (<a href="MsgTy01.html">Ty01</a>)</p>
+  <p align="left"><strong>Shut Down</strong> (<a href="MsgTy02.html">Ty02</a>)</p>
+  <p align="left"><strong>Monitor</strong> (<a href="MsgTy03.html">Ty03</a>)</p>
+  <p align="left"><b>Request Brokering </b>(<a href="MsgTy04.html">Ty04)</a></p>
+  <p align="left"><b>Scheduling</b> (<a href="MsgTy05.html">Ty05</a>)</p>
+  <p align="left"><strong>Queue Thread</strong> (<a href="MsgTy06.html">Ty06</a>)</p>
+  <p align="left"><strong>Output Agent Thread</strong> (<a href="MsgTy07.html">Ty07</a>)</p>
+  <p align="left"><strong>General Tymeac Component</strong> (<a href="MsgTy08.html">Ty08</a>)</p>
+  <p align="left"><strong>User Modification of Queue Threads</strong> (<a href="MsgTy09.html">Ty09</a>)</p>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

@@ -1,0 +1,133 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Tymeac Alter Server Options</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Alter Server Options</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This is the way to alter server options at runtime.</p>
+    <p>The non-frame version of this class is <a href="#non">TyAltSvrClient</a>, below.</p>
+    <hr>
+  </blockquote>
+    <p align="center"><a href="Images/TyAltSvr.jpg">
+    <img border="2" src="Images/TyAltSvr_small.jpg" xthumbnail-orig-image="Images/TyAltSvr.jpg" width="100" height="113"></a><br>
+    (click for full image)</p>
+</blockquote>
+
+<blockquote>
+  <p><big><big>Elements:</big></big></p>
+  <blockquote>
+    <p><a name="sys"></a><strong>Sys.exit():</strong>&nbsp; This Checkbox is<br>
+    <strong>&nbsp;&nbsp;&nbsp; <u>Not Checked</u></strong> for <strong>no</strong> shut down
+    thread, <br>
+    <strong>&nbsp;&nbsp;&nbsp; <u>Is Checked</u></strong> for <strong>yes</strong>. Yes is the
+    default</p>
+    <blockquote>
+      <p>The RMI server is keep alive by a thread that never ends. Tymeac Server also issues a
+      never ending wait() so that the garbage collector does not eat necessary variables </p>
+      <p>In order to end Tymeac Server after a normal shut down, Tymeac starts a thread at shut
+      down.&nbsp;This thread calls System.exit(0) which ends the Java Virtual Machine. <strong>Not
+      Checked</strong> for this option does not start this thread.&nbsp;The name of this thread
+      is found <a href="ThreadNames.html">here</a>.&nbsp;</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p><a name="interval"></a><strong>Monitor Interval:</strong>&nbsp;&nbsp;The interval, <u>in
+    seconds</u>, that the Tymeac Monitor sleeps.&nbsp; Another way of saying 
+    this is the delay between running of the Monitor.&nbsp;(If the original value was 
+    zero, meaning NOT to use a monitor, then values entered here are ignored 
+    since the Monitor is not running.) Tymeac also uses this interval for <a href="Disabled.html#five">timing</a>
+    of how long requests are in the system.&nbsp;When over this (interval (times a factor)) a
+    request may be marked as possibly <a href="Stalled.html">stalled</a>. 
+    Altering this value also affects the timing variables.</p>
+  </blockquote>
+  <blockquote>
+    <p><a name="activate"></a><strong>Inactivation Minutes:</strong>&nbsp; This is the time, <u>in
+    minutes</u>, to inactivate the Tymeac Server when no activity (<a href="#activity">see
+    below</a>) takes place for this interval.&nbsp;This is only valid for the Remote Object
+    Activation System and when specifying a Monitor Interval, above.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h3><strong>Buttons</strong></h3>
+    <blockquote>
+      <p><strong>Import:&nbsp;&nbsp;</strong>This button loads the current 
+      settings.</p>
+    </blockquote>
+    <blockquote>
+      <p><strong>Alter:&nbsp;&nbsp;</strong>This button alters the settings in the running 
+      server.</p>
+    </blockquote>
+</blockquote>
+
+<hr align="left" width="60%" noshade size="4">
+
+<h3><a name="activity"></a>Activity:</h3>
+
+<blockquote>
+  <p>An inactive Tymeac Server has no currently executing synchronous or asynchronous
+  requests.<ul>
+    <li>Requests in the Stall Array are active asynchronous requests.</li>
+    <li>Timed-out synchronous requests are active until the Monitor frees the request.</li>
+    <li>Recursive requests, whether synchronous or asynchronous, are active.</li>
+    <li><a href="TyNotify.html">Notification</a> requests from the Monitor are active.</li>
+  </ul>
+  <p>The inactivation time is irrelevant to the Server's Distributed Garbage Collector's
+  Lease Value (java.rmi.dgc.leaseValue). Tymeac does not use the unreferenced notification
+  of the java.rmi.server.Unreferenced&nbsp; interface.</p>
+  <p>When there are no executing requests and there has been no request activity for this
+  time interval, the Monitor executes the shut down <a href="UserExits.html">user exits</a>,
+  if present, and calls: java.rmi.activation.Activatable.inactive().</p>
+</blockquote>
+
+<hr>
+
+<h3><a name="non"></a>com.tymeac.client.TyAltSvrClient (<a href="../JavaDoc/com/tymeac/client/TyAltSvrClient.html">JavaDoc</a>)</h3>
+
+<blockquote>
+  <blockquote>
+    <p>This is the Non-GUI equivalent of the GUI Class, above. An example of how to use this
+    class is: com.tymeac.demo.TyDemoClient_AltSvr.java in the
+    &lt;TymeacHome&gt;source/com/tymeac/demo directory.</p>
+  </blockquote>
+  <p>Constructor 1 -- has no arguments. This is for the RMI Server. The constructor gets a
+  new instance of&nbsp; a Tymeac internal class that is similar to <a href="TySvrComm.html">TySvrComm</a></p>
+</blockquote>
+
+<blockquote>
+  <p>Constructor 2--&nbsp; is for the internal server. The single argument is the Tymeac
+  Server Interface, TymeacInterface.</p>
+</blockquote>
+
+<p><strong>Instance Methods</strong> --</p>
+
+<blockquote>
+  <p>TyAltSvrElements importElements(null)</p>
+  <blockquote>
+    <p>Returns the Elements List </p>
+  </blockquote>
+    <p>TyAltSvrElements alterElements(<a href="../JavaDoc/com/tymeac/base/TyAltSvrElements.html">TyAltSvrElements</a> 
+    ele)</p>
+    <blockquote>
+    <p>Returns the Elements List after altering the server according to the 
+    passed parm.</p>
+    </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

@@ -1,0 +1,959 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Developing your System</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Developing your System</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>This section details the elements necessary for developing Tymeac Systems in your
+      installation.</p>
+      <p>It's really very simple. It's the first time through here that's a little confusing.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h4><a name="top"></a>Tymeac development comprises four elements: </h4>
+  <ol>
+    <li>The <a href="Develop.html#pap">Processing Application Class</a> that executes the
+      application code.</li>
+    <li>The <a href="Develop.html#queue">Queue </a>in which the Processing Application Class
+      resides.</li>
+    <li>The <a href="Develop.html#function">Function</a> in which the Queue resides.</li>
+    <li>The <a href="Develop.html#client">Client</a> that calls the Tymeac Server.</li>
+  </ol>
+  <p><strong>... and four related subjects:</strong> <ol>
+    <li><a href="#system">System Wide Variables</a></li>
+    <li><a href="Develop.html#testing">Testing</a>.</li>
+    <li>The <a href="#exits">user exit</a> structure.</li>
+    <li>The <a href="#structure">overall structure</a>.</li>
+  </ol>
+  <hr>
+  <p>A <strong>Tymeac Function</strong> is  a list of Tymeac Queues.</p>
+</blockquote>
+
+<blockquote>
+  <p>&nbsp;</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p><img src="Images/TyF.gif" alt="TyF.gif (2230 bytes)" width="193" height="121"></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<blockquote>
+  <p>A <strong>Tymeac Queue</strong> contains a list of waiting requests, called Wait Lists,
+  the Threads of execution that make Tymeac a multi-threading container and the Processing
+  Application Class that contains the user code.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p><img src="Images/QWLT3.gif" alt="QWLT3.gif (4584 bytes)" width="343" height="278"></p>
+      <p>&nbsp;</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>A <strong>Processing Application Class</strong> is the code you write to process the
+  specifics of the application. A Tymeac Queue Thread uses reflection to invoke the main()
+  method of your class.</p>
+  <blockquote>
+    <p>This is the decoupling that is so important in good application design. Multi-threading
+    is very difficult since not only does the developer have to write the application logic,
+    the developer also has to write the threading logic (wait(), notify(), synchronize() etc.)
+    </p>
+    <p>You supply the application logic in a Processing Application Class. Tymeac handles the
+    threading logic.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong><big><a href="DevelopExample.html">A Detailed Example of This</a></big></strong></p>
+</blockquote>
+
+<blockquote>
+  <hr noshade size="3">
+  <h2><a name="pap"></a>Processing Application Class (or base Class)</h2>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <blockquote>
+          <p><big>If this is your first time through here, we suggest you take a <a href="Develop2.html">quick tour</a> of this material without all the detail.</big></p>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+    <p>Tymeac utilizes two types of applications:<ol>
+      <li><strong>A normal application</strong><br>
+        This application receives input from a Client and may return an object.<br>
+        The returned object may pass back to the calling Client or, when an asynchronous request,
+        the returned object may be passed on to an Output Agent application.</li>
+    </ol>
+    <ol>
+      <li type="disc" value="2"><strong>An Output Agent application</strong><br>
+        This optional application receives the returned object(s) from the normal application(s)
+        for asynchronous requests.</li>
+    </ol>
+    <ol>
+      <p><strong><em>That is just so confusing, but wait, examples are forthcoming.</em></strong></p>
+    </ol>
+  </blockquote>
+  <blockquote>
+    <p>Your Processing Application Class (base Class) must have a public static main() method
+    that accepts an Object array.</p>
+    <blockquote>
+      <p>public static Object main(Object[] args) {}<br>
+      public static void&nbsp;&nbsp;&nbsp;&nbsp; main(Object[] args) {} (has no returned data)</p>
+    </blockquote>
+    <p>The Queue Thread uses a java.lang.reflect.Method invoke() for your base Class passing
+    an Object array (Object args[]) ):<ol>
+      <li>The first Object (arg[0])&nbsp; is either<ol type="a">
+          <li>the optional input data from the Tymeac Client contained in the Tymeac <a href="TymeacParm.html#input">parameter</a>,<br>
+            <strong>Normal Processing ApplicationClass</strong>,<strong> or<br>
+            &nbsp;&nbsp;&nbsp; </strong></li>
+          <li>an Object array when this is an <strong>Output Agent Processing Application Class</strong>.&nbsp;The
+            Object array is the array of all the return Objects from the normal Processing Application
+            Classes. (<a href="TymeacParm.html#async">See here</a>.)<br>
+            <br>
+          </li>
+        </ol>
+      </li>
+      <li><a name="second"></a>The second Object (arg[1]) is a reference (<a href="../JavaDoc/com/tymeac/base/TymeacInterface.html">TymeacInterface</a>) to the Tymeac
+        Server. You may use this reference for recursion processing or pass it along to another
+        Class.</li>
+    </ol>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>For examples see the Demo Classes we supply in the <a href="Samples.html">sample</a>
+      directory. A snippet of the code is presented in the following documents.</p>
+      <blockquote>
+        <p><a href="Demo1.html">Demo1.java</a> -- is a normal Processing Application Class. It
+        receives input data from a Tymeac Client.</p>
+        <p><a href="DemoAgent1.html">DemoAgent1.java</a> -- is an Output Agent Processing
+        Application Class.&nbsp;It receives an Object array of the return Objects of the normal
+        Processing Application Classes.</p>
+        <p><a href="DemoRecur.html">DemoRecur.java</a> -- is an example of recursion processing.
+        It uses the second argument (arg[1]) to call the Tymeac Server.</p>
+      </blockquote>
+    </blockquote>
+    <p>The main() method Return Type may be an Object, void, another class or
+    primitive.&nbsp;Tymeac passes the return value back to the <a href="TymeacParm.html#result">Synchronous Request in an Object array</a> or on to the <a href="TymeacParm.html#async">Output Agent in an Object array</a>.&nbsp;Therefore, it is up
+    to the receiving module to interpret this Object. (For maximum flexibility, we recommend
+    using a return type of Object and casting any return class to Object, or, wrapping a
+    primitive in an object and casting it to Object.)</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><a name="returned"></a>The first object in the returned Object array is the result of Tymeac Processing.
+      <em><br>
+      This is a String</em>.<br>
+      For a Synchronous Request:<br>
+      <strong>&nbsp;&nbsp; Tymeac SR(0000)</strong><ul>
+        <li><strong>Tymeac</strong> is the prefix. </li>
+        <li><strong>SR</strong> stands for Synchronous Request.</li>
+        <li><strong>(nnnn)</strong> Return code, should be 0000.&nbsp;When the number in parentheses
+          is not zero, then check the <a href="Usage.html">return code</a> document for the failure
+          reason.</li>
+      </ul>
+      <blockquote>
+        <p>The other objects in the <a href="TymeacParm.html#result">returned Object array </a>are
+        the result of YOUR processing. YOUR objects may be any object that implements the <em>interface
+        serializable</em>. When only using the Internal Server, you may pass 
+        non-serializable classes.</p>
+      </blockquote>
+      <p><a name="async"></a>For an Asynchronous Request there is only one String object in the
+      returned Object array:<br>
+      <strong>&nbsp;&nbsp; Tymeac AR(0000)[session id, request id]</strong><ul>
+        <li><strong>Tymeac</strong> is the prefix. </li>
+        <li><strong>AR</strong> stands for Asynchronous Request.</li>
+        <li><strong>(nnnn)</strong> Return code, should be 0000.&nbsp;When the number in parentheses
+          is not zero, then check the <a href="Usage.html">return code</a> document for the failure
+          reason.</li>
+        <li>The data in brackets are:<ul>
+            <li><strong>Session Id</strong> -- The System time in milliseconds since
+              1970.&nbsp;MilliTime also appears on the <a href="StartUp.html#sstart">start up</a> and <a href="Shutdown.html">shut down</a> messages&nbsp; It is the way to identify this session
+              of Tymeac. When you wish to inquire about the status of an asynchronous request, this Id
+              is necessary, see the <a href="TyReqStatus.html">Request Status Class</a>.</li>
+            <li><strong>Request Id</strong> -- A unique number assigned to every request starting at one
+              (1). When you wish to inquire about the status or to cancel an asynchronous request, this
+              Id is necessary, see the <a href="TyReqStatus.html">Request Status Class</a>.</li>
+          </ul>
+        </li>
+      </ul>
+      <p><img border="0" src="Images/tip.jpg" width="25" height="24">&nbsp; Parsing the above Objects 
+      can be tedious and prone to error. Therefore, we have a class that 
+      extracts necessary information from those Objects and puts it into this 
+      class for easy reference. This is the <a href="TymeacReturn.html">
+      TymeacReturn</a> class. Several demonstration classes use this class. See 
+      for example: com.tymeac.demo.TyDemoInternal<p>For a Shut down Request there is one String:<br>
+      <strong>&nbsp;&nbsp; Tymeac SD(0000)</strong><ul>
+        <li><strong>Tymeac</strong> is the prefix. </li>
+        <li><strong>SD</strong> stands for Shut Down.</li>
+        <li><strong>(nnnn)</strong> Return code, should be 0000.&nbsp;When the number in parentheses
+          is not zero, then check the <a href="Usage.html">return code</a> document for the reason.</li>
+      </ul>
+    </blockquote>
+    <p>The <u>public</u> is so that Tymeac may find your base Class.&nbsp;The <u>static</u> is
+    so that no instance of your base Class is necessary, eliminating constructors (called a
+    Class Method).</p>
+  </blockquote>
+  <blockquote>
+    <p>Since this main() is <u>static</u> other method references by code in main() must also
+    be <u>static</u>.&nbsp;However, there is no restriction on new instances of other Classes
+    (composition).&nbsp;his means that the main() method can be a base for the rest of your
+    functionality including loading other Classes, using a transport mechanism (like RMI or
+    CORBA) or Servlets.</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The Queue Thread invokes your base Class with a:<br>
+      Object&nbsp; return_data = ...invoke()...</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The Output Agent Queue Thread invokes your Class with an:<br>
+      ...invoke()...&nbsp; ( no return value specified.)</p>
+    </blockquote>
+    <hr>
+    <p><strong>Additional Subjects:</strong><ul>
+      <li><a href="#cancel">Canceling a working request</a></li>
+      <li><a href="#test">Testing Aids</a></li>
+      <li><a href="#access">Access</a></li>
+      <li><a href="#security">Security</a></li>
+      <li><a href="#catch">Exceptions</a></li>
+      <li><a href="#reload">Re-loading Classes</a></li>
+      <li><a href="#long">Long Running Threads</a></li>
+      <li><a href="#compile">Compiling</a></li>
+      <li><a href="#sharing">Sharing Conflicts</a></li>
+      <li><a href="#info">Server Information</a></li>
+      <li><a href="#single">The Singleton</a></li>
+      <li><a href="#shut">Shut Down</a></li>
+    </ul>
+    <p><a name="cancel"></a><strong>Canceling a working request</strong></p>
+    <blockquote>
+    <p>Yes, it is possible, <a href="Cancel.html">see here</a>.</p>
+    </blockquote>
+    <p><b><a name="test"></a>Testing aids</b></p>
+    <blockquote>
+      <p>Testing multi-threading systems is not for the faint of heart. We have 
+      a <a href="Testing.html">document</a> on testing aids. Included in 
+      document is a section on using the <a href="Testing.html#diag">
+      diagnoseRequest()</a>. This method is not documented anywhere else. </p>
+    </blockquote>
+    <p><a name="access"></a><strong>Access</strong><blockquote>
+    <p>Tymeac needs access to your Processing Application Class therefore, Tymeac must be able to
+    load that class into the Java Virtual Machine.&nbsp;Two option are available:<ol>
+      <li>Using the Java Class Path:<br>
+        Tymeac uses a custom Class Loader with the method, findSystemClass(), for your base
+        Class.&nbsp;The base Class is the Class you define in the Tymeac Queue.&nbsp;Therefore,
+        your base Class must be a local Class (on the CLASSPATH,&nbsp; -cp or codebase).<br>
+        <br>
+      </li>
+      <li>Using URL's:<br>
+        Tymeac uses a URLClassLoader with the list of URL's specified along with the class name.
+        See the <a href="ClassNameFormat.html">class naming and URL</a> document for details of
+        how to specify a URL list.</li>
+    </ol>
+    </blockquote>
+    <p><a name="security"></a><strong>Security</strong></p>
+    <blockquote>
+    <p>Tymeac handles Security Exceptions in that it sets all <a href="Definitions.html#quethread">Queue Threads </a>as unavailable for requests (status:
+    disabled). Therefore, you must address all <a href="Security.html">security issues</a>
+    before starting Tymeac Server.</p>
+    </blockquote>
+    <p><a name="catch"></a><strong>You should catch exceptions</strong>.</p>
+    <blockquote>
+    <p>The Tymeac Queue Thread invokes your base Class in a &quot;try&quot;
+    block.&nbsp;Exceptions for this reflect.Method are caught, including
+    &quot;Throwable&quot;. Errors are caught using an UnCaughtExceptionHandler.</p>
+    <p>Tymeac processes a caught exception by <a href="DBMSLog.html">logging</a>
+    a message, sending a <a href="TyNotify.html">notification</a>, and <a href="Disabled.html">disabling
+    the thread</a>. If this is the action you wish to take, then re-throw the
+    exception.&nbsp;See also the <a href="Usage.html#threads">return codes</a> for Queue
+    Threads.</p>
+    <blockquote>
+      <p>When should you rethrow the exception? Anytime the situation requires manual
+      intervention, that is, it's broken beyond what error recovery code can handle. An example
+      is a corrupt file or database, a programming error or any critical resource that is not
+      available.</p>
+      <p>Once you rethrow the exception, the thread is marked &quot;disabled&quot;. Once all
+      threads are &quot;disabled&quot; the Queue is no longer functional. The Tymeac Monitor
+      sends a <a href="TyNotify.html">notification</a> when all threads are disabled.</p>
+      <p>If the exception was due to a programming error, then you may fix the logic, recompile
+      the module, use the <a href="TyNewCopy.html">New Copy GUI</a> to get a new copy of the
+      Class and enable the Queue Threads with the enable button on the <a href="TyQueThd.html">Queue
+      Threads Display/Alter GUI</a>.</p>
+      <p>If you can fix the problem without taking down the Server then you may enable the Queue
+      Threads as above.</p>
+    </blockquote>
+    </blockquote>
+    <p><a name="reload"></a><strong>Re-load Classes</strong></p>
+    <blockquote>
+    <p>During testing it is common that the base Class you develop may need adjusting.&nbsp;It is
+    not necessary to shut down and restart Tymeac every time a change is necessary. The Tymeac
+    Class, <a href="TyNewCopy.html">TyNewCopy</a>, is available to re-load the base class or
+    load an alternate base Class during execution.</p>
+    <blockquote>
+      <p><strong>N.B.</strong> -- Classes already loaded by the Virtual Machine through a
+      classpath cannot be unloaded (at this time.)&nbsp;Therefore, if you need changes to the
+      base class, then you must use a URL to load the class. This also holds true for any
+      classes your base class loads. See the <a href="ClassNameFormat.html">class naming and URL</a>
+      document.</p>
+    </blockquote>
+    </blockquote>
+    <p><a name="long"></a><strong>Long running processes pose a potential problem.</strong></p>
+  <blockquote>
+    <p>Tymeac is a process NOW system.&nbsp;The structure is to accept a work request, process
+    that request as quickly as possible and fetch the next request. There is no facility
+    within Tymeac to process the request at a later time. However, there are numerous
+    middleware, message-queuing systems on the market.&nbsp;The scope of these systems is that
+    one sends a message (this could be the parameters for Tymeac) to a message queue with
+    instructions to deliver the message to another message queue at a later time.</p>
+  </blockquote>
+  <blockquote>
+    <p>Tymeac <a href="Disabled.html#five">keeps track</a> of the time the Queue Thread is
+    executing within the reflection invoked base class and may flag the Queue Thread as
+    possibly stalled.&nbsp;The result of this is that the Queue Thread's status becomes
+    'cancelled' or 'disabled'.&nbsp;When all Queue Threads within a Queue have either of these
+    status codes, the Queue cannot accept any more requests (<a href="SchdFail.html">Scheduling
+    failure</a>).</p>
+  </blockquote>
+  <blockquote>
+    <p>If the processing is just slow, then the potential for a problem is small.</p>
+    <p>&nbsp;<b>However, if
+    this is truly a long running process,</b> then one may use the <a href="TyQueMaint.html#timeout">Queue timeout value</a> to increase the time Tymeac allows
+    the reflection invoked code to execute before flagging it as possibly stalled. 
+    You may also alter this value dynamically with the <a href="TyQueData.html">
+    QueData</a> Class.</p>
+    <p>This flagging has no affect on the executing Processing Application Class. It simply
+    changes the Queue Thread's status code. If the Processing Application Class finishes
+    processing, the Queue Thread resets the status code.</p>
+  </blockquote>
+    <p><a name="compile"></a><strong>Compiling: </strong></p>
+    <blockquote>
+    <p>The Tymeac Classes (<a href="../JavaDoc/com/tymeac/base/TymeacInterface.html">TymeacInterface</a>,
+    <a href="../JavaDoc/com/tymeac/base/TymeacParm.html">TymeacParm</a>, etc.) are in package <strong>com.tymeac.base</strong>,
+    in the directory, &lt;TymeacHome&gt;/Classes. Import the package <strong>com.tymeac.base</strong>
+    in the user classes that require access to the Tymeac Classes and include the proper
+    directory for the compiler.</p>
+    <p>Where to put the compiled code is another <a href="Directories.html#serveruser">concern</a>.</p>
+    </blockquote>
+    <p><img src="Images/Caution.gif" alt="Caution.gif (1012 bytes)" width="20" height="20">&nbsp; <a name="sharing"></a><strong>&quot;Sharing&quot;
+    conflicts</strong>:</p>
+    <blockquote>
+    <p>One of the primary reasons for multi-threading systems to fail is the 
+    problem of threads stepping on each other. If you're new to multi-threading, 
+    you'll never believe it affects you -- you can get away without 
+    synchronizing shared variables etc. Try it and weep.</p>
+    <p>Since your Processing Application Class runs as a Java Thread, there may be many threads
+    of execution running at the same time. If your Class uses objects that are 
+    shared by this Class, then you need to protect the integrity of these 
+    objects.</p>
+    <p>Java provides four ways for preserving integrity on shared objects.&nbsp;These 
+    are:</p>
+    <ol>
+      <li><p align="left">the synchronized modifier on the method definition<br>
+        <strong>&nbsp;&nbsp;&nbsp; public synchronized void yourMethod() {}</strong></p>
+      </li>
+      <li><p align="left">and the synchronized statement<br>
+        <strong>&nbsp;&nbsp;&nbsp; synchronized (object) {}</strong></p>
+      </li>
+      <li><p align="left"><strong style="font-weight: 400">the 
+      java.util.concurrent.locks package</strong></p>
+      </li>
+      <li><p align="left"><strong style="font-weight: 400">the 
+      java.util.concurrent.atomic package.</strong></p>
+      </li>
+    </ol>
+    <p>Using the 'volatile' keyword does not preserve variable integrity. It 
+    does however force the compiler to generate code that fetches the current 
+    state of the variable from memory for each thread access and immediately 
+    writes the variable to memory for each thread modify.</p>
+    <p>What this means is 
+    that if you have one thread that writes a variable and multiple threads that 
+    read a variable, the reads will get the current value. (This did not work 
+    properly before Java 1.5) If you have multiple threads that write a 
+    variable, forgetaboutit. Use one of the above four methods.</p>
+    <p>When locking spans multiple methods, then the second or third way is preferable.&nbsp;However,
+    confusion sometimes arises over how one may get a reference to a shared object (the
+    (object) in the synchronized statement.)</p>
+    <blockquote>
+      <p>The simplest way is to lock on a Class object (e.g. synchronized (MyClass.class) {}).</p>
+      <p>Another is to use a Singleton Class (i.e. There are numerous examples of this technique
+      in the Sun archives, developerWorks.com and JavaWorld.com.)</p>
+      <p>One common way is to use a public Class with static fields.&nbsp;See the <a href="develop.html#exits">User Exit</a> structure, below.</p>
+    </blockquote>
+    <p>Not only does &quot;synchronized/Lock()&quot; lock out other threads, it reads/writes the
+    thread's variables from/to main memory.</p>
+    <blockquote>
+      <p>In Java, main memory is where all variables live. (See the Java Memory Model, Chapter
+      17 of the <em>Java Language Specification</em>) Each thread has a copy of&nbsp; the
+      variables it uses (registers, caches etc).&nbsp;When a thread writes a value to a
+      variable, it is the thread's copy of the variable that gets modified. Eventually, Java
+      writes the value to main memory.</p>
+    </blockquote>
+    <blockquote>
+      <p>Therefore, if another thread looks at a variable, it may see the value of the main
+      memory variable before Java updates the main memory.</p>
+      <p>The solution is to synchronize, use Lock or atomic.</p>
+    </blockquote>
+    <p>However, one must remember that Tymeac controls the threads -- instantiation,
+    termination, waiting, notifying, etc.&nbsp;Although you may pass a thread-object reference
+    (java.lang.Thread.currentThread() ) to a private product, there is a 
+    potential for conflict if that product uses methods that affect thread 
+    control.<ul>
+      <li>Tymeac may believe a stall condition is present in the Processing Application Class when
+        that application waits for an <a href="Disabled.html#five">excessive</a> amount of time.</li>
+      <li>When using the <a href="TyQueThd.html">Queue Thread</a> alteration GUI or the <a href="TyNewCopy.html">New Copy</a> GUI, one may purge threads that have a reference stored
+        in a private Vector.&nbsp;Although Tymeac believes the thread is gone, the thread may
+        resume execution and results are unpredictable.</li>
+      <li>Since only Tymeac controls the threads, private techniques for flushing, resetting and
+        restarting threads in private resources are not available.</li>
+    </ul>
+    </blockquote>
+    <p><a name="info"></a><strong>Information</strong></p>
+    <blockquote>
+    <p>
+    <img src="Images/tip.jpg" alt="tip.jpg (457 bytes)" width="25" height="24">&nbsp; Tymeac maintains information
+    about the currently executing Tymeac Server.&nbsp;This information is available to any
+    Processing Application Class or User Exit.&nbsp; See <a href="TymeacInfo.html">TymeacInfo</a>.</p>
+    </blockquote>
+    <p><a name="single"></a><strong>The Singleton</strong></p>
+    <blockquote>
+    <p>Tymeac maintains a <a href="Persistence.html#single">user singleton class</a> into which
+    you may put any objects for use by your runtime classes.</p>
+    </blockquote>
+    <p><a name="shut"></a><strong>ShutDown</strong> (See also the <a href="Shutdown.html">shutdown
+    document</a>.)<blockquote>
+    <p>There are two implementation methods for shut down:<ol>
+      <li><p align="left"><strong>public String shutRequest()</strong>; -- This is the old version
+        and is the same as the second with a boolean false.</p>
+      </li>
+      <li><p align="left"><strong>public String shutRequest(boolean kill)</strong>; -- This
+        version supports forcing termination in the case when there are unresponsive Queue
+        Threads. For all normal shut down requests, you should set the boolean to false or simply
+        use version 1. If normal shutdown cannot progress and you need the Server down quickly,
+        then set the boolean to true.</p>
+      </li>
+    </ol>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p><map name="FPMap0">
+    <area href="#top" shape="rect" coords="2, 1, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap0" width="32" height="22"></p>
+  </blockquote>
+  <h2><a name="queue"></a>Queues</h2>
+  <blockquote>
+    <p>A Queue constructs with the Queue Maintenance Class, <a href="TyQueMaint.html">TyQueMaint</a>,
+    when using a <a href="DBMS.html">Data Base Management System</a>, or you may use the <a href="UserClass.html">User Classes</a></p>
+  </blockquote>
+  <blockquote>
+    <p>All three parts of a Queue work together; Threads, Wait Lists, and your Processing
+    Application Class.</p>
+  </blockquote>
+  <blockquote>
+    <p>After you write the <u>Processing Application Class</u>, above, you define the
+    environment in which it is to execute, the Queue.</p>
+  </blockquote>
+  <blockquote>
+    <p>The client request goes into a Queue's <u>Wait List</u>.&nbsp;A <u>Queue Thread</u>
+    picks up the request, invokes your <u>Processing Application Class</u>, saves the return
+    Object from your Class and repeats that cycle until there are no more requests.</p>
+    <blockquote>
+      <p>For a Synchronous Request, the array of return Objects is passed back to the client.</p>
+      <p>For an Asynchronous Request, the array of return Objects may go into an Output Agent
+      Queue's <u>Wait List</u>.&nbsp;An <u>Agent Queue Thread</u> picks up the request, invokes
+      your <u>Processing Application Class</u> and repeats that cycle until there are no more
+      requests.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>How many threads in the Queue and the number of Wait Lists are determined by processing
+    requirements.&nbsp;The Queue Maintenance Class, <a href="TyQueMaint.html">TyQueMaint</a>,
+    discusses these.</p>
+  </blockquote>
+  <blockquote>
+    <p><map name="FPMap1">
+    <area href="#top" shape="rect" coords="2, 1, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap1" width="32" height="22"></p>
+  </blockquote>
+  <h2 ALIGN="JUSTIFY"><a name="function"></a>Functions</h2>
+  <blockquote>
+    <p>A Function constructs with the Function Maintenance Class, <a href="TyFuncMaint.html">TyFuncMaint</a>,
+    when using a <a href="DBMS.html">Data Base Management System</a>, or, you may use the <a href="UserClass.html">User Classes</a></p>
+    <blockquote>
+      <p><a href="FuncNaming.html">Function naming</a> guidelines are here.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>After you define the <u>Queue</u>, above, the component part of a request, you set up
+    the way by which <u>Queues</u> tie together, the Function.</p>
+  </blockquote>
+  <blockquote>
+    <p>The client requests a <u>Function</u>.&nbsp;The Function contains <u>Queues</u>. Each <u>Queue</u>
+    contains your <u>Processing Application Class</u>.</p>
+  </blockquote>
+  <blockquote>
+    <p>Each Function has one or more Queues associated with it.&nbsp;For example, refer to the
+    Tymeac <a href="Demo.html">Demonstration System</a>:</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p ALIGN="JUSTIFY"><strong>Class</strong>, Demo1, is a Processing Application Class.<br>
+      <strong>Queue</strong>, AAAA, is a Queue that uses Demo1.<br>
+      <strong>Function</strong>, Function_2, is a Function that uses Queue AAAA.</p>
+    </blockquote>
+    <blockquote>
+      <p ALIGN="JUSTIFY"><strong>Class</strong>, Demo2, is a Processing Application Class.<br>
+      <strong>Queue</strong>, BBBB, is a Queue that uses Demo2.<br>
+      <strong>Function</strong>, Function_3, is a Function that uses Queues AAAA and BBBB.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>Tymeac supports two types of requests: Synchronous and Asynchronous.</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>A <strong>Synchronous Request</strong> schedules the Queues in the Function, waits
+      until all Queue's finish processing and returns the &quot;return Objects&quot; of all the
+      Processing Application Classes to the client in an array.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>An <strong>Asynchronous Request</strong> schedules the Queues in the Function and
+      returns control to the client.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>As part of an Asynchronous Request, it is often useful to do something with the
+        &quot;return Objects&quot; of all the Processing Application Classes. This is the purpose
+        of the Output Agent Queue.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>As part of the definition of a Function is the option of an Output Agent
+        Queue.&nbsp;When the last Queue Thread finishes processing the request (the order of which
+        is irrelevant):<ul>
+          <li>it builds an array of all the of the &quot;return Objects&quot; of all the Queues in the
+            Function that is latter passed to the Processing Application Class as the first Object
+            (arg[0]) </li>
+          <li>it schedules the Output Agent Queue.</li>
+        </ul>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>For an overview of&nbsp; Tymeac processing, with drawings, see the Tymeac <a href="Overview.html">Overview</a>.</p>
+  </blockquote>
+  <blockquote>
+    <p><map name="FPMap2">
+    <area href="#top" shape="rect" coords="2, 1, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap2" width="32" height="22"></p>
+  </blockquote>
+  <h2 ALIGN="JUSTIFY"><a name="client"></a>Tymeac Client</h2>
+  <blockquote>
+    <p>The client access to the Tymeac Server is with the parameter the client passes to the
+    Tymeac Server and the communication code.</p>
+    <blockquote>
+      <p>The <strong>parameter</strong> is Class <a href="TymeacParm.html">TymeacParm</a>.&nbsp;The
+      input Object (passed to all <u>Processing Application Classes)</u>, is optional.</p>
+    </blockquote>
+    <blockquote>
+      <p>The <strong>communication code</strong> is the variable. We supply a framework Class, <a href="TySvrComm.html">TySvrComm</a>.&nbsp;However, you may develop any Class you wish.
+      Processing before and after this class is purely application oriented.</p>
+      <p>// passed object for the P.A.C.<br>
+      Object pass = any object you need<br>
+      <br>
+      // form a parameter for Tymeac <br>
+      TymeacParm TP = new TymeacParm( <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pass,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      // input data <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;YourFunc&quot;, // function name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      // wait time in seconds<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      // priority<br>
+      <br>
+      // do a sync request <br>
+      Object back[] = new TySvrComm().syncRequest(TP);</p>
+    </blockquote>
+    <p>We supply several demonstration classes that are Tymeac Clients: [prefix
+    com.tymeac.demo..]<ul>
+      <li>DemoClientBase -- base from which other classes inherit.</li>
+      <li>DemoClient_1 - _8</li>
+      <li>TyDemoT1, TyDemoT3</li>
+      <li>DemoRecur -- This is the recursion example.&nbsp;It is a Processing Application Class
+        that also becomes a client.</li>
+    </ul>
+    <p><strong>Identification</strong><br>
+    There may be times when your <u>Processing Application Class</u>, executing in the Tymeac
+    Server, needs to know the identification of the Tymeac Client requesting the service <strong>Outside
+    of <a href="Callback.html">CallBack</a></strong>.</p>
+    <blockquote>
+      <p>Although there is an rmi Server method, getClientHost(), this method generally is
+      unacceptable and Tymeac Server does not use this method.<ul>
+        <li>The method only returns the TCP EndPoint address of the host on which the client
+          resides, not the actual client identification and this method is only available to pure
+          Java (not RMI-IIOP or other plug-in) implementations.</li>
+        <li>Using a physical address to identify a client is usually not a good idea.&nbsp;The
+          network may change, machines come and go.&nbsp;This is &quot;hard wiring&quot;. When the
+          location changes, then an administrator must alter all tables. Using a &quot;soft
+          wiring&quot; method means the client can take its identification with it when it moves.</li>
+      </ul>
+      <p>Secondly, the RMI Runtime keeps track of the identification of Clients that have
+      unmarshalled this Server's RemoteObject. (This has to do with the Distributed Garbage
+      Collector.)&nbsp;However, API access to this data is not available.</p>
+      <p>Therefore, it is the responsibility of the Client to include a unique identifier for
+      use by the <u>Processing Application Class</u> within the input Object it passes to the
+      Tymeac Server. This coding is totally dependent on each application.</p>
+    </blockquote>
+    <p><strong>Idle Period<br>
+    </strong>There may be times when you would like to know when no Tymeac Clients exist. (See
+    the SDK documentation /guide/rmi/spec/rmi/ (Garbage Collection of Remote
+    Objects.)&nbsp;This involves implementing the Unreferenced Interface (one method,
+    Unreferenced()) in the Tymeac Server.<ol>
+      <li>The unreferenced() method is only called when <strong>ALL</strong> clients no longer
+        hold a reference to the remote object or when the lease time expires
+        (java.rmi.dgc.leaseValue.)</li>
+      <li>The Registries (RMI/JNDI) are clients.&nbsp;When Tymeac Server registers with one of
+        these, then the unreferenced() method may never be called.</li>
+      <li>Since this is the purview of the Distributed Garbage Collector, each operating system
+        may implement this differently.</li>
+    </ol>
+    <p>We do not implement the Unreferenced Interface.</p>
+    <p>For the activatable Tymeac Server, we keep track of the idle period, that is - the time
+    when no Client has called the Server. (see <a href="TyCfg.html#activate">Configuration
+    File Maintenance</a> and <a href="UserVariables.html">User Variables Class</a>) When this
+    idle period reaches a threshold, the application may take some action (such as
+    deactivating, etc.)&nbsp; In this way, we are not dependent on any implementations of DGC
+    and we have much more flexibility.</p>
+  </blockquote>
+  <blockquote>
+    <p><map name="FPMap3">
+    <area href="#top" shape="rect" coords="2, 1, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap3" width="32" height="22"></p>
+  </blockquote>
+  <h2 align="justify"><a name="system"></a>System Variables</h2>
+  <blockquote>
+    <p>Tymeac reads system variables at start up from the <a href="UserVariables.html">TymeacUserVariables</a>
+    class for stand alone mode or the <a href="TyCfg.html">Tymeac Configuration File</a> for
+    DBMS start up. This is where you put the monitor interval, etc.</p>
+  </blockquote>
+  <blockquote>
+    <p><map name="FPMap4">
+    <area href="#top" shape="rect" coords="2, 1, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap4" width="32" height="22"></p>
+  </blockquote>
+  <h2 ALIGN="JUSTIFY"><a name="testing"></a>Testing</h2>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>Becoming familiar with how Tymeac works is preliminary in any testing
+        environment.&nbsp;We provide a page on how to <a href="AlterDemo.html">alter</a> the
+        Demonstration System Classes and a page on <a href="AbnCond.html">abnormal conditions</a>
+        that may arise.</p>
+      </blockquote>
+    </blockquote>
+    <p>The easiest way to test a Class is without the Tymeac threading environment. We supply
+    a source Class, DemoTesting.java. This Class:<ul>
+      <li>loads the required Class, Class.forName(&quot;name of the Class to load&quot;),</li>
+      <li>finds the method signature, &quot;main(Object[])&quot;, and</li>
+      <li>invokes the found &quot;main&quot; method.</li>
+    </ul>
+    <p>This is similar to the way Tymeac invokes your Processing Application
+    Class.&nbsp;Therefore, if it runs here, it should run there.</p>
+    <p>Two directories are necessary to use this Class:<ol>
+      <li>&lt;home&gt;\com\tymeac\serveruser&nbsp; -- for the Processing Application Class</li>
+      <li>&lt;home&gt;\com\tymeac\demo&nbsp; --&nbsp; for the DemoTesting Class.</li>
+    </ol>
+  </blockquote>
+  <p ALIGN="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  <blockquote>
+    <p>Having tested the Class in a stand-alone environment, it is time to test the Class in
+    the Tymeac threading environment.</p>
+    <p>Testing a Class usually requires setting up a <u>Queue</u> and a <u>Function</u> just
+    for testing.</p>
+    <blockquote>
+      <p>It is easier to test a single Class when there is only one <u>Queue</u> in the <u>Function</u>.&nbsp;It
+      is easier to isolate threads when there is only one thread in the <u>Queue</u>.&nbsp;Therefore,
+      define a <u>Queue</u>, <a href="TyQueMaint.html">TyQueMaint</a>, with one (1) thread and
+      the name of your <u>Processing Application Class</u>.&nbsp;Define a <u>Function</u>, <a href="TyFuncMaint.html">TyFuncMaint</a>, with the name of this single <u>Queue</u>.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>Write a Tymeac Client Class that passes the input Object to the Tymeac Server as a
+    Synchronous Request, <a href="TymeacParm.html">TymeacParm</a>, with a time out value high
+    enough to allow stepping through the application.</p>
+  </blockquote>
+  <blockquote>
+    <ul>
+      <li>Start the RMI Registry.</li>
+      <li>Start TymeacServer.</li>
+      <li>Set a trap for your application.</li>
+      <li>Run the application.</li>
+    </ul>
+    <p>See also the section on naming threads found in the<a href="TyQueMaint.html#naming">
+    Maintenance</a> Class for Queues and in the section on Thread <a href="ThreadNames.html">Names</a>.</p>
+  </blockquote>
+  <blockquote>
+    <p>This same process works for the Output Agent Processing Application Class.</p>
+    <blockquote>
+      <p>Just set up a normal <u>Queue</u> and pass simulated data to this application, with a
+      Synchronous Request, as it would be if from other applications.&nbsp;When the application
+      works properly, then set up an Output Agent Queue as part of a <u>Function</u>.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>When there is more than one thread in the <u>Queue</u>, knowing which thread is going
+    to process a request is sometimes possible.</p>
+    <blockquote>
+      <p>Thread numbering starts at zero (0).&nbsp;Tymeac thread selection always starts at
+      zero(0).&nbsp;Therefore, if three threads are &quot;waiting for work&quot;, <a href="TyQueThd.html">TyQueThd</a>, Tymeac selects thread number zero (0), first. If all
+      threads are &quot;inactive&quot; or &quot;never used&quot;, Tymeac activates thread number
+      zero (0), first.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>As mentioned, above, the New Copy Class is available so that you do not have to shut
+    down and start up Tymeac Server every time you recompile your Class.</p>
+  </blockquote>
+  <p ALIGN="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  <blockquote>
+    <p>Now that all is working well, what happens when this newly developed system is under a
+    load?&nbsp;That is, many clients requesting service at the same time. Are there any &quot;<a href="Develop.html#sharing">sharing</a>&quot; conflicts, resource limitations,
+    etc?&nbsp;We supply an &quot;under load&quot; system, the T3 series.&nbsp;[You may wish to
+    clone this series, renaming the classes to your own standards.]</p>
+    <blockquote>
+      <p><a href="TyDemoT3.html">TyDemoT3</a> is made up of &nbsp; five classes.&nbsp;The only
+      one you must change is TyDemoT3Thread.&nbsp;The other classes may remain without
+      change.&nbsp;Alter TyDemoT3Thread Constructor to use your <a href="TymeacParm.html">TymeacParm</a>
+      information. Alter TyDemoT3Thread.run() to perform the sequence of events necessary for
+      your testing.</p>
+      <p>Now you may put as heavy a load on your code as necessary.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p><map name="FPMap5">
+    <area href="#top" shape="rect" coords="2, 1, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap5" width="32" height="22"></p>
+  </blockquote>
+  <h2><a name="exits"></a>User Exits</h2>
+  <blockquote>
+    <p>As with other general purpose tools, Tymeac cannot supply all the functionality one may
+    wish to have.&nbsp;Therefore, Tymeac provides exits or hooks into which you may add your
+    own functionality.&nbsp;See the section on <a href="UserExits.html">user exits</a>.&nbsp;
+    See also the section on <a href="StartUpFunctions.html">start up functions</a>.</p>
+    <p>Tymeac provides several <a href="Samples.html#exits">sample</a> Classes to demonstrate
+    how one might set this up. The following is an explanation of those sample Classes.</p>
+    <blockquote>
+      <p><strong>TyDemoMsgBase</strong> -- This is the persistent storage necessary for Tymeac
+      Clients (i.e. RMI code running on the Tymeac Server) to access private persistent storage.
+      The variable fields are all <strong>static</strong>. &nbsp; These are called class
+      variables.</p>
+      <blockquote>
+        <blockquote>
+          <p>&quot;There is exactly one copy of each class variable associated with the class; every
+          instance of the class shares the single copy of the class's <em>static</em>
+          variables.&nbsp;Thus, setting the value of a class variable changes the value of the
+          variable for all objects that are instances of that class or any of its subclasses.&quot;</p>
+        </blockquote>
+      </blockquote>
+      <p>This means that there is only one copy of each of these fields no matter how many
+      instances of the class are in the Virtual Machine. Therefore, when a thread (call it A) at
+      Tymeac start up, gets a new instance of the class and sets its variables, those variables
+      are available to any other thread (call it B+) when it gets a new instance of the class.</p>
+      <p>If the B+ threads do not change the values of the variables, then every B+ thread gets
+      the same values. If any B+ thread changes the value of a variable, then every other B+
+      threads gets the changed value of that variable when it gets a new instance of the class.</p>
+    </blockquote>
+  </blockquote>
+  <p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p><strong>Another Example 1</strong>:&nbsp; public class MyClass contains a&nbsp; <em>static</em>
+        field MyStorage mt.</p>
+        <blockquote>
+          <p>public class MyClass {<br>
+          &nbsp;&nbsp;&nbsp; public static MyStorage mt;</p>
+          <blockquote>
+            <p>// constructor used by start up code<br>
+            public MyClass(int dummy) {<br>
+            &nbsp;&nbsp;&nbsp; mt = new MyStorage()<br>
+            }</p>
+            <p>// no-arg constructor<br>
+            public MyClass() {<br>
+            }</p>
+            <p>// class method<br>
+            public static MyStorage getField()<br>
+            &nbsp;&nbsp;&nbsp; return mt;<br>
+            }</p>
+          </blockquote>
+          <p>}</p>
+        </blockquote>
+        <p>The start up procedure gets a new instance of MyClass using the &quot;int&quot;
+        argument constructor.&nbsp;This constructor sets the class variable in MyClass,
+        &quot;mt&quot; to a new instance of MyStorage.</p>
+        <p>Now every Tymeac Client can use the <em>static</em> field, &quot;mt&quot;, in class,
+        MyClass, by getting a new instance of MyClass with the no argument constructor or by using
+        the class method MyClass.getField().&nbsp;Since &quot;mt&quot; refers to an object, the
+        Clients can use this in a synchronized statement (synchronized (mt) { ) or in any other
+        way desirable.</p>
+        <p>The <em>static</em> field, &quot;mt&quot;, is never altered.</p>
+        <p><strong>Another Example 2</strong>:&nbsp; public class MyClass contains <em>static</em>
+        field MyStorage mt and <em>static</em> field int counter. &nbsp; </p>
+        <blockquote>
+          <p>public class MyClass {<br>
+          &nbsp;&nbsp;&nbsp; public static MyStorage mt;<br>
+          &nbsp;&nbsp;&nbsp; public static int counter;<br>
+          </p>
+          <blockquote>
+            <p>public MyClass( int cnt) {<br>
+            &nbsp;&nbsp;&nbsp; mt = new MyStorage()<br>
+            &nbsp;&nbsp;&nbsp; counter = cnt;<br>
+            }</p>
+            <p>public MyClass() {<br>
+            }</p>
+          </blockquote>
+          <p>}</p>
+        </blockquote>
+        <p>The start up procedure gets a new instance of MyClass using the &quot;int&quot;
+        argument constructor.&nbsp;This constructor sets the class variables in MyClass, mt = a
+        new instance of MyStorage and counter = passed argument.</p>
+        <p>Now every Tymeac Client can use the <em>static</em> fields, &quot;mt&quot; and
+        &quot;counter&quot;, in class, MyClass, by getting a new instance of MyClass with the no
+        argument constructor.&nbsp; Since &quot;mt&quot; refers to an object, the Clients can use
+        this in a synchronized statement (synchronized (mt) {} ). This &quot;single threads&quot;
+        access to the other fields in the class and now each client may increment
+        &quot;counter&quot;, counter++.&nbsp; </p>
+        <p>The <em>static</em> field, &quot;mt&quot;, is never altered, however, the <em>static</em>
+        field &quot;counter&quot; may be altered and every new instance of class, MyClass, with
+        the no argument constructor, will reflect the current value of this field.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  <blockquote>
+    <blockquote>
+      <p>This is a way to use private, persistent storage within the Tymeac RMI Server
+      environment.&nbsp; However, there is one further step that ensures this private storage is
+      never garbage collected.&nbsp;That step requires the use of a private thread that never
+      ends.</p>
+      <p><strong>TyDemoMsgThread</strong> -- This is the private thread that [may] never
+      end.&nbsp; It holds a reference to the private class, MyClass. Since there is a live
+      reference to MyClass and the thread is alive, the garbage collector never frees the
+      original MyClass storage. Incidentally, any storage that MyClass acquires (through
+      allocation) also remains persistent.</p>
+      <blockquote>
+        <p>The example of this thread, TyDemoMsgThread, is that it not only holds the reference to
+        MyClass, but does some other work as well.</p>
+      </blockquote>
+    </blockquote>
+    <p>There are two further steps in this procedure:&nbsp;How to start the persistent thread
+    and how to shut down the sub-system.&nbsp; You may do this in any way you
+    wish.&nbsp;Tymeac provides exits at Tymeac Start Up and Shut Down to aid in this
+    procedure.</p>
+    <p>S<strong>tart Up Exit:</strong>&nbsp; See the section on <a href="UserExits.html">user
+    exits</a>.&nbsp; Tymeac provides a <a href="Samples.html#exits">sample</a> Class to
+    demonstrate how one might set this up.&nbsp; The following is an explanation of that
+    sample Class.</p>
+    <blockquote>
+      <p><strong>TyDemoStartup1</strong> -- This is the private class used to start the
+      persistent thread, TyDemoMsgThread, in the constructor. &nbsp; There are no class fields
+      and no other methods.&nbsp; Although the code sets the thread as a daemon, it is really
+      irrelevant.</p>
+    </blockquote>
+    <p>S<strong>hut Down, Stage 1 Exit:</strong>&nbsp; See the section on <a href="UserExits.html">user exits</a>.&nbsp; Tymeac provides a <a href="Samples.html#exits">sample</a>
+    Class to demonstrate how one might set this up. &nbsp; The following is an explanation of
+    that sample Class.</p>
+    <blockquote>
+      <p><strong>TyDemoShutdown1</strong> -- This is the private class used to end&nbsp; the
+      persistent thread, TyDemoMsgThread, in the constructor. &nbsp; There are no class fields
+      and no other methods.</p>
+    </blockquote>
+    <p>S<strong>hut Down, Stage 2 Exit:</strong>&nbsp; See the section on <a href="UserExits.html">user exits</a>.&nbsp; Tymeac provides a <a href="Samples.html#exits">sample</a>
+    Class to demonstrate how one might set this up. &nbsp; The following is an explanation of
+    that sample Class.</p>
+    <blockquote>
+      <p><strong>TyDemoShutdown2</strong> -- This is not used.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>As an aid in coding, Tymeac provides a <a href="Samples.html#exits">sample</a> Class to
+    demonstrate how one might use this sub-system in a Tymeac Client Class.&nbsp; The
+    following is an explanation of that sample Class.</p>
+    <blockquote>
+      <p><strong>DemoMsg</strong> -- The main method gets a reference to the TyDemoMsgThread and
+      passes it a String when waking it up.&nbsp;The Tymeac demonstration system does not supply
+      a Tymeac Queue nor Function since the Class is for reference only.</p>
+      <p>&nbsp;</p>
+    </blockquote>
+    <p>These exits are established either in the Tymeac <a href="TyCfg.html">Configuration
+    File</a> or in the <a href="UserVariables.html">TymeacUserVariables</a> Class.</p>
+  </blockquote>
+  <blockquote>
+    <p><map name="FPMap6">
+    <area href="#top" shape="rect" coords="2, 1, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap6" width="32" height="22"></p>
+  </blockquote>
+  <h2><a name="structure"></a>Overall Structure</h2>
+  <ul>
+    <li>We provide guidance in the form of <a href="Patterns.html">patterns</a> that appear
+      frequently within Tymeac.</li>
+    <li>We provide an <a href="RMIAlternatives.html">exposition</a> on RMI communications for
+      use with Tymeac.</li>
+    <li>The computer memory requirements are difficult for any system.&nbsp;We provide a
+      discussion on how Tymeac uses <a href="Storage.html">storage</a>.</li>
+    <li>We have a <a href="LoadBalance.html">discussion</a> on network load balancing.</li>
+  </ul>
+  <blockquote>
+    <p><map name="FPMap7">
+    <area href="#top" shape="rect" coords="2, 1, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap7" width="32" height="22"></p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

@@ -1,0 +1,55 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Messages, Request Brokering Ty04</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Messages: Request Brokering Ty04</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This section details the Request Brokering messages.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>(<strong>P</strong>) Printed to System.out.println() (this is <a href="TyCfg.html">optional</a>).<br>
+    (<strong>L</strong>) Sent to the Tymeac <a href="RunTime.html#log">Log</a>.<br>
+    (<strong>N</strong>) Sent to the Tymeac <a href="RunTime.html#notify">Notification</a>
+    Function.</p>
+  </blockquote>
+</blockquote>
+
+<hr>
+
+<p align="left">010C (<strong>P</strong>) (<strong>L</strong>) (<b>N</b>)</p>
+
+<blockquote>
+  <p align="left">'TymeacInternalCancel' Function is missing, CallBacks 
+  non-functioning. </p>
+  <blockquote>
+    <p align="left">Tymeac does <a href="TymeacParm.html#callback">callbacks</a> 
+    in Synchronous Requests by using an in internal Tymeac Function (TymeacInternalCancel), internal 
+    Queue (TymeacInternalCancel) and internal 
+    Processing Application Class (com.tymeac.base.TymeacInternalCancel). All the internal Functions are loaded at 
+    Tymeac start up. Not being able to find the Function during request 
+    processing means that there is system damage.</p>
+    <p align="left">The Server continues. </p>
+    <p align="left">The calling request is given a general notification that the 
+    callback failed.</p>
+  </blockquote>
+</blockquote>
+
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

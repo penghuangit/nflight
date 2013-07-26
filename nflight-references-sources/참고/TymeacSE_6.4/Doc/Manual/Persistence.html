@@ -1,0 +1,196 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Persistence Examples</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Persistence Examples</h1>
+
+<hr width="30%">
+
+<h2 align="left"><strong>Common, persistent storage.</strong></h2>
+
+<blockquote>
+
+<blockquote>
+  <p>It is necessary to have an area of storage within the Java Virtual Machine that is both
+  persistent and addressable by all threads.</p>
+  <blockquote>
+    <p><strong>Persistent:</strong>&nbsp; Tymeac is a persistent Server, therefore, all the
+    storage obtained by the Server is persistent as long as a reference to the allocated
+    classes remains active.</p>
+    <p><strong>Addressable:</strong>&nbsp; The JVM keeps track of all the names of all the
+    allocated classes therein.&nbsp;Two common methods are:<ol>
+      <li><a href="#single">The Singleton Class</a></li>
+      <li><a href="#static">Static fields</a></li>
+    </ol>
+  </blockquote>
+  <p><a name="single"></a><strong>The Singleton Class</strong></p>
+  <blockquote>
+  <p>Tymeac supplies a basic Singleton Class</p>
+
+<p align="left"><big>JavaDoc: <a href="../JavaDoc/com/tymeac/serveruser/TymeacUserSingleton.html">com.tymeac.serveruser.TymeacUserSingleton</a></big></p>
+
+    <p>Tymeac allocates this class at Tymeac start up with the <u>static</u> method
+    getInstance() and keeps a live reference to the class so the garbage collector may never
+    eat the Object.</p>
+    <p>We supply the basic class in the serveruser directory (both class and source). You may
+    delete the class from the serveruser directory without incident. It is optional. Tymeac
+    start up tries to allocate the class and if not found, ignores the error.</p>
+    <p>You may place any instance fields therein as well as any method.</p>
+    <p>By utilizing a Tymeac <a href="UserExits.html">start up user exit</a> you may
+    initialize the fields so they are available for Processing Application Classes. The start
+    up exit Classes run before any [a]syncRequest() to the Server.</p>
+    <p><strong>Examples:<br>
+    </strong>We add two instance fields and the getter and setter methods for them.</p>
+    <blockquote>
+      <p>package com.tymeac.serveruser;<br>
+      public final class TymeacUserSingleton {</p>
+      <blockquote>
+        <p>&nbsp;&nbsp;&nbsp; // private Class field</p>
+        <blockquote>
+          <p>// static reference to this Singleton<br>
+          private static TymeacUserSingleton me = null;</p>
+        </blockquote>
+        <p>&nbsp;&nbsp;&nbsp; // private instance fields for your use</p>
+        <blockquote>
+          <p><font color="#FF0000">// These were added by user 1</font><br>
+          private Object myObject1 = null;<br>
+          private Object myObject2 = null;</p>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>/* Public static method to return the object. During Tymeac start up only one thread
+        &nbsp; may execute this public method therefore, no sync statement is necessary. */<br>
+        public static TymeacUserSingleton getInstance() {</p>
+        <blockquote>
+          <p>// When not here<br>
+          if (me == null) {</p>
+          <p>&nbsp;&nbsp;&nbsp; // new instance<br>
+          &nbsp;&nbsp;&nbsp; me = new TymeacUserSingleton();<br>
+          <br>
+          } // endif <br>
+          <br>
+          // instance of<br>
+          return me;</p>
+        </blockquote>
+        <p>} // end-method</p>
+        <p><font color="#FF0000">// NEW</font><br>
+        public void setObj1 (Object obj) {</p>
+        <blockquote>
+          <p>myObject1 = obj;</p>
+        </blockquote>
+        <p>} // end-method</p>
+        <p><font color="#FF0000">// NEW</font><br>
+        public void setObj2 (Object obj) {</p>
+        <blockquote>
+          <p>myObject2 = obj;</p>
+        </blockquote>
+        <p>} // end-method</p>
+        <p><font color="#FF0000">// NEW</font><br>
+        public Object getObj1 () {</p>
+        <blockquote>
+          <p>return myObject1;</p>
+        </blockquote>
+        <p>} // end-method</p>
+        <p><font color="#FF0000">// NEW</font><br>
+        public Object getObj2 () {</p>
+        <blockquote>
+          <p>return myObject2;</p>
+        </blockquote>
+        <p>} // end-method</p>
+      </blockquote>
+    </blockquote>
+    <blockquote>
+      <p>In a start up exit class we add the code to create two objects and set a reference to
+      those objects in the Singleton Class</p>
+      <blockquote>
+        <p>PrivateSubSystem1 ss1 = [the code to create this sub system]</p>
+        <p>PrivateSubSystem2 ss2 = [the code to create this sub system]</p>
+        <p>TymeacUserSingleton sing = TymeacUserSingleton.getInstance();</p>
+        <p>// By using Class Object, we make the references more generic.</p>
+        <p>sing.setObj1(ss1);<br>
+        sing.setObj2(ss2);</p>
+      </blockquote>
+      <p>In any Processing Application Class (or other start up exit class or shut down class)
+      we add the code to get a reference to those objects in the Singleton Class:</p>
+      <blockquote>
+        <p>TymeacUserSingleton sing = TymeacUserSingleton.getInstance();</p>
+      </blockquote>
+      <blockquote>
+        <p>PrivateSubSystem1 ss1&nbsp; = (PrivateSubSystem1) sing.getObj1();<br>
+        PrivateSubSystem2 ss2&nbsp; = (PrivateSubSystem2) sing.getObj2();</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/Caution.gif" alt="Caution.gif (1012 bytes)" width="20" height="20"><strong> &nbsp;
+    Synchronization is your work</strong>.<br>
+    The above example sets the objects in a start up exit. Therefore, no other thread may
+    access them and synchronization is not necessary. The above example only gets the values,
+    so synchronization is not necessary.</p>
+    <p><strong>If you need to update the values in your private fields or objects, then you
+    must either use the synchronized key word on the methods, use a synchronized statement 
+    or the java.util.concurrent packages.
+    Don't even think about trying to get around it.</strong></p>
+  </blockquote>
+</blockquote>
+
+  <p><a name="static"></a><strong>Static Fields</strong></p>
+
+<blockquote>
+  <p>By defining a class with <em>static</em> fields, the JVM shares the single copy of the
+  class's <em>static</em> variables with all allocated classes of that same name.</p>
+  <p>You may use the Tymeac start up user exit to establish common, persistent storage by a
+  thread that never ends (see the <a href="Develop.html#exits">example</a> of:
+  TyDemoMsgThread.)</p>
+  <p>By utilizing the Tymeac shutdown user exits one may end this environment gracefully
+  when it is no longer needed (see the <a href="Develop.html#exits">example</a> of:
+  TyDemoShutdown1.)</p>
+  <blockquote>
+    <p>The start up thread may do additional work, as it does in the examples, or may simply
+    be the reference holder for the common storage.</p>
+  </blockquote>
+  <p>The common storage holds the references to the thread(s) that do the work, the
+  parameters necessary for establishing the linkage to the system and current counts of how
+  many objects were written.</p>
+  <p><img src="Images/magball1.gif" alt="magball1.gif (896 bytes)" width="12" height="12">&nbsp; The work thread is
+  timed.&nbsp;When the work thread receives the first object, it:<ol>
+    <li>Connects to and opens the Message Queue, or, gets a java.sql.DriverManager, a
+      DriverManager.getConnection() and a connection.createStatement().</li>
+    <li>Writes the object.</li>
+  </ol>
+  <p><img src="Images/magball1.gif" alt="magball1.gif (896 bytes)" width="12" height="12">&nbsp; The work thread
+  writes subsequent objects.</p>
+  <p><img src="Images/magball1.gif" alt="magball1.gif (896 bytes)" width="12" height="12">&nbsp; After the work
+  thread receives the last object in the series or when a time out occurs, the work thread:<ol>
+    <li>Writes the last object, when present.</li>
+    <li>Closes the linkage and/or flushes the buffer of the Message Queue or DBMS.</li>
+  </ol>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p>This, by no means, is the limit to which one may use common, persistent storage.</p>
+</blockquote>
+
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

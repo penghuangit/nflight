@@ -1,0 +1,606 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Technical Reference Manual</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac<sup><small><small>&#153;</small></small></sup> Technical Reference</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Tymeac<sup><small>&#153;</small></sup> (pronounced <i>Tie-Mack</i>) is 
+      an acronym for as<u>Y</u>nchronous <u>T</u>ask <u>M</u>anager and <u>E</u>asy
+      <u>A</u>ssembly of <u>C</u>omponents.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h2><a name="top"></a>
+<img src="Images/Contents.gif" alt="Contents.gif (1026 bytes)" width="36" height="36">
+Contents</h2>
+
+<blockquote>
+  <blockquote>
+    <ul>
+      <li><a href="Manual.html#started">Getting Started</a>&nbsp; --&nbsp; Product overview and
+        instructions for setting up the environment.</li>
+    </ul>
+    <ul>
+      <li><a href="Manual.html#function">Functionality</a>&nbsp; -- This is the section for
+        developing your own systems.</li>
+    </ul>
+    <ul>
+      <li><a href="Manual.html#operation">Operation</a>&nbsp; --&nbsp; This section is for using
+        the Tymeac Product.&nbsp;Start up, shut down, etc.</li>
+    </ul>
+    <ul>
+      <li><a href="Manual.html#classes">Tymeac Classes</a>&nbsp; --&nbsp; This section lists the
+        all the classes that come with the Tymeac Product.</li>
+    </ul>
+    <ul>
+      <li><a href="../JavaDoc/index.html">JavaDoc for selected classes </a>-- 
+      Tymeac classes mentioned in this documentation.<br>
+&nbsp;</li>
+      <li><a href="Support.html">Support</a>&nbsp; --&nbsp; Product support</li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <ul>
+      <li><a href="Manual.html#index">Index</a>&nbsp; --&nbsp; Document index.</li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h3><a name="started"></a>
+  <img src="Images/magball1.gif" alt="magball1.gif (896 bytes)" width="12" height="12">&nbsp;
+  Getting Started</h3>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Overview.html">Product Overview</a></p>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="ReleaseNotes.html">Release Notes</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;<a href="SetUp.html">Setting Up the Environment</a></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpBasic.html">Basic 
+      RMI Set Up</a>,<small> </small><strong>Please do this first</strong><small>.</small></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpAct.html">Activatable Remote Object Set Up</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpCSF.html">Custom Socket Factory Set Up</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpInternal.html">Internal, non-RMI Server Set Up</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpIIOP.html">IIOP Set Up</a></p>
+      <blockquote>
+        <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpBasicIIOP.html">Basic IIOP Set Up</a></p>
+        <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpPoaIIOP.html">POA IIOP Set Up</a></p>
+      </blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="SetUpJini2.html">Jini Set Up</a></p>
+    </blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Demo.html">Demonstration System</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Definitions.html">Glossary</a></p>
+    <p><map name="FPMap0">
+    <area href="#top" shape="rect" coords="2, 3, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap0" width="32" height="22"></p>
+  </blockquote>
+  <h3><a name="function"></a>
+  <img src="Images/magball1.gif" alt="magball1.gif (896 bytes)" width="12" height="12">&nbsp;
+  Functionality</h3>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Develop.html">Developing Your Own Systems</a></p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="DevelopExample.html">Development Example</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Develop2.html">First Time through here</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TymeacParm.html">Tymeac Parameter</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="TymeacReturn.html">TymeacReturn</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Patterns.html">Design Patterns</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TymeacInfo.html">Server Run Time Information</a></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="RMIAlternatives.html">RMI Registry Alternatives</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Storage.html">Storage Requirements</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Directories.html#serveruser">Compiling</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserExits.html">User Exits</a></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Tutorial.html">Development Tutorial</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="DBMS.html">DBMS Overview</a></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="Derby.html">Derby</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="Hsql.html">Hsql</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyCfg.html">TyCfg</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyQueMaint.html">TyQueMaint</a></p>
+    </blockquote>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyFuncMaint.html">TyFuncMaint</a></p>
+    </blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserClass.html">The User Classes</a></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserVariables.html">TyUserVariables</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserQueues.html">TyUserQueMaint</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserFunctions.html">TyUserFuncMaint</a></p>
+    </blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Essentials.html">Essentials Expounded</a></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Benefits.html">Benefits Exemplified</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="Testing.html">Testing for Developers</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="InternalStructure.html">Internal Structure for Developers</a></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><map name="FPMap1">
+    <area href="#top" shape="rect" coords="2, 3, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap1" width="32" height="22"></p>
+  </blockquote>
+  <h3><a name="operation"></a>
+  <img src="Images/magball1.gif" alt="magball1.gif (896 bytes)" width="12" height="12">&nbsp;
+  Operation</h3>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Security.html">Security</a></p>
+    <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="LoginServers.html">Login Server</a></p>
+    </blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="StartUp.html">Start Up</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Shutdown.html">Shut Down</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Monitor.html">Monitor</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="RunTime.html">Run Time Functions</a>&nbsp; (Notification, statistics, logging)</p>
+    <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="TyNewRTNotification.html">Alter Run Time Notification</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="TyNewRTLog.html">Alter Run Time Logging</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="TyNewRTStats.html">Alter Run Time Statistics</a></p>
+    </blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="TyAltSvr.html">Alter Run Time Server</a>&nbsp; </p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Usage.html">Run Time Return Codes</a></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Messages.html">Run Time Messages</a></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="MsgTy00.html">Start up</a><br>
+      <img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="MsgTy01.html">Start up, extended</a><br>
+      <img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="MsgTy02.html">Shut down</a><br>
+      <img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="MsgTy03.html">Monitor</a><br>
+      <img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="MsgTy04.html">Request Brokering</a><br>
+      <img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="MsgTy05.html">Scheduling</a><br>
+      <img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="MsgTy06.html">Queue Thread</a><br>
+      <img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="MsgTy07.html">Output Agent Thread</a><br>
+      <img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="MsgTy08.html">General Tymeac Component</a><br>
+      <img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="MsgTy09.html">User Modification of Queue Threads</a></p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Stats.html">Shut Down / On Request Statistics</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Tuning.html">Tuning</a></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SchdFail.html">Scheduling Failures</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Stalled.html">Stalled Requests</a> </p>
+  </blockquote>
+  <blockquote>
+    <p><map name="FPMap2">
+    <area href="#top" shape="rect" coords="2, 3, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap2" width="32" height="22"></p>
+  </blockquote>
+  <h3><a name="classes"></a>
+  <img src="Images/magball1.gif" alt="magball1.gif (896 bytes)" width="12" height="12">&nbsp;
+  Tymeac Classes</h3>
+    <h4 align="left">&nbsp;&nbsp; Execution</h4>
+
+<blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TymeacInfo.html">com.tymeac.base.TymeacInfo</a>&nbsp;&nbsp;<br>
+    Singleton Class
+    containing information on the currently executing Tymeac Server.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TymeacParm.html">com.tymeac.base.TymeacParm</a>&nbsp; 
+    <br>
+    Parameter passed to the Tymeac
+    Server.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyVariables.html">com.tymeac.common.TyVariables</a>&nbsp; 
+    <br>
+    The Class containing the
+    local RMI URL and Tymeac Name for binding.</p>
+</blockquote>
+
+    <h4 align="left">&nbsp;&nbsp; User Classes (non-DBMS)</h4>
+
+<blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserVariables.html">com.tymeac.serveruser.TymeacUserVariables</a>&nbsp;&nbsp;<br>
+    The
+    Class for the non-DBMS version of Tymeac for start up values.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserQueues.html">com.tymeac.serveruser.TymeacUserQueues</a>&nbsp;&nbsp;<br>
+    The Class for
+    the non-DBMS version of Tymeac for holding Queues.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="IndividQueue.html">com.tymeac.base.TymeacIndividualQueue</a>&nbsp;&nbsp;<br>
+    The Class is
+    used by the above, TymeacUserQueues Class.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserFunctions.html">com.tymeac.serveruser.TymeacUserFunctions</a>&nbsp; 
+    <br>
+    The Class
+    for the non-DBMS version of Tymeac for holding Functions.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="IndividFunction.html">com.tymeac.base.TymeacIndividualFunction</a>&nbsp;&nbsp;<br>
+    The
+    Class is used by the above, TymeacUserFunctions Class.</p>
+</blockquote>
+
+    <h4 align="left">&nbsp;&nbsp; <a name="frame"></a>Frame Classes&nbsp; <span style="font-weight: 400">The package prefix is: 
+    com.tymeac.client.jframe</span></h4>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyMenu.html">TyMenu</a>&nbsp; Display of the Frame Processes, in the list below.</p>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyCfg.html">TyCfg</a>&nbsp;&nbsp;Configuration File Maintenance Class.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="TyAltSvr.html">TyAltSvr</a>&nbsp;&nbsp;Alter the running server options</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserVariables.html">TyUserVariables</a>&nbsp;&nbsp;User Variables Class Maintenance
+    Class.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyVariables.html">TyVariables</a>&nbsp;&nbsp;Tymeac Start Up Variables Class
+    Maintenance Class.</p>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyFuncData.html">TyFuncData</a>&nbsp;&nbsp;Display of Functions loaded and times
+    used during execution.</p>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyFuncMaint.html">TyFuncMaint</a>&nbsp; Function Table Maintenance Class.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserFunctions.html">TyUserFuncMaint</a>&nbsp; User Functions Class Maintenance
+    Class.</p>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyNewCopy.html">TyNewCopy</a>&nbsp;&nbsp;Reload the Processing Application Class as
+    a new version.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="TyNewRTNotification.html">TyNewRTNotify</a>&nbsp;&nbsp;Alter 
+    run time notification.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="TyNewRTLog.html">TyNewRTLog</a>&nbsp;&nbsp;Alter run time logging.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="TyNewRTStats.html">TyNewRTStats</a>&nbsp;&nbsp;Alter run time statistics.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyOverall.html">TyOverall</a> &nbsp;Display the overall load 
+    and Queue
+    names with attendant threads</p>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyQueData.html">TyQueData</a>&nbsp;&nbsp;Display/alter of the elements of a Queue
+    during execution.</p>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyQueMaint.html">TyQueMaint</a>&nbsp; Queue Table Maintenance Class.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserQueues.html">TyUserQueMaint</a>&nbsp; User Queue Class Maintenance Class.</p>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyQueThd.html">TyQueThd</a>&nbsp;&nbsp;Display/disable/enable of the threads of a
+    Queue during execution.</p>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyReqStatus.html">TyReqStatus</a>&nbsp;&nbsp;Displayed query for an Asynchronous
+    Request in the current session.</p>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyShutdown.html">TyShutdown</a>&nbsp;&nbsp;Shut down the Tymeac Server.</p>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyStats.html">TyStats</a>&nbsp;&nbsp;On-Request statistics generation.</p>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyStalled.html">TyStalled</a>&nbsp;&nbsp;Display/purge of stalled asynchronous
+    requests.</p>
+  </blockquote>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyWlData.html">TyWlData</a>&nbsp;&nbsp;Display of a Queue's Wait Lists during
+    execution.</p>
+  </blockquote>
+    <h4 align="left">&nbsp;&nbsp; Samples / Demonstration</h4>
+  <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Samples.html">Sample Classes</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TySvrComm.html">com.tymeac.demo.TySvrComm</a>&nbsp;&nbsp;<br>
+    Tymeac Server Communication
+    Class for the Demonstration System.&nbsp;The user maintained Class containing the Methods
+    for Client communication with the Tymeac Server.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyDemoT1.html">com.tymeac.demo.jframe.TyDemoT1</a>&nbsp; 
+    <br>
+    Demonstration System single
+    event Class.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyDemoT3.html">com.tymeac.demo.jframe.TyDemoT3</a>&nbsp; 
+    <br>
+    Demonstration System
+    multiple event Class.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="SetUpInternal.html#running">com.tymeac.demo.jframe.TyDemoInternal&nbsp;</a>
+    <br>
+    Demonstration System 
+    Internal Server testing.</p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyDemoJiniT1.html">com.tymeac.demo.jini.client.TyDemoJiniT1</a>&nbsp;<br>
+    Demonstration
+    System Jini example Class.</p>
+    <p><map name="FPMap3">
+    <area href="#top" shape="rect" coords="2, 3, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap3" width="32" height="22"></p>
+  </blockquote>
+  <h3><a name="index"></a>
+  <img src="Images/magball1.gif" alt="magball1.gif (896 bytes)" width="12" height="12">&nbsp;
+  Index of documents</h3>
+  <blockquote>
+    <p><big><a href="#Tag-A">A</a> <a href="#Tag-B">B</a> <a href="#Tag-C">C</a> <a href="Manual.html#Tag-D">D</a> <a href="Manual.html#Tag-E">E</a> <a href="Manual.html#Tag-F">F</a>
+    <a href="#Tag-H">H</a> <a href="Manual.html#Tag-I">I</a> <a href="#Tag-J">J</a> <a href="Manual.html#Tag-L">L</a> <a href="Manual.html#Tag-M">M</a> <a href="Manual.html#Tag-O">O</a> <a href="Manual.html#Tag-P">P</a>
+    <a href="#Tag-Q">Q</a> <a href="Manual.html#Tag-R">R</a> <a href="Manual.html#Tag-S">S</a> <a href="Manual.html#Tag-T">T</a> <a href="Manual.html#Tag-U">U</a></big></p>
+    <p><a name="Tag-A"></a><strong>A</strong></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="AbnCond.html">Abnormal Conditions</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="AlterDemo.html">Altering the Demonstration Classes</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Alternatives.html">Alternative Log and Statistics Classes</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="../Articles/Articles.html">Articles</a></p>
+    </blockquote>
+    <p><a name="Tag-B"></a><big>B</big></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Benefits.html">Benefits Exemplified</a></p>
+    </blockquote>
+    <p><a name="Tag-C"></a><big>C</big></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Callback.html">Callback</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Cancel.html">Canceling Requests</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="ClassNameFormat.html">Class naming and URL's</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="CT.htm">Component Technology </a></p>
+    </blockquote>
+    <p><a name="Tag-D"></a><big>D</big></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Demo.html">Demonstration System</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="DBMS.html">DBMS Overview</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;<a href="Derby.html"> Derby</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="DBMSFunc.html">DBMS Function Table</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="DBMSList.html">DBMS List Table</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="DBMSLog.html">DBMS Log Table</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="DBMSQue.html">DBMS Queue Table</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="DBMSStats.html">DBMS Statistics Table</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Definitions.html">Definitions</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Develop.html">Developing Your Own Systems</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="DevelopExample.html">Development Example</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Directories.html">Directory Structure</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="Testing.html#diag">diagnoseRequest()</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Disabled.html">Disabled Threads</a></p>
+    </blockquote>
+    <p><a name="Tag-E"></a><big>E</big></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Essentials.html">Essentials Expounded</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="ex1.html">Examples</a></p>
+    </blockquote>
+    <p><a name="Tag-F"></a><big>F</big></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Develop2.html">First Time through here</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="ForkJoin.html">Fork-Join</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="../Articles/ForkJoinArticle.html">Fork-Join Development in Java 
+      SE</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="FuncNaming.html">Function Naming</a></p>
+    </blockquote>
+      <p><b><a name="Tag-H"></a>H</b></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="Hsql.html">Hsql</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="../Articles/PriQueArticle.html">High Performance Priority Queues 
+      in Java SE</a></p>
+    </blockquote>
+    <p><a name="Tag-I"></a><big>I</big></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="IndividFunction.html">Individual Function Class</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="IndividQueue.html">Individual Queue Class</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="IVP.html">Installation
+      Verification Procedure</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="InternalFunctions.html">Internal Functions</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="InternalQueues.html">Internal Queues</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="InternalStructure.html">Internal Structure for Developers</a></p>
+    </blockquote>
+      <p><b><a name="Tag-J"></a>J</b></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="../JavaDoc/index.html">JavaDoc for selected classes </a></p>
+    </blockquote>
+    <p><a name="Tag-L"></a><strong>L</strong></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="../Tylicense.html">License</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="LoadBalance.html">Load Balancing</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="LoginServers.html">Login Server</a></p>
+    </blockquote>
+    <p><a name="Tag-M"></a><big>M</big></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="../Articles/J2SEArticle.html">Managing Threads in Java SE</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Messages.html">Messages Overview</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="MsgTy00.html">Messages, Start Up</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="MsgTy01.html">Messages, Start Up, extended</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="MsgTy02.html">Messages, Shut Down</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="MsgTy04.html">Messages, Request Brokering</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="MsgTy05.html">Messages, Scheduling</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="MsgTy03.html">Messages, Monitor</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="MsgTy06.html">Messages, Queue Thread</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="MsgTy07.html">Messages, Output Agent Thread</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="MsgTy08.html">Messages, General Tymeac Component</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="MsgTy09.html">Messages, 
+      Modification of Queue Threads</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Monitor.html">Monitor</a></p>
+    </blockquote>
+    <p><a name="Tag-O"></a><big>O</big></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Overview.html">Overview</a></p>
+    </blockquote>
+    <p><a name="Tag-P"></a><big>P</big></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Patterns.html">Patterns</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Persistence.html">Persistence</a></p>
+    </blockquote>
+    <p><b><a name="Tag-Q"></a>Q</b></p>
+    <blockquote>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="QueueManager.html">Queue Manager</a></p>
+    </blockquote>
+    <p><a name="Tag-R"></a><big>R</big></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="ReleaseNotes.html">Release Notes</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="Usage.html">Return Codes</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="RMIAlternatives.html">RMI Alternatives</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="RMIBackground.html">RMI Background</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="RunTime.html">Run Time 
+      Functions</a></p>
+    </blockquote>
+    <p><a name="Tag-S"></a><big>S</big></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Samples.html">Samples</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SchdFail.html">Scheduling Failures</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Scripts.html">Scripts</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Security.html">Security</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUp.html">Set Up</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpBasic.html">Set Up, Basic</a><small>.</small></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpAct.html">Set Up, Activatable Remote Object</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpInternal.html">
+      Set Up Internal, non-RMI Server</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpIIOP.html">Set Up, IIOP</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpBasicIIOP.html">Set Up, Basic IIOP</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpPoaIIOP.html">Set Up, POA IIOP</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpCSF.html">Set Up, Custom Socket Factory</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="SetUpJini2.html">Set Up, Jini2.x</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="Persistence.html#single">Singleton Class</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="StartUpFunctions.html">Start 
+      up User Functions</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Shutdown.html">Shut Down</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Stalled.html">Stalled Requests</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="StartUp.html">Start Up</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Stats.html">Statistics</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Storage.html">Storage Usage</a></p>
+    </blockquote>
+    <p><a name="Tag-T"></a><big>T</big></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="Testing.html">Testing for Developers</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="ThreadMgmt.html">Thread Manager</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyDemoT1.html">TyDemoT1 Test Class</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyDemoT3.html">TyDemoT3 Test Class</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyDemoJiniT1.html">TyDemoJiniT1</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="ThreadNames.html">Thread Names</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Tuning.html">Tuning</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="Tutorial.html">Tutorial</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="TyAltSvr.html">TyAltSvr</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyCfg.html">TyCfg</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyDemoActBase.html">TyDemoActBase</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyDemoJiniDocActBase.html">TyDemoJiniDocActBase</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyFuncData.html">TyFuncData</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyFuncMaint.html">TyFuncMaint</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TymeacInfo.html">TymeacInfo</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TymeacParm.html">TymeacParm</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+      <a href="TymeacReturn.html">TymeacReturn</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyMenu.html">TyMenu</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyNewCopy.html">TyNewCopy</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="TyNewRTNotification.html">TyNewRTNotify</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="TyNewRTLog.html">TyNewRTLog</a></p>
+    <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp;
+    <a href="TyNewRTStats.html">TyNewRTStats</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyNotify.html">TyNotify</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyOverall.html">TyOverall</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyQueData.html">TyQueData</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyQueMaint.html">TyQueMaint</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyQueThd.html">TyQueThd</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyReqStatus.html">TyReqStatus</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyShutdown.html">TyShutdown</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyStalled.html">TyStalled</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyStats.html">TyStats</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TySvrComm.html">TySvrComm</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyVariables.html">TyVariables</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="TyWlData.html">TyWlData</a></p>
+    </blockquote>
+    <p><a name="Tag-U"></a><big>U</big></p>
+    <blockquote>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserClass.html">User Classes Overview</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserFunctions.html">User Function Class</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserQueues.html">User Queue Class</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserVariables.html">User Variables</a></p>
+      <p><img src="Images/magball2.gif" alt="magball2.gif (104 bytes)" width="6" height="6">&nbsp; <a href="UserExits.html">User Exits</a></p>
+    </blockquote>
+    <p><map name="FPMap4">
+    <area href="#top" shape="rect" coords="2, 3, 31, 21">
+    </map>
+    <img src="Images/top2.gif" alt="top2.gif (969 bytes)" border="0" usemap="#FPMap4" width="32" height="22"></p>
+  </blockquote>
+</blockquote>
+
+<hr>
+
+<p><strong>Tymeac</strong> is a trademark of Cooperative Software Systems, Inc.</p>
+
+<p><strong>Java, 100% Pure Java, and all Java-based  </strong> 
+trademarks and logos are trademarks or registered trademarks of Oracle and/or 
+its affiliates. All rights reserved.</p>
+
+<p>&nbsp;</p>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

@@ -1,0 +1,208 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Tymeac Run Time Functions</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1><a name="top"></a>Tymeac Run Time Functions</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This section details the Tymeac functions for<ul>
+      <li><a href="RunTime.html#notify">Notification</a>, </li>
+      <li><a href="RunTime.html#log">Logging</a> and</li>
+      <li><a href="RunTime.html#stats">Statistics</a></li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<h3 style="text-align: justify"><a name="notify"></a><strong>Tymeac Notification </strong></h3>
+
+<blockquote>
+  <p>The <a href="TyNotify.html">notification system </a>is optional. It is 
+  simply a user-written Tymeac Function that Tymeac management classes call when 
+  there is a problem. E.G. The Tymeac Monitor examines the internal structure looking for actual or potential
+  problems.</p>
+  <ul>
+    <li>An actual problem is that all Queue Threads are '<a href="Disabled.html">disabled</a>'.</li>
+    <li>A potential problem is that a thread's processing or wait time is <a href="Disabled.html#five">excessive</a>.</li>
+  </ul>
+  <p>The Tymeac management classes send a <a href="MsgTy03.html">message</a> describing the problem to this
+  Tymeac Function. Further processing is the customer's option.<p>You set this up similarly to any user 
+  Function:<ul>
+    <li>Define a Processing Application Class that accepts a String and does 
+    whatever you want with that String. You must handle the zero length String 
+    since Tymeac Start up sends a zero length String just to make sure the Class 
+    is alive.</li>
+    <li>Define a Queue with one thread.</li>
+    <li>Define a Function with one Queue.</li>
+    <li>Place the name of the Function in the GENERAL section of the <a href="UserVariables.html">Tymeac User Variables</a> (Stand-a-lone) or <a href="TyCfg.html">Configuration
+      File</a> (DBMS).</li>
+  </ul>
+  <p>Tymeac verifies the availability of the Tymeac Function during start up by 
+  sending a zero length message to the Function with a syncRequest(). If any 
+  non-zero return code comes back, then Tymeac disables notification for the 
+  session.</p>
+  <p>Tymeac sends messages to this Function during the session with an 
+  asyncRequest(). If any non-zero return code comes back, then Tymeac disables 
+  notification for the session.</p>
+  <p>Notification is <a href="TyNewRTNotification.html">dynamically alterable</a> 
+  during the session. Therefore, you may repair problems or add notification to the session at 
+  anytime.</p>
+  <p>Tymeac provides a sample notification Function, <a href="TyNotify.html">TyNotify</a>,
+  and sample notification Class, DemoNotify </p>
+</blockquote>
+
+<blockquote>
+  <p style="text-align: justify"><a href="RunTime.html#top">
+  <img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" width="32" height="22"></a></p>
+</blockquote>
+
+<h3 style="text-align: justify"><a name="log"></a>Tymeac Log</h3>
+
+<blockquote>
+  <p>Tymeac uses an internal logging system. Most messages, during the life time 
+  of the Server, are written to the log <b>only if you specify that there is a 
+  log</b>.<p>Tymeac verifies the availability of the log during start up. Tymeac 
+  writes messages to the Log. If there is any error, then Tymeac disables 
+  logging for the session.<p>Logging is <a href="TyNewRTLog.html">dynamically alterable</a> 
+  during the session. Therefore, you may repair or add logging to the session at 
+  anytime.<p>There are three choices for a log medium:<ol>
+    <li>the DBMS LogTable</li>
+    <li>to a local file or&nbsp;</li>
+    <li>to a user class</li>
+  </ol>
+  <p><b>DBMS</b></p>
+  <blockquote>
+  <p>You define a <a href="DBMSLog.html">DBMS table here</a>. You put the 
+  name of the <a href="TyCfg.html">table here</a>. Tymeac will write log 
+  messages to the log.</p>
+  </blockquote>
+  <p><b>Local File</b></p>
+  <blockquote>
+  <p>You put the fully qualified name of the local file in the
+  <a href="TyCfg.html">configuration file or preference data here</a> or in the
+  <a href="UserVariables.html">User Variables Class here.</a> Tymeac will write 
+  log messages to the log.</p>
+  </blockquote>
+  <p><b>User Class</b></p>
+  <blockquote>
+  <p>You define an alternative class that Tymeac may call to pass the message. 
+  See <a href="Alternatives.html">Alternatives</a> for information about where you may
+  put the log.</p>
+  </blockquote>
+  <p>This is optional. The message structure is<a href="Messages.html"> here</a>.</p>
+</blockquote>
+
+<blockquote>
+  <p style="text-align: justify"><a href="RunTime.html#top">
+  <img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" width="32" height="22"></a></p>
+</blockquote>
+
+<h3 style="text-align: justify"><a name="stats"></a>Tymeac Statistics </h3>
+
+<blockquote>
+  <p>Tymeac optionally writes statistics <b>only if you specify that there is a 
+  repository</b>.<p>Tymeac verifies the availability of the repository during 
+  start up. Tymeac writes messages to the repository when required. If there is 
+  any error, then Tymeac disables the statistics repository for the session.<p>Statistics is <a href="TyNewRTStats.html">dynamically alterable</a> 
+  during the session. Therefore, you may repair or add a statistics repository to the session at 
+  anytime.<p>There are three choices for a statistics repository:<ol>
+    <li>the DBMS LogTable</li>
+    <li>to a local file or&nbsp;</li>
+    <li>to a user class</li>
+  </ol>
+  <p><b>DBMS</b></p>
+  <blockquote>
+  <p>You define a<a href="DBMSStats.html"> DBMS table here</a>. You put the 
+  name of the <a href="TyCfg.html">table here</a>. Tymeac will write statistics 
+  to the repository.</p>
+  </blockquote>
+  <p><b>Local File</b></p>
+  <blockquote>
+  <p>You put the fully qualified name of the statistics file in the
+  <a href="TyCfg.html">configuration file or preference data here</a> or in the
+  <a href="UserVariables.html">User Variables Class here.</a> Tymeac will write 
+  statistics to the repository.</p>
+  </blockquote>
+  <p><b>User Class</b></p>
+  <blockquote>
+  <p>You define an alternative class that Tymeac may call to pass the message. 
+  See <a href="Alternatives.html">Alternatives</a> for information about where you may
+  put the repository.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p style="text-align: left">Statistics are available by three methods.</p>
+  <ol style="text-align: left">
+    <li>
+  At shut down,
+    </li>
+    <li>
+  at de-activation and
+    </li>
+    <li>
+  on request.
+    </li>
+  </ol>
+</blockquote>
+
+<blockquote>
+  <p style="text-align: justify"><strong>Shut Down</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Tymeac shut down, optionally, writes statistics to the repository.&nbsp;The Statistics
+    are written after all Tymeac Queue Threads stop processing.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p style="text-align: justify"><strong>De-activation</strong></p>
+  <blockquote>
+    <p style="text-align: justify">Tymeac <a href="TyCfg.html#activate">inactivation</a>
+    optionally, writes statistics to the repository.&nbsp;The Statistics are written after the
+    inactivation period expires.</p>
+    <blockquote>
+      <p>The activation framework is ideal for unattended use. Tymeac starts and ends only when
+      necessary.&nbsp;Each time Tymeac deactivates, it writes the statistics for the session to
+      the repository.&nbsp;In this way system personnel may monitor the sessions use and
+      possibly adjust the deactivation time.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p style="text-align: justify"><strong>On Request</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>The On Request statistics Class is <a href="TyStats.html">TyStats</a>.&nbsp; Press the
+    button. The Class writes statistics to the repository.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p style="text-align: justify"><strong><a href="Stats.html">Message Structure</a> </strong></p>
+</blockquote>
+
+<blockquote>
+  <p><a href="RunTime.html#top">
+  <img src="Images/top2.gif" alt="top2.gif (202 bytes)" border="0" width="32" height="22"></a></p>
+</blockquote>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

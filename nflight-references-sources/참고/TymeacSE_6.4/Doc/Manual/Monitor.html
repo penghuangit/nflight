@@ -1,0 +1,220 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Tymeac Monitor</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1><a name="top"></a>Tymeac Monitor</h1>
+
+<hr color="#000000" width="20%">
+
+<blockquote>
+  <p>Tymeac is a pure application.&nbsp;There are no hooks, no operating system exits, nor
+  special Java programs. This is in order that Tymeac may run without interfering with any
+  existing exit routine and may run on any future release of RMI without modification.</p>
+</blockquote>
+
+<blockquote>
+  <p>Without accessing internal Java tables or using operating system exit routines a
+  monitor facility is necessary for the use of <a href="#Threads">asynchronous threads</a>.</p>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac start-up starts the Monitor Thread when the <a href="TyCfg.html#interval">monitor
+  interva</a>l is greater than zero (use zero for testing when you need to trap 
+  threads.)&nbsp;When the Monitor finds possible problems it <a href="RunTime.html#log">logs</a>&nbsp; messages. Therefore, the interval should be long
+  enough not to interfere with normal execution.&nbsp;We recommend starting this interval at
+  <u><strong>60 seconds</strong></u>. Your processing requirements determine the final
+  value.</p>
+</blockquote>
+
+<blockquote>
+  <p>The Monitor Thread examines each Queue.&nbsp;The code uses the Monitor Interval, or,
+  one minute if the interval is less, as the time interval in determining when there may be
+  a problem.</p>
+  <blockquote>
+  <p>You may alter the monitor interval at runtime by using the
+  <a href="TyAltSvr.html">Alter Server Options</a> GUI. You may not alter this 
+  value if you specified zero, above, since the monitor would not be running. 
+  Also, altering the monitor interval after start up will have no affect on 
+  determining when there may be a problem since these values are only set at 
+  start up.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac keeps track of the time of <a href="Disabled.html#five">several events</a>.</p>
+</blockquote>
+
+<blockquote>
+  <p>The Monitor examines each Wait List entry for a non performing Queue, i.e., no Queue
+  Thread busy, posted, activated, or waiting, and, when an Asynchronous Request, it adds an
+  entry to the <a href="Stalled.html">Stall Array</a>.</p>
+</blockquote>
+
+<blockquote>
+  <p><a name="sync"></a>The Monitor purges Synchronous Requests that exceed the wait_time
+  (set in the <a href="TymeacParm.html">parameter</a> passed to Tymeac Server) by an
+  excessive amount.</p>
+  <blockquote>
+    <p>The amount is release dependent. However, it is always several times the wait_time
+    parameter, or, twice the Monitor interval, whichever is greater.</p>
+    <p>The logic here is that the caller is only willing to wait for the wait_time. Anything
+    that happens thereafter is no longer relevant to the caller. Since the request is
+    irrelevant, off with its head.</p>
+    <p>Since there is a delay in purging a timed-out request, one may see the count of
+    synchronous requests greater then those actually present in the system when viewing the
+    overall Tymeac environment, <a href="TyOverall.html">TyOverall</a>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p>The Monitor purges Asynchronous Requests that were possibly stalled and 
+  then finished.</p>
+  <blockquote>
+  <p><a href="Stalled.html">See here for more detail on this.</a></p>
+  </blockquote>
+  <p>The Monitor also purges requests that were cancelled but some Queues were still 
+    executing at the time of the cancel.</p>
+  <blockquote>
+  <p>These may be both Synchronous or Asynchronous requests. For instance, you 
+  cancel a request with three queues.</p>
+  <ul>
+    <li>Queue-1 already completed.</li>
+    <li>Queue-2 is executing.</li>
+    <li>Queue-3 hasn't started and Tymeac removes the request from that queue.</li>
+  </ul>
+  <p>Since one Queue is busy, Tymeac cannot free the resources until that 
+  executing Queue finishes. The Queue Thread itself will try to free the 
+  resources when it finishes, but this doesn't always happen. Hence, the Monitor 
+  to the rescue.</p>
+  </blockquote>
+  <p>The Monitor handles the <a href="Shutdown.html#NB">de-activation procedure</a> 
+  for an Activatable Server.</p>
+  <p><b>You simply cannot run without the Monitor Thread in a production 
+  environment.</b></p>
+  <blockquote>
+  <p>When things go wrong or when requests time-out or are cancelled 
+  it is the Monitor Thread that cleans up the environment.</p>
+  <p>Therefore, the Monitor Thread has an uncaught exception handler that shuts 
+  down Tymeac when invoked. The handler tries several times to shut down 
+  normally, then forces shut down. (See the <a href="Shutdown.html">shut down 
+  document</a> for shut down details.)</p>
+  </blockquote>
+  <p>The messages are <a href="MsgTy03.html">here</a>.</p>
+</blockquote>
+
+<h3 style="text-align: justify"><a name="details"></a>Details</h3>
+
+<blockquote>
+  <p>Tymeac performs two important services as a Backend Server:</p>
+  <ol>
+    <li>memory management and </li>
+    <li>thread management.</li>
+  </ol>
+  <h4 style="text-align: justify">Memory management</h4>
+  <blockquote>
+    <p>When Tymeac receives a new request it must save the parameters of that request for the
+    Queues (basically the input Object from the client.) Tymeac also allocates resources to
+    keep track of the progress of the request. Tymeac saves the output Objects from the Queues
+    to return to the requester (synchronous request) or to pass on to the Output Agent
+    (asynchronous request.)</p>
+    <p style="text-align: justify">Normally, the End-Point Connection thread<sup><a href="#f1" style="text-decoration: none; font-weight:700">1</a>
+    </sup>handles the allocation of resources.</p>
+    <p style="text-align: justify">For synchronous requests this thread also handles the
+    freeing of resources (making available to the garbage collector.)</p>
+    <p style="text-align: justify">However, when a synchronous request times-out or is
+    cancelled the following occurs:<ol>
+      <li>Tymeac attempts to back out<sup><a href="#f2" style="text-decoration: none; font-weight:700">2</a></sup> all the Queues that have not
+        finished processing.</li>
+      <li>Tymeac forms a return Object array containing the Objects from the completed Queues.</li>
+      <li>All the resources (Tymeac storage, client input Object, Queue output Objects) remain <em>in
+        case a currently executing Queue Thread needs access to any resource</em>.</li>
+    </ol>
+    <p style="text-align: justify">It is the Monitor that eventually cleans up this storage.</p>
+    <p style="text-align: left">For asynchronous requests the last Queue Thread to finish
+    in the request handles the freeing of resources (making available to the garbage
+    collector.)</p>
+    <p style="text-align: left">However, when an asynchronous request fails scheduling or
+    stalls, the resources remain. See the <a href="Stalled.html">Stall Array</a>.</p>
+    <p style="text-align: justify">Once again, it is the Monitor that eventually cleans up
+    this storage.</p>
+  </blockquote>
+  <h4 style="text-align: justify"><a name="Threads"></a>Thread management</h4>
+  <blockquote>
+    <p>Multi-threading is a potential nightmare.&nbsp;The only truly effective way to control
+    a thread of execution is at the operating system level. Time slicing, preempting,
+    prioritizing, recognizing the stall, etc. -- these functions are most difficult to control
+    at the thread level.</p>
+    <p>In an applet or GUI application multi-threading is both easy and safe. If a thread
+    hangs or misbehaves, simply close the window and start over. Using a separate thread as a
+    listener is preferable.</p>
+    <p>It is on the server side that multi-threading can get out of control. Threads can hang,
+    abnormally terminate or stall and the client may never know. It is for these reasons that
+    Tymeac <a href="Disabled.html#five">times</a> the functions in the<a href="Tuning.html#cycle"> life of a thread</a>.</p>
+    <p>Since Tymeac has no operating system hooks, the next best way to control the threads on
+    a backend Server is with a Monitor<sup><a href="#f3" style="text-decoration: none; font-weight:700">3</a></sup> thread.</p>
+    <p>It is the Monitor that examines the Tymeac threading environment, flags potential
+    problems and notifies users through the <a href="TyNotify.html">Notification Function</a>.</p>
+  </blockquote>
+  <hr noshade size="3">
+    <table border="0" cellpadding="0" cellspacing="0" width="686" style="border-collapse: collapse" bordercolor="#111111">
+    <tr>
+      <td width="9" valign="top" align="left"><b><sup>
+      <span style="letter-spacing: 2; vertical-align: super">1</span><sup>&nbsp;&nbsp; </b>
+      </sup></sup></td>
+      <td width="674"><a name="f1"></a>For the remote server, this is the daemon 
+      thread of execution that runs the implementation of the Tymeac<br>
+      Interface.&nbsp;Java creates this thread in response to the RMI request from a 
+      client.<br>
+      For the internal server, this is the Client thread.<br>
+&nbsp;</td>
+    </tr>
+  </table>
+  <div align="left">
+    <table border="0" cellpadding="0" cellspacing="0" width="686" style="border-collapse: collapse" bordercolor="#111111">
+    <tr>
+      <td width="9" valign="top" align="left"><b><sup>
+      <span style="letter-spacing: 2; vertical-align: super">2</span><sup>&nbsp;&nbsp;
+      </sup></sup>
+      </b></td>
+      <td width="658"><a name="f2"></a>Back-out occurs when a Back-out occurs 
+      when a Queue, within a Function, <a href="SchdFail.html">fails scheduling</a>. <br>
+      The Tymeac Server informs all previously scheduled Queues to ignore 
+      processing.&nbsp;<br>
+      If the request is in a Wait List, then Tymeac removes that entry.<br>
+&nbsp;</td>
+    </tr>
+  </table>
+  </div>
+    <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+    <tr>
+      <td width="9" valign="top" align="left"><b><small><sup>
+      <font size="3"><span style="letter-spacing: 2; vertical-align: super">3</span><sup>&nbsp;&nbsp; </font>&nbsp;</sup></sup></small></b></td>
+      <td><a name="f3"></a>The Monitor runs as a daemon thread for the Internal 
+      Server and non-daemon otherwise. <br>
+      We see no advantage to daemon since with RMI there are&nbsp;&quot;keep alive&quot; 
+      threads. Additionally,<ul>
+        <li>The non-activatable Servers all issue a never ending wait() to 
+        protect resources from garbage collection</li>
+        <li>The shutRequest() starts the shut down thread which destroys the JVM.
+        </li>
+        <li>The activatable servers deactivate and destroy the JVM.</li>
+      </ul>
+      </td>
+    </tr>
+  </table>
+</blockquote>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

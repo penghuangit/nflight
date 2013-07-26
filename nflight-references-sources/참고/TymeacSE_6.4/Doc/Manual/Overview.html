@@ -1,0 +1,254 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Product Overview</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Product Overview</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <blockquote>
+          <p>This section gives an overview of the Tymeac product.&nbsp; <a href="Definitions.html">Definitions</a>
+          are the Tymeac terms used throughout this manual.</p>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h2>Processing Overview</h2>
+
+<blockquote>
+  <div align="left"><table border="0" cellspacing="1">
+    <tr>
+      <td align="left" valign="top"><big>Tymeac provides a</big><ul type="square">
+        <li><p ALIGN="left">prioritized queuing facility and</p>
+        </li>
+        <li><p ALIGN="left">high-quality thread management in a</p>
+        </li>
+        <li><p ALIGN="left">[separate JVM | internally] with a</p>
+        </li>
+        <li><p ALIGN="left">minimal footprint that is</p>
+        </li>
+        <li><p ALIGN="left">easy to use.</p>
+        </li>
+      </ul>
+      </td>
+      <td></td>
+      <td><img src="Images/Tymeac3.gif" alt="Tymeac3.gif (2927 bytes)" width="142" height="271">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      <img src="Images/Tymeac4.gif" alt="Tymeac4.gif (2332 bytes)" width="142" height="179"></td>
+    </tr>
+  </table>
+  </div>
+</blockquote>
+
+<blockquote>
+  <h3>Tymeac is</h3>
+  <ul>
+    <li>
+  <p align="left">a <a href="../Brochure/Bjorb.html">Backend Process Manager</a>.&nbsp;Backend
+  processes, with their application threads, are a means to isolate functions or perform
+  common procedures outside the client domain.</p>
+    </li>
+    <li>
+  <p align="left">a <a href="../Brochure/whymgr.html">Container</a> that manages 
+  persistence, messaging, logging, the user interface and much more<font color="#000080">.</font></p>
+    </li>
+    <li>
+  <p align="left">a <a href="CT.htm">Component Architecture</a>.&nbsp;Components
+  need a means for scheduling, monitoring and linking together.&nbsp;Tymeac is a
+  multi-threading, component architecture into which you may easily plug your components.</p>
+    </li>
+    <li>
+  <p align="left">a high-quality <a href="ThreadMgmt.html">Thread Manager</a> and
+  <a href="QueueManager.html">Queue Manager</a>.</p>
+    </li>
+    <li>
+  <p align="left"> <a href="ForkJoin.html">Fork-Join</a> logic to the next level.</p>
+    </li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p>Evolving from these intrinsic properties are myriad features without 
+  limitation. The well managed, fault tolerant application components are 
+  unrestricted in any task.</p>
+</blockquote>
+
+<blockquote>
+  <h3 ALIGN="left"><strong style="font-weight: 400">Three Tymeac Server methods are available for 
+  clients:</strong></h3>
+  <ol>
+    <li>
+    <p ALIGN="left">syncRequest() -- Request with wait for completion. (A <a href="Cancel.html#sync">method</a> is available to cancel this call.)</p>
+    </li>
+    <li>
+    <p ALIGN="left">asyncRequest() -- Request without waiting for completion. (A <a href="Cancel.html#async">method</a> is available to cancel this call.)</p>
+    </li>
+    <li>
+    <p ALIGN="left">shutRequest()&nbsp; -- Shut down the Tymeac Server.</p>
+    </li>
+  </ol>
+  <hr>
+</blockquote>
+
+<blockquote>
+  <p>Tymeac Queues and Functions are the base of Tymeac processing.</p>
+  <blockquote>
+    <p>A Queue is the framework for processing each component of the request.&nbsp;The major
+    framework elements are the Queue's Threads, Wait Lists, and the user-written Processing
+    Application Class that executes the code.&nbsp;You define each <u>Queue</u> 
+    with its elements using a simple GUI.</p>
+    <p align="center"><img src="Images/QWLT3.gif" alt="QWLT3.gif (4584 bytes)" width="343" height="278"></p>
+  </blockquote>
+  <blockquote>
+    <p>A Function is simply a user-determined name and a list of <u>Queues</u> needed to
+    complete the request. You define each <u>Function</u> using a simple GUI. By knowing the list of <u>Queues</u> associated
+    with each <u>Function</u>, Tymeac is able to separate the request into its component
+    parts.</p>
+    <p align="center"><img src="Images/TyF.gif" alt="TyF.gif (2230 bytes)" width="193" height="121"></p>
+  </blockquote>
+  <p>At the lowest level is your <u><em>Processing Application Class</em></u>. This is the
+  code you write to process the specifics of the application.</p>
+  <p>A Tymeac Queue Thread uses reflection to invoke the main() method of your class.<br>
+  Your <u>Processing Application Class</u> is part of a <u><em>Queue</em></u>.<br>
+  The Queue is part of a <u><em>Function</em></u>.</p>
+  <p>Think of the <u>Processing Application Class</u> as a plug-in or component. In this way
+  you may write applications that simply plug in to a threading environment.</p>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>(<a href="Develop.html">Developing your Systems</a> (which is beyond the scope of an
+        overview) describes this in detail.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <p ALIGN="JUSTIFY">How it works:</p>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li><p align="left">You develop the<a href="TymeacParm.html"> parameters</a> for a Tymeac
+      request in your Client application.</p>
+    </li>
+    <li><p align="left">You pass the request (parameter) to the Tymeac Server either directly
+      when using the internal server or remotely when using RMI, IIOP, Jini etc).</p>
+    </li>
+    <li><p align="left">The Tymeac Server separates the request (<u>Function</u>) into its
+      component parts (<u>Queues</u>) and schedules the request on each <u>Queue</u>.</p>
+    </li>
+    <li><p align="left">A Thread within each <u>Queue</u> picks up the request and invokes your <u>Processing
+      Application Class</u> passing it the input message from the <u>parameter</u> of the
+      original request.</p>
+    </li>
+    <li><p align="left">The Tymeac Server collects the return Objects from the <u>Processing
+      Application Classes</u> and presents this response to the requesting client for
+      Synchronous Requests, or, [optionally] further schedules the <a href="Definitions.html#oa">Output
+      Agent</a> for Asynchronous Requests.</p>
+    </li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p>The following is a functional overview of Tymeac processing for a single request.</p>
+</blockquote>
+
+<hr size="4" noshade>
+
+<p ALIGN="center">For Request with wait processing, (<strong>Synchronous Request</strong>):
+</p>
+
+<blockquote>
+  <p ALIGN="JUSTIFY">The client application class invokes the Synchronous Request Method on
+  the Tymeac Server.</p>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li><p align="left">The Tymeac Server determines the list of Queues for this Tymeac Function
+      and schedules the request on each Queue.</p>
+    </li>
+    <li><p align="left">A thread on each Queue uses Reflection to invoke the Processing
+      Application Class for the Queue.</p>
+    </li>
+    <li><p align="left">As each thread finishes processing, the return Object, if any, from the
+      Processing Application Class, moves to a common buffer.</p>
+    </li>
+    <li><p align="left">The Tymeac Server 
+      waits until either all Queue Threads finish processing or a time-out occurs.</p>
+    </li>
+    <li><p align="left">The Tymeac Server then returns the concatenated Object array from all Queue&#146;s
+      back to the client application.</p>
+    </li>
+  </ul>
+  <p align="left">&nbsp;</p>
+</blockquote>
+
+<p ALIGN="center"><img src="Images/fig122.gif" alt="fig122.gif (7071 bytes)" width="298" height="434"></p>
+
+<hr noshade size="4">
+
+<p ALIGN="center">For Request without wait processing, (<strong>Asynchronous Request</strong>):
+</p>
+
+<blockquote>
+  <p ALIGN="JUSTIFY">The client application class invokes the Asynchronous Request Method on
+  the Tymeac Server.</p>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li><p align="left">The Tymeac Server determines the list of Queues for this Tymeac
+      Function, schedules the request on each Queue and returns an &quot;in progress' 
+    message to the client application.</p>
+    </li>
+    <li><p align="left">A thread on each Queue uses Reflection to invoke the Processing
+      Application Class for the Queue.</p>
+    </li>
+    <li><p align="left">As each thread finishes processing, the return Object, if any, from the
+      Processing Application Class, moves to a common buffer.</p>
+    </li>
+    <li><p align="left">When the last Queue Thread finishes processing (the order of which is
+      irrelevant) that Queue Thread [optionally] schedules the Output Agent Queue (like 
+    another asynchronous request).</p>
+    </li>
+    <li><p align="left">The user-written Processing&nbsp; Application Class may then further
+      process the concatenated return Objects of the prior processing. This may 
+    involve passing a final result to the original client on the network.</p>
+    </li>
+  </ul>
+</blockquote>
+
+<p ALIGN="JUSTIFY">&nbsp;</p>
+
+<p ALIGN="center"><img src="Images/fig123.gif" alt="fig123.gif (9135 bytes)" width="565" height="434"></p>
+
+<hr noshade size="4">
+
+<h3 ALIGN="JUSTIFY"><a href="ex1.html">Examples</a></h3>
+
+<p ALIGN="JUSTIFY">We provide expounded and exemplified detail to our Product description
+sections, Essentials and Benefits:</p>
+
+<blockquote>
+  <h4 ALIGN="JUSTIFY"><a href="Essentials.html">Essentials Expounded</a></h4>
+  <h4 ALIGN="JUSTIFY"><a href="Benefits.html">Benefits Exemplified</a></h4>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

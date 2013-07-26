@@ -1,0 +1,128 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Function Maintenance</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Function Maintenance,<br>
+&nbsp;&nbsp;&nbsp;&nbsp; com.tymeac.client.jframe.TyFuncMaint</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This is the means to add, change and delete Tymeac Functions. </p>
+  </blockquote>
+  <blockquote>
+    <p>This Class requires <ul>
+      <li>A Data Base Management System,</li>
+      <li>A Function Table set up according to <a href="DBMSFunc.html">this</a>,</li>
+      <li>A List Table set up according to <a href="DBMSList.html">this</a>,</li>
+      <li>The <a href="TyCfg.html">Configuration File</a> so that it may find the DBMS names.</li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<hr noshade size="3" width="80%">
+
+<p align="center"><a href="Images/TyFuncMaint.jpg"><img src="Images/TyFuncMaint_small.jpg" alt="TyFuncMaint.jpg (36390 bytes)" border="2" WIDTH="100" HEIGHT="77"></a>&nbsp; (click to link to full image)</p>
+
+<h3><strong>Elements</strong></h3>
+
+<blockquote>
+  <p><strong>Function Name</strong> -- This is a String.&nbsp;Any unique sequence. However,
+  please see how to <a href="FuncNaming.html">name Functions</a> and the Function name
+  checking class, FunctionChecker in the <a href="Samples.html">sample</a> code.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Output Agent Queue (optional)</strong> -- The name of the Output Agent Queue
+  for this Function, if any. This Queue must exist in the DBMS <a href="DBMSQue.html">Queue
+  Table</a>, as an <u>Output Agent Queue</u>, see Queue Maintenance, <a href="TyQueMaint.html">TyQueMaint</a>.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Queue Name to Add</strong> -- The name of a Queue to add to the list. This
+  Queue must exist in the DBMS <a href="DBMSQue.html">Queue Table</a> as a <u>normal Queue</u>,
+  not as an Output Agent Queue, see Queue Maintenance, <a href="TyQueMaint.html">TyQueMaint</a>.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Queue List</strong> -- This is a List of the Queue Names associated with this
+  Function.&nbsp;Tymeac schedules Queues in the order found here.&nbsp; However, as with all
+  asynchronous processing, execution variables determine dispatching and completion.</p>
+</blockquote>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>IMPORT</strong> -- The button brings up the FileDialog Menu for the
+  Configuration File.&nbsp;Once this file is accessed, the current Function is read from the
+  DBMS and the elements are filled in.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>DELETE</strong> -- This button deletes the current Function.&nbsp;When there is
+  no current function, it brings up the FileDialog Menu for the Configuration File, verifies
+  the existence of the Function, and deletes it.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>ADD</strong> -- This button adds a Queue to the list.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>REMOVE</strong> -- This button removes the <strong>selected</strong> Queue from
+  the list .</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>FINISH</strong> -- This button updates the DBMS Function and List Tables.</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> This is an information message.</p>
+
+<blockquote>
+  <p><u>Function Deleted</u> -- The function was deleted.</p>
+  <p><u>Configuration File not found </u>-- The FileDialog chosen file did not exist or was
+  not in the proper format.</p>
+  <p><u>Invalid Function Name for delete | update | import</u> --&nbsp; The Function does
+  not exist.</p>
+  <p><u>Function Data Base error</u> -- A DBMS error occurred. Check the console for
+  additional information.</p>
+  <p><u>List not found error</u> -- The List of Queue's for this Function could not be
+  found.&nbsp;This is probable a DBMS error on the List Table. Check the console for
+  additional information.</p>
+  <p><u>List Data Base error</u> --&nbsp; This is a DBMS error on the List Table. Check the
+  console for additional information.</p>
+  <p><u>Successful</u> -- The requested procedure completed successfully.</p>
+  <p><u>List is empty</u> -- The List of Queue's for this Function could not be found. This
+  is probable a DBMS error on the List Table. Check the console for additional information.</p>
+  <p><u>Function could not be added</u> -- This is probable a DBMS error. Check the console
+  for additional information.</p>
+  <p><u>Make changes</u> -- The current Function is available for changes.</p>
+  <p><u>Function/List mismatch error</u> -- The List of Queue's for this Function could not
+  be found.&nbsp;This is probable a DBMS error on the List Table.&nbsp;Check the console for
+  additional information.</p>
+  <p><u>Output Agent Queue invalid</u> -- This Queue does not exist on the DBMS Queue Table.</p>
+  <p><u>Selected Queue invalid</u> -- This Queue does not exist on the DBMS Queue Table.</p>
+  <p><u>Queue Data Base Error</u> -- This is a DBMS error on the Queue Table.&nbsp;Check the
+  console for additional information.</p>
+  <p><u>Function already exists</u> -- You cannot add an existing function or make changes
+  to an existing function without first importing it.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

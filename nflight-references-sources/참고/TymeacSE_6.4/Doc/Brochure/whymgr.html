@@ -1,0 +1,259 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<title>Why use a manager</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/wheat.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1 align="center">Why use a container?</h1>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p><font color="#000080">Why are EJB, Servlet and GUI
+      application so successful?&nbsp; Because they run inside a container; a framework that
+      manages persistence, messaging, thread management, logging, the event queue, the user
+      interface and much more.</font></p>
+      <p><font color="#000080">A Backend Server
+      doesn't have a similar application container to manage queues, threads, messaging, logging
+      and more.</font></p>
+    <p><font color="#000080">Developers who construct
+    backend applications know that it is first necessary to build a
+    framework in which the application lives.</font></p>
+    <p align="left" style="text-align: justify"><font color="#000080">Tymeac<sup><font size="2">™</font></sup> 
+    is that manager.</font></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="right"><font color="#000080">[ </font><a href="details2.html">need more details?</a><font color="#000080"> ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;<br>
+[ </font><a href="details3.html">need meticulous details<font color="#000080">?</a> ]</font></p>
+
+<p align="center"><em><big><big>-- Essence --</big></big></em></p>
+
+<p align="center"><a href="#appl">Application Threads</a>&nbsp; <big><strong><big>|</big></strong></big>
+&nbsp; <a href="#parallel">Parallelism</a>&nbsp; <strong><big><big>|</big></big></strong>
+&nbsp; <a href="#persist">Persistence</a>&nbsp; <strong><big><big>|</big></big></strong>
+&nbsp; <a href="#recur">Recursion</a>&nbsp; <strong><big><big>|</big></big></strong>
+&nbsp; <a href="#debug">Debugging, Recovery, Tuning</a>&nbsp;&nbsp; <strong><big><big>|</big></big></strong>
+&nbsp; <a href="#picture">Overall Picture</a></p>
+
+<p align="center">&nbsp;</p>
+
+<blockquote>
+  <p><a name="appl"></a>
+  <img src="Images/whitedot.gif" alt="whitedot.gif (103 bytes)" width="12" height="12">&nbsp;
+  Two common uses for application threads on a Backend Server are the timing of requests and
+  the autonomous request, with or without callback.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h4>Timing:</h4>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>When timing a request, the Client thread cannot time itself.&nbsp; If it gets caught in
+      a long or never ending loop then it may not be able to break out of the code when the time
+      expires. &nbsp; Therefore, it is necessary for the Client thread to start a new
+      application thread.&nbsp; The Client thread may time the new thread and if the time
+      expires the request does not complete.</p>
+      <p>This seems simple enough.&nbsp; However, there are serious problems with this approach.</p>
+      <blockquote>
+        <p>For every request there is a new application thread. The VM must create and destroy
+        every thread.&nbsp; This overhead puts a severe strain on resources.&nbsp; There may come
+        a time when the VM cannot sustain any more threads and the entire VM becomes unusable.</p>
+        <blockquote>
+          <p style="text-align: justify">[Some developers may put the timing code in the client.
+          &nbsp; Rather than have a standard timing mechanism on the server, each client application
+          must add proprietary timing code.] </p>
+        </blockquote>
+        <p>What happens to the threads that time-out?&nbsp; If there is problem with a resource
+        that the threads require before completing, then, once again, there may come a time when
+        the VM cannot sustain any more threads and the entire VM becomes unusable.</p>
+        <blockquote>
+          <p style="text-align: justify">[Even with the timing code in the client, the Client
+          threads still hang.]</p>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <h4>Autonomous requests:</h4>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The only way to schedule this background task is to start a new application thread and
+      inform the client that the request is pending.</p>
+    </blockquote>
+    <blockquote>
+      <p>Again, this seems simple enough.&nbsp; Again, there are serious problems with this
+      approach.</p>
+      <blockquote>
+        <p style="text-align: justify">The thread overload problem is the same as with the timed
+        request, above.</p>
+      </blockquote>
+      <blockquote>
+        <p style="text-align: justify">The thread stall problem, as above, is even more serious.
+        Since there is no time-out, the clients never know there is a problem.</p>
+      </blockquote>
+      <blockquote>
+        <p style="text-align: justify">Clients waiting for a notification need a way to inquire of
+        the status of their request.</p>
+      </blockquote>
+    </blockquote>
+    <p>To handle these problems one must manage the application environment.<ul>
+      <li>There must be a thread-limit parameter to avoid thread overload.&nbsp; There should be a
+        queuing mechanism with thread initiation according to load, not chance.</li>
+      <li>There must be a way to notify clients before the situation gets out of control.</li>
+      <li>There must be a way to dynamically alter the parameters as business needs change.</li>
+    </ul>
+    <p><strong>Tymeac<small><sup>&#153;</sup></small></strong> is that manager.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p><a name="parallel"></a>
+  <img src="Images/whitedot.gif" alt="whitedot.gif (103 bytes)" width="12" height="12">&nbsp;
+  Another use for application threads on a Backend Server is parallelism.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h4>Parallelism:</h4>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Often a request requires more than a simple compute or fetch from a resource. The
+      request may need several methods.&nbsp; For linear programming, one method simply follows
+      the other.&nbsp; However, by making each method a thread, one may take advantage of
+      multi-programming and multi-processing capable machines.</p>
+      <p>Creating a thread for each method in Java<small><sup>&#153;</sup></small> is very easy.</p>
+      <blockquote>
+        <p>However, all the problems with threads mentioned above are relevant here as well.&nbsp;
+        In addition, the Client thread must now monitor multiple application threads and
+        concatenate any return values from these threads for the client.</p>
+      </blockquote>
+    </blockquote>
+    <p>To handle these problems one must design a full-feature application manager.</p>
+    <p style="text-align: justify"><strong>Tymeac<small><sup>&#153;</sup></small></strong> is
+    that manager.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p><a name="persist"></a>
+  <img src="Images/whitedot.gif" alt="whitedot.gif (103 bytes)" width="12" height="12">&nbsp;
+  The Backend Server environment is persistent.&nbsp;Applications can take advantage of this
+  persistence to store common variables that drive processing</p>
+  <blockquote>
+    <h4>Persistence:</h4>
+    <blockquote>
+      <p>Could you use connection pools for your JDBC work thereby saving cycles and
+      memory?&nbsp; Could you use common storage to keep track of how many messages are
+      outstanding within a Message Queuing start/stop sequence?&nbsp; Could you use common
+      storage as a work area between threads?</p>
+      <p>Managing the common variables including how threads access and update that storage
+      requires a great deal of time and effort outside the pure application development area.</p>
+    </blockquote>
+    <p>To handle persistent storage properly one must manage the Backend Server environment.</p>
+    <p style="text-align: justify"><strong>Tymeac<small><sup>&#153;</sup></small></strong> is
+    that manager.</p>
+  </blockquote>
+  <p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  <p><a name="recur"></a>
+  <img src="Images/whitedot.gif" alt="whitedot.gif (103 bytes)" width="12" height="12">&nbsp;
+  Recursion is one of the most useful techniques and sometimes the most difficult to
+  implement.</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h4>Recursion:</h4>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>When the current process itself requires another asynchronous process, the effort
+      required in keeping track of allocated storage, time-out, back-out, etc., means that
+      designers usually chose some other, less efficient method.</p>
+    </blockquote>
+    <p>To handle recursion one must manage the entire application environment.</p>
+    <p style="text-align: justify"><strong>Tymeac<small><sup>&#153;</sup></small></strong> is
+    that manager.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p><a name="debug"></a>
+  <img src="Images/whitedot.gif" alt="whitedot.gif (103 bytes)" width="12" height="12">&nbsp;
+  Debugging, Recovery and Tuning on a Backend Server can be a developer's worst nightmare.</p>
+  <blockquote>
+    <h4>Debugging:</h4>
+    <blockquote>
+      <p>How does one trap the application thread when one doesn't know which thread is
+      currently handling this request?&nbsp; There is always trial and error.&nbsp; There is
+      always println().&nbsp; There is always setting a breakpoint at the beginning of the code
+      and walking all the way through.</p>
+    </blockquote>
+    <h4 style="text-align: justify">Recovery:</h4>
+    <blockquote>
+      <p>Recovery assumes that one is in control of the situation, catches the exception,
+      backs-out valuable resources and restores the proper state. &nbsp; Without a proper
+      management facility, the assumption is false.</p>
+    </blockquote>
+    <h4 style="text-align: justify">Tuning:</h4>
+    <blockquote>
+      <p>Tuning starts with designing for tuning.&nbsp; Without tuning as a prime thought in the
+      design phase, there is no tuning in the execution stage. &nbsp; Throwing hardware at the
+      problem, (E.G. adding more memory, more file space, etc.), only works for a while.</p>
+    </blockquote>
+    <p>To handle these problems requires a total management package.</p>
+    <p style="text-align: justify"><strong>Tymeac<small><sup>&#153;</sup></small></strong> is
+    that manager.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p><a name="picture"></a>
+  <img src="Images/whitedot.gif" alt="whitedot.gif (103 bytes)" width="12" height="12">&nbsp;
+  A picture is worth a thousand words.</p>
+  <blockquote>
+    <h4>Picture:</h4>
+    <blockquote>
+      <p>What is the status of an autonomous request?&nbsp; What requests are stalled?&nbsp;
+      What is the current thread load?&nbsp; How many requests are currently backed up?&nbsp;
+      Can we get a &quot;snap shot&quot; of the overall queuing environment usage?&nbsp; Is
+      there a log?&nbsp; Etc.</p>
+      <blockquote>
+        <p>Building these pictures requires so much effort on the part of the development team
+        that it overshadows the service it is meant to serve.</p>
+      </blockquote>
+    </blockquote>
+    <p><strong>Tymeac<small><sup>&#153;</sup></small></strong> is a manager that provides
+    logging and statistics as well as dozens of GUI and non-GUI classes to give administrators
+    not only a picture of the environment but the means to alter that environment.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

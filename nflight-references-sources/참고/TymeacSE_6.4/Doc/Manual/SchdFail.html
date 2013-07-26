@@ -1,0 +1,131 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Scheduling Failures</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Scheduling Failures</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This section discusses the common reasons why Tymeac Queues fail to schedule.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Scheduling failures (<a href="Usage.html#rc">return code</a> greater than zero) come
+    under these categories: </p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <ul>
+      <li>Shut Down,</li>
+      <li>Time-out,</li>
+      <li>No available Wait List, and&nbsp; </li>
+      <li>No available thread.</li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<hr width="60%" noshade>
+
+<blockquote>
+  <p><b>Shut down</b><br>
+  Tymeac is shutting down.</p>
+  <blockquote>
+  <p>If shut down comes in the middle of scheduling queues for a request, then 
+  the queue that failed scheduling is identified on the return code. Tymeac 
+  attempts to back out the queues that scheduled normally, but there are no 
+  guarantees.</p>
+  <p>If shut down comes during a recursive call, then Tymeac does the same as 
+  above. However, this may have a seriously negative affect on your logic.</p>
+  <p>If shut down comes during scheduling of an Output Agent Queue, the only 
+  time this fails is when the shut down is by force. The Queue in failure stalls 
+  the request. There is no recovery for this situation since no new threads may 
+  be created during forced shut down. You may use the <a href="TyStalled.html">
+  Stalled request </a>display to purge the request or use the
+  <a href="Shutdown.html#kill">shut-kill request</a> to terminate the Server.</p>
+  </blockquote>
+  <p><a name="timeout"></a><strong>Time-out</strong>, <br>
+  for <a href="Definitions.html#sync">Synchronous Requests</a>, means that all components
+  (Queues) of the request did not finish within the interval requested. Tymeac starts timing
+  the request <u>after scheduling all Queues</u>.&nbsp;If, at the moment of expired time,
+  the last Queue finishes, then there is no time-out. (See the
+  <a href="Usage.html#timeout">return code</a> to your application for an 
+  important message about the return objects.) The time-out interval is unique for
+  each request and is the user's responsibility to adjust.</p>
+  <blockquote>
+    <p>For peak processing periods, an
+    increase in the wait time may be sufficient.&nbsp;However, the time-out may be due to
+    problems relating to excessive time in application classes (i.e., waiting for
+    strings/threads, locks, or other resources.) The On Request Statistics Class (<a href="TyStats.html">TyStats</a>) writes the entire Tymeac system picture to a DBMS Table
+    or local file for review off-line.</p>
+  </blockquote>
+  <p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  <p><a name="wait"></a><strong>No Available Wait List</strong><br>
+  may occur for several reasons.&nbsp;The section, <a href="Tuning.html">Tuning</a>, details
+  Tymeac's Wait List processing.</p>
+  <blockquote>
+    <p>The number of entries in Wait Lists may be inadequate for which the solution is to
+    increase the number of entries.</p>
+    <p>The number of Wait Lists, when used as an overflow mechanism, may be inadequate during
+    peak requirements, for which the solution is to increase the number of Wait Lists.</p>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The overflow mechanism also is true for prioritized Wait Lists. For priority 3, the
+      request goes into Wait List 3. If Wait List 3 is full and there is no Wait List 4, the
+      Scheduler rejects the request regardless of the status of Wait Lists 1 and 2.</p>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>An analysis of priority as well as number of Wait Lists, and number in a Wait List is
+    necessary.&nbsp;Class, <a href="TyQueMaint.html">TyQueMaint</a>, makes the DBMS changes to
+    the Wait Lists.</p>
+  </blockquote>
+  <blockquote>
+    <p>In addition to the On Request Statistics mentioned above, several Classes are available
+    for Wait Lists during execution.</p>
+  </blockquote>
+  <blockquote>
+    <p>The Wait List Display Class (<a href="TyWlData.html">TyWlData</a>) is available for
+    real time picture of the status of Wait Lists.</p>
+  </blockquote>
+  <blockquote>
+    <p>The Queue Elements Display/Alter Class (<a href="TyQueData.html">TyQueData</a>) is
+    available to alter the number of entries in a Queue's Wait Lists.</p>
+  </blockquote>
+  <p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+  <p><a name="thread"></a><strong>No Available thread</strong><br>
+  is the condition when <strong>NO</strong> <a href="Definitions.html#quethread">Queue
+  Thread </a>is available for </p>
+  <ul>
+    <li>notifying (waiting for work) or is </li>
+    <li>actively processing a request (busy) or is </li>
+    <li>about to process a request (activated or notified) or </li>
+    <li>no thread is available to reactivate (available).</li>
+    <li>The status of all threads is 'cancelled' or 'disabled'.</li>
+  </ul>
+  <blockquote>
+    <p>The section &quot;<a href="Disabled.html">How Threads Become Disabled</a>&quot;
+    describes how threads become 'disabled'.&nbsp;The Queue Thread Class (<a href="TyQueThd.html">TyQueThd</a>) is available to display/alter the status of Queue
+    threads.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

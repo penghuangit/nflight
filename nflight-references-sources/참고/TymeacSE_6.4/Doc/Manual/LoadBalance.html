@@ -1,0 +1,171 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Multi-Server Load Balancing</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Multi-Server Load Balancing</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <p>We often get requests for our opinion on load balancing multiple Tymeac RMI Servers in
+        a network. We try to avoid application design issues.&nbsp;We provide a development tool
+        -- an asynchronous-process manager.&nbsp;How one uses this tool is beyond our scope.
+        However, customers have common thoughts on this subject and it is these that we share with
+        you here.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <h3><strong>Background:</strong></h3>
+  <blockquote>
+    <p>Since Tymeac is an RMI Server, it is a component in the network.&nbsp;The network may
+    be a local host or that which transcends multiple machines.&nbsp;Naturally, when dealing
+    with a local host, transport time issues are negligible.</p>
+    <p>The problem involves how to distribute work among several Tymeac Servers in a network.
+    The work is a procedure, that, for various considerations, needs splitting onto several
+    servers.&nbsp;This may be for memory usage, I/O, security, the number of concurrent
+    requests for this service or any other consideration.</p>
+  </blockquote>
+  <h3 style="text-align: justify">Assumptions:</h3>
+  <blockquote>
+    <ol>
+      <li>There are many Tymeac Servers that support the procedure.</li>
+      <li>Each Tymeac Server does not know about the other Tymeac Servers that support the
+        procedure. That is, each Server is an independent entity.</li>
+    </ol>
+    <p style="text-align: justify">This second assumption requires some explaining.</p>
+    <blockquote>
+      <p>In order for each Tymeac Server to know about all other Tymeac Servers would require a
+      huge amount of overhead <u>in each Server</u> to keep track of who is where doing what.</p>
+      <p>While this is not a problem when there are two or three Servers in the local machine,
+      consider the overhead when there are two or three dozen Servers across many machines in a
+      network. Each Server must contact all other servers when every request starts when every
+      request ends and every time there is any kind of problem.</p>
+    </blockquote>
+    <p>Therefore, to support this second assumption we need a process in-between the Client
+    and the network of Tymeac Servers (the router).</p>
+    <p>The contrary argument to the router is that of the middleman problem. As often happens,
+    the question inevitably arises, &quot;Why is this middleman necessary?&quot;&nbsp;The bold
+    heading <strong>issues:</strong>, below, point out the problems with a middleman approach.</p>
+  </blockquote>
+  <h3 style="text-align: justify">Router:</h3>
+  <blockquote>
+    <p style="text-align: justify">The router knows about all active Tymeac Servers that
+    support the procedure. It contains a list of the String(name) and the reference to the
+    Remote Object (Interface TymeacInterface).</p>
+    <p style="text-align: justify">As each Tymeac Server that supports the procedure
+    initializes, a User Function (see <a href="StartUpFunctions.html">Start Up Functions</a>)
+    passes the name of the Tymeac Server along with the reference to the RemoteObject to the
+    router.&nbsp;As each Tymeac Server that supports the procedure shuts down, a User Exit
+    (see <a href="UserExits.html">User Exits</a>) passes the name of the Tymeac Server to the
+    router.</p>
+    <p style="text-align: justify">The router may use the <a href="TyOverall.html#over">TyOverStatus</a>
+    Tymeac Function to inquire of the load on each of these Servers.</p>
+    <p>The router contains the logic to determine which Tymeac Server should process the
+    request from a client. There are three basic scenarios:<ol>
+      <li>The client contacts the router and the router returns the reference to the RemoteObject
+        for the Tymeac Server (pass back).</li>
+      <li>The client contacts the router and the router passes the request to the Tymeac Server
+        (pass through).</li>
+      <li>A combination of both (hybrid.)</li>
+    </ol>
+    <p>Each client obtains the reference to the RemoteObject for the router from a <a href="#registry">Registry</a> or <a href="#private">private</a>.</p>
+  </blockquote>
+  <blockquote>
+    <h3 style="text-align: justify">Pass Back:</h3>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Each client contacts the router <u>for every request</u>. The router returns the
+      reference to the RemoteObject of the Tymeac Server best able to handle the request.</p>
+      <p>Each client does a single Tymeac request (asyncRequest(), syncRequest()).</p>
+      <h4 style="text-align: justify">Issues:</h4>
+      <blockquote>
+        <p>This resembles the Internet where every &quot;www&quot; request must go to a common
+        service that passes back the IP address.</p>
+        <p>Clients may only use the Tymeac Server RemoteObject one time since it may not be best
+        able to handle the next request.</p>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <h3 style="text-align: justify">Pass Through:</h3>
+  </blockquote>
+  <blockquote>
+    <blockquote>
+      <p>The object the clients pass to the Tymeac Server must go through the router.&nbsp;This
+      involves de-serializing&nbsp; the object in the router and re-serializing the object in
+      the router to pass on to the Tymeac Server.</p>
+      <p>The object the Tymeac Server returns to the client must go through the
+      router.&nbsp;This involves de-serializing&nbsp; the object in the router and
+      re-serializing the object in the router to return to the client.</p>
+      <h4 style="text-align: justify">Issues:</h4>
+      <blockquote>
+        <p>Using a MarshalledObject significantly reduces the serialization parameter.</p>
+        <p>Using a call back scheme eliminates the return message problem:</p>
+        <blockquote>
+          <p>The client (having exported its RemoteObject) passes its RemoteObject to the
+          router.&nbsp;The router de-serializes the passed object, extracts the object for pass
+          through and re-serializes that object that is to pass on to the Tymeac Server.</p>
+          <p>The router may or may not respond to the client.</p>
+          <p>The router uses a Tymeac asyncRequest() and may ignore the response therefrom.</p>
+          <p>Your Processing Application uses the client's RemoteObject to respond to the request.</p>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3>Hybrid:</h3>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Some requests (perhaps syncRequest()) uses a pass back while others use a pass through.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<hr align="left" width="75%" noshade size="3">
+
+<p><a name="registry"></a>Registry:</p>
+
+<blockquote>
+  <p>The standard Java RMI or JNDI Registry or any plug-in.</p>
+</blockquote>
+
+<p><a name="private"></a>Private:</p>
+
+<blockquote>
+  <p>This includes, but is not limited to<ul>
+    <li>a Jini lookup service,</li>
+    <li>a local file in which the RemoteObject has been serialized and written thereto,</li>
+    <li>a message routing facility.</li>
+  </ul>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body>
+</html>

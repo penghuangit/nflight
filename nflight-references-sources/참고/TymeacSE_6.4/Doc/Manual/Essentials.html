@@ -1,0 +1,327 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Essentials Expounded</title>
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Essentials Expounded</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+    <p>The Tymeac Product description, <a href="../Brochure/BEssential.html">Essentials</a>,
+    lists the needs of your business the Tymeac System satisfies.&nbsp;We expound those needs
+    here.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h2 style="text-align: justify">Tymeac meets your current needs:</h2>
+
+<blockquote>
+  <p><strong>Tymeac bridges the gap between your Web Server and the rest of the company by
+  letting each component of the request run on a separate, asynchronous thread.</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>See design pattern, <a href="Patterns.html#adapter">Adapter</a>.&nbsp; </p>
+    <p>Placing a Tymeac Server on your Web Server machine splits the burden of processing
+    complex requests from the Web application.</p>
+  </blockquote>
+  <blockquote>
+    <p>In one way, the Web application invokes a <u>Synchronous Request</u> on the Tymeac
+    Server. The request is for information from several different vendor data bases. Each
+    component of the request runs on a different Tymeac thread so that incompatibilities
+    between between vendor products is irrelevant.&nbsp;When the Tymeac processing finishes,
+    the Web application formats the response and returns it to the requestor.&nbsp; </p>
+  </blockquote>
+  <blockquote>
+    <p>In another way, the Web application invokes an <u>Asynchronous Request</u> on the
+    Tymeac Server.&nbsp;The request is to send messages to remote locations using several
+    different vendor message queuing products. As soon as Tymeac schedules the request and
+    returns data useful for tracking the request at a later time, the Web application is free
+    to continue with the next request. Each component of the request runs on a different
+    Tymeac thread so that incompatibilities between between vendor products is irrelevant. You
+    may even use recursion, see design pattern, <a href="Patterns.html#recursion">Recursion</a>,
+    to set up an entire sub-structure as is done in the <a href="ex1.html">Examples</a>,
+    revalue portfolio scenario.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Tymeac bridges the gap between your Legacy Applications and the rest of the
+  company by segregating each legacy component of the request on a separate, asynchronous
+  thread.</strong></p>
+  <blockquote>
+    <p>See design pattern, <a href="Patterns.html#adapter">Adapter</a>.&nbsp; </p>
+    <p>Tymeac Server segregates each component of the request on separate threads.&nbsp;See
+    Product description, <a href="../Brochure/Bennies.html#gateway">Gateway</a>.</p>
+    <p>The dependencies between legacy access and current processing are irrelevant. Each
+    thread executes in isolation from the other threads. Even failures in one thread have no
+    direct affect on the other threads. See also Tymeac Product description,&nbsp;<a href="../Brochure/Bennies.html#failure">Failure Containment</a>.</p>
+    <p>Using the Java Native Interface to access legacy applications is one example.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Existing threads that execute without control can be managed successfully.</strong></p>
+  <blockquote>
+    <p>See Tymeac Product description, <a href="../Brochure/Bennies.html#threads">Asynchronous
+    Threads</a>, and the <a href="../Brochure/BExPur.html#manage">examples</a> 
+    of purpose.</p>
+    <p>Tymeac provides the management for your threading environment. See design pattern, <a href="Patterns.html#sharing">Use-Sharing</a>.</p>
+    <p>In&nbsp; Tymeac <a href="TyQueMaint.html">Queue</a> Maintenance:&nbsp;<br>
+    <u>You</u> have the option of specifying the maximum number of threads for each Queue.<br>
+    <u>You</u> have the option of specifying when a new thread becomes a participant in
+    processing<br>
+    &nbsp;&nbsp;&nbsp; through new thread thresholds.<br>
+    <u>You</u> have the option of specifying when an idle thread can no longer participate in
+    scheduling<br>
+    &nbsp;&nbsp;&nbsp; through the wait-time parameter.<br>
+    <u>You</u> have the option of timing requests.<br>
+    <u>You</u> have the option of prioritizing requests.<br>
+    <u>You</u> are in control, not chance.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Individual objects execute concurrently reducing elapsed response time.</strong></p>
+  <blockquote>
+    <p>See Tymeac Product description, <a href="../Brochure/Bennies.html#parallel">Reduced
+    Response Time</a>.</p>
+    <p>The requirement today is for modularized, functionally isolated code so that the
+    hardware, network, and framework can function as designed.</p>
+    <p>Tymeac encourages parallel processing.&nbsp;The number of processors and operating
+    system dependencies determine the exact type of parallelism.&nbsp;However, parallel
+    processing is increasing with each generation of processor.&nbsp;Your software, with
+    Tymeac, is ready today.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="fault"></a><strong>Individual objects execute independently increasing fault
+  tolerance.</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>See Tymeac Product description, <a href="../Brochure/Bennies.html#failure">Failure
+    Containment</a>.</p>
+    <p>Programming can be easy.&nbsp; It's error recovery that makes up the bulk of the code.
+    Isolating the failure is one giant step in the recovery process.</p>
+    <p>You may handle the recovery of a failure in the same thread in which it occurs or at
+    the higher level as an <a href="Patterns.html#adapter">Adapter</a>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="jvm"></a>I<strong>ndividual Java<sup><small>&#153;</small></sup> Virtual
+  Machines increase fault tolerance, scalability and the ability to tune each system.</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>See Tymeac Product description, <a href="../Brochure/Bennies.html#tunable">Separately
+    Tunable</a>.</p>
+    <p align="justify" style="TEXT-ALIGN: justify">Tymeac Server runs in its own Java Virtual
+    Machine, separate from your application Client, Data Base Management System, Jini Service
+    or other middle tier layer.&nbsp;This advantage brings:</p>
+    <ul>
+      <li><p align="left"><strong>Tolerance </strong>-- Use separate security property and/or
+        classpath options.&nbsp;You can have the same process resident in several JVM's each with
+        its own -Dsecurity.policy.file or -classpath.&nbsp; In this way, you can control who does
+        what, where, and when.</p>
+      </li>
+      <li><p align="left"><strong>Scalability</strong> -- Personnel may quickly move the JVM to
+        the most advantageous machine when needed.&nbsp;This is as easy as changing a script file
+        and moving it to another machine along with the Tymeac class files.</p>
+      </li>
+      <li><p align="left"><strong>Tuning</strong> -- Personnel may add a debugging interface or
+        profiling option. Since each JVM is separate, stopping the processing of one does not
+        impact any other.</p>
+      </li>
+      <li><p align="left"><strong>More tuning</strong> -- Personnel may change memory allocation
+        or other non-standard start up options.&nbsp;Non-standard options are good for debugging
+        and tuning.&nbsp;However, Sun may not support each indefinitely or in the same way. Using
+        a separate JVM gives you the option of using what is best now.</p>
+      </li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="nested"></a><strong>Nested processing may become part of the tools available
+  to designers.</strong></p>
+  <blockquote>
+    <p>See Tymeac Product description, <a href="../Brochure/Bennies.html#recursion">Nested</a>.</p>
+    <p>See design pattern, <a href="Patterns.html#recursion">Recursion</a>.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="multi"></a><strong>Processing multiple requests per thread reduces machine
+  overhead leaving more cycles for business needs.</strong></p>
+  <blockquote>
+    <p>See Tymeac Product description, <a href="../Brochure/Bennies.html#overhead">Reduced
+    Processor Overhead</a>.</p>
+    <p>How does one do that in a garbage collecting environment?&nbsp; Especially without
+    using persistent references?</p>
+    <p>You may set up your own RMI Server or use other means (I/O Stream, CORBA, JNI, JINI,
+    HomeGrown, etc.) for establishing a separate environment (SE).&nbsp;In your <a href="Definitions.html#pap">Processing Application Class</a>, instantiate a [serialized]
+    object and pass it to your SE.&nbsp;The SE may check-point, commit, or rollback depending
+    upon your needs.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Tymeac is an Object Request Broker that can run on the smallest processor.</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Tymeac was written by top professionals with decades of experience in very tight
+    transaction processing systems.&nbsp;Systems where efficiency and cooperation among tasks
+    were paramount.&nbsp;&nbsp; </p>
+    <p>Tymeac uses methods that require the smallest footprint. Tymeac de-references objects
+    quickly so they can be garbage collected.&nbsp;Tymeac's design from the beginning is not
+    to compete with the large Object Request Brokers but to go where they cannot.</p>
+  </blockquote>
+</blockquote>
+
+<h2>Tymeac meets your future needs:</h2>
+
+<blockquote>
+  <p><a name="heter"></a><strong>Heterogeneous networks of computers and parallel processing
+  are no longer terms of the future.&nbsp; Scalability is achievable by making table changes
+  not programming changes.</strong></p>
+  <blockquote>
+    <p>The user-written <a href="Definitions.html#pap">Processing Application Class</a> is the
+    lowest level of Tymeac processing.&nbsp;See design pattern, <a href="Patterns.html#strategy">Strategy</a>.&nbsp;This Class is the fine-grained algorithm
+    for processing one unit of work that you keep in your repository.&nbsp;These Classes are
+    small, single purpose Classes that are easy to write and test since they are separate from
+    each other and the execution environment. See also design pattern, <a href="Patterns.html#sharing">Use-Sharing</a>.&nbsp;This Class fits into a <a href="Definitions.html#queue">Tymeac Queue</a>.</p>
+    <p>Each <a href="TyQueMaint.html">Queue</a> Table is tunable as to the number of threads,
+    the number and size of Wait Lists, thread threshold algorithms, and wait-time.&nbsp;Queue
+    data is <a href="TyQueData.html">viewable and adjustable</a>. Threads are <a href="TyQueThd.html">viewable and selectable</a>. Wait Lists are <a href="TyWlData.html">viewable</a>
+    and <a href="TyQueData.html">adjustable</a>.&nbsp;The Queue fits into one or more <a href="Definitions.html#function">Tymeac Functions</a>.</p>
+    <p>Each <a href="TyFuncMaint.html">Function</a> Table is tunable as to the number of
+    Queues, and <a href="Definitions.html#oa">Output Agent</a> processing.&nbsp;Function usage
+    is <a href="TyFuncData.html">viewable</a> during execution.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Portability among any processor is achievable since Tymeac ports between all
+  computers supporting Java.</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Tymeac was designed from the beginning to be portable.&nbsp;Portability was not tacked
+    on as an afterthought.</p>
+    <p>Not only is Tymeac certified &quot;100% pure&quot;, the designers made the run time
+    parameters of Tymeac functionality execute identically across all processors, (<a href="Tuning.html#all">Wait Lists</a>, <a href="Disabled.html#NB">Threads</a>).</p>
+    <p>Tymeac is made to run concurrently on all computers in your enterprise. When
+    business parameters change, execute the same Tymeac Function, Queue, and Processing
+    Application Class on another machine.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Large, complex conversions to the &quot;new&quot; architecture are no longer
+  necessary.&nbsp; Tymeac runs in multiple images on all computers and is not dependent on
+  any operating system or access method.</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>This is primarily a function of Java. With each release of the JVM, this statement is
+    stronger.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><a name="bridge"></a><strong>Tymeac is the bridge to the next generation of Distributed
+  Objects.&nbsp;Components written today with Java migrate smoothly into the next Client /
+  Server revolution. </strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>See Product descriptions, <a href="../Brochure/Bennies.html#gateway">Gateway</a>.</p>
+    <p>See design pattern, <a href="Patterns.html#template">Template</a>.&nbsp;Tymeac is meant
+    to compliment large Frameworks.&nbsp;Your business may move to Component Technology when
+    the Frameworks are ubiquitous and your computers can support the additional memory and
+    cycles.&nbsp;Tymeac is a simple Framework available today. Code written today can migrate
+    smoothly.</p>
+  </blockquote>
+</blockquote>
+
+<h2>Tymeac provides financial benefits:</h2>
+
+<blockquote>
+  <p><strong>Writing single purpose objects and 'batching' requests, (thereby reducing
+  overhead), makes better use of processors leaving more cycles for business needs.</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>See <a href="Essentials.html#multi">Processing multiple requests</a>, above.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Isolating functionality reduces the impact and cost of component failures.</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>See <a href="Essentials.html#fault">Fault tolerance</a>, above.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Reduced development time means reduced development cost. </strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>See <a href="Essentials.html#heter">Heterogeneous networks</a>, above.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>The ability to migrate quickly to new environments as technology lowers cost.</strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>See <a href="Essentials.html#bridge">Bridge</a>, above.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>The ability to expand the list of tools available to developers to ensure the
+  best, cost effective system. </strong></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>See <a href="Essentials.html#nested">Nested</a>, above.</p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

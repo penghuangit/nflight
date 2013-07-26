@@ -1,0 +1,102 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Tymeac Overall Status</title>
+
+</head>
+
+<body>
+
+<h1>Tymeac Overall Status</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This frame class displays the overall load on the system.</p>
+    <p>The non-frame version of this class is <u>TyOverStatus</u>, below.</p>
+  </blockquote>
+</blockquote>
+
+<h3><big><strong>Elements</strong></big></h3>
+
+<blockquote>
+  <p><strong>Top List:</strong>&nbsp;&nbsp; The two or three lines are:</p>
+  <blockquote>
+    <ul>
+      <li>The number of Synchronous Request currently working in the system.<br>
+        When the system is idle and this number is greater than zero, then there may be timed-out
+        requests lingering. RMI threads, (the request), and Tymeac Queue Threads &quot;share&quot;
+        some persistent storage. Eventually, the Tymeac Monitor frees this storage.</li>
+      <li>The number of Asynchronous Requests currently working in the system.</li>
+      <li>The next line only appears when there are entries in the Stall Array:<br>
+&nbsp;</li>
+      <li>The number of Asynchronous Requests possibly stalled in the system.<br>
+        When this number is greater than the above number of Asynchronous Requests, then there may
+        be &quot;doubtful&quot; requests lingering.&nbsp; Eventually, the Tymeac Monitor frees
+        these elements.</li>
+    </ul>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><strong>Bottom List:</strong>&nbsp;&nbsp;Each line is the name of a Queue with threads
+  of a status other than &quot;disabled&quot;. &nbsp; (See TyQueThd for the status
+  information.)&nbsp; That is, the Queue has attendant threads, that can process a
+  request.&nbsp; </p>
+  <p>This List is useful during shut down processing.&nbsp; After requesting shut down and
+  when there are no more Queues with attendant threads, the system may be shut down.</p>
+  <blockquote>
+    <p><strong>For example:</strong>&nbsp; An administrator requests Tymeac shut down.&nbsp; </p>
+    <blockquote>
+      <p>Tymeac enters stage one of shut down processing.&nbsp; <ul>
+        <li>No new requests may enter the system.&nbsp; </li>
+        <li>Existing processes may continue until complete.</li>
+        <li>When non-Output Agent threads complete, they terminate. If there are no working
+          asynchronous requests, then the Output Agent threads terminate.</li>
+        <li>When there are working asynchronous requests, new Output Agent Queues may schedule.</li>
+        <li>When no requests are pending, (the Top List), this Bottom List shows only the Output
+          Agent Queues, when asynchronous request were working at the time of the shut down.</li>
+      </ul>
+    </blockquote>
+    <blockquote>
+      <p>An administrator requests Tymeac shut down, again.&nbsp; </p>
+    </blockquote>
+    <blockquote>
+      <p>Tymeac enters stage two of shut down processing.<ul>
+        <li>Output Agent threads are told to terminate when they finish processing.</li>
+        <li>When all processes complete, the Output Agent threads terminate and this Bottom List
+          shows that there are no more attendant threads for any Queue.</li>
+      </ul>
+    </blockquote>
+    <blockquote>
+      <p>The system is halted.</p>
+    </blockquote>
+    <blockquote>
+      <p>An administrator requests Tymeac shut down, again. This completes shut down.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>REFRESH TOP:&nbsp;&nbsp;&nbsp; </strong>This button refreshes the top list
+  only.</p>
+  <p><strong>REFRESH BOTH:&nbsp;&nbsp;&nbsp; </strong>This button refreshes the top list and
+  the bottom list.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- This is an information message:</p>
+
+<blockquote>
+  <p><u>Connection failure</u> -- The RMI connection failed or the Tymeac Server returned an
+  invalid message.</p>
+  <p><u>Ok</u> -- The request processed.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;</body></html>

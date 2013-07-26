@@ -1,0 +1,126 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<title>New Run Time Logging</title>
+</head>
+
+<body>
+
+<h1>New Run Time Logging</h1>
+
+<blockquote>
+  <blockquote>
+
+<p>Logging is dynamically alterable with the New Run Time 
+Log GUI/Non-GUI. During the session, if Tymeac finds a problem with 
+logging, then Tymeac sets logging as unavailable. You may fix the 
+problem and reset logging, stop all logging or set new logging parameters below.</p>
+
+  </blockquote>
+</blockquote>
+
+<h3><strong>Elements - each is mutually exclusive</strong></h3>
+
+<blockquote>
+  <p><strong>DBMS Table </strong>&nbsp;-- Enter the name of the New DBMS Table.</p>
+  <p><strong>Dir and/or File Name </strong>&nbsp;-- When using a local file 
+  instead of a DBMS Table, then enter the name of the file. A directory is 
+  optional</p>
+  <p><strong>Alt </strong>&nbsp;-- When using an alternate class instead of the 
+  above, enter that fully qualified class name.</p>
+</blockquote>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>Reset</strong> -- Re-verifies the existing Logging on 
+  the Server. If all goes well, then Logging is restored.</p>
+  <p><strong>Stop</strong> -- Stops all Logging on the Server.</p>
+  <p><strong>Import</strong> -- Fetches the current Logging parameters from 
+  the Server.</p>
+  <p><strong>Update</strong> -- Fill in a new Logging parameters and press to 
+  update on the Server. If you never had Logging at Server start-up, then 
+  you can add it now.</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- (xx) is the return code for the non-gui
+class. This is an information message:</p>
+
+<blockquote>
+  <p>(-1)&nbsp; <u>Connection failure</u> -- The RMI connection failed or the Tymeac Server
+  returned an invalid message.</p>
+  <p>Since Tymeac is fully open-source now, you must go to the source code to 
+  find the return codes. All codes are <font color="#0000FF">public static final 
+  int</font> values in Class com.tymeac.base.SetUpLog.java. As of Release 6.2 
+  they are as follows: </p>
+  <blockquote>
+    <font SIZE="2" COLOR="#7f0055"><b>
+    <p ALIGN="LEFT">public</b></font><font SIZE="2"> </font>
+    <font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2"> </font>
+    <font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2"> </font>
+    <font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2"> </font>
+    <font SIZE="2" COLOR="#0000c0"><i>LogSuccess</i></font><font SIZE="2"> = 0;
+    </font><font SIZE="2" COLOR="#3f7f5f">// success<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>LogNoCurr</i></font><font SIZE="2"> 
+    = 20; </font><font SIZE="2" COLOR="#3f7f5f">// no current log<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>LogNotNec</i></font><font SIZE="2"> 
+    = 21; </font><font SIZE="2" COLOR="#3f7f5f">// log doesn't need resetting<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>LogWriteOldFail</i></font><font SIZE="2"> 
+    = 22; </font><font SIZE="2" COLOR="#3f7f5f">// write to original log failed<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>LogFailVeryOld</i></font><font SIZE="2"> 
+    = 23; </font><font SIZE="2" COLOR="#3f7f5f">// failed to verify original<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>LogCreateFail</i></font><font SIZE="2"> 
+    = 24; </font><font SIZE="2" COLOR="#3f7f5f">// New log failed to create<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>LogWriteNewFail</i></font><font SIZE="2"> 
+    = 25; </font><font SIZE="2" COLOR="#3f7f5f">// write to new log failed<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>LogFailVeryNew</i></font><font SIZE="2"> 
+    = 26; </font><font SIZE="2" COLOR="#3f7f5f">// failed to verify new <br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>LogNotInUse</i></font><font SIZE="2"> 
+    = 27; </font><font SIZE="2" COLOR="#3f7f5f">// logging not in use<br>
+    </font><font SIZE="2" COLOR="#7f0055"><b>public</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>static</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>final</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#7f0055"><b>int</b></font><font SIZE="2">
+    </font><font SIZE="2" COLOR="#0000c0"><i>LogStopped</i></font><font SIZE="2"> 
+    = 28; </font><font SIZE="2" COLOR="#3f7f5f">// logging service stopped</font></p>
+  </blockquote>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;</body></html>

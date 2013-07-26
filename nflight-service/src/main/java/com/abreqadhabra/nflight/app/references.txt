@@ -33,3 +33,13 @@ http://www.oracle.com/technetwork/java/index-139917.html
 http://javarevisited.blogspot.kr/2013/07/how-to-create-thread-pools-in-java-executors-framework-example-tutorial.html
 http://howtodoinjava.com/2013/03/12/java-executor-framework-tutorial-and-best-practices/
 http://www.javaworld.com/javaworld/jw-10-2011/111004-jtip-recursion-in-java-7.html
+
+http://www.h-online.com/developer/features/The-fork-join-framework-in-Java-7-1762357.html
+http://www.javacodegeeks.com/2011/02/java-forkjoin-parallel-programming.html
+http://www.javabeat.net/2012/06/simple-introduction-to-fork-join-framework-in-java-7/
+http://whiteship.me/?p=13100
+http://coopsoft.com/index.html
+http://www.slideshare.net/fullscreen/sys4u/introduction-to-fork-join-frameworksys4u-ic/1
+http://olpost.com/r/6826866
+http://www.oracle.com/technetwork/articles/java/fork-join-422606.html
+

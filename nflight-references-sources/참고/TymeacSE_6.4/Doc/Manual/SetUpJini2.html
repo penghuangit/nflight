@@ -1,0 +1,412 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link REL="stylesheet" HREF="h1.css" TYPE="text/css">
+<title>Tymeac Jini2.x Set Up</title>
+
+<meta name="Microsoft Border" content="b, default">
+</head>
+
+<body background="Images/texture.jpg"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1>Tymeac Jini2.x Set Up</h1>
+
+<blockquote>
+  <blockquote>
+    <p>This version uses Configuration Files. The power of Jini2.x is that it supports full
+    security and customization. We supply configuration files to demonstrate this
+    functionality.</p>
+  </blockquote>
+</blockquote>
+
+<hr width="80%" noshade size="4">
+
+<p>This section describes the steps necessary to make Tymeac Server a part of your Jini
+environment as 
+
+<ol>
+  <li><a href="#service">A non-activatable Jini Service.</a></li>
+  <li><a href="#activatable">An activatable Jini Service.</a></li>
+</ol>
+
+<blockquote>
+  <p>Additional demonstration with: <a href="#doc">The Document Demonstration Service
+  upgraded to Jini2.x.</a></p>
+</blockquote>
+
+<p align="left"><big>Security:</big></p>
+
+<blockquote>
+  <p align="left">We support security in both the Server start up and Clients. All the
+  configuration files have SSL keystore parameters in place for your use. See the <a href="Security.html">security document</a> for details.</p>
+</blockquote>
+
+<p align="left"><a name="reggie"></a><big>Reggie:</big></p>
+
+<blockquote>
+  <p align="left">The Reggie configuration file is jrmp-reggie.config It is in the
+  /Scripts/Config directory:</p>
+  <blockquote>
+    <p align="left">com.sun.jini.reggie {</p>
+    <blockquote>
+      <p align="left">serverExporter = new JrmpExporter();<br>
+      initialMemberGroups = new String[] { &quot;TymeacServer&quot;, <br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &quot;TymeacServerFrontEnd&quot;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &quot;TymeacDocService&quot; };<br>
+      }</p>
+    </blockquote>
+  </blockquote>
+  <p align="left">Groups:</p>
+  <blockquote>
+    <p align="left"><strong>TymeacServer</strong> -- is for all versions of the Tymeac Server</p>
+    <p><strong>TymeacServerFrontEnd</strong> -- is for shutting down the Jini Leasing Service
+    when using an activatable remote object. This works in conjunction with the <a href="#exit">exit structure</a>, below.</p>
+    <p align="left"><strong>TymeacDocService -</strong>- is the demonstration Documentation
+    Service.</p>
+  </blockquote>
+</blockquote>
+
+<p align="left"><big>Phoenix:</big></p>
+
+<blockquote>
+  <p align="left">For the activation system we use RMID, not phoenix. For security reasons
+  you may set up phoenix any way you wish.</p>
+</blockquote>
+
+<p align="left"><big>Proxies:</big></p>
+
+<blockquote>
+  <p align="left">Two Jini proxies:</p>
+  <ol>
+    <li><strong>com.tymeac.jini.base.JiniTymeacProxy </strong>-- This is a Smart Proxy that
+      implements:<font SIZE="2"><ul>
+        <li>Serializable</li>
+        <li>TymeacInterface</li>
+        <li>ServerProxyTrust</li>
+        <li>ProxyAccessor <br>
+          <br>
+          </font></li>
+      </ul>
+    </li>
+    <li><p align="left"><strong>com.tymeac.jini.base.JiniShutDownProxy</strong> --&nbsp; This is
+      a Proxy for shutting down the Jini Service when Tymeac is a backend, activatable remote
+      object.</p>
+    </li>
+  </ol>
+</blockquote>
+
+<p align="left"><a name="exit"></a><big>Tymeac Shut Down Exits:</big></p>
+
+<blockquote>
+  <p>You may shut down the Join Manager leasing structure when you shut down the Tymeac
+  Server by using a stage 2 shut down exit class, <strong>com.tymeac.serveruser.JiniShutDownExit</strong>
+  The class is compiled and resides in the com/tymeac/serveruser directory.</p>
+  <blockquote>
+    <p>This exit Class will shut down both the activatable and non-activatable Jini Servers.</p>
+    <p>To set this up using the User Variables Class:</p>
+    <blockquote>
+      <p>1. When using the <a href="UserVariables.html">GUI</a>, simply add this Class to the
+      EXITS panel under stage 2 shutdown classes:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#000000" size="3">com.tymeac.serveruser.JiniShutDownExit</font></p>
+      <p>2 When editing the TymeacUserVariables Class manually:</p>
+      <blockquote>
+        <p>Edit the com.tymeac.serveruser.TymeacUserVariables.java file<br>
+        In the constructor at the comment&nbsp; <font COLOR="#3f7f5f" size="3">// shutdown stage2
+        array of classes<br>
+        </font><font size="3">add the following:</font></p>
+        <font SIZE="2" COLOR="#3f7f5f"><p></font><font COLOR="#3f7f5f" size="3">// shutdown stage2
+        array of classes<br>
+        </font><font size="3">shutdown_stage2_classes =&nbsp; <font COLOR="#7f0055">new</font>
+        String[] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<font COLOR="#2a00ff"> </font></font><font color="#000000" size="3">&quot;com.tymeac.serveruser.JiniShutDownExit&quot;</font><font SIZE="2" color="#000000"> };</font><font size="3"></p>
+        </font>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+  <blockquote>
+    <p>To set this up using the Tymeac Cfg file:</p>
+    <blockquote>
+      <p>1. When using the <a href="TyCfg.html">GUI,</a> simply add this Class to the EXITS
+      panel under stage 2 shutdown classes:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#000000" size="3">com.tymeac.serveruser.JiniShutDownExit</font></p>
+      <p>2 When editing the file (tymeac.cfg) manually, in the [EXITS] section, add the class
+      name:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#000000" size="3">com.tymeac.serveruser.JiniShutDownExit<br>
+      after the shut down stage two sub-heading. </font>{Shut2Classes}.</p>
+    </blockquote>
+    <p>This exit only acts on Jini versions of Tymeac Server so leaving it in place has no
+    effect on other versions of Tymeac Server. However, if you do not have Jini in your
+    CLASSPATH then you may get an error message at shutdown that Jini Classes cannot be found.</p>
+  </blockquote>
+</blockquote>
+
+<p><a name="config"></a><big>Configuration Files:</big></p>
+
+<blockquote>
+  <p>config/jrmp-reggie.config -- This file is for Reggie.</p>
+  <p>config/tymeac-jrmp-server.config -- This file uses a jrmp exporter.</p>
+  <p>config/tymeac-ssl-server.config -- This file uses a jeri exporter with a
+  SslServerLEndpoint.</p>
+  <p>config/tymeac-jrmp-client.config -- This file is for the client classes.</p>
+  <p>The location of the file is in directory &quot;config&quot; which must be under the
+  current directory when you run the script. You may always change the location to anywhere
+  you wish.</p>
+</blockquote>
+
+<p><a name="args"></a><big>Server Command Line Arguments:</big></p>
+
+<blockquote>
+  <p>There are three required command line arguments. <font color="#FF0000">This 
+  changed in release 5.5 (before the other command line arguments were in the 
+  configuration file.)</font><ol>
+    <li><strong>-config</strong>&nbsp; -- the identifier for configuration entries.</li>
+    <li>the location and name of the configuration file (<a href="#config">see above</a>).</li>
+    <li>the component name:&nbsp; <strong>com.tymeac.TymeacServer</strong>.</li>
+  </ol>
+  <p>To use the JRMP configuration the command line arguments would be:<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -config config/tymeac-jrmp-server.config
+  com.tymeac.TymeacServer </p>
+</blockquote>
+
+<p><big>Client Command Line Arguments:</big></p>
+
+<blockquote>
+  <p>There are two required and one optional command line arguments.<ol>
+    <li><strong>-config</strong>&nbsp; -- the identifier for configuration entries.</li>
+    <li>the location and name of the configuration file (<a href="#config">see above</a>).<br>
+      The component name is hard coded within the classes (<strong>com.tymeac.TymeacClient</strong>).</li>
+    <li>*- optional -* <strong>-secure</strong> -- Whether using security or not. If you use
+      security, a pop-up Dialog window appears requesting a pass word == tyclient</li>
+  </ol>
+  <p>To use the JRMP configuration the command line arguments without security would be:<br>
+  &nbsp;&nbsp;&nbsp; -config config/tymeac-jrmp-client.config </p>
+</blockquote>
+
+<hr>
+
+<h2><a name="service"></a>1.&nbsp; As a Jini Server</h2>
+
+<blockquote>
+  <p>The class is <strong>com.tymeac.jini.base.JiniServer</strong></p>
+  <p>This class is very similar to the <strong>com.tymeac.base.RMIServer </strong>class. The
+  major differences are that the Jini version uses<ul>
+    <li>a configuration file,</li>
+    <li>additional command line arguments,</li>
+    <li>exports the remote object using a Jeri Exporter class therefore there is no _Stub.class,</li>
+    <li>and naturally registers itself as a Jini Service.</li>
+  </ul>
+  <p>The configuration files you may use are mentioned above. You may certainly edit these
+  any way you wish.</p>
+</blockquote>
+
+<blockquote>
+  <p><font size="+1">Creating a Run Time Script:</font></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>We supply two scripts to run this: <a href="Scripts.html#jserver">JiniServer</a> (.bat
+    and .sh), in /Scripts.</p>
+  </blockquote>
+  <blockquote>
+    <p>You <strong>must edit</strong> the <a href="Scripts.html#env">SET_ENV</a> script: for
+    your installation requirements.</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><font size="+1">Running the Server:</font></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>The sequence of events are as follows:<ul>
+      <li>Start a http server to download the code, (&lt;jini_home&gt;\lib\tools.jar -port 8083)
+        is fine.</li>
+      <li>Start a Jini Lookup Service with the configuration, <a href="#reggie">above</a>
+        (&lt;jini_home&gt;\lib\reggie.jar) is fine.</li>
+      <li>Start the Jini Service, JiniServer.bat[sh], </li>
+      <li>Run the demonstration classes, see below.</li>
+    </ul>
+  </blockquote>
+  <p><a name="client"></a><strong>Running the Tymeac Client Classes:</strong></p>
+  <blockquote>
+    <p>We supply Jini client classes that are basically the same as the non-Jini demo classes.
+    The Jini clients all begin with &quot;Jini&quot;</p>
+    <p>Creating a configuration file:</p>
+    <blockquote>
+      <p>config/tymeac-jrmp-client.config --&nbsp; is set up for your use.</p>
+    </blockquote>
+    <p>Creating a Script:</p>
+    <blockquote>
+      <p>We supply scripts to run the clients:<br>
+      <a href="Scripts.html#jf2">JiniF[n]</a>&nbsp; (.bat and .sh)&nbsp; /Scripts. the n is
+      between 1 and 8<br>
+      Additionally, <a href="Scripts.html#jshut">JiniShut</a> (.bat and .sh) for shutting down
+      the service.</p>
+    </blockquote>
+    <blockquote>
+      <p>You <strong>must edit</strong> the <a href="Scripts.html#env">SET_ENV</a> script: for
+      your installation requirements.</p>
+    </blockquote>
+    <p>Command Line Arguments:</p>
+    <blockquote>
+      <p>-config config\tymeac-jrmp-client.config</p>
+      <p>Or for a security check:<br>
+      &nbsp;&nbsp;&nbsp; -config config\tymeac-jrmp-client.config -secure</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h2><a name="activatable"></a>2. As an activatable Jini Service:</h2>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Creating the service is a two part endeavor. Basically you must register the backend
+      remote object with the activation service. This is fairly standard and has been around for
+      many years. Now if you simply register the service with Reggie and leave it at that, when
+      a client calls, the activation service will activate Tymeac in the same JVM as the lease
+      renewal JVM. Therefore, there is no benefit to using activation. Additionally, when Tymeac
+      de-activates, it takes the leasing service down with it, not good. This is why we make
+      this a two part endeavor.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <ol>
+    <li>Process 1 -- Register the backend remote object with the activation service and
+      temporarily with the RMI Registry so part two can have access to the remote object. There
+      are alternatives to using the RMI Registry and you may certainly use one of them. The idea
+      is to pass the remote object to the next process.<br>
+      <br>
+      &nbsp;&nbsp;&nbsp; (When a client calls, the activation system will create a new JVM for
+      the Tymeac Server.<br>
+      &nbsp;&nbsp;&nbsp; When the time for inactivation arrives, Tymeac will deactivate ending
+      the JVM.)<br>
+      <br>
+    </li>
+    <li>Process 2 -- Retrieve the backend remote object from the RMI Registry. Create a Tymeac
+      Server proxy and register it with a Jini Lookup Service (group=TymeacServer) Create a
+      shutdown proxy and register it with a Jini Lookup Service (group=TymeacServerFrontEnd).
+      Wait for shutdown either from the Tymeac Server exit routine (next paragraph) or an
+      operating system kill.<br>
+      <br>
+    </li>
+    <li>By using the shutdown exit mentioned <a href="#exit">above</a>, you may have the Tymeac
+      Server shut down the Service when the Tymeac Server shuts down. We supply a class that
+      does the same process as the exit,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>com.tymeac.jini.base.JiniActivationDestroy</strong>.<br>
+      You need the same command line arguments as the Process 2 Class.</li>
+  </ol>
+</blockquote>
+
+<blockquote>
+  <p align="left" style="text-align: justify">Details:</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p align="left" style="text-align: justify">Process 1 is Class <strong>com.tymeac.jini.base.JiniActivationCreate1.</strong></p>
+    <blockquote>
+      <p align="left" style="text-align: justify">Configuration is:
+      tymeac-jini-activatable-ssl-server.config</p>
+      <blockquote>
+        <p>You <big><strong>must edit</strong> </big>this
+        configuration for the <strong>location</strong> and <strong>properties</strong> unique to
+        your installation.</p>
+      </blockquote>
+      <p align="left" style="text-align: justify">Component is: com.tymeac.TymeacServer</p>
+      <p>We supply two scripts to run this: <a href="Scripts.html#jact1">JiniAct1</a> (.bat and
+      .sh), in /Scripts.</p>
+      <p>You <strong>must edit</strong>&nbsp; the <a href="Scripts.html#env">SET_ENV</a>
+      script:: for your installation requirements.</p>
+    </blockquote>
+    <p align="left" style="text-align: justify">Process 2 is Class <strong>com.tymeac.jini.base.JiniActivationCreate2</strong>.</p>
+    <blockquote>
+      <p align="left" style="text-align: justify">Configuration is the same as above for Process
+      1:</p>
+      <p>We supply two scripts to run this: <a href="Scripts.html#jact2">JiniAct2</a> (.bat and
+      .sh), in /Scripts.</p>
+      <p>You <strong>must edit</strong>&nbsp; the <a href="Scripts.html#env">SET_ENV</a>
+      script:: for your installation requirements.</p>
+    </blockquote>
+    <p>Client classes are: <strong>com.tymeac.jini.client.JiniClientF</strong>1-8
+    and JiniClientShutdown <a href="#client">as above</a>.</p>
+    <blockquote>
+      <p align="left" style="text-align: justify">Configuration is: tymeac-jrmp-client.config</p>
+      <p align="left" style="text-align: justify">Component is: com.tymeac.TymeacServer</p>
+      <p align="left" style="text-align: justify">Command line options are one required and one
+      optional.</p>
+      <blockquote>
+        <p align="left" style="text-align: justify">Required is for the configuration location<br>
+        &nbsp;&nbsp;&nbsp; -config config\tymeac-jrmp-client.config</p>
+        <p align="left" style="text-align: justify">Optional is for security<br>
+        &nbsp;&nbsp;&nbsp; -secure<br>
+        If you specify this option, a pop-up dialog will request the password:<br>
+        &nbsp;&nbsp;&nbsp; tyclient<br>
+        (You can always change this in the configuration file.)</p>
+      </blockquote>
+      <p>We supply a sample script to run this: JiniF2 and JiniShut (.bat and .sh) in /Scripts, <a href="#client">as above</a>.</p>
+    </blockquote>
+    <p align="left" style="text-align: justify">Manual shutdown is Class <strong>com.tymeac.jini.base.JiniActivationDistroy</strong>.</p>
+    <blockquote>
+      <p align="left" style="text-align: justify">Configuration is the same as above for Process
+      1.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<hr>
+
+<p><a name="doc"></a><font size="+1">Creating a Jini Document Service Class (Demonstration
+System):</font></p>
+
+<blockquote>
+  <p>We supply a class, <strong>com.tymeac.demo.jini2.base.TyDemoJiniDocService</strong>.<ul>
+    <li>Uses the <a href="SetUpInternal.html">Internal Tymeac Server</a>.</li>
+    <li>Creates the Jini Document Service</li>
+    <li>Creates a new proxy with the Jini Document Service </li>
+    <li>Registers with a Lookup Service (group=&quot;TymeacDocService&quot;)</li>
+    <li>Waits for client calls.</li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p>There is no configuration file and no command line arguments specific to the service.
+  You must supply the normal -D options required for Java:</p>
+</blockquote>
+
+<blockquote>
+  <p>We supply two scripts to run this creation: <a href="Scripts.html#doc">JiniDoc</a>.bat
+  sh in /Scripts/Demo.</p>
+</blockquote>
+
+<blockquote>
+  <p>You <strong>must edit</strong>&nbsp; the <a href="Scripts.html#env">SET_ENV</a>
+  script:: for your installation requirements.</p>
+</blockquote>
+
+<blockquote>
+  <p>Use GUI Class, <a href="TyDemoJiniT1.html">com.tymeac.demo.jini2.client<strong>.</strong>TyDemoJiniT1</a>.</p>
+  <blockquote>
+    <p>We supply a script file for this, <a href="Scripts.html#j1">jtest1</a>.bat [sh] . You <strong>must
+    edit</strong> this script for your installation requirements.</p>
+    <p>Enter a pseudo document name and press either of the buttons.</p>
+    <p>The Jini Document Service will request an internal Tymeac Function that will return
+    Strings for transport back to the client.</p>
+  </blockquote>
+  <p>Shutdown is manual with an operating system kill.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p><b><small><font size="2">© 1998 - 2013 Cooperative Software Systems, Inc.&nbsp; All rights 
+    reserved.</font></small></b></p>
+
+</td></tr><!--msnavigation--></table></body></html>

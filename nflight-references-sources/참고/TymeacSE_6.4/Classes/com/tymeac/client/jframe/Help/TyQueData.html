@@ -1,0 +1,141 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Alter Queue Elements </title>
+
+</head>
+
+<body>
+
+<h1>Alter Elements of a loaded Tymeac Queue</h1>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>This frame class allows you to alter certain elements of a Tymeac Queue during
+      execution.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p align="center"><img src="Images/divider.gif" alt="divider.gif (931 bytes)" width="100" height="5"></p>
+
+<blockquote>
+  <p>Tymeac stores the Queue Elements in the Queue Table, or User Class.&nbsp; Class
+  TyQueMaint is available to alter these values for the DBMS.&nbsp; Manually for the User
+  Classes. &nbsp;However, these elements only load at Tymeac Server start-up.&nbsp; This
+  Class provides a way to temporarily change these elements without a shutdown / start-up
+  sequence.</p>
+  <p>Altering values herein has an immediate effect on performance.&nbsp; Changing the New
+  Thread Thresholds while the Queue is under a heavy load is a way of tuning performance.
+  &nbsp; The effect of the weighted factor, calculated on paper, may not perform as planned.</p>
+  <p>This Class, in a test environment, gives designers an invaluable tool with which to
+  test performance parameters under many conditions to establish the final values for a
+  production system.</p>
+  <p>This Class, in a production system, gives system personnel the tool necessary to
+  respond to temporary, changing conditions.</p>
+  <p>A prime example is altering the number of entries in a Queue's Wait Lists.&nbsp; System
+  personnel can respond to Tymeac scheduling failures caused by exceptional loads on Queues
+  by increasing the maximum number of Wait List entries.</p>
+</blockquote>
+
+<h3><strong>Elements</strong></h3>
+
+<blockquote>
+  <p><strong>Queue Name</strong> -- Enter the name of the Tymeac Queue.&nbsp;</p>
+</blockquote>
+
+<p align="center"><strong><big>&lt;--- Thresholds ---&gt;</big></strong></p>
+
+<blockquote>
+  <blockquote>
+    <p><strong>Overall %</strong> -- Enter a new percent. Format as below.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>Individual %</strong> --&nbsp; Enter a new percent. Format as below.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>Weighted Factor</strong> --&nbsp; Enter a new percent. Format as below.</p>
+  </blockquote>
+  <blockquote>
+    <p><strong>Weighted Average</strong> --&nbsp; Enter a new percent. Format as below.</p>
+    <p><font color="#FF0000">This format changed in Release 4.0.3 (Standard Edition, 1.1.2
+    Micro Edition). Before you had to enter the zero and decimal (0.) as part of the number.</font></p>
+    <p>The format is any number of digits as a percentage. Tymeac stores the number as a
+    fraction in a floating point number. E.G., for 25 percent, enter 25,&nbsp;Tymeac stores
+    the number as 0.25F, for 5 percent, enter 05, Tymeac stores the number as 0.05F.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><big><strong>&lt;--- Threads ---&gt;</strong></big></p>
+
+<blockquote>
+  <blockquote>
+    <p><strong>Idle Wait Time</strong> --The time, in seconds, the Queue Thread remains
+    waiting for work and selectable.&nbsp; When this time expires, the Thread changes its
+    status to 'inactive', that is, not directly selectable.</p>
+    <p><strong>Idle Thread Life</strong> -- When <u>non-zero</u>, the time, in seconds, a
+    thread remains alive in an inactive state , (see above Idle Wait Time).&nbsp; When this
+    time expires, the Tymeac Monitor informs the Thread to destroy, (return in the run()
+    method).&nbsp; When <u>zero</u>, the Tymeac Monitor ignores this field.</p>
+  </blockquote>
+</blockquote>
+
+<p align="center"><big><strong>&lt;--- Wait Lists ---&gt;</strong></big></p>
+
+<blockquote>
+  <blockquote>
+    <p><strong>Nbr Physical WL Entries</strong> -- Enter a new maximum number of wait 
+    list entries for all Wait Lists.</p>
+
+    <p><strong>Nbr Logical WL Entries</strong> -- Enter a new maximum number of wait 
+    list entries for all Wait Lists for Threshold Processing only.</p>
+
+<p align="center"><big><strong>&lt;--- Appl ---&gt;</strong></big></p>
+
+    <p><strong>Appl Timeout</strong> -- Enter a new maximum timeout value, in 
+    seconds, for the Processing Application Class. This overrides both the 
+    default and specific (when set at start up) time.</p>
+    <blockquote>
+    <p>Initially displayed with the IMPORT BUTTON is either the default or 
+    specific timeout value. As of this writing (release 5.6) the default value 
+    is four times the monitor interval. (E.G. if the monitor interval is 60 
+    seconds, then the default timeout value is 240 seconds.) Once set, this 
+    permanently overrides the default value.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<h3><strong>Buttons</strong></h3>
+
+<blockquote>
+  <p><strong>IMPORT</strong> -- Displays the Queue Elements.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>UPDATE</strong> -- Updates the Queue Elements.</p>
+</blockquote>
+
+<hr>
+
+<p><strong>Message Block at bottom :</strong> -- This is an information message:</p>
+
+<blockquote>
+  <p><u>Connection failure</u> -- The RMI connection failed or the Tymeac Server returned an
+  invalid message.</p>
+  <p><u>Tymeac shutting down</u> -- Tymeac Server is in shut down mode.</p>
+  <p><u>Invalid Queue Name | for Update</u> -- The Queue Name does not exist.</p>
+  <p><u>Make Changes</u> -- The Elements imported, make any necessary changes.</p>
+  <p><u>Successful</u> -- The Queue Elements were updated.</p>
+  <p><u>Invalid number of WL Entries</u>&nbsp; -- Entered value &lt; 1 or NaN.</p>
+  <p><u>Invalid Overall %</u>&nbsp; -- Entered value not a float.</p>
+  <p><u>Invalid Individual %</u>&nbsp; -- Entered value not a float.</p>
+  <p><u>Invalid Weighted Factor %</u>&nbsp; -- Entered value not a float.</p>
+  <p><u>Invalid Weighted Average %</u>&nbsp; -- Entered value not a float.</p>
+  <p><u>Cannot alter WL entries at this time</u> --&nbsp; The number of <u>currently active</u>
+  entries in a Wait List is more than the new number requested.&nbsp; Try again later.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+&nbsp;</body></html>
