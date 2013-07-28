@@ -15,27 +15,7 @@ import com.abreqadhabra.nflight.application.server.concurrent.runnable.MultiRunn
 import com.abreqadhabra.nflight.application.server.concurrent.runnable.ServiceRunnable;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-class RejectedExecutionHandelerImpl implements RejectedExecutionHandler {
-	private static final Class<RejectedExecutionHandelerImpl> THIS_CLAZZ = RejectedExecutionHandelerImpl.class;
-	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public RejectedExecutionHandelerImpl() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-				LoggingHelper.describe(THIS_CLAZZ));
-	}
-
-	@Override
-	public void rejectedExecution(final Runnable runnable,
-			final ThreadPoolExecutor executor) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-				runnable.toString() + " : I've been rejected ! ");
-	}
-}
 
 public class ServiceExecutorThread {
 	private static final Class<ServiceExecutorThread> THIS_CLAZZ = ServiceExecutorThread.class;

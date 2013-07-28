@@ -14,7 +14,7 @@
  * limitations under the License. 
  */
 
-package util;
+package com.abreqadhabra.nflight.samples.benchmark.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

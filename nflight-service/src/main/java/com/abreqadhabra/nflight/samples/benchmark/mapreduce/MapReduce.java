@@ -14,31 +14,33 @@
  * limitations under the License. 
  */
 
-package com.abreqadhabra.nflight.samples.concurrent.benchmark.actor.forkjoin;
+package com.abreqadhabra.nflight.samples.benchmark.mapreduce;
 
 import java.util.concurrent.ForkJoinPool;
-
-import com.abreqadhabra.nflight.samples.concurrent.actor.Actor;
-import com.abreqadhabra.nflight.samples.concurrent.benchmark.actor.parallel.AbstractDispatcher;
+import java.util.concurrent.ForkJoinTask;
 
 /**
- * Dispatcher for the fork/join actor benchmark. The dispatcher maintains an internal
- * {@link ForkJoinPool} and schedules a new {@link ActorForkJoinTask} when a scheduling request for
- * an actor is made.
+ * A this wrapper around a ForkJoinPool that enables the caller to retrieve the result of a
+ * Map/Reduce computation in a type-safe fashion.
  * 
  * @author patrick.peschlow
+ * 
+ * @param <T>
+ *            the type of the result computed by the job
  */
-public class ForkJoinDispatcher extends AbstractDispatcher {
+public class MapReduce<T> {
 
     private final ForkJoinPool pool;
 
-    public ForkJoinDispatcher(Actor[] actors, ForkJoinPool pool) {
-	super(actors);
-	this.pool = pool;
+    public MapReduce(int numThreads) {
+	this.pool = new ForkJoinPool(numThreads);
     }
 
-    @Override
-    protected void schedule(int actorId) {
-	pool.execute(new ActorForkJoinTask(this, mailboxes[actorId]));
+    public T execute(Input<T> input) {
+	ForkJoinTask<Output<T>> task = new MapReduceTask<T>(input);
+
+	Output<T> output = pool.invoke(task);
+
+	return output.getResult();
     }
 }

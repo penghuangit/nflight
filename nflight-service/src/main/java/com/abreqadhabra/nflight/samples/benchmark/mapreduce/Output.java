@@ -14,7 +14,7 @@
  * limitations under the License. 
  */
 
-package mapreduce;
+package com.abreqadhabra.nflight.samples.benchmark.mapreduce;
 
 /**
  * Interface for Map/Reduce output entities. An output entity is produced by the map phase of the

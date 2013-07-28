@@ -10,7 +10,6 @@ import com.abreqadhabra.nflight.app.core.command.Invoker;
 import com.abreqadhabra.nflight.app.core.rmi.RMIServiceHelper;
 import com.abreqadhabra.nflight.app.server.command.ShutdownServerCommand;
 import com.abreqadhabra.nflight.app.server.command.StartupServerCommand;
-import com.abreqadhabra.nflight.app.server.command.StatusServerCommand;
 import com.abreqadhabra.nflight.app.server.service.IService;
 import com.abreqadhabra.nflight.app.server.service.ServiceDescriptor;
 import com.abreqadhabra.nflight.app.server.service.ServiceFactory;
@@ -104,15 +103,15 @@ public class ServerTest {
 		_server = this.getServer(sd);
 
 		try {
-			_cmd = new StartupServerCommand(_server);
+//			_cmd = new StartupServerCommand(_server);
 			_invoker.execute(_cmd);
 //			_cmd = new StatusServerCommand(_server);
 //			_invoker.execute(_cmd);
 //			_cmd = new ShutdownServerCommand(_server);
 //			_invoker.execute(_cmd);
 		} catch (final Exception e) {
-//			_cmd = new ShutdownServerCommand(_server);
-//			_invoker.execute(_cmd);
+	//		_cmd = new ShutdownServerCommand(_server);
+			_invoker.execute(_cmd);
 			e.printStackTrace();
 		}
 

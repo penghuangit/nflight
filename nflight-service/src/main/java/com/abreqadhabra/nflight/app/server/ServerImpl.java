@@ -35,7 +35,7 @@ public class ServerImpl implements IServer {
 	@Override
 	public IService getService() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.service;
 	}
 
 	@Override

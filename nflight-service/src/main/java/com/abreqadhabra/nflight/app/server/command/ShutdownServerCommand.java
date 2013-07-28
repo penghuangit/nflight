@@ -1,7 +1,8 @@
 package com.abreqadhabra.nflight.app.server.command;
 
-import com.abreqadhabra.nflight.app.core.command.Command;
-import com.abreqadhabra.nflight.app.server.IServer;
+import com.abreqadhabra.nflight.application.launcher.command.Command;
+import com.abreqadhabra.nflight.application.server.IServer;
+
 
 public class ShutdownServerCommand implements Command {
 	private final IServer server;

@@ -14,7 +14,7 @@
  * limitations under the License. 
  */
 
-package util;
+package com.abreqadhabra.nflight.samples.benchmark.util;
 
 import java.util.List;
 

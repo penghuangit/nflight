@@ -14,7 +14,7 @@
  * limitations under the License. 
  */
 
-package document.usertags;
+package com.abreqadhabra.nflight.samples.benchmark.document.usertags;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,7 +23,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import document.Document;
+import com.abreqadhabra.nflight.samples.benchmark.document.Document;
+
 
 /**
  * Business logic for the computation of user tag sets. Provides a method to compute the user tags

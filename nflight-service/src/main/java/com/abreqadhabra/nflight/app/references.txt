@@ -43,3 +43,6 @@ http://www.slideshare.net/fullscreen/sys4u/introduction-to-fork-join-frameworksy
 http://olpost.com/r/6826866
 http://www.oracle.com/technetwork/articles/java/fork-join-422606.html
 
+http://visualvm.java.net/
+
+http://codeidol.com/java/java-concurrency/Applying-Thread-Pools/Configuring-ThreadPoolExecutor/

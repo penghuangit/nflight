@@ -10,10 +10,11 @@ import java.nio.channels.DatagramChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.app.server.service.IService;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class DatagramAcceptor extends Thread {
+public class DatagramAcceptor implements Runnable, IService  {
 	private static Class<DatagramAcceptor> THIS_CLAZZ = DatagramAcceptor.class;
 	private Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
@@ -111,6 +112,42 @@ public class DatagramAcceptor extends Thread {
 			throws IOException {
 		datagramChannel.send(echoText, clientAddress);
 		echoText.clear();
+	}
+
+	@Override
+	public void init() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isRunning() throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String sayHello() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void shutdown() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void startup() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean status() throws Exception {
+		// TODO Auto-generated method stub
+		return isOpen;
 	}
 
 }

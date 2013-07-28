@@ -14,38 +14,23 @@
  * limitations under the License. 
  */
 
-package document;
+package com.abreqadhabra.nflight.samples.benchmark.document.usertags;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
- * Simple data holder class for a document that contains a set of users and a list of tags
- * associated with the document.
- * 
- * @author patrick.peschlow
+ * Simple data holder class for maps of user names to tag sets.
  */
-public class Document {
+public class UserTagsBundle {
 
-    private final Set<String> users;
+    private final Map<String, Set<String>> userToTags;
 
-    private final List<String> tags;
-
-    public Document(Set<String> users, List<String> tags) {
-	this.users = users;
-	this.tags = tags;
+    public UserTagsBundle(Map<String, Set<String>> userToTags) {
+	this.userToTags = userToTags;
     }
 
-    public Set<String> getUsers() {
-	return users;
-    }
-
-    public List<String> getTags() {
-	return tags;
-    }
-
-    @Override
-    public String toString() {
-	return "Document [users=" + users + ", tags=" + tags + "]";
+    public Map<String, Set<String>> getUserToTags() {
+	return userToTags;
     }
 }

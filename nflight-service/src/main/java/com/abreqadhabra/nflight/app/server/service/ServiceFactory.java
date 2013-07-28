@@ -5,7 +5,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.app.core.Profile.SERVICE_NAME;
-import com.abreqadhabra.nflight.app.server.service.net.DatagramServiceImpl;
 import com.abreqadhabra.nflight.app.server.service.net.MulticastServiceImpl;
 import com.abreqadhabra.nflight.app.server.service.net.StreamServiceImpl;
 import com.abreqadhabra.nflight.app.server.service.rmi.ActivatableServantImpl;
@@ -50,7 +49,7 @@ public class ServiceFactory {
 				break;
 			case datagram:
 				// _operation = new ActivatableRMIServiceImpl(sd);
-				_operation = new DatagramServiceImpl(sd);
+	//			_operation = new DatagramServiceImpl(sd);
 				break;
 			case multicast:
 				// _operation = new ActivatableRMIServiceImpl(sd);

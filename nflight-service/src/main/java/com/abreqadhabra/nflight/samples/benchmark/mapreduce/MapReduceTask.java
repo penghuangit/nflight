@@ -14,7 +14,7 @@
  * limitations under the License. 
  */
 
-package mapreduce;
+package com.abreqadhabra.nflight.samples.benchmark.mapreduce;
 
 import java.util.List;
 import java.util.concurrent.RecursiveTask;

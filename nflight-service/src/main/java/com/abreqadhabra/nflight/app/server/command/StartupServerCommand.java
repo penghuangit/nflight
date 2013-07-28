@@ -3,8 +3,8 @@ package com.abreqadhabra.nflight.app.server.command;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.app.core.command.Command;
-import com.abreqadhabra.nflight.app.server.IServer;
+import com.abreqadhabra.nflight.application.launcher.command.Command;
+import com.abreqadhabra.nflight.application.server.IServer;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 //Command ConcreteCommand 

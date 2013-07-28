@@ -1,12 +1,19 @@
 package com.abreqadhabra.nflight.application.launcher;
 
+import java.net.BindException;
+import java.net.InetAddress;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.app.server.command.ShutdownServerCommand;
+import com.abreqadhabra.nflight.app.server.command.StartupServerCommand;
 import com.abreqadhabra.nflight.application.Globals;
+import com.abreqadhabra.nflight.application.launcher.command.Command;
+import com.abreqadhabra.nflight.application.launcher.command.Invoker;
+import com.abreqadhabra.nflight.application.server.IServer;
 import com.abreqadhabra.nflight.application.server.ServerImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
@@ -72,10 +79,26 @@ public class ServiceLauncher implements Launcher {
 
 		final ProfileImpl profile = new ProfileImpl(props);
 
+		
+		Command _cmd = null;
+		final Invoker _invoker = new Invoker();
+
+		
+		//new ServerImpl(profile);
+		IServer server =new ServerImpl(InetAddress.getLocalHost().getHostAddress(), 9999);
+		
+		try{
+		_cmd = new StartupServerCommand(server);
+		_invoker.execute(_cmd);
+		}catch(BindException be){
+			_cmd = new ShutdownServerCommand(server);
+			_invoker.execute(_cmd);
+		}
+		
 		// throw new
 		// NFServiceException("No arguments specified for Night Flighr Service");
 
-		new ServerImpl(profile);
+
 	}
 	
 	
