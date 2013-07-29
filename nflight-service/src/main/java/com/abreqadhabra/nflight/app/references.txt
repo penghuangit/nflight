@@ -46,3 +46,13 @@ http://www.oracle.com/technetwork/articles/java/fork-join-422606.html
 http://visualvm.java.net/
 
 http://codeidol.com/java/java-concurrency/Applying-Thread-Pools/Configuring-ThreadPoolExecutor/
+
+
+http://jeewanthad.blogspot.kr/2013/02/reactor-pattern-explained-part-1.html
+http://jeremyko.blogspot.kr/2012/05/proactor-design-pattern.html
+http://thushw.blogspot.kr/2011/06/asynchronous-udp-server-using-java-nio.html
+
+http://www.obsidianscheduler.com/blog/category/concurrency/
+http://www.ibm.com/developerworks/java/tutorials/j-patterns/
+http://www.cs.vu.nl/~eliens/online/oo/I/2/reactor.html
+

@@ -11,23 +11,21 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 public class StartupServerCommand implements Command {
 	private static final Class<StartupServerCommand> THIS_CLAZZ = StartupServerCommand.class;
 	private static Logger LOGGER = LoggingHelper
-			.getLogger(StartupServerCommand.THIS_CLAZZ);
+			.getLogger(THIS_CLAZZ);
 
 	private final IServer server;
 
 	public StartupServerCommand(final IServer server) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-
 		this.server = server;
-
-		LOGGER.logp(Level.FINER,
-				THIS_CLAZZ.getName(), METHOD_NAME,
-				"Command -> ConcreteCommand  : " + THIS_CLAZZ.getName());
 	}
 
 	@Override
 	public void execute() throws Exception {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
 		this.server.startup();
+		LOGGER.logp(Level.FINER,
+				THIS_CLAZZ.getName(), METHOD_NAME,
+				"Command -> ConcreteCommand  : " + THIS_CLAZZ.getName());
 	}
 }

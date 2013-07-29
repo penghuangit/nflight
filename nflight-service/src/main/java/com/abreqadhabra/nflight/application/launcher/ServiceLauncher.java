@@ -25,10 +25,10 @@ public class ServiceLauncher implements Launcher {
 	public ServiceLauncher() {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
-		
+
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 				LoggingHelper.describe(THIS_CLAZZ));
-		
+
 		if (System.getSecurityManager() == null) {
 			LauncherHelper.setSecurityManager();
 		}
@@ -50,7 +50,8 @@ public class ServiceLauncher implements Launcher {
 							+ Globals.FILE_BOOT_PROPERTIES);
 
 			// Settings specified in the default property file
-			props = PropertyFile.readPropertyFilePath(Globals.FILE_BOOT_PROPERTIES);
+			props = PropertyFile
+					.readPropertyFilePath(Globals.FILE_BOOT_PROPERTIES);
 
 		} else if (cmdLineArgs.length > 1
 				&& cmdLineArgs[0].equals(Globals.BOOT_OPTION_CONF)) {
@@ -79,28 +80,24 @@ public class ServiceLauncher implements Launcher {
 
 		final ProfileImpl profile = new ProfileImpl(props);
 
-		
 		Command _cmd = null;
 		final Invoker _invoker = new Invoker();
 
-		
-		//new ServerImpl(profile);
-		IServer server =new ServerImpl(InetAddress.getLocalHost().getHostAddress(), 9999);
-		
-		try{
-		_cmd = new StartupServerCommand(server);
-		_invoker.execute(_cmd);
-		}catch(BindException be){
+		// new ServerImpl(profile);
+		IServer server = new ServerImpl(InetAddress.getLocalHost()
+				.getHostAddress(), 9999);
+
+		try {
+			_cmd = new StartupServerCommand(server);
+			_invoker.execute(_cmd);
+		} catch (BindException be) {
 			_cmd = new ShutdownServerCommand(server);
 			_invoker.execute(_cmd);
 		}
-		
+
 		// throw new
 		// NFServiceException("No arguments specified for Night Flighr Service");
 
-
 	}
-	
-	
 
 }
