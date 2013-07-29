@@ -37,7 +37,7 @@ public class DatagramAcceptor implements Runnable, IService  {
 			datagramChannel
 					.setOption(StandardSocketOptions.SO_RCVBUF, 4 * 1024)
 					.setOption(StandardSocketOptions.SO_SNDBUF, 4 * 1024);
-			// bind the channel to local address
+			// bind the channel to local socketAddress
 			datagramChannel.bind(new InetSocketAddress(address, port));
 		} else {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,

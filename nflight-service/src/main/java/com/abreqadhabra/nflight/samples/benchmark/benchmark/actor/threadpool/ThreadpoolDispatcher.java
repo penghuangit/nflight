@@ -8,7 +8,7 @@ import com.abreqadhabra.nflight.samples.benchmark.benchmark.actor.parallel.Abstr
 
 /**
  * Dispatcher for the threadpool com.abreqadhabra.nflight.samples.benchmark.actor com.abreqadhabra.nflight.samples.benchmark.benchmark. The dispatcher maintains an internal
- * {@link ExecutorService} and submits a new {@link ActorRunnable} when a scheduling request for an
+ * {@link ExecutorService} and submits a new {@link ActorRunnable} when a scheduling requestByteBuffer for an
  * com.abreqadhabra.nflight.samples.benchmark.actor is made.
  * 
  * @author patrick.peschlow

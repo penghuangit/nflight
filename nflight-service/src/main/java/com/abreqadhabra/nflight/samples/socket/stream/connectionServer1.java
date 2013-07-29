@@ -14,7 +14,7 @@ class connectionServer1 {
 			PrintStream socketOutput = new PrintStream(
 					dataSocket.getOutputStream());
 			socketOutput.println(message);
-			System.out.println("sent response to client…");
+			System.out.println("sent responseByteBuffer to client…");
 			socketOutput.flush();
 			dataSocket.close();
 			connectionSocket.close();

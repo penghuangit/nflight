@@ -85,7 +85,7 @@ public class ServerImpl implements IServer {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		// new StreamAcceptor(address, port);
+		// new StreamAcceptor(socketAddress, port);
 
 		final BlockingQueue<Runnable> worksQueue = new ArrayBlockingQueue<Runnable>(
 				2);

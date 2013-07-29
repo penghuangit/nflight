@@ -95,7 +95,7 @@ public class MulticastServiceImpl extends AbstractService {
 					networkInterface);
 			datagramChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 
-			// bind the channel to the local address
+			// bind the channel to the local socketAddress
 			datagramChannel.bind(new InetSocketAddress(port));
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"Date-time server is ready ... shortly I'll start sending ...");

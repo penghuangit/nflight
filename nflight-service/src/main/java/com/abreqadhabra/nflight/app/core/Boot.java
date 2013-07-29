@@ -213,9 +213,9 @@ public class Boot {
 		sb.append("    		  --service <service-specifier>");
 		sb.append("    			where service-specifier = <service-name>:<service-type>:<service-type>:<service-command>[(semicolon-separated <property-name>=<property-value>)]");
 		sb.append("    				where properties are:");
-		sb.append("    					-local-host	 <host(or host address) where to bind the local server socket on>");
+		sb.append("    					-local-host	 <host(or host socketAddress) where to bind the local server socket on>");
 		sb.append("    					-local-port	 <port where to bind the local server socket on>");
-		sb.append("    					-remote-host	 <host(or host address) where to bind the remote server socket on>");
+		sb.append("    					-remote-host	 <host(or host socketAddress) where to bind the remote server socket on>");
 		sb.append("    					-remote-port	 <port where to bind the remote server socket on>");
 		sb.append("    					-gui		 If specified, GUI created.");
 		sb.append("    					");

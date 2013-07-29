@@ -51,7 +51,7 @@ public class SocketClient02rw {
 			// check if it the channel was successfully opened
 			if (datagramChannel.isOpen()) {
 
-				// connect to remote address
+				// connect to remote socketAddress
 				datagramChannel.connect(new InetSocketAddress(REMOTE_IP,
 						REMOTE_PORT));
 

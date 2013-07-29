@@ -24,7 +24,7 @@ import com.abreqadhabra.nflight.samples.benchmark.benchmark.actor.parallel.Abstr
 
 /**
  * Dispatcher for the fork/join com.abreqadhabra.nflight.samples.benchmark.actor com.abreqadhabra.nflight.samples.benchmark.benchmark. The dispatcher maintains an internal
- * {@link ForkJoinPool} and schedules a new {@link ActorForkJoinTask} when a scheduling request for
+ * {@link ForkJoinPool} and schedules a new {@link ActorForkJoinTask} when a scheduling requestByteBuffer for
  * an com.abreqadhabra.nflight.samples.benchmark.actor is made.
  * 
  * @author patrick.peschlow

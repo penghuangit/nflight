@@ -56,3 +56,5 @@ http://www.obsidianscheduler.com/blog/category/concurrency/
 http://www.ibm.com/developerworks/java/tutorials/j-patterns/
 http://www.cs.vu.nl/~eliens/online/oo/I/2/reactor.html
 
+http://www.javafaq.nu/java-article1103.html
+http://www.exampledepot.8waytrips.com/egs/java.nio/NbClient.html

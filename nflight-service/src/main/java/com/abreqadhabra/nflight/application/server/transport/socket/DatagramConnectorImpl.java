@@ -68,7 +68,7 @@ public final class DatagramConnectorImpl implements DatagramConnector {
 			datagramChannel
 					.setOption(StandardSocketOptions.SO_RCVBUF, 4 * 1024)
 					.setOption(StandardSocketOptions.SO_SNDBUF, 4 * 1024);
-			// connect the channel to local address
+			// connect the channel to local socketAddress
 			datagramChannel.connect(remoteSocketAddress);
 		} else {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
@@ -97,7 +97,7 @@ public final class DatagramConnectorImpl implements DatagramConnector {
 			datagramChannel
 					.setOption(StandardSocketOptions.SO_RCVBUF, 4 * 1024)
 					.setOption(StandardSocketOptions.SO_SNDBUF, 4 * 1024);
-			// bind the channel to local address
+			// bind the channel to local socketAddress
 			datagramChannel.bind(remoteSocketAddress);
 		} else {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,

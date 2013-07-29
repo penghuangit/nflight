@@ -54,7 +54,7 @@ public class StreamAcceptor implements IService {
 						StandardSocketOptions.SO_RCVBUF, 4 * 1024);
 				asyncServerSocketChannel.setOption(
 						StandardSocketOptions.SO_REUSEADDR, true);
-				// bind the server-socket channel to local address
+				// bind the server-socket channel to local socketAddress
 				asyncServerSocketChannel.bind(new InetSocketAddress(address,
 						port));
 

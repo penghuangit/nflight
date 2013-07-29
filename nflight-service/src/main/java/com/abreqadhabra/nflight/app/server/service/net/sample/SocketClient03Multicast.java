@@ -35,7 +35,7 @@ public class SocketClient03Multicast {
 				.open(StandardProtocolFamily.INET)) {
 
 			final InetAddress group = InetAddress.getByName(GROUP);
-			// check if the group address is multicast
+			// check if the group socketAddress is multicast
 			if (group.isMulticastAddress()) {
 				// check if the channel was successfully created
 				if (datagramChannel.isOpen()) {
@@ -47,7 +47,7 @@ public class SocketClient03Multicast {
 					// set some options
 					datagramChannel.setOption(
 							StandardSocketOptions.SO_REUSEADDR, true);
-					// bind the channel to the local address
+					// bind the channel to the local socketAddress
 					datagramChannel.bind(new InetSocketAddress(DEFAULT_PORT));
 					// join the multicast group and get ready to receive
 					// datagrams
@@ -73,7 +73,7 @@ public class SocketClient03Multicast {
 					System.out.println("The channel cannot be opened!");
 				}
 			} else {
-				System.out.println("This is not  multicast address!");
+				System.out.println("This is not  multicast socketAddress!");
 			}
 
 		} catch (final IOException ex) {
