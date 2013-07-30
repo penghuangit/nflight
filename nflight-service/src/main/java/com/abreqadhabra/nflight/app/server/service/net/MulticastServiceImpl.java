@@ -98,7 +98,7 @@ public class MulticastServiceImpl extends AbstractService {
 			// bind the channel to the local socketAddress
 			datagramChannel.bind(new InetSocketAddress(port));
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Date-time server is ready ... shortly I'll start sending ...");
+					"Date-time acceptor is ready ... shortly I'll start sending ...");
 		} else {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"The channel cannot be opened!");
@@ -140,7 +140,7 @@ public class MulticastServiceImpl extends AbstractService {
 		if (isOpen) {
 
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Echo server was successfully opened!");
+					"Echo acceptor was successfully opened!");
 
 			// NetworkInterface networkInterface =
 			// NetworkInterface.getByName("hme0");
@@ -160,10 +160,10 @@ public class MulticastServiceImpl extends AbstractService {
 					Level.FINER,
 					THIS_CLAZZ.getName(),
 					METHOD_NAME,
-					"Echo server was binded on: "
+					"Echo acceptor was binded on: "
 							+ datagramChannel.getLocalAddress());
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Echo server is ready to echo ...");
+					"Echo acceptor is ready to echo ...");
 
 			ByteBuffer datetime = null;
 

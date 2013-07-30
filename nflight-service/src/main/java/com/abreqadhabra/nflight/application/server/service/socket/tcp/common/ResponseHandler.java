@@ -1,13 +1,14 @@
-package com.abreqadhabra.nflight.application.server.service.socket.test.sample.common;
+package com.abreqadhabra.nflight.application.server.service.socket.tcp.common;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.nio.ByteBuffer;
 
-public class RspHandler {
+public class ResponseHandler {
 	private byte[] rsp = null;
 
 	public synchronized boolean handleResponse(byte[] rsp) {
@@ -16,7 +17,7 @@ public class RspHandler {
 		return true;
 	}
 
-	public synchronized void waitForResponse() {
+	public synchronized Object waitForResponse() {
 		while (this.rsp == null) {
 			try {
 				this.wait();
@@ -27,15 +28,15 @@ public class RspHandler {
 	
 		
 		Object object = deserializeObject(this.rsp);
-		if (object instanceof Object) {
-			System.out.println(object.getClass().getName());
-		} else {
-			System.out.println(new String(this.rsp));
-		}
+		if (object == null) {
+			object = new String(this.rsp);
+		} 
+		
+		return object;
 	}
 	
 	
-	public ByteBuffer serializeObject(Object object) {
+	public static ByteBuffer serializeObject(Object object) {
 		byte[] bytes = null;
 		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 				ObjectOutputStream objectOutputStream = new ObjectOutputStream(
@@ -50,13 +51,18 @@ public class RspHandler {
 		return ByteBuffer.wrap(bytes);
 	}
 	
-	public Object deserializeObject(final byte[] bytes) {
+	public static Object deserializeObject(final byte[] bytes) {
 		Object readObject = null;
 		try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 				ObjectInputStream ois = new ObjectInputStream(bais);) {
 			readObject = ois.readObject();
-		} catch (ClassNotFoundException | IOException e) {
+		 
+		}catch(ClassNotFoundException | IOException e) {
+			if(e instanceof StreamCorruptedException){
+				return null;
+			}else{
 			e.printStackTrace();
+			}
 		}
 
 		return readObject;

@@ -47,8 +47,8 @@ import java.rmi.server.UnicastRemoteObject;
 
 
 /**
- * Used to launch a server from <code>inetd</code>.  The <code>main</code>
- * method of this server implementation exports the service object (an
+ * Used to launch a acceptor from <code>inetd</code>.  The <code>main</code>
+ * method of this acceptor implementation exports the service object (an
  * instance of <code>ServiceInterface</code>) and then uses the utility
  * method <code>InitializeRegistry.initializeWithInheritedChannel</code> to
  * create and export a registry using an inherited channel (if any) and
@@ -56,7 +56,7 @@ import java.rmi.server.UnicastRemoteObject;
  * up.
  *
  * <p>This program, when configured to be started from <code>inetd</code>,
- * will start the server when a client attempts to look up the server by
+ * will start the acceptor when a client attempts to look up the acceptor by
  * name in the registry on the port configured with <code>inetd</code>.
  *
  * <p>To configure <code>inetd</code> to launch this program, the following
@@ -64,22 +64,22 @@ import java.rmi.server.UnicastRemoteObject;
  * <code>/etc/inetd.conf</code>:
  *
  * <pre>
- *    example-server stream tcp wait nobody <b><i>jrehome</i></b>/bin/java \
+ *    example-acceptor stream tcp wait nobody <b><i>jrehome</i></b>/bin/java \
  *	  java -classpath <b><i>classpath</i></b> example.inetd.Server
  * </pre>
  * where <b><i>jrehome</i></b> is the path to the installed JRE, and 
  * <b><i>classpath</i></b> is the class path for the example.
  *
- * <p>Additionally, the <code>example-server</code> name needs to be
+ * <p>Additionally, the <code>example-acceptor</code> name needs to be
  * configured as a service in the <code>/etc/services</code> file as
  * follows:
  *
  * <pre>
- *    example-server    <b><i>port</i></b>/tcp
+ *    example-acceptor    <b><i>port</i></b>/tcp
  * </pre>
  * where <b><i>port</i></b> is the port the registry will accept requests
  * on.  Note that the service name--
- * here we used <code>example-server</code>-- can be another name, as long
+ * here we used <code>example-acceptor</code>-- can be another name, as long
  * as the chosen name it is not already configured in /etc/services.
  *
  * <p>This program also supports being run from the command line.  In this
@@ -169,7 +169,7 @@ public class Server implements ServiceInterface {
      */
     private static void redirectErrorOutput() {
 	try {
-	    File file = File.createTempFile("example-server-err", null, null);
+	    File file = File.createTempFile("example-acceptor-err", null, null);
 	    PrintStream errStream =
 		new PrintStream(new FileOutputStream(file));
 	    System.setErr(errStream);

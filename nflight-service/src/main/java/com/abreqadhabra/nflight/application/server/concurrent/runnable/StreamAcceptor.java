@@ -40,7 +40,7 @@ public class StreamAcceptor implements IService {
 			System.err.println(ex);
 		}
 
-		// create asynchronous server-socket channel bound to the default group
+		// create asynchronous acceptor-socket channel bound to the default group
 		try {
 			asyncServerSocketChannel = AsynchronousServerSocketChannel
 					.open(threadGroup);
@@ -54,7 +54,7 @@ public class StreamAcceptor implements IService {
 						StandardSocketOptions.SO_RCVBUF, 4 * 1024);
 				asyncServerSocketChannel.setOption(
 						StandardSocketOptions.SO_REUSEADDR, true);
-				// bind the server-socket channel to local socketAddress
+				// bind the acceptor-socket channel to local socketAddress
 				asyncServerSocketChannel.bind(new InetSocketAddress(address,
 						port));
 
@@ -95,7 +95,7 @@ public class StreamAcceptor implements IService {
 			System.in.read();
 		} else {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"The asynchronous server-socket channel cannot be opened!");
+					"The asynchronous acceptor-socket channel cannot be opened!");
 		}
 	}
 

@@ -8,7 +8,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
-import com.abreqadhabra.nflight.application.server.service.socket.test.sample.common.Message;
+import com.abreqadhabra.nflight.application.server.service.socket.tcp.common.Message;
 
 public class TestServer {
 
@@ -18,8 +18,7 @@ public class TestServer {
 
 		TestServer server = new TestServer();
 		server.startupTestServer(DEFAULT_PORT);
-		
-		
+
 	}
 
 	private void startupTestServer(int port) {
@@ -28,7 +27,7 @@ public class TestServer {
 		try (Selector selector = Selector.open();
 				ServerSocketChannel ssc = ServerSocketChannel.open()) {
 
-		//	StreamHelper.bind(selector, ssc, port);
+			// StreamHelper.bind(selector, ssc, port);
 
 			while (true) {
 				// wait for incomming events
@@ -52,7 +51,7 @@ public class TestServer {
 		}
 
 	}
-	
+
 	// isAcceptable returned true
 	private void accept(final SelectionKey key, final Selector selector)
 			throws IOException {
@@ -108,8 +107,6 @@ public class TestServer {
 			e.printStackTrace();
 		}
 	}
-
-
 
 	// isWritable returned true
 	public void write(final SelectionKey key, final Object object) {

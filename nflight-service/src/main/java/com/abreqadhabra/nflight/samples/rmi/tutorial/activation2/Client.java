@@ -76,7 +76,7 @@ public class Client {
 	    // method call
 	    //
 	    String result = "failure";
-	    System.out.println("Making remote call to the server");
+	    System.out.println("Making remote call to the acceptor");
 
 	    result = (String)mri.callMeRemotely();
 	    System.out.println("Returned from remote call");

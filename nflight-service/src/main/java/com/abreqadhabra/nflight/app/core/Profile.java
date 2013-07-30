@@ -152,11 +152,11 @@ public abstract class Profile {
 
 	public static final int BOOTCOMMAND_SLEEPTIME_1 = 2000;
 	public static final int BOOTCOMMAND_SLEEPTIME_2 = 10000;
-	public static final String FILE_ACTIVATION_PROPERTIES = "com/abreqadhabra/nflight/app/server/service/rmi/conf/activatable.properties";
+	public static final String FILE_ACTIVATION_PROPERTIES = "com/abreqadhabra/nflight/app/acceptor/service/rmi/conf/activatable.properties";
 
-	public static final String FILE_ACTIVATION_POLICY = "com/abreqadhabra/nflight/app/server/service/rmi/conf/activatable.policy";
+	public static final String FILE_ACTIVATION_POLICY = "com/abreqadhabra/nflight/app/acceptor/service/rmi/conf/activatable.policy";
 
-	public static final String FILE_RMID_POLICY = "com/abreqadhabra/nflight/app/server/service/rmi/conf/rmid.policy";
+	public static final String FILE_RMID_POLICY = "com/abreqadhabra/nflight/app/acceptor/service/rmi/conf/rmid.policy";
 
 	public static final String ACTIVATION_FILE_PREFIX = "file://";
 

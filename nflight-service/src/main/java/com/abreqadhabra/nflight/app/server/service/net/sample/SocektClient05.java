@@ -88,7 +88,7 @@ public class SocektClient05 {
 									keySocketChannel.finishConnect();
 								}
 
-								// read/write from/to server
+								// read/write from/to acceptor
 								while (keySocketChannel.read(buffer) != -1) {
 
 									buffer.flip();

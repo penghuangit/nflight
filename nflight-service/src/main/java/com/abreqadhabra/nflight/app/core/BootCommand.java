@@ -41,7 +41,7 @@ public class BootCommand {
 
 	/**
 	 * Main to start the <code> ServerApplication </code> and creates the
-	 * Instance of <code> ServerController </code>. Create a RMI server with the
+	 * Instance of <code> ServerController </code>. Create a RMI acceptor with the
 	 * specified port(1024-65535).
 	 * 
 	 * @param args

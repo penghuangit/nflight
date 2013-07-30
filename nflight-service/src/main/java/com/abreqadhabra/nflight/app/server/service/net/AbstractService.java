@@ -50,11 +50,11 @@ public abstract class AbstractService implements IService {
 			}
 
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"UDP monitoring server has been stopped.");
+					"UDP monitoring acceptor has been stopped.");
 
 		} catch (final IOException e) {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"Error shutting down the UDP monitor server");
+					"Error shutting down the UDP monitor acceptor");
 		}
 	}
 }

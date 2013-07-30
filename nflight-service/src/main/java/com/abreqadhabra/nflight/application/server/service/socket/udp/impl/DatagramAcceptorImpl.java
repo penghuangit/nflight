@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.server.service.socket.impl;
+package com.abreqadhabra.nflight.application.server.service.socket.udp.impl;
 
 import java.io.IOException;
 import java.nio.channels.DatagramChannel;
@@ -7,7 +7,7 @@ import java.nio.channels.SelectionKey;
 import com.abreqadhabra.nflight.application.server.service.socket.AbstractAcceptor;
 import com.abreqadhabra.nflight.application.server.service.socket.Attachment;
 
-public class DatagramAcceptorImpl extends AbstractAcceptor {
+public class DatagramAcceptorImpl extends AbstractSocketAcceptor {
 
 	@Override
 	public void read(SelectionKey key) throws IOException {

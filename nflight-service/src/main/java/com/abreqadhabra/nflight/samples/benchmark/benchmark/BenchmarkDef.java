@@ -25,7 +25,7 @@ import java.util.List;
  * respective methods, the com.abreqadhabra.nflight.samples.benchmark.benchmark definition may choose to specify code that is executed
  * before/after the whole com.abreqadhabra.nflight.samples.benchmark.benchmark, or before/after each individual run.
  * 
- * The com.abreqadhabra.nflight.samples.benchmark.benchmark definition also server as a collector for the results and execution times of the
+ * The com.abreqadhabra.nflight.samples.benchmark.benchmark definition also acceptor as a collector for the results and execution times of the
  * individual runs of the com.abreqadhabra.nflight.samples.benchmark.benchmark.
  * 
  * @author patrick.peschlow

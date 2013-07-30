@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.server.service.socket.test.sample.client.runnable;
+package com.abreqadhabra.nflight.application.server.service.socket.tcp.client.runnable;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -15,11 +15,18 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.server.service.socket.test.sample.common.ChangeRequest;
-import com.abreqadhabra.nflight.application.server.service.socket.test.sample.common.RspHandler;
+import com.abreqadhabra.nflight.application.server.service.socket.tcp.common.ChangeRequest;
+import com.abreqadhabra.nflight.application.server.service.socket.tcp.common.ResponseHandler;
+import com.abreqadhabra.nflight.common.logging.LoggingHelper;
+import com.sun.xml.internal.txw2.output.XmlSerializer;
 
-public class NioClient implements Runnable {
+public class SocketClient implements Runnable {
+	private static final Class<SocketClient> THIS_CLAZZ = SocketClient.class;
+	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+
+	
 	// The host:port combination to connect to
 	private InetAddress hostAddress;
 	private int port;
@@ -36,17 +43,17 @@ public class NioClient implements Runnable {
 	// Maps a SocketChannel to a list of ByteBuffer instances
 	private Map<SocketChannel, List> pendingData = new HashMap<SocketChannel, List>();
 
-	// Maps a SocketChannel to a RspHandler
-	private Map<SocketChannel, RspHandler> rspHandlers = Collections
-			.synchronizedMap(new HashMap<SocketChannel, RspHandler>());
+	// Maps a SocketChannel to a ResponseHandler
+	private Map<SocketChannel, ResponseHandler> rspHandlers = Collections
+			.synchronizedMap(new HashMap<SocketChannel, ResponseHandler>());
 
-	public NioClient(InetAddress hostAddress, int port) throws IOException {
+	public SocketClient(InetAddress hostAddress, int port) throws IOException {
 		this.hostAddress = hostAddress;
 		this.port = port;
 		this.selector = this.initSelector();
 	}
 
-	public void sendObject(Object object, RspHandler handler) throws IOException {
+	public void sendObject(Object object, ResponseHandler handler) throws IOException {
 		// Start a new connection
 		SocketChannel socket = this.initiateConnection();
 
@@ -60,7 +67,7 @@ public class NioClient implements Runnable {
 				queue = new ArrayList<ByteBuffer>();
 				this.pendingData.put(socket, queue);
 			}
-			
+			 
 			queue.add(handler.serializeObject(object));
 		}
 
@@ -160,7 +167,7 @@ public class NioClient implements Runnable {
 		System.arraycopy(data, 0, rspData, 0, numRead);
 
 		// Look up the handler for this channel
-		RspHandler handler = this.rspHandlers.get(socketChannel);
+		ResponseHandler handler = this.rspHandlers.get(socketChannel);
 
 		// And pass the response to it
 		if (handler.handleResponse(rspData)) {

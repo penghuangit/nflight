@@ -1,7 +1,6 @@
 package com.abreqadhabra.nflight.application.server.transport.socket.runnable;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -16,7 +15,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.app.server.service.ServiceDescriptor;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 //Strategy ConcreteStrategy
@@ -84,14 +82,14 @@ public class StreamServiceImpl {
 			serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR,
 					true);
 
-			// bind the server socket channel to port
+			// bind the acceptor socket channel to port
 //			serverSocketChannel.bind(new InetSocketAddress(port));
 
 			// register the current channel with the given selector
 			serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 		} else {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"The server socket channel or selector cannot be opened!");
+					"The acceptor socket channel or selector cannot be opened!");
 		}
 	}
 

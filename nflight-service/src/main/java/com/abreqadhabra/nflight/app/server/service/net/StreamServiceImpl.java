@@ -89,14 +89,14 @@ public class StreamServiceImpl extends AbstractService {
 			serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR,
 					true);
 
-			// bind the server socket channel to port
+			// bind the acceptor socket channel to port
 			serverSocketChannel.bind(new InetSocketAddress(port));
 
 			// register the current channel with the given selector
 			serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 		} else {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-					"The server socket channel or selector cannot be opened!");
+					"The acceptor socket channel or selector cannot be opened!");
 		}
 	}
 

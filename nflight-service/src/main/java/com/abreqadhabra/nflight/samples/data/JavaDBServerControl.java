@@ -102,7 +102,7 @@ public class JavaDBServerControl {
 	}
 
 	/**
-	 * Start Derby Network server
+	 * Start Derby Network acceptor
 	 * 
 	 * @throws Exception
 	 * 
@@ -128,7 +128,7 @@ public class JavaDBServerControl {
 	}
 
 	/**
-	 * trace utility of server
+	 * trace utility of acceptor
 	 * 
 	 * @throws Exception
 	 */
@@ -137,7 +137,7 @@ public class JavaDBServerControl {
 	}
 
 	/**
-	 * trace utility of server
+	 * trace utility of acceptor
 	 * 
 	 * @throws Exception
 	 */
@@ -399,14 +399,14 @@ public class JavaDBServerControl {
 
 	void waitForConnection() {
 		// Server instance for testing connection
-		// NetworkServerControl server = null;
+		// NetworkServerControl acceptor = null;
 
 		// Use NetworkServerControl.ping() to wait for
 		// NetworkServer to come up. We could have used
-		// NetworkServerControl to start the server but the property is
+		// NetworkServerControl to start the acceptor but the property is
 		// easier.
 		try {
-			// server = new NetworkServerControl();
+			// acceptor = new NetworkServerControl();
 
 			networkServerControl.ping();
 			networkServerControl.logConnections(true);

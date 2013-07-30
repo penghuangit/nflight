@@ -71,10 +71,10 @@ public class ServerTest {
 
 		//this.testService(sd);
 
-		// server.init();
-		// server.startup();
-		// server.status();
-		// server.shutdown();
+		// acceptor.init();
+		// acceptor.startup();
+		// acceptor.status();
+		// acceptor.shutdown();
 
 	}
 

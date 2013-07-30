@@ -28,7 +28,7 @@ public class SocektClient02 {
 		final Charset charset = Charset.defaultCharset();
 		final CharsetDecoder decoder = charset.newDecoder();
 		final ByteBuffer textToEcho = ByteBuffer
-				.wrap("Echo this: I'm a big and ugly server!".getBytes());
+				.wrap("Echo this: I'm a big and ugly acceptor!".getBytes());
 		final ByteBuffer echoedText = ByteBuffer
 				.allocateDirect(MAX_PACKET_SIZE);
 

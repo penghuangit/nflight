@@ -25,12 +25,12 @@ public class SecureSocketFactory implements RMIClientSocketFactory,
 	}
 
 	/**
-	 * Creates the server socket, which will be used to instantiate a
+	 * Creates the acceptor socket, which will be used to instantiate a
 	 * <code>UnicastRemoteObject</code>.
 	 * 
 	 * @param port
 	 *            The port to listen on.
-	 * @return The server socket.
+	 * @return The acceptor socket.
 	 */
 	@Override
 	public ServerSocket createServerSocket(final int port) throws IOException {

@@ -22,7 +22,7 @@ public class summationClient {
 			System.out.println(" sum = " + sum);
 			long endTime = System.currentTimeMillis();
 			System.out
-					.println("Time consumed for receiving the feedback from the server:"
+					.println("Time consumed for receiving the feedback from the acceptor:"
 							+ (endTime - startTime) + " milliseconds");
 			clientSocket.close();
 		} catch (Exception e) {

@@ -87,7 +87,7 @@ public class Boot {
 	/**
 	 * Fires up the <b><em>NFlight</em></b> system. This method initializes the
 	 * Profile Manager and then starts the bootstrap process for the <B>
-	 * <em>NFlight</em></b> server platform.
+	 * <em>NFlight</em></b> acceptor platform.
 	 */
 	public static void main(final String[] args) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
@@ -213,10 +213,10 @@ public class Boot {
 		sb.append("    		  --service <service-specifier>");
 		sb.append("    			where service-specifier = <service-name>:<service-type>:<service-type>:<service-command>[(semicolon-separated <property-name>=<property-value>)]");
 		sb.append("    				where properties are:");
-		sb.append("    					-local-host	 <host(or host socketAddress) where to bind the local server socket on>");
-		sb.append("    					-local-port	 <port where to bind the local server socket on>");
-		sb.append("    					-remote-host	 <host(or host socketAddress) where to bind the remote server socket on>");
-		sb.append("    					-remote-port	 <port where to bind the remote server socket on>");
+		sb.append("    					-local-host	 <host(or host socketAddress) where to bind the local acceptor socket on>");
+		sb.append("    					-local-port	 <port where to bind the local acceptor socket on>");
+		sb.append("    					-remote-host	 <host(or host socketAddress) where to bind the remote acceptor socket on>");
+		sb.append("    					-remote-port	 <port where to bind the remote acceptor socket on>");
 		sb.append("    					-gui		 If specified, GUI created.");
 		sb.append("    					");
 		sb.append("   ");

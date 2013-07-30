@@ -29,7 +29,7 @@ public class HandlerWithThreadPool extends Handler {
     //Start processing in a new Processer Thread and Hand off to the reactor thread.
     synchronized void processAndHandOff(int readCount) {
         readProcess(readCount);
-        //Read processing done. Now the server is ready to send a message to the client.
+        //Read processing done. Now the acceptor is ready to send a message to the client.
         state = SENDING;
     }
  

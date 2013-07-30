@@ -64,7 +64,7 @@ import java.rmi.registry.Registry;
  * <i><b>client.policy</b></i> file)
  * <li><i><b>name</b></i> is the name for the object's stub 
  * in the registry 
- * <li><i><b>host</b></i> is the server's host
+ * <li><i><b>host</b></i> is the acceptor's host
  * </ul>
  *
  * <p>Note: <code>rmid</code> must be running on its default port,

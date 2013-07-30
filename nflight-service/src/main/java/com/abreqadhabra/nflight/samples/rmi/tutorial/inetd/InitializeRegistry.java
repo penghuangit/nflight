@@ -138,8 +138,8 @@ public class InitializeRegistry {
 	 */
 	if (channel instanceof ServerSocketChannel) {
 	    /*
-	     * Service launched from inetd.  Get server socket from
-	     * inherited server socket channel.
+	     * Service launched from inetd.  Get acceptor socket from
+	     * inherited acceptor socket channel.
 	     */
 	    serverSocket = ((ServerSocketChannel) channel).socket();
 
@@ -160,7 +160,7 @@ public class InitializeRegistry {
 	}
 
 	/*
-	 * Create server socket factory for registry to delay accepting
+	 * Create acceptor socket factory for registry to delay accepting
 	 * calls until a service is bound in the registry.
 	 */
 	RMIServerSocketFactory ssf =
@@ -190,13 +190,13 @@ public class InitializeRegistry {
     }
 
     /**
-     * A server socket factory to use when exporting a registry launched
+     * A acceptor socket factory to use when exporting a registry launched
      * from 'inetd' with 'wait' status.  This socket factory's
-     * 'createServerSocket' method returns a server socket that wraps the
-     * server socket specified during construction and is specialized to
+     * 'createServerSocket' method returns a acceptor socket that wraps the
+     * acceptor socket specified during construction and is specialized to
      * delay accepting requests until a remote service is bound in the
-     * registry (when the 'serviceAvailable' flag is 'true').  The server
-     * socket supplied to the constructor should be the server socket
+     * registry (when the 'serviceAvailable' flag is 'true').  The acceptor
+     * socket supplied to the constructor should be the acceptor socket
      * obtained from the 'System.inheritedChannel' method.
      *
      * Note that only a single instance of this class should be created.
@@ -215,7 +215,7 @@ public class InitializeRegistry {
 	}
 
 	/**
-	 * Returns the server socket specified during construction wrapped
+	 * Returns the acceptor socket specified during construction wrapped
 	 * in a 'DelayedAcceptServerSocket'.  The port argument is ignored.
 	 **/
 	public ServerSocket createServerSocket(int port)
@@ -227,9 +227,9 @@ public class InitializeRegistry {
     }
 
     /**
-     * A server socket that delegates all public methods to the underlying
-     * server socket specified at construction.  The accept method is
-     * overridden to delay calling accept on the underlying server socket
+     * A acceptor socket that delegates all public methods to the underlying
+     * acceptor socket specified at construction.  The accept method is
+     * overridden to delay calling accept on the underlying acceptor socket
      * until a remote service is bound in the registry (when the
      * 'serviceAvailable' flag is 'true').
      **/
@@ -270,7 +270,7 @@ public class InitializeRegistry {
 	}
 
 	/**
-	 * Delays calling accept on the underlying server socket until the
+	 * Delays calling accept on the underlying acceptor socket until the
 	 * remote service is bound in the registry.
 	 **/
 	public Socket accept() throws IOException {

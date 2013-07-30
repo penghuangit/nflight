@@ -39,7 +39,7 @@
  Usage: java nserverdemo.NsSample
  <P>
  Please note, a file derby.log is created in the directory you run this program.
- This file contains the logging of connections made with the derby network server
+ This file contains the logging of connections made with the derby network acceptor
  */
 
 package com.abreqadhabra.nflight.samples.data.bin;
@@ -200,7 +200,7 @@ public class JavaDBServer {
 		try {
 			// Use NetworkServerControl.ping() to wait for
 			// NetworkServer to come up. We could have used
-			// NetworkServerControl to start the server but the property is
+			// NetworkServerControl to start the acceptor but the property is
 			// easier.
 			// Server instance for testing connection
 			server = new NetworkServerControl();

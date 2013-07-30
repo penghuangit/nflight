@@ -11,7 +11,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 
-import com.abreqadhabra.nflight.application.server.service.socket.test.sample.common.Message;
+import com.abreqadhabra.nflight.application.server.service.socket.tcp.common.Message;
 
 public class StreamHelper {
 

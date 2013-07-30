@@ -64,17 +64,17 @@ public class DatagramAcceptor implements Runnable, IService  {
 			if (isOpen) {
 
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-						"Echo server was successfully opened!");
+						"Echo acceptor was successfully opened!");
 
 				LOGGER.logp(
 						Level.FINER,
 						THIS_CLAZZ.getName(),
 						METHOD_NAME,
-						"Echo server was binded on: "
+						"Echo acceptor was binded on: "
 								+ datagramChannel.getLocalAddress());
 
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-						"Echo server is ready to echo ...");
+						"Echo acceptor is ready to echo ...");
 
 				final ByteBuffer echoText = ByteBuffer
 						.allocateDirect(MAX_PACKET_SIZE);

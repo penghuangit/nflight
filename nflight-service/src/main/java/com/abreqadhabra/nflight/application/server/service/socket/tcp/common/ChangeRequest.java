@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.server.service.socket.test.sample.common;
+package com.abreqadhabra.nflight.application.server.service.socket.tcp.common;
 
 import java.nio.channels.SocketChannel;
 
@@ -15,4 +15,13 @@ public class ChangeRequest {
 		this.type = type;
 		this.ops = ops;
 	}
+
+	@Override
+	public String toString() {
+		return "ChangeRequest [socket=" + socket + ", type=" + type + ", ops="
+				+ ops + "]";
+	}
+
+
+	
 }
