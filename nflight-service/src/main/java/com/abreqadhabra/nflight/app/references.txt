@@ -58,3 +58,5 @@ http://www.cs.vu.nl/~eliens/online/oo/I/2/reactor.html
 
 http://www.javafaq.nu/java-article1103.html
 http://www.exampledepot.8waytrips.com/egs/java.nio/NbClient.html
+http://kingori.egloos.com/4711759
+http://rox-xmlrpc.sourceforge.net/niotut/

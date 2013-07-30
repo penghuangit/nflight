@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.server.service.socket.test;
+package com.abreqadhabra.nflight.application.server.service.socket.test.sample.common;
 
 import java.io.Serializable;
 
