@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.server.service.socket.tcp;
+package com.abreqadhabra.nflight.application.server.service.socket;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -9,7 +9,7 @@ import com.abreqadhabra.nflight.application.server.service.socket.tcp.impl.DataE
 
 public interface SocketAcceptor {
 
-	void init() throws IOException;
+	void bind() throws IOException;
 
 	void accept(SelectionKey key) throws IOException;
 

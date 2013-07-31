@@ -14,7 +14,7 @@ public class Message implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Message [str=" + str + "]";
+		return str;
 	}
 
 }

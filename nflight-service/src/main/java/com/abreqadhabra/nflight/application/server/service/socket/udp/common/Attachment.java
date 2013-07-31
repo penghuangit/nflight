@@ -1,11 +1,11 @@
-package com.abreqadhabra.nflight.application.server.service.socket;
+package com.abreqadhabra.nflight.application.server.service.socket.udp.common;
 
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 
 public class Attachment {
 
-	private int bufferCapacity = 1024;
+	private int bufferCapacity = 1024*1024;
 	private ByteBuffer requestByteBuffer;
 	private ByteBuffer responseByteBuffer;
 	private SocketAddress socketAddress;

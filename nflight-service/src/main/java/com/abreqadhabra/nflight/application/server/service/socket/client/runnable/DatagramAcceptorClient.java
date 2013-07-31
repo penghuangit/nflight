@@ -1,12 +1,14 @@
-package com.abreqadhabra.nflight.application.server.service.socket.tcp.client.runnable;
+package com.abreqadhabra.nflight.application.server.service.socket.client.runnable;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.StandardProtocolFamily;
+import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
-import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,18 +17,17 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.server.service.socket.tcp.common.ChangeRequest;
 import com.abreqadhabra.nflight.application.server.service.socket.tcp.common.ResponseHandler;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
-import com.sun.xml.internal.txw2.output.XmlSerializer;
 
-public class SocketClient implements Runnable {
-	private static final Class<SocketClient> THIS_CLAZZ = SocketClient.class;
+public class DatagramAcceptorClient implements Runnable {
+	private static final Class<DatagramAcceptorClient> THIS_CLAZZ = DatagramAcceptorClient.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	
 	// The host:port combination to connect to
 	private InetAddress hostAddress;
 	private int port;
@@ -41,34 +42,36 @@ public class SocketClient implements Runnable {
 	private List<ChangeRequest> pendingChanges = new LinkedList<ChangeRequest>();
 
 	// Maps a SocketChannel to a list of ByteBuffer instances
-	private Map<SocketChannel, List> pendingData = new HashMap<SocketChannel, List>();
+	private Map<DatagramChannel, List> pendingData = new HashMap<DatagramChannel, List>();
 
 	// Maps a SocketChannel to a ResponseHandler
-	private Map<SocketChannel, ResponseHandler> rspHandlers = Collections
-			.synchronizedMap(new HashMap<SocketChannel, ResponseHandler>());
+	private Map<DatagramChannel, ResponseHandler> rspHandlers = Collections
+			.synchronizedMap(new HashMap<DatagramChannel, ResponseHandler>());
 
-	public SocketClient(InetAddress hostAddress, int port) throws IOException {
+	public DatagramAcceptorClient(InetAddress hostAddress, int port)
+			throws IOException {
 		this.hostAddress = hostAddress;
 		this.port = port;
 		this.selector = this.initSelector();
 	}
 
-	public void sendObject(Object object, ResponseHandler handler) throws IOException {
+	public void sendObject(Object object, ResponseHandler handler)
+			throws IOException {
 		// Start a new connection
-		SocketChannel socket = this.initiateConnection();
+		DatagramChannel datagram = this.initiateConnection();
 
 		// Register the response handler
-		this.rspHandlers.put(socket, handler);
+		this.rspHandlers.put(datagram, handler);
 
 		// And queue the data we want written
 		synchronized (this.pendingData) {
-			List<ByteBuffer> queue = this.pendingData.get(socket);
+			List<ByteBuffer> queue = this.pendingData.get(datagram);
 			if (queue == null) {
 				queue = new ArrayList<ByteBuffer>();
-				this.pendingData.put(socket, queue);
+				this.pendingData.put(datagram, queue);
 			}
-			 
-			queue.add(handler.serializeObject(object));
+
+			queue.add(ResponseHandler.serializeObject(object));
 		}
 
 		// Finally, wake up our selecting thread so it can make the required
@@ -78,6 +81,13 @@ public class SocketClient implements Runnable {
 
 	@Override
 	public void run() {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		final String orgName = Thread.currentThread().getName();
+		Thread.currentThread().setName(
+				orgName + "-" + THIS_CLAZZ.getSimpleName());
+
 		while (true) {
 			try {
 				// Process any pending changes
@@ -87,15 +97,46 @@ public class SocketClient implements Runnable {
 					while (changes.hasNext()) {
 						ChangeRequest change = changes.next();
 						switch (change.type) {
-						case ChangeRequest.CHANGEOPS:
-							SelectionKey key = change.socket
+						case ChangeRequest.CHANGE_OPS:
+							SelectionKey key = change.datagramChannel
 									.keyFor(this.selector);
+
+							LOGGER.logp(
+									Level.FINER,
+									THIS_CLAZZ.getSimpleName(),
+									METHOD_NAME,
+									"보류 변경 유형: "
+											+ change.type
+											+ ":"
+											+ ChangeRequest.getOpsName(key
+													.interestOps())
+											+ "->"
+											+ ChangeRequest
+													.getOpsName(change.ops)
+											+ "\n" + change);
+							
 							key.interestOps(change.ops);
 							break;
 						case ChangeRequest.REGISTER:
-							change.socket.register(this.selector, change.ops);
+
+							LOGGER.logp(
+									Level.FINER,
+									THIS_CLAZZ.getSimpleName(),
+									METHOD_NAME,
+									"보류 변경 유형: "
+											+ change.type
+											+ ":"
+											+ this.selector
+											+ "->"
+											+ ChangeRequest
+													.getOpsName(change.ops)
+											+ "\n" + change);
+							
+							change.datagramChannel.register(this.selector,
+									change.ops);
 							break;
 						}
+						
 					}
 					this.pendingChanges.clear();
 				}
@@ -115,9 +156,7 @@ public class SocketClient implements Runnable {
 					}
 
 					// Check what event is available and deal with it
-					if (key.isConnectable()) {
-						this.finishConnection(key);
-					} else if (key.isReadable()) {
+					if (key.isReadable()) {
 						this.read(key);
 					} else if (key.isWritable()) {
 						this.write(key);
@@ -130,7 +169,7 @@ public class SocketClient implements Runnable {
 	}
 
 	private void read(SelectionKey key) throws IOException {
-		SocketChannel socketChannel = (SocketChannel) key.channel();
+		DatagramChannel datagram = (DatagramChannel) key.channel();
 
 		// Clear out our read buffer so it's ready for new data
 		this.readBuffer.clear();
@@ -138,12 +177,12 @@ public class SocketClient implements Runnable {
 		// Attempt to read off the channel
 		int numRead;
 		try {
-			numRead = socketChannel.read(this.readBuffer);
+			numRead = datagram.read(this.readBuffer);
 		} catch (IOException e) {
 			// The remote forcibly closed the connection, cancel
 			// the selection key and close the channel.
 			key.cancel();
-			socketChannel.close();
+			datagram.close();
 			return;
 		}
 
@@ -156,10 +195,10 @@ public class SocketClient implements Runnable {
 		}
 
 		// Handle the response
-		this.handleResponse(socketChannel, this.readBuffer.array(), numRead);
+		this.handleResponse(datagram, this.readBuffer.array(), numRead);
 	}
 
-	private void handleResponse(SocketChannel socketChannel, byte[] data,
+	private void handleResponse(DatagramChannel datagram, byte[] data,
 			int numRead) throws IOException {
 		// Make a correctly sized copy of the data before handing it
 		// to the client
@@ -167,26 +206,29 @@ public class SocketClient implements Runnable {
 		System.arraycopy(data, 0, rspData, 0, numRead);
 
 		// Look up the handler for this channel
-		ResponseHandler handler = this.rspHandlers.get(socketChannel);
+		ResponseHandler handler = this.rspHandlers.get(datagram);
 
 		// And pass the response to it
 		if (handler.handleResponse(rspData)) {
 			// The handler has seen enough, close the connection
-			socketChannel.close();
-			socketChannel.keyFor(this.selector).cancel();
+			datagram.close();
+			datagram.keyFor(this.selector).cancel();
 		}
 	}
 
 	private void write(SelectionKey key) throws IOException {
-		SocketChannel socketChannel = (SocketChannel) key.channel();
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		DatagramChannel datagram = (DatagramChannel) key.channel();
 
 		synchronized (this.pendingData) {
-			List<?> queue = this.pendingData.get(socketChannel);
+			List<?> queue = this.pendingData.get(datagram);
 
 			// Write until there's not more data ...
 			while (!queue.isEmpty()) {
 				ByteBuffer buf = (ByteBuffer) queue.get(0);
-				socketChannel.write(buf);
+				datagram.write(buf);
 				if (buf.remaining() > 0) {
 					// ... or the socket's buffer fills up
 					break;
@@ -203,49 +245,34 @@ public class SocketClient implements Runnable {
 		}
 	}
 
-	private void finishConnection(SelectionKey key) throws IOException {
-		SocketChannel socketChannel = (SocketChannel) key.channel();
+	private DatagramChannel initiateConnection() throws IOException {
+		DatagramChannel datagramChannel = DatagramChannel
+				.open(StandardProtocolFamily.INET);
+		datagramChannel.configureBlocking(false);
 
-		// Finish the connection. If the connection operation failed
-		// this will raise an IOException.
-		try {
-			socketChannel.finishConnect();
-		} catch (IOException e) {
-			// Cancel the channel's registration with our selector
-			System.out.println(e);
-			key.cancel();
-			return;
-		}
-
-		// Register an interest in writing on this channel
-		key.interestOps(SelectionKey.OP_WRITE);
-	}
-
-	private SocketChannel initiateConnection() throws IOException {
-		// Create a non-blocking socket channel
-		SocketChannel socketChannel = SocketChannel.open();
-		socketChannel.configureBlocking(false);
+		// set some options
+		datagramChannel.setOption(StandardSocketOptions.SO_RCVBUF, 4 * 1024);
+		datagramChannel.setOption(StandardSocketOptions.SO_SNDBUF, 4 * 1024);
 
 		// Kick off connection establishment
-		socketChannel
-				.connect(new InetSocketAddress(this.hostAddress, this.port));
+		datagramChannel.connect(new InetSocketAddress(this.hostAddress,
+				this.port));
 
 		// Queue a channel registration since the caller is not the
 		// selecting thread. As part of the registration we'll register
 		// an interest in connection events. These are raised when a channel
 		// is ready to complete connection establishment.
 		synchronized (this.pendingChanges) {
-			this.pendingChanges.add(new ChangeRequest(socketChannel,
-					ChangeRequest.REGISTER, SelectionKey.OP_CONNECT));
+			this.pendingChanges.add(new ChangeRequest(datagramChannel,
+					ChangeRequest.REGISTER, SelectionKey.OP_WRITE));
 		}
 
-		return socketChannel;
+		return datagramChannel;
 	}
 
 	private Selector initSelector() throws IOException {
 		// Create a new selector
 		return SelectorProvider.provider().openSelector();
 	}
-
 
 }

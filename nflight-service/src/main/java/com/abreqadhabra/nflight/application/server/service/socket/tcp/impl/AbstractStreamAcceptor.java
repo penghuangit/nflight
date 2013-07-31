@@ -1,8 +1,9 @@
-package com.abreqadhabra.nflight.application.server.service.socket.tcp;
+package com.abreqadhabra.nflight.application.server.service.socket.tcp.impl;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketOption;
 import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -15,16 +16,19 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.application.server.service.socket.SocketAcceptor;
 import com.abreqadhabra.nflight.application.server.service.socket.tcp.common.ChangeRequest;
-import com.abreqadhabra.nflight.application.server.service.socket.tcp.impl.AcceptorWorker;
+import com.abreqadhabra.nflight.application.server.service.socket.tcp.common.ResponseHandler;
+import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public abstract class AbstractSocketAcceptor implements SocketAcceptor,
+public abstract class AbstractStreamAcceptor implements SocketAcceptor,
 		Runnable {
-	private static final Class<AbstractSocketAcceptor> THIS_CLAZZ = AbstractSocketAcceptor.class;
+	private static final Class<AbstractStreamAcceptor> THIS_CLAZZ = AbstractStreamAcceptor.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	// The host:port combination to listen on
@@ -47,59 +51,75 @@ public abstract class AbstractSocketAcceptor implements SocketAcceptor,
 	// A list of PendingChange instances
 	protected List<ChangeRequest> pendingChanges = new LinkedList<ChangeRequest>();
 
-	
-	public AbstractSocketAcceptor(final InetAddress hostAddress,
+	public AbstractStreamAcceptor(final InetAddress hostAddress,
 			final int port, final AcceptorWorker worker) throws IOException {
 		this.hostAddress = hostAddress;
 		this.port = port;
 		this.worker = worker;
-		this.init();
+		this.bind();
 	}
 
 	@Override
-	public void init() throws IOException {
+	public void bind() throws IOException {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		// Create a new selector
+		// 새로운 서버 소켓 채널 생성
+		this.serverChannel = ServerSocketChannel.open();
+
+		// 새로운 셀렉터 생성
 		this.selector = SelectorProvider.provider().openSelector();
-		// Create a new non-blocking acceptor socket channel
-		serverChannel = ServerSocketChannel.open();
 
-		// check that both of them were successfully opened
-		if ((this.selector.isOpen()) && (serverChannel.isOpen())) {
+		// 생성된 서버 소켓 채널과 셀렉터가 성공적으로 열려있는지를 확인
+		if ((this.selector.isOpen()) && (this.serverChannel.isOpen())) {
 
-			// configure non-blocking mode
-			serverChannel.configureBlocking(false);
+			// 블로킹 메커니즘을 논블로킹 모드로 설정
+			this.serverChannel.configureBlocking(false);
 
-			// set some options
-			serverChannel
-					.setOption(StandardSocketOptions.SO_RCVBUF, 256 * 1024);
-			serverChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+			if (LOGGER.isLoggable(Level.FINER)) {
+				Set<SocketOption<?>> options = serverChannel.supportedOptions();
+				StringBuffer sb = new StringBuffer(
+						"서버 소켓 채널의 지원 옵션:  ");
 
-			// Bind the acceptor socket to the specified address and port
-			final InetSocketAddress isa = new InetSocketAddress(hostAddress,
-					port);
+				for (SocketOption<?> option : options) {
+					sb.append(option.name());
+					sb.append(" ");
+				}
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
+						METHOD_NAME, sb.toString());
+			}
+
+			// 서버 소켓 채널 옵션 설정 - 소켓 전송 버퍼 크기(바이트)를 지정
+			this.serverChannel.setOption(StandardSocketOptions.SO_RCVBUF,
+					256 * 1024);
+			// 서버 소켓 채널 옵션 설정 - 주소의 재사용 여부를 활성화
+			this.serverChannel.setOption(StandardSocketOptions.SO_REUSEADDR,
+					true);
+
+			// 네트워크 주소와 포트 번호를 지정하여 InetSocketAddress 생성
+			final InetSocketAddress isa = new InetSocketAddress(
+					hostAddress, port);
+
+			// 지정된 네트워크 주소로 소켓을 바인딩
+			this.serverChannel.socket().bind(isa);
+
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
+					METHOD_NAME, "바인딩된 서버 소켓 채널 주소 :"+ serverChannel.getLocalAddress() );
+
+			// 서버 소켓 채널을 셀렉터에 OP_ACCEPT 키로 등록
+			this.serverChannel.register(this.selector, SelectionKey.OP_ACCEPT);
 			
-			// bind the acceptor socket channel to port
-			serverChannel.socket().bind(isa);
-
-			// Register the acceptor socket channel, indicating an interest in
-			// accepting new connections
-			// register the current channel with the given selector
-
-			serverChannel.register(this.selector, SelectionKey.OP_ACCEPT);
 		} else {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-					"The socket channel or selector cannot be opened!");
+					" 서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
 		}
 	}
-	
+
 	@Override
 	public void accept(final SelectionKey key) throws IOException {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
-		
+
 		// For an accept to be pending the channel must be a acceptor socket
 		// channel.
 		final ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key
@@ -109,10 +129,10 @@ public abstract class AbstractSocketAcceptor implements SocketAcceptor,
 		final SocketChannel socketChannel = serverSocketChannel.accept();
 		socketChannel.socket();
 		socketChannel.configureBlocking(false);
-		
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,"Incoming connection from: "
-				+ socketChannel.getRemoteAddress());
-		
+
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+				"Incoming connection from: " + socketChannel.getRemoteAddress());
+
 		// Register the new SocketChannel with our Selector, indicating
 		// we'd like to be notified when there's data waiting to be read
 		socketChannel.register(this.selector, SelectionKey.OP_READ);
@@ -126,12 +146,12 @@ public abstract class AbstractSocketAcceptor implements SocketAcceptor,
 		final SocketChannel socketChannel = (SocketChannel) key.channel();
 
 		// Clear out our read buffer so it's ready for new data
-		readBuffer.clear();
+		this.readBuffer.clear();
 
 		// Attempt to read off the channel
 		int numRead = -1;
 		try {
-			numRead = socketChannel.read(readBuffer);
+			numRead = socketChannel.read(this.readBuffer);
 		} catch (final IOException e) {
 			// The remote forcibly closed the connection, cancel
 			// the selection key and close the channel.
@@ -152,7 +172,8 @@ public abstract class AbstractSocketAcceptor implements SocketAcceptor,
 				numRead + " bytes from " + socketChannel.getRemoteAddress());
 
 		// Hand the data off to our worker thread
-		worker.processData(this, socketChannel, readBuffer.array(), numRead);
+		this.worker.processData(this, socketChannel, this.readBuffer.array(),
+				numRead);
 	}
 
 	@Override
@@ -185,14 +206,13 @@ public abstract class AbstractSocketAcceptor implements SocketAcceptor,
 
 	@Override
 	public void send(SocketChannel socket, ByteBuffer data) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
+		Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		synchronized (this.pendingChanges) {
 			// Indicate we want the interest ops set changed
 			this.pendingChanges.add(new ChangeRequest(socket,
-					ChangeRequest.CHANGEOPS, SelectionKey.OP_WRITE));
-	
+					ChangeRequest.CHANGE_OPS, SelectionKey.OP_WRITE));
+
 			// And queue the data we want written
 			synchronized (this.pendingData) {
 				List<ByteBuffer> queue = this.pendingData.get(socket);
@@ -209,4 +229,54 @@ public abstract class AbstractSocketAcceptor implements SocketAcceptor,
 		this.selector.wakeup();
 	}
 
+	@Override
+	public void execute(final DataEvent dataEvent) {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		Object object = ResponseHandler.deserializeObject(dataEvent.data);
+		if (object == null) {
+			object = new String(dataEvent.data);
+		}
+
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+				object.toString());
+		
+		if("shutdown".equals(object.toString())){
+			exit();
+		}
+
+		final String response = "acceptor";
+
+		
+		final ByteBuffer data = ResponseHandler.serializeObject(response);
+
+		this.send(dataEvent.socket, data);
+
+	}
+	
+	public static void exit() {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		// 3초간 대기후 어플리케이션을 종료합니다.
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(3000);
+				} catch (final InterruptedException ie) {
+					// 이 예외는 발생하지 않습니다.
+					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
+							METHOD_NAME, "Thread was interrupted\n"
+									+ WrapperException.getStackTrace(ie));
+				}
+				System.gc();
+				System.runFinalization();
+				LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(),
+						METHOD_NAME, "system exit");
+				System.exit(0);
+			}
+		}).start();
+	}
 }
