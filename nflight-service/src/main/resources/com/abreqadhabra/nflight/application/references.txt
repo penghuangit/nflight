@@ -65,11 +65,11 @@ http://stackoverflow.com/questions/3192940/best-socket-options-for-client-and-se
 http://cs.ecs.baylor.edu/~donahoo/practical/JavaSockets2/textcode.html
 https://forums.oracle.com/thread/1692921
 http://underpop.online.fr/j/java/java-network-programming/javanp3-CHP-13-SECT-5.html
+http://www.java2s.com/Open-Source/Android/Graphics-3D-2D-OpenGL/jmonkeyengine/com/jme3/network/connection/Catalogconnection.htm
 
 
 
-
-
+https://github.com/netty/netty/issues/1258
 
 
 

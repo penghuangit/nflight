@@ -152,15 +152,7 @@ public abstract class AbstractDatagramAcceptor implements SocketAcceptor,
 
 		final DatagramChannel datagramChannel = (DatagramChannel) key.channel();
 
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
-				METHOD_NAME, datagramChannel + ": " + datagramChannel.isConnected());
-//		try {
-//			Thread.sleep(100000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
+
 		// Clear out our read buffer so it's ready for new data
 		this.readBuffer.clear();
 

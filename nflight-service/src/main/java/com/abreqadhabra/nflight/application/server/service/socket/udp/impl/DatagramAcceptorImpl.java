@@ -2,7 +2,6 @@ package com.abreqadhabra.nflight.application.server.service.socket.udp.impl;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -51,7 +50,7 @@ public class DatagramAcceptorImpl extends AbstractDatagramAcceptor {
 									.keyFor(super.selector);
 							// 셀렉션키의 OPS를 요청값으로 변경
 							key.interestOps(change.ops);
-							LOGGER.logp(
+								LOGGER.logp(
 									Level.FINER,
 									THIS_CLAZZ.getSimpleName(),
 									METHOD_NAME,
@@ -69,7 +68,6 @@ public class DatagramAcceptorImpl extends AbstractDatagramAcceptor {
 					// 모든 보류 변경 내용을 소거
 					this.pendingChanges.clear();
 				}
-
 				// 등록된 데이터그램 채널에 대한 이벤트 발생을 대기
 				int readyChannels = this.selector.select();
 
@@ -92,6 +90,17 @@ public class DatagramAcceptorImpl extends AbstractDatagramAcceptor {
 					// 취득한 키를 키 집합에서 제거
 					selectedKeys.remove();
 
+					
+					
+					//Object o = ResponseHandler.deserializeObject(buf.array());
+//					/LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),					METHOD_NAME, buffer.array().length + "-------------------> " + client.);
+					try {
+						Thread.sleep(100000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 					if (!key.isValid()) {
 						// false이면 가장 가까운 반복문의 초기위치로 이동
 						continue;
@@ -149,6 +158,10 @@ public class DatagramAcceptorImpl extends AbstractDatagramAcceptor {
 		if (key.isReadable()) {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					"a channel is ready for reading");
+			
+	
+
+			
 			// Get channel with bytes to read
 			this.read(key);
 			// See Reading from a SocketChannel

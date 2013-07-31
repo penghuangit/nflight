@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.server.service.socket.tcp.common.ChangeRequest;
 import com.abreqadhabra.nflight.application.server.service.socket.tcp.common.ResponseHandler;
+import com.abreqadhabra.nflight.application.server.service.socket.udp.common.Attachment;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class DatagramAcceptorClient implements Runnable {
@@ -57,21 +58,30 @@ public class DatagramAcceptorClient implements Runnable {
 
 	public void sendObject(Object object, ResponseHandler handler)
 			throws IOException {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+		
 		// Start a new connection
 		DatagramChannel datagram = this.initiateConnection();
 
 		// Register the response handler
 		this.rspHandlers.put(datagram, handler);
 
+		
+		
 		// And queue the data we want written
 		synchronized (this.pendingData) {
 			List<ByteBuffer> queue = this.pendingData.get(datagram);
+			
+
 			if (queue == null) {
 				queue = new ArrayList<ByteBuffer>();
 				this.pendingData.put(datagram, queue);
 			}
-
+			
 			queue.add(ResponseHandler.serializeObject(object));
+
+
 		}
 
 		// Finally, wake up our selecting thread so it can make the required
@@ -225,10 +235,13 @@ public class DatagramAcceptorClient implements Runnable {
 		synchronized (this.pendingData) {
 			List<?> queue = this.pendingData.get(datagram);
 
+
 			// Write until there's not more data ...
 			while (!queue.isEmpty()) {
 				ByteBuffer buf = (ByteBuffer) queue.get(0);
-				datagram.write(buf);
+				
+			
+				//datagram.write(buf);
 				if (buf.remaining() > 0) {
 					// ... or the socket's buffer fills up
 					break;
@@ -246,6 +259,9 @@ public class DatagramAcceptorClient implements Runnable {
 	}
 
 	private DatagramChannel initiateConnection() throws IOException {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+		
 		DatagramChannel datagramChannel = DatagramChannel
 				.open(StandardProtocolFamily.INET);
 		datagramChannel.configureBlocking(false);
@@ -258,6 +274,15 @@ public class DatagramAcceptorClient implements Runnable {
 		datagramChannel.connect(new InetSocketAddress(this.hostAddress,
 				this.port));
 
+		// check if it the channel was successfully connected
+		if (datagramChannel.isConnected()) {
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
+					METHOD_NAME,"the channel was successfully connected!");
+		} else {
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
+					METHOD_NAME, "The channel cannot be connected!");
+		}
+		
 		// Queue a channel registration since the caller is not the
 		// selecting thread. As part of the registration we'll register
 		// an interest in connection events. These are raised when a channel
