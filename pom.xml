@@ -35,7 +35,8 @@
 		
 		<module>nflight-references-sources</module>
 		 -->
-	
+
+		<module>nflight-application</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

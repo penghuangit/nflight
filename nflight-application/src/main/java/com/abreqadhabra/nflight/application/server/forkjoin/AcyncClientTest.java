@@ -1,4 +1,4 @@
-package mch_10_client;
+package com.abreqadhabra.nflight.application.server.forkjoin;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -16,12 +16,12 @@ import java.util.concurrent.ExecutionException;
  *
  * @author Apress
  */
-public class Main {
+public class AcyncClientTest {
 
     public static void main(String[] args) {
 
         final int DEFAULT_PORT = 9999;
-        final String IP = "127.0.0.1";
+        final String IP = "10.67.8.144";
 
         //create asynchronous socket channel bound to the default group
         try (AsynchronousSocketChannel asynchronousSocketChannel = AsynchronousSocketChannel.open()) {

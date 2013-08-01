@@ -32,7 +32,7 @@ public abstract class Profile {
 		// com_abreqadhabra_nflight_service_socket_server_NFServerSocketImpl,
 		//
 		// com_abreqadhabra_nflight_service_rmi_server_unicast_UnicastRMIServerImpl,
-		// com_abreqadhabra_nflight_service_rmi_server_activatable_ActivatableRMIServerImpl,
+		// com_abareqadhabra_nflight_service_rmi_server_activatable_ActivatableRMIServerImpl,
 		UNKNOWN;
 
 		public static boolean contains(final String name) {
