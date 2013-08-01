@@ -11,14 +11,6 @@ public class RejectedExecutionHandelerImpl implements RejectedExecutionHandler {
 	private static final Class<RejectedExecutionHandelerImpl> THIS_CLAZZ = RejectedExecutionHandelerImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public RejectedExecutionHandelerImpl() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-				LoggingHelper.describe(THIS_CLAZZ));
-	}
-
 	@Override
 	public void rejectedExecution(final Runnable runnable,
 			final ThreadPoolExecutor executor) {

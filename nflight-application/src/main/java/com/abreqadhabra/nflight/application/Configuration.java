@@ -10,6 +10,10 @@ public final class Configuration {
 	
 	public static final Path CODE_BASE_PATH = IOStream
 			.getCodebasePath(THIS_CLAZZ.getName());
+	
+	public static final Path FILE_SOCKET_SERVER_PROPERTIES = CODE_BASE_PATH
+		.resolve("com/abreqadhabra/nflight/application/server/aio/conf/socketserver.properties");
+	
 	public static final Path FILE_BOOT_PROPERTIES = CODE_BASE_PATH
 			.resolve("com/abreqadhabra/nflight/application/launcher/conf/boot.properties");
 	public static final Path FILE_BOOT_POLICY = CODE_BASE_PATH

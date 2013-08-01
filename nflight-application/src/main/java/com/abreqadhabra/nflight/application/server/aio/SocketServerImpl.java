@@ -2,48 +2,74 @@ package com.abreqadhabra.nflight.application.server.aio;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousServerSocketChannel;
-import java.nio.channels.AsynchronousSocketChannel;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.abreqadhabra.nflight.application.server.aio.concurrent.ListenRobot;
+import com.abreqadhabra.nflight.application.server.aio.concurrent.ThreadPoolMonitor;
+import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class SocketServerImpl implements SocketServer {
+	private static final Class<SocketServerImpl> THIS_CLAZZ = SocketServerImpl.class;
+	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private ConcurrentHashMap<Long, Session> sessionMap = new ConcurrentHashMap<Long, Session>();
-	private AsynchronousServerSocketChannel asynchronousServerSocketChannel;
-	private Configure configure;
-	private ThreadPoolExecutor threadPoolExecutor;
-	private AtomicLong sessionId = new AtomicLong(0);
-	private boolean running = false;
+	private final ConcurrentHashMap<Long, Session> sessionMap = new ConcurrentHashMap<Long, Session>();
+	private AsynchronousServerSocketChannel asyncServerSocketChannel;
+	private final Configure configure;
+	private final ThreadPoolExecutor threadPoolExecutor;
+
+	private InetSocketAddress socketAddress;
 
 	public SocketServerImpl() {
-		this.configure = new SocketServerConfiguraImpl();
+		configure = new SocketServerConfiguraImpl();
 
-		RejectedExecutionHandler executionHandler = new RejectedExecutionHandelerImpl();
+		threadPoolExecutor = new ThreadPoolExecutor(Integer.parseInt(configure
+				.get("min_pool_size").trim()), Integer.parseInt(configure.get(
+				"max_pool_size").trim()), Long.parseLong(configure.get(
+				"keep_alive_time").trim()), TimeUnit.SECONDS,
+				new LinkedBlockingQueue<Runnable>(),
+				new RejectedExecutionHandelerImpl());
 
-		this.threadPoolExecutor = new ThreadPoolExecutor(12, 24, 10,
-				TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(),
-				executionHandler);
-		// this.threadPoolExecutor = new ThreadPoolExecutor(
-		// Integer.parseInt(this.configure.get("min_pool_size").trim()),
-		// Integer.parseInt(this.configure.get("max_pool_size").trim()),
-		// Long.parseLong(this.configure.get("keep_alive_time").trim()),
-		// TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>());
+		// start the monitoring thread
+		startMonitoringThread(threadPoolExecutor, 30);
+
 	}
-	
-	
+
+	private void startMonitoringThread(ThreadPoolExecutor threadPoolExecutor,
+			int delay) {
+		ThreadPoolMonitor monitor = new ThreadPoolMonitor(threadPoolExecutor,
+				delay);
+		Thread monitorThread = new Thread(monitor);
+		monitorThread.start();
+		// /monitor.shutdown();
+	}
+
+	public SocketServerImpl(final InetSocketAddress socketAddress) {
+		this();
+		this.socketAddress = socketAddress;
+	}
+
 	@Override
-	public void start() throws Exception {
-		asynchronousServerSocketChannel = AsynchronousServerSocketChannel
-				.open();
-		asynchronousServerSocketChannel.bind(new InetSocketAddress(
-				9999));//Integer.parseInt(configure.get("port").trim())));
-		threadPoolExecutor.submit(new ListenRobot(
-				asynchronousServerSocketChannel));
+	public void startup() throws Exception {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		asyncServerSocketChannel = AsynchronousServerSocketChannel.open();
+		asyncServerSocketChannel.bind(socketAddress);
+
+		LOGGER.logp(
+				Level.FINER,
+				THIS_CLAZZ.getSimpleName(),
+				METHOD_NAME,
+				"바인딩된 서버 소켓 채널 주소 :"
+						+ asyncServerSocketChannel.getLocalAddress());
+
+		threadPoolExecutor.submit(new ListenRobot(asyncServerSocketChannel,
+				sessionMap, configure));
 	}
 
 	@Override
@@ -53,34 +79,8 @@ public class SocketServerImpl implements SocketServer {
 	}
 
 	@Override
-	public Session getSession(long sessionId) {
+	public Session getSession(final long sessionId) {
 		return sessionMap.get(sessionId);
-	}
-
-	class ListenRobot implements Runnable {
-		private AsynchronousServerSocketChannel asynchronousServerSocketChannel;
-		public ListenRobot(
-				AsynchronousServerSocketChannel asynchronousServerSocketChannel) {
-			this.asynchronousServerSocketChannel = asynchronousServerSocketChannel;
-		}
-		public void run() {
-			while (!running) {
-				Future<AsynchronousSocketChannel> future = asynchronousServerSocketChannel
-						.accept();
-				try {
-					AsynchronousSocketChannel channel = future.get();
-					Session session = new SocketServerSession(
-							sessionId.incrementAndGet(), channel);
-					sessionMap.put(session.getId(), session);
-					session.init(configure);
-					session.open();
-					session.read();
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 
 }

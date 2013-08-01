@@ -1,8 +1,10 @@
 package com.abreqadhabra.nflight.application.server.forkjoin;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -18,10 +20,10 @@ import java.util.concurrent.ExecutionException;
  */
 public class AcyncClientTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnknownHostException {
 
         final int DEFAULT_PORT = 9999;
-        final String IP = "10.67.8.144";
+        final String IP = InetAddress.getLocalHost().getHostAddress();
 
         //create asynchronous socket channel bound to the default group
         try (AsynchronousSocketChannel asynchronousSocketChannel = AsynchronousSocketChannel.open()) {
