@@ -77,8 +77,8 @@ https://github.com/netty/netty/issues/1258
 http://www.ibm.com/developerworks/library/j-jtp07233/index.html
 https://code.google.com/p/fle4y/source/browse/
 
-
-
+http://programmingexamples.wikidot.com/threadpoolexecutor
+https://www.google.com/webhp?hl=ko&tab=ww#hl=ko&output=search&sclient=psy-ab&q=threadpoolexecutor+example&oq=threadpoolexecutor+example&gs_l=hp.3..0l3j0i30.992.992.0.2319.1.1.0.0.0.0.117.117.0j1.1.0....0...1c.1.23.psy-ab..0.1.107.de4gW8jsZUo&pbx=1&bav=on.2,or.r_cp.r_qf.&bvm=bv.50165853%2Cd.dGI%2Cpv.xjs.s.en_US.seW1cfrvSKg.O&fp=4c5f868f81c070dd&biw=1920&bih=1017
 
 
 
