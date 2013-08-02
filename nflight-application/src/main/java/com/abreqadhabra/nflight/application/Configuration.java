@@ -2,21 +2,12 @@ package com.abreqadhabra.nflight.application;
 
 import java.nio.file.Path;
 
-import com.abreqadhabra.nflight.common.util.IOStream;
+import com.abreqadhabra.nflight.application.launcher.Configure;
 
 public final class Configuration {
-	private static final Class<Configuration> THIS_CLAZZ = Configuration.class;
 	public static final String LAUNCHER_CLASS = "com.abreqadhabra.nflight.application.launcher.ServiceLauncher";
-	
-	public static final Path CODE_BASE_PATH = IOStream
-			.getCodebasePath(THIS_CLAZZ.getName());
-	
-	public static final Path FILE_SOCKET_SERVER_PROPERTIES = CODE_BASE_PATH
-		.resolve("com/abreqadhabra/nflight/application/server/aio/conf/socketserver.properties");
-	
-	public static final Path FILE_BOOT_PROPERTIES = CODE_BASE_PATH
-			.resolve("com/abreqadhabra/nflight/application/launcher/conf/boot.properties");
-	public static final Path FILE_BOOT_POLICY = CODE_BASE_PATH
+
+	public static final Path FILE_BOOT_POLICY = Configure.CODE_BASE_PATH
 			.resolve("com/abreqadhabra/nflight/application/launcher/conf/boot.policy");
 	public static final String BOOT_OPTION_PREFIX = "--";
 	public static final Object BOOT_OPTION_CONF = BOOT_OPTION_PREFIX + "conf";
@@ -43,7 +34,7 @@ public final class Configuration {
 			return this.lowercase;
 		}
 	}
-	
+
 	public static enum BOOT_OPTION {
 
 		conf, version, service, name, type, mode, command, mainclass, gui, host, port, UNKNOWN;

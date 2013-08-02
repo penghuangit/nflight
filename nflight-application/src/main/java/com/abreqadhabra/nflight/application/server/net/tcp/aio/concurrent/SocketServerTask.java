@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.server.aio.concurrent;
+package com.abreqadhabra.nflight.application.server.net.tcp.aio.concurrent;
 
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -8,23 +8,23 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.server.aio.Configure;
-import com.abreqadhabra.nflight.application.server.aio.Session;
-import com.abreqadhabra.nflight.application.server.aio.SocketServerSession;
+import com.abreqadhabra.nflight.application.launcher.Configure;
+import com.abreqadhabra.nflight.application.server.net.tcp.Session;
+import com.abreqadhabra.nflight.application.server.net.tcp.aio.SocketServerSession;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class ListenRobot implements Runnable {
-	private static final Class<ListenRobot> THIS_CLAZZ = ListenRobot.class;
+public class SocketServerTask implements Runnable {
+	private static final Class<SocketServerTask> THIS_CLAZZ = SocketServerTask.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private final AsynchronousServerSocketChannel asyncServerSocketChannel;
-	private final boolean running = false;
+	private final boolean isRunning = false;
 	private final AtomicLong sessionId = new AtomicLong(0);
 
 	private final ConcurrentHashMap<Long, Session> sessionMap;
 	private final Configure configure;
 
-	public ListenRobot(
+	public SocketServerTask(
 			final AsynchronousServerSocketChannel asynchronousServerSocketChannel,
 			final ConcurrentHashMap<Long, Session> sessionMap,
 			final Configure configure) {
@@ -43,19 +43,23 @@ public class ListenRobot implements Runnable {
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "[Thread] "
 				+ threadName);
 
-		while (!running) {
-			final Future<AsynchronousSocketChannel> future = asyncServerSocketChannel
-					.accept();
+		Future<AsynchronousSocketChannel> future = null;
+		AsynchronousSocketChannel asyncSocketChannel = null;
+		Session session = null;
+
+		while (!isRunning) {
+			future = asyncServerSocketChannel.accept();
 			try {
+				asyncSocketChannel = future.get();
 
-				final AsynchronousSocketChannel asyncSocketChannel = future
-						.get();
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+						threadName
+								+ "\t비동기 서버 소켓 채널 바인딩 주소 : "
+								+ asyncSocketChannel.getLocalAddress()
+										.toString());
 
-				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, threadName +"\t" +
-						asyncSocketChannel.getLocalAddress().toString());
-
-				final Session session = new SocketServerSession(
-						sessionId.incrementAndGet(), asyncSocketChannel);
+				session = new SocketServerSession(sessionId.incrementAndGet(),
+						asyncSocketChannel);
 				sessionMap.put(session.getSessionId(), session);
 				session.init(configure);
 				session.open();

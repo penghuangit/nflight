@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.server.aio;
+package com.abreqadhabra.nflight.application.launcher.concurrent.executor;
 
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class RejectedExecutionHandelerImpl implements RejectedExecutionHandler {
-	private static final Class<RejectedExecutionHandelerImpl> THIS_CLAZZ = RejectedExecutionHandelerImpl.class;
+public class RejectedExecutionHandlerImpl implements RejectedExecutionHandler {
+	private static final Class<RejectedExecutionHandlerImpl> THIS_CLAZZ = RejectedExecutionHandlerImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	@Override
@@ -17,6 +17,6 @@ public class RejectedExecutionHandelerImpl implements RejectedExecutionHandler {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-				runnable.toString() + " : I've been rejected ! ");
+				runnable.toString() + " : has been rejected");
 	}
 }

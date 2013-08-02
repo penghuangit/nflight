@@ -1,7 +1,6 @@
 package com.abreqadhabra.nflight.application.launcher;
 
 import java.net.BindException;
-import java.net.InetAddress;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Properties;
@@ -47,21 +46,21 @@ public class ServiceLauncher implements Launcher {
 		if (cmdLineArgs.length == 0) {
 			LOGGER.logp(Level.FINEST, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					"Settings specified in the default property file : "
-							+ Configuration.FILE_BOOT_PROPERTIES);
+							+ Configure.FILE_BOOT_PROPERTIES);
 
 			// Settings specified in the default property file
 			props = PropertyFile
-					.readPropertyFilePath(Configuration.FILE_BOOT_PROPERTIES);
+					.readPropertyFilePath(Configure.FILE_BOOT_PROPERTIES);
 
 		} else if (cmdLineArgs.length > 1
 				&& cmdLineArgs[0].equals(Configuration.BOOT_OPTION_CONF)) {
 
 			LOGGER.logp(Level.FINEST, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					"Settings specified in a property file : "
-							+ Configuration.FILE_BOOT_PROPERTIES);
+							+ Configure.FILE_BOOT_PROPERTIES);
 
 			String propsPath = cmdLineArgs[0];
-			Path path = Configuration.CODE_BASE_PATH.resolve(propsPath);
+			Path path = Configure.CODE_BASE_PATH.resolve(propsPath);
 			// Settings specified in a property file
 			props = PropertyFile.readPropertyFilePath(path);
 		} else if (cmdLineArgs.length > 0

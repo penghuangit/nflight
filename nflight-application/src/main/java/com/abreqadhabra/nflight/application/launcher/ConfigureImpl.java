@@ -1,22 +1,23 @@
-package com.abreqadhabra.nflight.application.server.aio;
+package com.abreqadhabra.nflight.application.launcher;
 
+import java.nio.file.Path;
+import java.util.Hashtable;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.Configuration;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 
-public class SocketServerConfiguraImpl implements Configure {
-	private static final Class<SocketServerConfiguraImpl> THIS_CLAZZ = SocketServerConfiguraImpl.class;
+public class ConfigureImpl implements Configure {
+	private static final Class<ConfigureImpl> THIS_CLAZZ = ConfigureImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private Properties props = new Properties();
 
-	public SocketServerConfiguraImpl() {
+	public ConfigureImpl(Path path) {
 		try {
 			props = PropertyFile
-					.readPropertyFilePath(Configuration.FILE_SOCKET_SERVER_PROPERTIES);
+					.readPropertyFilePath(path);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -33,4 +34,8 @@ public class SocketServerConfiguraImpl implements Configure {
 		props.setProperty(key, value);
 	}
 
+	@Override
+	public Hashtable<Object, Object> all() {
+		return (Hashtable<Object, Object>) props;
+	}
 }
