@@ -6,14 +6,16 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.application.launcher.Configure;
+import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.application.launcher.Profile;
 import com.abreqadhabra.nflight.application.launcher.concurrent.executor.ThreadPoolExecutorServiceImpl;
 import com.abreqadhabra.nflight.application.launcher.concurrent.executor.monitor.ThreadPoolMonitorServiceImpl;
-import com.abreqadhabra.nflight.application.server.net.tcp.aio.MessageDTO;
-import com.abreqadhabra.nflight.application.server.net.tcp.aio.MessageDTOImpl;
-import com.abreqadhabra.nflight.application.server.net.tcp.aio.SocketServerImpl;
-import com.abreqadhabra.nflight.application.server.net.tcp.aio.logic.BusinessLogicHandler;
-import com.abreqadhabra.nflight.application.server.net.tcp.aio.logic.BusinessLogicHandlerImpl;
+import com.abreqadhabra.nflight.application.server.net.socket.AsyncStreamServerImpl;
+import com.abreqadhabra.nflight.application.server.net.socket.MessageDTO;
+import com.abreqadhabra.nflight.application.server.net.socket.MessageDTOImpl;
+import com.abreqadhabra.nflight.application.server.net.socket.logic.BusinessLogicHandlerImpl;
+import com.abreqadhabra.nflight.application.server.net.socket.logic.IBusinessLogicHandler;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 //Strategy Context
@@ -48,13 +50,14 @@ public class ServerImpl implements IServer {
 				monitor.start();
 			}
 
-			BusinessLogicHandler logicHandler = new BusinessLogicHandlerImpl();
-			
+			IBusinessLogicHandler logicHandler = new BusinessLogicHandlerImpl();
 			MessageDTO messageDTO = new MessageDTOImpl();
-			SocketServerImpl socketServer = new SocketServerImpl(
-					new InetSocketAddress(InetAddress.getLocalHost()
-							.getHostAddress(), 9999), threadPoolExecutor, messageDTO, logicHandler);
-			
+			AsyncStreamServerImpl asyncStreamServer = new AsyncStreamServerImpl(
+					new ConfigureImpl(Configure.FILE_SOCKET_SERVER_PROPERTIES),
+					threadPoolExecutor, new InetSocketAddress(InetAddress
+							.getLocalHost().getHostAddress(), 9999),
+					messageDTO, logicHandler);
+			asyncStreamServer.startup();
 			// Runnable socketServerTask = socketServer.getSocketServerTask();
 			// threadPoolExecutor.submit(socketServerTask);
 

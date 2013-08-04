@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
@@ -112,7 +111,7 @@ public class PropertyFile {
 		final StringBuffer sb = new StringBuffer();
 
 		for (final String key : keys) {
-			final String formatString = ":: key = %-50s value = %s%n";
+			final String formatString = ":: key = %-60s value = %s%n";
 			final String str = String.format(formatString, key, props.get(key));
 			sb.append(str);
 		}

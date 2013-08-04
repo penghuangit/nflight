@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.server.net.tcp.aio;
+package com.abreqadhabra.nflight.application.server.net.socket;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;

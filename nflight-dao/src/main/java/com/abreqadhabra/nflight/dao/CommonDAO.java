@@ -24,7 +24,6 @@ public class CommonDAO {
 	private static final Class<CommonDAO> THIS_CLAZZ = CommonDAO.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private String databaseMode;
 	private String databaseType;
 	private Properties dbProperties;
 	private Connection connection;
@@ -39,10 +38,8 @@ public class CommonDAO {
 	 */
 	private int maxRows;
 
-	protected CommonDAO(String databaseType, String databaseMode) throws Exception {
+	protected CommonDAO(String databaseType) throws Exception {
 		this.databaseType = databaseType;
-		this.databaseMode = databaseMode;
-
 
 		this.connection = this.getConnection();
 
@@ -75,7 +72,7 @@ public class CommonDAO {
 	}
 
 	protected String getPropertyByDatabaseType(String key) {
-		return dbProperties.getProperty(databaseType +"." + databaseMode + key);
+		return dbProperties.getProperty(databaseType +"." + key);
 	}
 
 	/**

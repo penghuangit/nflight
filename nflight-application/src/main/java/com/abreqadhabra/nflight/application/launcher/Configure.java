@@ -20,6 +20,11 @@ public interface Configure {
 	public static final Path FILE_SOCKET_SERVER_PROPERTIES = CODE_BASE_PATH
 			.resolve("com/abreqadhabra/nflight/application/server/aio/conf/socketserver.properties");
 
+	static final Path FILE_SOCKET_OPTION_PROPERTIES = CODE_BASE_PATH
+			.resolve("com/abreqadhabra/nflight/application/server/aio/conf/socketoption.properties");
+
+	static final String PREFIX_KEY_PROPERTIES_SOCKET_OPTION = "nflight.socketoption.";;
+
 	public String get(String key);
 
 	public void set(String key, String value);

@@ -1,5 +1,11 @@
-package com.abreqadhabra.nflight.application.server.net.tcp.aio;
+package com.abreqadhabra.nflight.application.server.net.socket;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -28,10 +34,10 @@ public class MessageDTOImpl implements MessageDTO {
 		byte[] bs02 = new byte[buffer.limit()];
 		buffer.get(bs02);
 		String content = new String(bs02, Charset.forName("UTF-8"));
-		//String[] strs = content.split("[:]");
-		String[] strs = content.split(",");
+		// String[] strs = content.split("[:]");
+		String[] strs = content.split("[:]");
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-				content + "->" +Arrays.toString(strs) + "/"+ strs.length);
+				content + "->" + Arrays.toString(strs) + "/" + strs.length);
 		msg.setType(strs[0]);
 		msg.setName(strs[1]);
 		msg.setMessage(strs[2]);
@@ -80,11 +86,46 @@ public class MessageDTOImpl implements MessageDTO {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("TextMessageImpl [type=").append(this.type)
-				.append(", name=").append(this.name).append(", message=")
-				.append(this.message).append(", content=").append(this.content)
-				.append("]");
+
+		builder.append(type);
+		builder.append(":");
+		builder.append(name);
+		builder.append(":");
+		builder.append(message);
+
 		return builder.toString();
+	}
+
+	public static ByteBuffer serializeObject(Object object) {
+		byte[] bytes = null;
+		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+				ObjectOutputStream objectOutputStream = new ObjectOutputStream(
+						byteArrayOutputStream);) {
+			objectOutputStream.writeObject(object);
+			objectOutputStream.flush();
+			bytes = byteArrayOutputStream.toByteArray();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return ByteBuffer.wrap(bytes);
+	}
+
+	public static Object deserializeObject(final byte[] bytes) {
+		Object readObject = null;
+		try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+				ObjectInputStream ois = new ObjectInputStream(bais);) {
+			readObject = ois.readObject();
+
+		} catch (ClassNotFoundException | IOException e) {
+			if (e instanceof StreamCorruptedException) {
+				return null;
+			} else {
+				e.printStackTrace();
+			}
+		}
+
+		return readObject;
 	}
 
 }
