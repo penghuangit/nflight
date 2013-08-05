@@ -1,4 +1,4 @@
-CONNECT 'jdbc:derby://localhost:1527/nflight;create=true;user=freelec;password=password1!';
+CONNECT 'jdbc:derby://localhost:1527/database/nflight;create=true;user=freelec;password=password1!';
 
 /* Drop Tables */
 

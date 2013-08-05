@@ -116,7 +116,7 @@ public class NetworkChannelHelper {
 			readObject = ois.readObject();
 
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-					"deserializeObject: " + readObject.getClass().getName() + " [" + bytes.length + " bytes] " + readObject);
+					"deserializeObject: " + readObject.getClass().getName() + " " + readObject);
 			
 		} catch (ClassNotFoundException | IOException e) {
 			if (e instanceof StreamCorruptedException) {

@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 public class JDBCExample {
 
-	private static String dbURL = "jdbc:derby://localhost:1527/JavaDB/nflightDB;create=true;user=freelec;password=password1!";
+	private static String dbURL = "jdbc:derby://localhost:1527/database/nflight;create=true;user=freelec;password=password1!";
 	private static String tableName = "FREELEC.AIRLINE";
 	// JDBC Connection
 	private static Connection conn = null;

@@ -3,6 +3,8 @@ package com.abreqadhabra.nflight.application.server.net.socket;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 
+import com.abreqadhabra.nflight.dao.dto.Airline;
+
 public interface MessageDTO extends Serializable {
 
 	// public MessageDTO transfer(ByteBuffer buffer);
@@ -14,5 +16,9 @@ public interface MessageDTO extends Serializable {
 	ByteBuffer getContent();
 
 	void setContent(ByteBuffer content);
+
+	void setAirlines(Airline[] airlines);
+	
+	Airline[] getAirlines();
 
 }

@@ -10,7 +10,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
-import com.abreqadhabra.nflight.application.server.net.socket.channel.ReadHandler;
 import com.abreqadhabra.nflight.application.server.net.socket.logic.IBusinessLogicHandler;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -21,7 +20,7 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 	private final Configure configure;
 	private final Long sessionId;
 	private final AsynchronousSocketChannel asyncSocketChannel;
-// private final MessageDTO messageDTO;
+	// private final MessageDTO messageDTO;
 	private final IBusinessLogicHandler logic;
 
 	private ByteBuffer readByteBuffer;
@@ -50,13 +49,12 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		NetworkChannelHelper
-				.setChannelOption(this.getAsyncSocketChannel());
+		NetworkChannelHelper.setChannelOption(this.getAsyncSocketChannel());
 
 		this.setReadByteBuffer(NetworkChannelHelper.getByteBuffer(this.configure
 				.getInt("nflight.socketserver.socket.async.bytebuffer.capacity")));
 	}
-	
+
 	@Override
 	public void start() {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
@@ -97,67 +95,76 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 
 		this.getReadByteBuffer().clear();
 		this.getAsyncSocketChannel().read(this.getReadByteBuffer(), this,
-				new ReadHandler(this)
-		// new CompletionHandler<Integer, AsyncSocketServerAcceptor>() {
-		// @Override
-		// public void completed(final Integer result,
-		// final AsyncSocketServerAcceptor acceptor) {
-		//
-		// try {
-		// LOGGER.logp(
-		// Level.FINER,
-		// THIS_CLAZZ.getSimpleName(),
-		// METHOD_NAME,
-		//
-		// AsyncSocketServerAcceptor.this.asyncSocketChannel
-		// + "----------> reading Message: "
-		// + AsyncSocketServerAcceptor.this.asyncSocketChannel
-		// .getRemoteAddress());
-		// } catch (IOException e1) {
-		// e1.printStackTrace();
-		// }
-		//
-		// if (result > 0) {
-		// AsyncSocketServerAcceptor.this.readByteBuffer.flip();
-		//
-		// // ?? 직렬화???
-		// final MessageDTO dto = AsyncSocketServerAcceptor.this.messageDTO
-		// .transfer(AsyncSocketServerAcceptor.this.readByteBuffer);
-		//
-		// LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
-		// METHOD_NAME,
-		// dto.getClass().getName() + ":" + dto.toString());
-		// try {
-		// AsyncSocketServerAcceptor.this.inputQueue.put(dto);
-		// } catch (final InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		//
-		// LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
-		// METHOD_NAME, AsyncSocketServerAcceptor.this.logic
-		// .getClass().getName());
-		//
-		// AsyncSocketServerAcceptor.this.logic.doLogic(acceptor,
-		// AsyncSocketServerAcceptor.this.inputQueue,
-		// AsyncSocketServerAcceptor.this.outputQueue);
-		// AsyncSocketServerAcceptor.this.readByteBuffer.clear();
-		// }
-		// if (result < 0) {
-		// acceptor.close();
-		// LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
-		// METHOD_NAME, "데이터 읽기 오류로 채널을 닫습니다.");
-		// AsyncSocketServerAcceptor.this.logic.endCallBack();
-		// return;
-		// }
-		// AsyncSocketServerAcceptor.this.receive();
-		// }
-		// @Override
-		// public void failed(final Throwable exc,
-		// final AsyncSocketServerAcceptor acceptor) {
-		// }
-		// }
+		// new ReadHandler(this)
+				new CompletionHandler<Integer, AsyncSocketServerAcceptor>() {
+					@Override
+					public void completed(final Integer result,
+							final AsyncSocketServerAcceptor acceptor) {
 
-				);
+						try {
+							LOGGER.logp(
+									Level.FINER,
+									THIS_CLAZZ.getSimpleName(),
+									METHOD_NAME,
+
+									AsyncSocketServerAcceptor.this.asyncSocketChannel
+											+ "----------> reading Message: "
+											+ AsyncSocketServerAcceptor.this.asyncSocketChannel
+													.getRemoteAddress());
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+
+						if (result > 0) {
+							AsyncSocketServerAcceptor.this.readByteBuffer
+									.flip();
+
+							// ?? 직렬화???
+							final MessageDTO dto = AsyncSocketServerAcceptor.this.messageDTO
+									.transfer(AsyncSocketServerAcceptor.this.readByteBuffer);
+
+							LOGGER.logp(
+									Level.FINER,
+									THIS_CLAZZ.getSimpleName(),
+									METHOD_NAME,
+									dto.getClass().getName() + ":"
+											+ dto.toString());
+							try {
+								AsyncSocketServerAcceptor.this.inputQueue
+										.put(dto);
+							} catch (final InterruptedException e) {
+								e.printStackTrace();
+							}
+
+							LOGGER.logp(Level.FINER,
+									THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+									AsyncSocketServerAcceptor.this.logic
+											.getClass().getName());
+
+							AsyncSocketServerAcceptor.this.logic.doLogic(
+									acceptor,
+									AsyncSocketServerAcceptor.this.inputQueue,
+									AsyncSocketServerAcceptor.this.outputQueue);
+							AsyncSocketServerAcceptor.this.readByteBuffer
+									.clear();
+						}
+						if (result < 0) {
+							acceptor.close();
+							LOGGER.logp(Level.FINER,
+									THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+									"데이터 읽기 오류로 채널을 닫습니다.");
+							AsyncSocketServerAcceptor.this.logic.endCallBack();
+							return;
+						}
+						AsyncSocketServerAcceptor.this.receive();
+					}
+					@Override
+					public void failed(final Throwable exc,
+							final AsyncSocketServerAcceptor acceptor) {
+					}
+				}
+
+		);
 
 	}
 
@@ -175,9 +182,9 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 									+ " / messageDTO: " + messageDTO);
 					// + new String(messageDTO.getContent().array(),
 					// Charset.forName("utf-8")));
-
-					ByteBuffer srcByteBuffer = messageDTO
-							.serializeObject(messageDTO);
+					ByteBuffer srcByteBuffer = null;
+					// ByteBuffer srcByteBuffer = messageDTO
+					// .serializeObject(messageDTO);
 
 					this.getAsyncSocketChannel()
 							.write(srcByteBuffer, // messageDTO.getContent(),

@@ -6,7 +6,7 @@ import java.nio.channels.CompletionHandler;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 
-public class Worker implements CompletionHandler {
+public class Worker implements CompletionHandler<Object, Object> {
 	private Proactor proactor;
 	private SocketChannel socket;
 	private ByteBuffer b_read;

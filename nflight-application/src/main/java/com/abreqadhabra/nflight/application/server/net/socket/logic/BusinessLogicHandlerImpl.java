@@ -67,9 +67,9 @@ public class BusinessLogicHandlerImpl implements IBusinessLogicHandler {
 				
 				messageDTO.setType("fresh");
 				
-				ByteBuffer content = messageDTO.serializeObject(airlines);
+		//		ByteBuffer content = messageDTO.serializeObject(airlines);
 				
-				messageDTO.setContent(content);
+		//		messageDTO.setContent(content);
 				
 //			/	ByteBuffer outputByteBuffer =  messageDTO.serializeObject(messageDTO);
 				

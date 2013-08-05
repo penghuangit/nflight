@@ -1,9 +1,11 @@
 package com.abreqadhabra.nflight.application.server.net.socket;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
+import com.abreqadhabra.nflight.dao.dto.Airline;
 
 public class MessageDTOImpl implements MessageDTO {
 	private transient static final Class<MessageDTOImpl> THIS_CLAZZ = MessageDTOImpl.class;
@@ -16,6 +18,7 @@ public class MessageDTOImpl implements MessageDTO {
 	private String name;
 	private String message;
 	private transient ByteBuffer content;
+	private Airline[] airlines;
 
 	// @Override
 	// public MessageDTO transfer(ByteBuffer buffer) {
@@ -76,16 +79,33 @@ public class MessageDTOImpl implements MessageDTO {
 	}
 
 	@Override
+	public void setAirlines(Airline[] airlines) {
+		this.airlines = airlines;
+	}
+
+	@Override
+	public Airline[] getAirlines() {
+		return airlines;
+
+	}
+
+	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-
+		builder.append("MessageDTOImpl [type=");
 		builder.append(type);
-		builder.append(":");
+		builder.append(", name=");
 		builder.append(name);
-		builder.append(":");
+		builder.append(", message=");
 		builder.append(message);
-
+		builder.append(", airlines=");
+		builder.append(Arrays.toString(airlines));
+		builder.append("]");
 		return builder.toString();
 	}
+
+	
+
+
 
 }

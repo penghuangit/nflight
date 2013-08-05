@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.server.net.socket.MessageDTOImpl;
-import com.abreqadhabra.nflight.application.server.net.socket.client.AsyncSocketClientAcceptor;
+import com.abreqadhabra.nflight.application.server.net.socket.client.AsyncSocketClientAcceptorBAK;
 import com.abreqadhabra.nflight.application.server.net.socket.client.ClientControllerImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -19,11 +19,11 @@ public class ReadHandler
 	private static final Class<ReadHandler> THIS_CLAZZ = ReadHandler.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	AsyncSocketClientAcceptor acceptor;
+	AsyncSocketClientAcceptorBAK acceptor;
 	AsynchronousSocketChannel receiveAsyncSocketChannel;
 	private final ByteBuffer buffer;
 
-	public ReadHandler(AsyncSocketClientAcceptor acceptor,
+	public ReadHandler(AsyncSocketClientAcceptorBAK acceptor,
 			AsynchronousSocketChannel receiveAsyncSocketChannel) {
 
 		this.acceptor = acceptor;
@@ -61,7 +61,7 @@ public class ReadHandler
 			final String[] strs = content.split(":");
 
 			MessageDTOImpl msg = new MessageDTOImpl();
-			msg = (MessageDTOImpl) msg.deserializeObject(bs);
+		//	msg = (MessageDTOImpl) msg.deserializeObject(bs);
 
 			// LOGGER.info("msg.deserializeObject  --->"
 			// + x.getClass().getName());

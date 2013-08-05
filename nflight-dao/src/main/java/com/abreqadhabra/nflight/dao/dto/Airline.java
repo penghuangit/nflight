@@ -12,7 +12,9 @@ import java.io.Serializable;
 
 public class Airline implements Serializable {
 
-    protected String airlineCode;
+ 	private static final long serialVersionUID = 1L;
+
+ 	protected String airlineCode;
     protected String airlineName;
 
     public Airline() {

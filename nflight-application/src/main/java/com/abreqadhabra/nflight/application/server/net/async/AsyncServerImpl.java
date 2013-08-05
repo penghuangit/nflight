@@ -15,10 +15,10 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.application.server.net.async.handler.AsyncServerAcceptHandler;
+import com.abreqadhabra.nflight.application.server.net.async.logic.IBusinessLogic;
 import com.abreqadhabra.nflight.application.server.net.socket.AbstractSocketServerImpl;
 import com.abreqadhabra.nflight.application.server.net.socket.ISocketAcceptor;
 import com.abreqadhabra.nflight.application.server.net.socket.NetworkChannelHelper;
-import com.abreqadhabra.nflight.application.server.net.socket.logic.IBusinessLogicHandler;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class AsyncServerImpl extends AbstractSocketServerImpl {
@@ -27,7 +27,6 @@ public class AsyncServerImpl extends AbstractSocketServerImpl {
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private final InetSocketAddress socketAddress;
-	private final IBusinessLogicHandler logicHandler;
 
 	private AsynchronousChannelGroup threadGroup;
 	private AsynchronousServerSocketChannel asyncServerSocketChannel;
@@ -38,15 +37,16 @@ public class AsyncServerImpl extends AbstractSocketServerImpl {
 	private boolean isRunning = false;
 	private Future<AsynchronousSocketChannel> future;
 	private final AtomicLong sessionId = new AtomicLong(0);
+	private IBusinessLogic logic;
 
 	public AsyncServerImpl(final Configure configure,
 			final ThreadPoolExecutor threadPoolExecutor,
 			final InetSocketAddress socketAddress,
-			final IBusinessLogicHandler logicHandler) throws Exception {
+			final IBusinessLogic logic) throws Exception {
 		super(configure, threadPoolExecutor);
 		this.socketAddress = socketAddress;
-		this.logicHandler = logicHandler;
-		this.logicHandler.setServer(this);
+		this.logic = logic;
+		this.logic.setServer(this);
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class AsyncServerImpl extends AbstractSocketServerImpl {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		this.asyncServerSocketChannel.accept(null,
-				new AsyncServerAcceptHandler(super.configure,
+				new AsyncServerAcceptHandler(super.configure,logic,
 						asyncServerSocketChannel, this));
 		
 

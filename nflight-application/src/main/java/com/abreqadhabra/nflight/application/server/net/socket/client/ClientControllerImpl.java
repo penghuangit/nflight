@@ -7,16 +7,16 @@ import com.abreqadhabra.nflight.application.server.net.socket.NetworkChannelHelp
 
 public class ClientControllerImpl {
 
-	AsyncSocketClientAcceptor acceptor;
+	AsyncSocketClientAcceptorBAK acceptor;
 
 	public ClientControllerImpl() {
 		this.init();
 
-		acceptor = new AsyncSocketClientAcceptor(this);
+		acceptor = new AsyncSocketClientAcceptorBAK(this);
 	}
 
 	private void init() {
-		new Thread(new AsyncSocketClientAcceptor(this)).start();
+		new Thread(new AsyncSocketClientAcceptorBAK(this)).start();
 
 	}
 
