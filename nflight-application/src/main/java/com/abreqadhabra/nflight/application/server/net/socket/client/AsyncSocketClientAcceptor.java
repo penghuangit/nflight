@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.server.net.socket.MessageDTOImpl;
+import com.abreqadhabra.nflight.application.server.net.socket.NetworkChannelHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class AsyncSocketClientAcceptor implements Runnable {
@@ -82,11 +83,14 @@ public class AsyncSocketClientAcceptor implements Runnable {
 		return asyncSocketChannel;
 	}
 
-	private void receive() {
+	public void receive() {
 		Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		this.buffer.clear();
-		this.receiveAsyncSocketChannel.read(this.buffer, this.controller,
+		
+		// connect this channel's socket
+		this.receiveAsyncSocketChannel.read(this.buffer, this.controller, 
+	//			new ReadHandler(this, receiveAsyncSocketChannel ));
 				new CompletionHandler<Integer, ClientControllerImpl>() {
 
 					@Override
@@ -111,47 +115,69 @@ public class AsyncSocketClientAcceptor implements Runnable {
 						}
 
 						LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
-								METHOD_NAME, Integer.toString(result));
+								METHOD_NAME, "result: " + Integer.toString(result));
 
 						if (result > 1) {
 							LOGGER.info(AsyncSocketClientAcceptor.this.receiveAsyncSocketChannel
 									.toString());
-							final MessageDTOImpl msg = new MessageDTOImpl();
 							AsyncSocketClientAcceptor.this.buffer.flip();
 							final byte[] bs = new byte[AsyncSocketClientAcceptor.this.buffer
 									.limit()];
 							AsyncSocketClientAcceptor.this.buffer.get(bs);
+
 							final String content = new String(bs, Charset
 									.forName("UTF-8"));
-							LOGGER.info(content);
+						//	LOGGER.info(content);
 							final String[] strs = content.split(":");
-							msg.setType(strs[0]);
-							msg.setName(strs[1]);
-							msg.setMessage(strs[2]);
-							msg.setContent(ByteBuffer.wrap(bs));
-							if (msg.getType().equals("fresh")) {
-								final String name = msg.getMessage();
-								final String[] names = name.split("@");
-								LOGGER.info("name size  --->" + names.length);
-								// DefaultListModel model = clientPanel.model;
-								// model.clear();
-								for (final String s : names) {
-									LOGGER.info("name   --->" + s);
+
+							MessageDTOImpl msg = new MessageDTOImpl();
+							msg =  (MessageDTOImpl) NetworkChannelHelper.deserializeObject(buffer);
+
+//							LOGGER.info("msg.deserializeObject  --->"
+//									+ x.getClass().getName());
+
+							// msg.setType(strs[0]);
+							// msg.setName(strs[1]);
+							// msg.setMessage(strs[2]);
+							// msg.setContent(ByteBuffer.wrap(bs));
+							
+							
+									
+							if (msg.getType() == null) {
+								LOGGER.info(msg.toString());
+							} else {
+								
+		
+								
+								if (msg.getType().equals("fresh")) {
+									final String name = msg.getMessage();
+									final String[] names = name.split("@");
+									LOGGER.info("name size  --->"
+											+ names.length);
+									// DefaultListModel model =
+									// clientPanel.model;
+									// model.clear();
+									for (final String s : names) {
+										LOGGER.info("name   --->" + s);
+									}
+								} else if (msg.getType().equals("chat")) {
+									// if (count % 10 == 0) {
+									// clientPanel.jta01.setText("");
+									// }
+									// String oldMsg =
+									// clientPanel.jta01.getText();
+									// clientPanel.jta01.setText(oldMsg
+									// + msg.getName() + " :"
+									// + msg.getMessage() + "\n");
+									//
 								}
-							} else if (msg.getType().equals("chat")) {
-								// if (count % 10 == 0) {
-								// clientPanel.jta01.setText("");
-								// }
-								// String oldMsg = clientPanel.jta01.getText();
-								// clientPanel.jta01.setText(oldMsg
-								// + msg.getName() + " :"
-								// + msg.getMessage() + "\n");
-								//
+							
 							}
 							AsyncSocketClientAcceptor.this.receive();
 						} else if (result < 1) {
 							return;
 						}
+						
 
 					}
 
@@ -193,7 +219,7 @@ public class AsyncSocketClientAcceptor implements Runnable {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
 			asyncSocketChannel.close();
 		} catch (final IOException e) {

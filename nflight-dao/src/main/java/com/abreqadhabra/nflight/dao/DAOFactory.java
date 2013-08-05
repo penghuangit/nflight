@@ -2,6 +2,7 @@ package com.abreqadhabra.nflight.dao;
 
 import com.abreqadhabra.nflight.dao.oracle.OracleDAOFactory;
 
+
 public abstract class DAOFactory {
 
 	// There will be a method for each DAO that can be

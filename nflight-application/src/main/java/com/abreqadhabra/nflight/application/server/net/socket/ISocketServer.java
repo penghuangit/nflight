@@ -1,5 +1,6 @@
 package com.abreqadhabra.nflight.application.server.net.socket;
 
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.abreqadhabra.nflight.application.server.IServer;
@@ -7,7 +8,7 @@ import com.abreqadhabra.nflight.application.server.IServer;
 public interface ISocketServer extends IServer {
 
 	void init();
-	void open();
+	boolean open() throws IOException;
 
 	void bind();
 

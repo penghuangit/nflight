@@ -5,11 +5,14 @@ import java.nio.ByteBuffer;
 
 public interface MessageDTO extends Serializable {
 
-	public MessageDTO transfer(ByteBuffer buffer);
+	// public MessageDTO transfer(ByteBuffer buffer);
+
 	void setType(String type);
+	
 	String getType();
 
 	ByteBuffer getContent();
 
 	void setContent(ByteBuffer content);
+
 }

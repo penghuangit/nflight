@@ -24,11 +24,18 @@ public interface Configure {
 			.resolve("com/abreqadhabra/nflight/application/server/aio/conf/socketoption.properties");
 
 	static final String PREFIX_KEY_PROPERTIES_SOCKET_OPTION = "nflight.socketoption.";;
-
+	
 	public String get(String key);
 
 	public void set(String key, String value);
 
 	Hashtable<Object, Object> all();
+	
+	//ASYNC SERVER
+	static final String ASYNC_THREADPOOL_INITIALSIZE ="nflight.server.async.init.threadpool.initialsize";
+	static final String ASYNC_BIND_BACKLOG="nflight.server.async.bind.backlog";
+	static final String ACCEPTOR_READ_BUFFER_CAPACITY = "nflight.server.async.acceptor.bytebuffer.capacity";
+
+	public int getInt(String asyncBindBacklog);
 
 }

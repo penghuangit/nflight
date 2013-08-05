@@ -1,8 +1,8 @@
 ﻿*.class
 target/**
 
-.settings
-.project
+#.settings
+#.project
 .classpath
 
 

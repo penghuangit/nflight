@@ -1,0 +1,11 @@
+Mon Aug 05 11:45:32 KST 2013 : Apache Derby 네트워크 서버 - 10.8.2.2 - (1181258)이(가) 시작되어 포트 1527에서 연결을 승인할 준비가 되었습니다.
+----------------------------------------------------------------
+Mon Aug 05 11:45:36 KST 2013:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.2.2 - (1181258): instance a816c00e-0140-4c5d-8610-00000000002e 
+on database directory D:\workspace\nflight\nflight-dao\nflight  with class loader sun.misc.Launcher$AppClassLoader@1835282 
+Loaded from file:/D:/dskim/eclipse-standard-kepler-R-win32/eclipse/plugins/org.apache.derby.core_10.8.2/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_25-b17
+user.dir=D:\workspace\nflight\nflight-dao
+derby.system.home=.
+Database Class Loader started - derby.database.classpath=''

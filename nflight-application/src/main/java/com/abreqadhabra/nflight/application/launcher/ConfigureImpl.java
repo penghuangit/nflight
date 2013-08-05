@@ -16,8 +16,7 @@ public class ConfigureImpl implements Configure {
 
 	public ConfigureImpl(Path path) {
 		try {
-			props = PropertyFile
-					.readPropertyFilePath(path);
+			this.props = PropertyFile.readPropertyFilePath(path);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -26,16 +25,21 @@ public class ConfigureImpl implements Configure {
 
 	@Override
 	public String get(String key) {
-		return props.getProperty(key);
+		return this.props.getProperty(key).trim();
 	}
 
 	@Override
 	public void set(String key, String value) {
-		props.setProperty(key, value);
+		this.props.setProperty(key, value);
 	}
 
 	@Override
 	public Hashtable<Object, Object> all() {
-		return (Hashtable<Object, Object>) props;
+		return this.props;
+	}
+
+	@Override
+	public int getInt(String key) {
+		return Integer.parseInt(this.get(key));
 	}
 }

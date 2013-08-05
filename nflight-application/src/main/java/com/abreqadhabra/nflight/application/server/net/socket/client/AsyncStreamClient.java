@@ -1,21 +1,15 @@
 package com.abreqadhabra.nflight.application.server.net.socket.client;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.charset.Charset;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import com.abreqadhabra.nflight.application.server.net.socket.AsyncSocketServerAcceptor;
 import com.abreqadhabra.nflight.application.server.net.socket.MessageDTOImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -52,7 +46,7 @@ public class AsyncStreamClient extends JFrame {
 		
 
 		MessageDTOImpl msg = new MessageDTOImpl();
-		msg.setType("login");
+		msg.setType("AirlineDAO.findAll");
 		msg.setName("1");
 		msg.setMessage("2");
 		msg.setContent(ByteBuffer.wrap(msg.toString().getBytes(

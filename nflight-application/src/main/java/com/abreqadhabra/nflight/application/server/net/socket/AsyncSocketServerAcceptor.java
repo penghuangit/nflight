@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
-import java.nio.charset.Charset;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
+import com.abreqadhabra.nflight.application.server.net.socket.channel.ReadHandler;
 import com.abreqadhabra.nflight.application.server.net.socket.logic.IBusinessLogicHandler;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -21,7 +21,7 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 	private final Configure configure;
 	private final Long sessionId;
 	private final AsynchronousSocketChannel asyncSocketChannel;
-	private final MessageDTO messageDTO;
+// private final MessageDTO messageDTO;
 	private final IBusinessLogicHandler logic;
 
 	private ByteBuffer readByteBuffer;
@@ -40,7 +40,7 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 		this.configure = configure;
 		this.sessionId = sessionId;
 		this.asyncSocketChannel = asyncSocketChannel;
-		this.messageDTO = messageDTO;
+		// this.messageDTO = messageDTO;
 		this.logic = logicHandler;
 		init();
 	}
@@ -50,22 +50,23 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		SocketChannelHelper.setSocketChannelOption(this.asyncSocketChannel);
+		NetworkChannelHelper
+				.setChannelOption(this.getAsyncSocketChannel());
 
-		this.readByteBuffer = SocketChannelHelper.getByteBuffer(this.configure
-				.get("nflight.socketserver.socket.async.bytebuffer.capacity"));
-
+		this.setReadByteBuffer(NetworkChannelHelper.getByteBuffer(this.configure
+				.getInt("nflight.socketserver.socket.async.bytebuffer.capacity")));
 	}
-
+	
 	@Override
 	public void start() {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
-			if (this.asyncSocketChannel.isOpen()) {
+			if (this.getAsyncSocketChannel().isOpen()) {
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
 						METHOD_NAME, "Incoming connection from: "
-								+ this.asyncSocketChannel.getRemoteAddress());
+								+ this.getAsyncSocketChannel()
+										.getRemoteAddress());
 				this.receive();
 			}
 		} catch (final IOException e) {
@@ -78,92 +79,86 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
-			if (this.asyncSocketChannel.isOpen()) {
+			if (this.getAsyncSocketChannel().isOpen()) {
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
-						METHOD_NAME, "close channel" + this.asyncSocketChannel);
-				this.asyncSocketChannel.close();
+						METHOD_NAME,
+						"close channel" + this.getAsyncSocketChannel());
+				this.getAsyncSocketChannel().close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-
 
 	@Override
 	public void receive() {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		this.readByteBuffer.clear();
-		this.asyncSocketChannel.read(this.readByteBuffer, this,
-				new CompletionHandler<Integer, AsyncSocketServerAcceptor>() {
-					@Override
-					public void completed(final Integer result,
-							final AsyncSocketServerAcceptor acceptor) {
+		this.getReadByteBuffer().clear();
+		this.getAsyncSocketChannel().read(this.getReadByteBuffer(), this,
+				new ReadHandler(this)
+		// new CompletionHandler<Integer, AsyncSocketServerAcceptor>() {
+		// @Override
+		// public void completed(final Integer result,
+		// final AsyncSocketServerAcceptor acceptor) {
+		//
+		// try {
+		// LOGGER.logp(
+		// Level.FINER,
+		// THIS_CLAZZ.getSimpleName(),
+		// METHOD_NAME,
+		//
+		// AsyncSocketServerAcceptor.this.asyncSocketChannel
+		// + "----------> reading Message: "
+		// + AsyncSocketServerAcceptor.this.asyncSocketChannel
+		// .getRemoteAddress());
+		// } catch (IOException e1) {
+		// e1.printStackTrace();
+		// }
+		//
+		// if (result > 0) {
+		// AsyncSocketServerAcceptor.this.readByteBuffer.flip();
+		//
+		// // ?? 직렬화???
+		// final MessageDTO dto = AsyncSocketServerAcceptor.this.messageDTO
+		// .transfer(AsyncSocketServerAcceptor.this.readByteBuffer);
+		//
+		// LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
+		// METHOD_NAME,
+		// dto.getClass().getName() + ":" + dto.toString());
+		// try {
+		// AsyncSocketServerAcceptor.this.inputQueue.put(dto);
+		// } catch (final InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		//
+		// LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
+		// METHOD_NAME, AsyncSocketServerAcceptor.this.logic
+		// .getClass().getName());
+		//
+		// AsyncSocketServerAcceptor.this.logic.doLogic(acceptor,
+		// AsyncSocketServerAcceptor.this.inputQueue,
+		// AsyncSocketServerAcceptor.this.outputQueue);
+		// AsyncSocketServerAcceptor.this.readByteBuffer.clear();
+		// }
+		// if (result < 0) {
+		// acceptor.close();
+		// LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
+		// METHOD_NAME, "데이터 읽기 오류로 채널을 닫습니다.");
+		// AsyncSocketServerAcceptor.this.logic.endCallBack();
+		// return;
+		// }
+		// AsyncSocketServerAcceptor.this.receive();
+		// }
+		// @Override
+		// public void failed(final Throwable exc,
+		// final AsyncSocketServerAcceptor acceptor) {
+		// }
+		// }
 
-						try {
-							LOGGER.logp(
-									Level.FINER,
-									THIS_CLAZZ.getSimpleName(),
-									METHOD_NAME,
+				);
 
-									AsyncSocketServerAcceptor.this.asyncSocketChannel
-											+ "----------> reading Message: "
-											+ AsyncSocketServerAcceptor.this.asyncSocketChannel
-													.getRemoteAddress());
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-
-						if (result > 0) {
-							AsyncSocketServerAcceptor.this.readByteBuffer
-									.flip();
-
-							// ?? 직렬화???
-							final MessageDTO dto = AsyncSocketServerAcceptor.this.messageDTO
-									.transfer(AsyncSocketServerAcceptor.this.readByteBuffer);
-
-							LOGGER.logp(
-									Level.FINER,
-									THIS_CLAZZ.getSimpleName(),
-									METHOD_NAME,
-									dto.getClass().getName() + ":"
-											+ dto.toString());
-							try {
-								AsyncSocketServerAcceptor.this.inputQueue
-										.put(dto);
-							} catch (final InterruptedException e) {
-								e.printStackTrace();
-							}
-
-							LOGGER.logp(Level.FINER,
-									THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-									AsyncSocketServerAcceptor.this.logic
-											.getClass().getName());
-
-							AsyncSocketServerAcceptor.this.logic.doLogic(
-									acceptor,
-									AsyncSocketServerAcceptor.this.inputQueue,
-									AsyncSocketServerAcceptor.this.outputQueue);
-							AsyncSocketServerAcceptor.this.readByteBuffer
-									.clear();
-						}
-						if (result < 0) {
-							acceptor.close();
-							LOGGER.logp(Level.FINER,
-									THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-									"데이터 읽기 오류로 채널을 닫습니다.");
-							AsyncSocketServerAcceptor.this.logic.endCallBack();
-							return;
-						}
-						AsyncSocketServerAcceptor.this.receive();
-					}
-					@Override
-					public void failed(final Throwable exc,
-							final AsyncSocketServerAcceptor acceptor) {
-					}
-				});
 	}
 
 	@Override
@@ -173,16 +168,19 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 
 		try {
 			MessageDTO messageDTO;
-			if (this.asyncSocketChannel.isOpen()) {
+			if (this.getAsyncSocketChannel().isOpen()) {
 				while ((messageDTO = this.outputQueue.poll()) != null) {
 					LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
-							METHOD_NAME, "sessionId: "
-									+ this.sessionId
-									+ " / messageDTO: "
-									+ new String(messageDTO.getContent()
-											.array(), Charset.forName("utf-8")));
-					this.asyncSocketChannel
-							.write(messageDTO.getContent(),
+							METHOD_NAME, "sessionId: " + this.sessionId
+									+ " / messageDTO: " + messageDTO);
+					// + new String(messageDTO.getContent().array(),
+					// Charset.forName("utf-8")));
+
+					ByteBuffer srcByteBuffer = messageDTO
+							.serializeObject(messageDTO);
+
+					this.getAsyncSocketChannel()
+							.write(srcByteBuffer, // messageDTO.getContent(),
 									this,
 									new CompletionHandler<Integer, AsyncSocketServerAcceptor>() {
 										@Override
@@ -196,9 +194,11 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 															THIS_CLAZZ
 																	.getSimpleName(),
 															METHOD_NAME,
-															AsyncSocketServerAcceptor.this.asyncSocketChannel
+															AsyncSocketServerAcceptor.this
+																	.getAsyncSocketChannel()
 																	+ "----------> writing Message: "
-																	+ AsyncSocketServerAcceptor.this.asyncSocketChannel
+																	+ AsyncSocketServerAcceptor.this
+																			.getAsyncSocketChannel()
 																			.getRemoteAddress());
 												} catch (IOException e) {
 													// block
@@ -250,14 +250,33 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 		return this.sessionId;
 	}
 
-
 	@Override
 	public String toString() {
 		return "AsyncSocketServerAcceptor [sessionId=" + this.sessionId
-				+ ", asyncSocketChannel=" + this.asyncSocketChannel + "]";
+				+ ", asyncSocketChannel=" + this.getAsyncSocketChannel() + "]";
 	}
 
 	public LinkedBlockingQueue<MessageDTO> getOutputQueue() {
 		return this.outputQueue;
+	}
+
+	public AsynchronousSocketChannel getAsyncSocketChannel() {
+		return asyncSocketChannel;
+	}
+
+	public ByteBuffer getReadByteBuffer() {
+		return readByteBuffer;
+	}
+
+	public void setReadByteBuffer(ByteBuffer readByteBuffer) {
+		this.readByteBuffer = readByteBuffer;
+	}
+
+	public LinkedBlockingQueue<MessageDTO> getInputQueue() {
+		return inputQueue;
+	}
+
+	public IBusinessLogicHandler getLogic() {
+		return logic;
 	}
 }

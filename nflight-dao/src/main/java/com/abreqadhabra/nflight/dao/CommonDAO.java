@@ -1,6 +1,8 @@
 package com.abreqadhabra.nflight.dao;
 
+import java.nio.file.Path;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,11 +13,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.exception.NFUnexpectedException;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
+import com.abreqadhabra.nflight.common.util.IOStream;
+import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.dao.exception.NFDAOException;
 import com.abreqadhabra.nflight.dao.util.ResultSetBeanUtil;
 
@@ -40,12 +45,18 @@ public class CommonDAO {
 
 	protected CommonDAO(String databaseType) throws Exception {
 		this.databaseType = databaseType;
-
+		 Path CODE_BASE_PATH = IOStream
+					.getCodebasePath(THIS_CLAZZ.getName());
+		dbProperties = PropertyFile
+				.readPropertyFilePath(CODE_BASE_PATH.resolve("com/abreqadhabra/nflight/dao/conf/db.properties"));
 		this.connection = this.getConnection();
 
 	}
 
 	public synchronized Connection getConnection() throws Exception {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
 		String jdbcDriver = getPropertyByDatabaseType(JDBC_DRIVER);
 		String jdbcURL = getPropertyByDatabaseType(JDBC_URL);
 		String jdbcUser = getPropertyByDatabaseType(JDBC_USER);
@@ -57,6 +68,21 @@ public class CommonDAO {
 
 			connection = DriverManager.getConnection(jdbcURL, jdbcUser,
 					jdbcPassword);
+			
+			DatabaseMetaData dbmd = connection.getMetaData() ;
+
+			StringBuffer sb = new StringBuffer();
+			sb.append("----------------------------------------------------") ;
+			sb.append("\nDatabase Name    = " + dbmd.getDatabaseProductName()) ;
+			sb.append("\nDatabase Version = " + dbmd.getDatabaseProductVersion()) ;
+			sb.append("\nDriver Name      = " + dbmd.getDriverName()) ;
+			sb.append("\nDriver Version   = " + dbmd.getDriverVersion()) ;
+			sb.append("\nDatabase URL     = " + dbmd.getURL()) ;
+			sb.append("\n----------------------------------------------------") ;
+
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+					sb.toString());
+			
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException | SQLException e) {
 			throw new NFDAOException(e)
@@ -72,7 +98,7 @@ public class CommonDAO {
 	}
 
 	protected String getPropertyByDatabaseType(String key) {
-		return dbProperties.getProperty(databaseType +"." + key);
+		return dbProperties.getProperty(databaseType + key);
 	}
 
 	/**

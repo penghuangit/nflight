@@ -11,7 +11,7 @@ import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.application.launcher.Profile;
 import com.abreqadhabra.nflight.application.launcher.concurrent.executor.ThreadPoolExecutorServiceImpl;
 import com.abreqadhabra.nflight.application.launcher.concurrent.executor.monitor.ThreadPoolMonitorServiceImpl;
-import com.abreqadhabra.nflight.application.server.net.socket.AsyncStreamServerImpl;
+import com.abreqadhabra.nflight.application.server.net.async.AsyncServerImpl;
 import com.abreqadhabra.nflight.application.server.net.socket.MessageDTO;
 import com.abreqadhabra.nflight.application.server.net.socket.MessageDTOImpl;
 import com.abreqadhabra.nflight.application.server.net.socket.logic.BusinessLogicHandlerImpl;
@@ -51,12 +51,12 @@ public class ServerImpl implements IServer {
 			}
 
 			IBusinessLogicHandler logicHandler = new BusinessLogicHandlerImpl();
-			MessageDTO messageDTO = new MessageDTOImpl();
-			AsyncStreamServerImpl asyncStreamServer = new AsyncStreamServerImpl(
+			AsyncServerImpl asyncStreamServer = new AsyncServerImpl(
 					new ConfigureImpl(Configure.FILE_SOCKET_SERVER_PROPERTIES),
 					threadPoolExecutor, new InetSocketAddress(InetAddress
 							.getLocalHost().getHostAddress(), 9999),
-					messageDTO, logicHandler);
+					 logicHandler);
+			
 			asyncStreamServer.startup();
 			// Runnable socketServerTask = socketServer.getSocketServerTask();
 			// threadPoolExecutor.submit(socketServerTask);

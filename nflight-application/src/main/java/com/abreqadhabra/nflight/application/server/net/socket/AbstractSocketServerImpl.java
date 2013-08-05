@@ -1,10 +1,16 @@
 package com.abreqadhabra.nflight.application.server.net.socket;
 
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
+import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public abstract class AbstractSocketServerImpl implements ISocketServer {
+	private static final Class<AbstractSocketServerImpl> THIS_CLAZZ = AbstractSocketServerImpl.class;
+	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
+	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	protected Configure configure;
 	protected ThreadPoolExecutor threadPoolExecutor;
@@ -18,9 +24,16 @@ public abstract class AbstractSocketServerImpl implements ISocketServer {
 
 	@Override
 	public void startup() throws Exception {
-		open();
-		bind();
-		accept();
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		if (open()) {
+			bind();
+			accept();
+		} else {
+			LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+					"The server-socket channel cannot be opened!");
+		}
 	}
 
 	@Override
