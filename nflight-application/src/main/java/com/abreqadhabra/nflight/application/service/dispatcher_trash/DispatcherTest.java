@@ -1,8 +1,5 @@
-package com.abreqadhabra.nflight.application.service.test;
+package com.abreqadhabra.nflight.application.service.dispatcher_trash;
 
-import com.abreqadhabra.nflight.application.service.Dispatcher;
-import com.abreqadhabra.nflight.application.service.ServiceDescriptor;
-import com.abreqadhabra.nflight.application.service.SocketServiceDescriptor;
 
 public class DispatcherTest {
 

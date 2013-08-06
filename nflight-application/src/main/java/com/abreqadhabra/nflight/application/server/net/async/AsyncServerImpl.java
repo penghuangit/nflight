@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.application.common.service.NetworkChannelDescriptor;
 import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.application.server.net.async.handler.AsyncServerAcceptHandler;
 import com.abreqadhabra.nflight.application.server.net.async.logic.IBusinessLogic;
@@ -67,6 +68,8 @@ public class AsyncServerImpl extends AbstractSocketServerImpl {
 		this.asyncServerSocketChannel = AsynchronousServerSocketChannel
 				.open(this.threadGroup);
 
+		
+		
 		return this.asyncServerSocketChannel.isOpen();
 	}
 

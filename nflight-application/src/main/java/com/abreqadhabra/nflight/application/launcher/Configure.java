@@ -31,10 +31,14 @@ public interface Configure {
 
 	Hashtable<Object, Object> all();
 	
+	//BLOCKING STREAM SERVER
+	static final String BLOCKING_BIND_BACKLOG="nflight.server.blocking.bind.backlog";
+
+	
 	//ASYNC SERVER
-	static final String ASYNC_THREADPOOL_INITIALSIZE ="nflight.server.async.init.threadpool.initialsize";
-	static final String ASYNC_BIND_BACKLOG="nflight.server.async.bind.backlog";
-	static final String ACCEPTOR_READ_BUFFER_CAPACITY = "nflight.server.async.acceptor.bytebuffer.capacity";
+	static final String ASYNC_THREADPOOL_INITIALSIZE ="nflight.service.async.init.threadpool.initialsize";
+	static final String ASYNC_BIND_BACKLOG="nflight.service.async.bind.backlog";
+	static final String ACCEPTOR_READ_BUFFER_CAPACITY = "nflight.service.async.acceptor.bytebuffer.capacity";
 
 	public int getInt(String asyncBindBacklog);
 

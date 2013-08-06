@@ -120,8 +120,9 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 									.flip();
 
 							// ?? 직렬화???
-							final MessageDTO dto = AsyncSocketServerAcceptor.this.messageDTO
-									.transfer(AsyncSocketServerAcceptor.this.readByteBuffer);
+							final MessageDTO dto = null;
+//									final MessageDTO dto = AsyncSocketServerAcceptor.this.messageDTO
+//									.transfer(AsyncSocketServerAcceptor.this.readByteBuffer);
 
 							LOGGER.logp(
 									Level.FINER,

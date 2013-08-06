@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service;
+package com.abreqadhabra.nflight.application.service.dispatcher_trash;
 
 public abstract class ServiceDescriptor {
 
