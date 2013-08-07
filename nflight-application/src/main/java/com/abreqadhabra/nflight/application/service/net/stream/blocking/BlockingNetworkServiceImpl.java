@@ -2,6 +2,7 @@ package com.abreqadhabra.nflight.application.service.net.stream.blocking;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.Future;
@@ -27,9 +28,15 @@ public class BlockingNetworkServiceImpl implements INetworkService {
 	public BlockingNetworkServiceImpl(final Configure configure,
 			final InetSocketAddress socketAddress,
 			final ThreadPoolExecutor threadPoolExecutor) {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
 		this.configure = configure;
 		this.socketAddress = socketAddress;
 		this.threadPoolExecutor = threadPoolExecutor;
+
+		LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+				"instantiated an idle instance of " + CLAZZ_NAME);
 	}
 
 	@Override
@@ -55,17 +62,10 @@ public class BlockingNetworkServiceImpl implements INetworkService {
 				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
 						METHOD_NAME, serverSocket.getLocalAddress()
 								+ " Waiting for connections ...");
-
-				System.out.println(serverSocket + ": " + serverSocket.isOpen());
-
 				// wait for incoming connections
 				while (this.isRunning) {
 					this.pendingConnections(serverSocket);
 				}
-
-				// threadPoolExecutor.submit(new BlockingNetworkServiceWorker(
-				// serverSocket));
-
 			} else {
 				throw new IllegalStateException(
 						"ServerSocketChannel has been closed");
@@ -80,22 +80,19 @@ public class BlockingNetworkServiceImpl implements INetworkService {
 
 		try {
 			final SocketChannel socket = serverSocket.accept();
-			System.out.println("Incoming connection from: "
+			System.out.println("Accepted socket connection from "
 					+ socket.getRemoteAddress());
 
-			// System.out.println(socket.isBlocking());
-			// ByteBuffer buffer = ByteBuffer.allocate(10);
-			// System.out.println(socket.read(buffer));
-
-			// BlockingNetworkServiceWorker st = new
-			// BlockingNetworkServiceWorker(socket);
-			// new Thread(st).start();
+			// write an welcome message
+			String welcomeMessage = "Welcome to "
+					+ socket.getLocalAddress().toString();
+			socket.write(ByteBuffer.wrap(welcomeMessage.getBytes("UTF-8")));
 
 			Future<?> f = this.threadPoolExecutor
 					.submit(new BlockingNetworkServiceWorker(socket));
 
 			System.out.println("Future<?>: " + f.getClass().getName());
-			
+
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}

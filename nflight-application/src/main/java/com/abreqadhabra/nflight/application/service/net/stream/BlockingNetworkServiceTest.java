@@ -10,6 +10,7 @@ import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.application.launcher.concurrent.executor.ThreadPoolExecutorServiceImpl;
 import com.abreqadhabra.nflight.application.launcher.concurrent.executor.monitor.ThreadPoolMonitorServiceImpl;
 import com.abreqadhabra.nflight.application.service.net.stream.blocking.BlockingNetworkServiceImpl;
+import com.abreqadhabra.nflight.application.service.net.stream.nonblocking.NonBlockingNetworkServiceImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class BlockingNetworkServiceTest {
@@ -28,9 +29,14 @@ public class BlockingNetworkServiceTest {
 
 		ThreadPoolExecutor blockingNetworkThreadPool = getThreadPoolExecutor();
 		
-		BlockingNetworkServiceImpl server = new BlockingNetworkServiceImpl(
+		BlockingNetworkServiceImpl blockingServer = new BlockingNetworkServiceImpl(
 				configure, socketAddress, blockingNetworkThreadPool);
-		server.start();
+	
+		NonBlockingNetworkServiceImpl nonBlockingServer = new NonBlockingNetworkServiceImpl(
+				configure, socketAddress, blockingNetworkThreadPool);
+		
+		//blockingServer.start();
+		nonBlockingServer.start();
 
 		// testDatagramAcceptor(DEFAULT_ADDRESS, DEFAULT_PORT);
 

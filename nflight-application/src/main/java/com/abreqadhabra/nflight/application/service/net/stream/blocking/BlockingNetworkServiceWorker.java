@@ -32,9 +32,8 @@ public class BlockingNetworkServiceWorker implements Runnable {
 			final String name = "nflight-" + t.getName();
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					name);
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-					Boolean.toString(this.socket.isOpen()));
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME, "isOpen=" +
+					Boolean.toString(this.socket.isOpen()) +", isConnected=" +
 					Boolean.toString(this.socket.isConnected()));
 
 			final ByteBuffer dst = NetworkChannelHelper.getByteBuffer(1024);
@@ -60,8 +59,9 @@ public class BlockingNetworkServiceWorker implements Runnable {
 		} finally {
 			try {
 				this.socket.close();
-				System.out.println(this.socket.isOpen());
-				System.out.println(this.socket.isConnected());
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME, "isOpen=" +
+						Boolean.toString(this.socket.isOpen()) +", isConnected=" +
+						Boolean.toString(this.socket.isConnected()));
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}

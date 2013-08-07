@@ -88,10 +88,8 @@ public class StreamServiceImpl extends AbstractService {
 					256 * 1024);
 			serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR,
 					true);
-
 			// bind the acceptor socket channel to port
 			serverSocketChannel.bind(new InetSocketAddress(port));
-
 			// register the current channel with the given selector
 			serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 		} else {

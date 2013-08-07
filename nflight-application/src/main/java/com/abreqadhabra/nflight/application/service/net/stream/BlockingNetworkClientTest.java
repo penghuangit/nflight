@@ -17,11 +17,12 @@ public class BlockingNetworkClientTest {
 		try {
 
 
-			for (int i = 0; i < 50000; i++) {
+			for (int i = 0; i < 1; i++) {
 				SocketChannel channel = SocketChannel.open();
 				channel.socket().connect(socketAddress);
 				channel.write(ByteBuffer.wrap(Integer.toString(i).getBytes()));
 				Thread.sleep(10);
+				System.out.println(i);
 			}
 
 		} catch (Exception e) {
