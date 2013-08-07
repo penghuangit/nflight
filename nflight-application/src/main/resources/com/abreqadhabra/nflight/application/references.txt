@@ -67,7 +67,7 @@ https://forums.oracle.com/thread/1692921
 http://underpop.online.fr/j/java/java-network-programming/javanp3-CHP-13-SECT-5.html
 http://www.java2s.com/Open-Source/Android/Graphics-3D-2D-OpenGL/jmonkeyengine/com/jme3/network/connection/Catalogconnection.htm
 
-
+http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6519418
 
 https://github.com/netty/netty/issues/1258
 
@@ -91,3 +91,5 @@ http://blog.daum.net/a5win/211
 http://scud.tistory.com/873
 http://rox-xmlrpc.sourceforge.net/niotut/index.html
 http://blog.daum.net/oraclejava/15867252
+
+http://wiki.codekin.com/index.php/07-1_%EB%B8%94%EB%A1%9C%ED%82%B9_IO%EB%A5%BC_%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94_%EB%B0%A9%EB%B2%95%EA%B3%BC_%EB%84%8C%EB%B8%94%EB%A1%9C%ED%82%B9_IO%EB%A5%BC_%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94_%EB%B0%A9%EB%B2%95

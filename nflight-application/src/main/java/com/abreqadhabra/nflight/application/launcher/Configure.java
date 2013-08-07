@@ -32,7 +32,7 @@ public interface Configure {
 	Hashtable<Object, Object> all();
 	
 	//BLOCKING STREAM SERVER
-	static final String BLOCKING_BIND_BACKLOG="nflight.server.blocking.bind.backlog";
+	static final String BLOCKING_BIND_BACKLOG="nflight.service.blocking.bind.backlog";
 
 	
 	//ASYNC SERVER

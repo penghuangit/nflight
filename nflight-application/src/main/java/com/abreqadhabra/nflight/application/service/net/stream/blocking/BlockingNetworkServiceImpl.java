@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,14 +19,17 @@ public class BlockingNetworkServiceImpl implements INetworkService {
 	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private Configure configure;
-	private InetSocketAddress socketAddress;
+	private final Configure configure;
+	private final InetSocketAddress socketAddress;
 	private boolean isRunning;
+	private final ThreadPoolExecutor threadPoolExecutor;
 
 	public BlockingNetworkServiceImpl(final Configure configure,
-			InetSocketAddress socketAddress) {
+			final InetSocketAddress socketAddress,
+			final ThreadPoolExecutor threadPoolExecutor) {
 		this.configure = configure;
 		this.socketAddress = socketAddress;
+		this.threadPoolExecutor = threadPoolExecutor;
 	}
 
 	@Override
@@ -34,7 +39,7 @@ public class BlockingNetworkServiceImpl implements INetworkService {
 
 		// create a new server-socket channel
 		try (ServerSocketChannel serverSocket = ServerSocketChannel.open()) {
-			isRunning = true;
+			this.isRunning = true;
 			// continue if it was successfully created
 			if (serverSocket.isOpen()) {
 				// set the blocking mode
@@ -42,7 +47,7 @@ public class BlockingNetworkServiceImpl implements INetworkService {
 				// set some options
 				NetworkServiceHelper.setChannelOption(serverSocket);
 				// maximum number of pending connections
-				int backlog = this.configure
+				final int backlog = this.configure
 						.getInt(Configure.BLOCKING_BIND_BACKLOG);
 				// bind the server-socket channel to local address
 				serverSocket.bind(this.socketAddress, backlog);
@@ -51,34 +56,47 @@ public class BlockingNetworkServiceImpl implements INetworkService {
 						METHOD_NAME, serverSocket.getLocalAddress()
 								+ " Waiting for connections ...");
 
+				System.out.println(serverSocket + ": " + serverSocket.isOpen());
+
 				// wait for incoming connections
-				while (isRunning) {
-					pendingConnections(serverSocket);
+				while (this.isRunning) {
+					this.pendingConnections(serverSocket);
 				}
+
+				// threadPoolExecutor.submit(new BlockingNetworkServiceWorker(
+				// serverSocket));
+
 			} else {
-				throw new IllegalStateException("ServerSocketChannel has been closed");
+				throw new IllegalStateException(
+						"ServerSocketChannel has been closed");
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private void pendingConnections(ServerSocketChannel serverSocket) {
+	private void pendingConnections(final ServerSocketChannel serverSocket) {
 
-		try (SocketChannel socket = serverSocket.accept()) {
+		try {
+			final SocketChannel socket = serverSocket.accept();
 			System.out.println("Incoming connection from: "
 					+ socket.getRemoteAddress());
+
+			// System.out.println(socket.isBlocking());
+			// ByteBuffer buffer = ByteBuffer.allocate(10);
+			// System.out.println(socket.read(buffer));
+
+			// BlockingNetworkServiceWorker st = new
+			// BlockingNetworkServiceWorker(socket);
+			// new Thread(st).start();
+
+			Future<?> f = this.threadPoolExecutor
+					.submit(new BlockingNetworkServiceWorker(socket));
+
+			System.out.println("Future<?>: " + f.getClass().getName());
 			
-			// AIOSession session =new
-			// AIOSession(sessionId.incrementAndGet(),channel,protocal,logic);
-			// sessionMap.put(session.getId(),session);
-			// session.init(configure);
-			// session.start();
-			//http://blog.daum.net/oraclejava/15867252 -> nonblocking/thread/selectable
-			
-			
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 
