@@ -25,6 +25,7 @@ public class BlockingNetworkClientTest {
 		int BLOCKING_DEFAULT_PORT = 8888;
 		int NON_BLOCKING_DEFAULT_PORT = 9999;
 
+		int cnt = 1;
 		
 		ThreadGroup clientThreadGroup = new ThreadGroup(
 				"NF-Service-Client-ThreadGroup");
@@ -32,17 +33,17 @@ public class BlockingNetworkClientTest {
 		InetSocketAddress socketAddress = new InetSocketAddress(
 				DEFAULT_ADDRESS, BLOCKING_DEFAULT_PORT);
 
-		new Thread(clientThreadGroup, blockingTypeTest(socketAddress, 15000), "NF-Service-Client-Blocking").start();
+		new Thread(clientThreadGroup, blockingTypeTest(socketAddress, cnt), "NF-Service-Client-Blocking").start();
 
 		socketAddress = new InetSocketAddress(DEFAULT_ADDRESS,
 				NON_BLOCKING_DEFAULT_PORT);
 
-		new Thread(clientThreadGroup, blockingTypeTest(socketAddress, 15000), "NF-Service-Client-Non-Blocking").start();
+		new Thread(clientThreadGroup, blockingTypeTest(socketAddress, cnt), "NF-Service-Client-Non-Blocking").start();
 		
 		socketAddress = new InetSocketAddress(DEFAULT_ADDRESS,
 				ASYNC_DEFAULT_PORT);
 
-		new Thread(clientThreadGroup, asyncTypeTest(socketAddress, 15000), "NF-Service-Client-Async").start();
+		new Thread(clientThreadGroup, asyncTypeTest(socketAddress, cnt), "NF-Service-Client-Async").start();
 		
 	}
 
@@ -63,12 +64,13 @@ public class BlockingNetworkClientTest {
 				final String METHOD_NAME = Thread.currentThread()
 						.getStackTrace()[1].getMethodName();
 
-				if (LOGGER.isLoggable(Level.FINER)) {
-					String currentThreadName = Thread.currentThread().getName();
-					LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
-							METHOD_NAME, "current thread is "
-									+ currentThreadName);
-				}
+				LOGGER.logp(
+						Level.FINER,
+						THIS_CLAZZ.getSimpleName(),
+						METHOD_NAME,
+						"current thread is "
+								+ LoggingHelper.getThreadName(Thread
+										.currentThread()));
 
 				for (int i = 0; i < num; i++) {
 					try {
@@ -109,12 +111,13 @@ public class BlockingNetworkClientTest {
 				final String METHOD_NAME = Thread.currentThread()
 						.getStackTrace()[1].getMethodName();
 
-				if (LOGGER.isLoggable(Level.FINER)) {
-					String currentThreadName = Thread.currentThread().getName();
-					LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
-							METHOD_NAME, "current thread is "
-									+ currentThreadName);
-				}
+				LOGGER.logp(
+						Level.FINER,
+						THIS_CLAZZ.getSimpleName(),
+						METHOD_NAME,
+						"current thread is "
+								+ LoggingHelper.getThreadName(Thread
+										.currentThread()));
 
 				for (int i = 0; i < num; i++) {
 					try {

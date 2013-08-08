@@ -33,15 +33,17 @@ public class LoggingHelper {
 			return sb.toString();
 		} else {
 			final String type = clazz.isInterface() ? "Interface" : clazz
-					.isArray() ? "Array" : clazz.isPrimitive() ? "Primitive"
+					.isArray() ? "Array" : clazz.isPrimitive()
+					? "Primitive"
 					: clazz.isEnum() ? "Enum" : "Class";
-			
+
 			sb.append(String.format("%n%s%s%s %s [%s]", pad, leadin, type,
 					clazz.getSimpleName(), clazz.getName()));
 			for (final Class<?> interfaze : clazz.getInterfaces()) {
 				sb.append(describe(interfaze, pad + "\t", "implements "));
 			}
-			sb.append(describe(clazz.getComponentType(), pad + "\t\t", "elements are "));
+			sb.append(describe(clazz.getComponentType(), pad + "\t\t",
+					"elements are "));
 			sb.append(describe(clazz.getSuperclass(), pad + "\t\t", "extends "));
 		}
 		return sb.toString();
@@ -144,5 +146,11 @@ public class LoggingHelper {
 		logger.setUseParentHandlers(false);
 
 	}
+
+
+	public static String getThreadName(Thread currentThread) {
+		return currentThread.getName();
+	}
+
 
 }

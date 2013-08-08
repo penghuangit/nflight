@@ -2,6 +2,7 @@ package com.abreqadhabra.nflight.application.service.net.stream;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Logger;
 
@@ -23,7 +24,7 @@ public class BlockingNetworkServiceTest {
 		InetAddress DEFAULT_ADDRESS = InetAddress.getLocalHost();
 		int BLOCKING_DEFAULT_PORT = 8888;
 		int NON_BLOCKING_DEFAULT_PORT = 9999;
-		int ASYNC_DEFAULT_PORT=7777;
+		int ASYNC_DEFAULT_PORT = 7777;
 
 		InetSocketAddress socketAddress = new InetSocketAddress(
 				DEFAULT_ADDRESS, BLOCKING_DEFAULT_PORT);
@@ -35,47 +36,44 @@ public class BlockingNetworkServiceTest {
 				"NF-Service-ThreadPool-Blocking", 3, false);
 
 		BlockingNetworkServiceImpl blockingService = new BlockingNetworkServiceImpl(
-				configure, socketAddress, blockingNetworkThreadPool);
+				configure, blockingNetworkThreadPool, socketAddress);
 
 		socketAddress = new InetSocketAddress(DEFAULT_ADDRESS,
 				NON_BLOCKING_DEFAULT_PORT);
 
 		NonBlockingNetworkServiceImpl nonBlockingService = new NonBlockingNetworkServiceImpl(
-				configure, socketAddress, blockingNetworkThreadPool);
-		
-		
+				configure, blockingNetworkThreadPool, socketAddress);
+
 		socketAddress = new InetSocketAddress(DEFAULT_ADDRESS,
 				ASYNC_DEFAULT_PORT);
 
-		
 		ThreadPoolExecutor asyncNetworkThreadPool = getThreadPoolExecutor(
 				"NF-Service-ThreadPool-Async", 3, false);
-		
+
 		AsyncNetworkServiceImpl asyncService = new AsyncNetworkServiceImpl(
-				configure, socketAddress, asyncNetworkThreadPool);
+				configure, asyncNetworkThreadPool, socketAddress);
 
 		ThreadGroup serviceThreadGroup = new ThreadGroup(
 				"NF-Service-ThreadGroup");
 
-		new Thread(serviceThreadGroup, blockingService,
-				"NF-Service-Blocking").start();
+		//Executors.n.newSingleThreadExecutor().execute(
+				
+		new Thread(serviceThreadGroup, blockingService, "NF-Service-Blocking")
+				.start();
 
 		new Thread(serviceThreadGroup, nonBlockingService,
 				"NF-Service-Non-Blocking").start();
-		
-		new Thread(serviceThreadGroup, asyncService,
-				"NF-Service-Async").start();
+
+		new Thread(serviceThreadGroup, asyncService, "NF-Service-Async")
+				.start();
 
 		// nonBlockingServer.start();
 
 		// testDatagramAcceptor(DEFAULT_ADDRESS, DEFAULT_PORT);
 
 		// System.exit(0);
-		
 
 	}
-
-
 
 	static ThreadPoolExecutor getThreadPoolExecutor(String poolName,
 			int delaySeconds, boolean isThreadPoolMonitoring) {
@@ -84,10 +82,10 @@ public class BlockingNetworkServiceTest {
 		threadPoolExecutor.allowCoreThreadTimeOut(true);
 
 		if (isThreadPoolMonitoring) {
-			
+
 			Thread t = Thread.currentThread();
 			ThreadGroup threadGroup = t.getThreadGroup();
-			
+
 			// Created executor is set to ThreadPoolMonitorService...
 			ThreadPoolMonitorServiceImpl tpms = new ThreadPoolMonitorServiceImpl(
 					delaySeconds, threadGroup, poolName);

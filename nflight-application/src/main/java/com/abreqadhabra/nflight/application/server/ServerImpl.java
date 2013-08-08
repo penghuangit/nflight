@@ -37,16 +37,16 @@ public class ServerImpl implements IServer {
 
 			boolean isThreadPoolMonitoring = false;
 			int delaySeconds = 5;
-			if (isThreadPoolMonitoring) {
-				// Created executor is set to ThreadPoolMonitorService...
-				ThreadPoolMonitorServiceImpl tpms = new ThreadPoolMonitorServiceImpl(
-						delaySeconds);
-				tpms.setExecutor(threadPoolExecutor);
-
-				// ThreadPoolMonitorService is started...
-				Thread monitor = new Thread(tpms);
-				monitor.start();
-			}
+//			if (isThreadPoolMonitoring) {
+//				// Created executor is set to ThreadPoolMonitorService...
+//				ThreadPoolMonitorServiceImpl tpms = new ThreadPoolMonitorServiceImpl(
+//						delaySeconds);
+//				tpms.setExecutor(threadPoolExecutor);
+//
+//				// ThreadPoolMonitorService is started...
+//				Thread monitor = new Thread(tpms);
+//				monitor.start();
+//			}
 
 			IBusinessLogic logic = new BusinessLogicImpl();
 			AsyncServerImpl asyncStreamServer = new AsyncServerImpl(

@@ -97,3 +97,5 @@ http://svn.apache.org/repos/asf/zookeeper/branches/ZOOKEEPER-823/src/java/main/o
 
 
 http://nadeausoftware.com/articles/2008/04/java_tip_how_list_and_find_threads_and_thread_groups
+
+http://www.java2s.com/Open-Source/Java-Open-Source-Library/JEE/activemq/org/apache/activemq/transport/nio/NIOSSLTransportFactory.java.htm
