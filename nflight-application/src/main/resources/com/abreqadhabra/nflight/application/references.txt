@@ -93,3 +93,7 @@ http://rox-xmlrpc.sourceforge.net/niotut/index.html
 http://blog.daum.net/oraclejava/15867252
 
 http://wiki.codekin.com/index.php/07-1_%EB%B8%94%EB%A1%9C%ED%82%B9_IO%EB%A5%BC_%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94_%EB%B0%A9%EB%B2%95%EA%B3%BC_%EB%84%8C%EB%B8%94%EB%A1%9C%ED%82%B9_IO%EB%A5%BC_%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94_%EB%B0%A9%EB%B2%95
+http://svn.apache.org/repos/asf/zookeeper/branches/ZOOKEEPER-823/src/java/main/org/apache/zookeeper/server/ServerCnxnFactory.java
+
+
+http://nadeausoftware.com/articles/2008/04/java_tip_how_list_and_find_threads_and_thread_groups

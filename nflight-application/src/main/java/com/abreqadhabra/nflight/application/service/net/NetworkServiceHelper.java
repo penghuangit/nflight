@@ -9,12 +9,16 @@ import java.io.StreamCorruptedException;
 import java.net.SocketOption;
 import java.nio.ByteBuffer;
 import java.nio.channels.NetworkChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.SocketChannel;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
+import com.abreqadhabra.nflight.application.service.net.stream.nonblocking.NonBlockingServerSessionImpl;
+import com.abreqadhabra.nflight.application.service.net.stream.nonblocking.ServerSession;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class NetworkServiceHelper {
@@ -116,8 +120,9 @@ public class NetworkServiceHelper {
 			readObject = ois.readObject();
 
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-					"deserializeObject: " + readObject.getClass().getName() + " " + readObject);
-			
+					"deserializeObject: " + readObject.getClass().getName()
+							+ " " + readObject);
+
 		} catch (ClassNotFoundException | IOException e) {
 			if (e instanceof StreamCorruptedException) {
 				return null;
@@ -127,5 +132,23 @@ public class NetworkServiceHelper {
 		}
 
 		return readObject;
+	}
+
+	public static String getReadySetString(SelectionKey selectionKey) {
+		return " [ selectionKey: " + selectionKey.hashCode()
+				+ " interest ops: {"
+				+ getOperationSetString(selectionKey.interestOps())
+				+ " }; ready ops: {"
+				+ getOperationSetString(selectionKey.readyOps()) + " } ]";
+	}
+
+	private static String getOperationSetString(final int ops) {
+		final StringBuffer sb = new StringBuffer();
+		sb.append(((ops & SelectionKey.OP_ACCEPT) != 0 ? " OP_ACCEPT" : ""));
+		sb.append(((ops & SelectionKey.OP_CONNECT) != 0 ? " OP_CONNECT" : ""));
+		sb.append(((ops & SelectionKey.OP_READ) != 0 ? " OP_READ" : ""));
+		sb.append(((ops & SelectionKey.OP_WRITE) != 0 ? " OP_WRITE" : ""));
+
+		return sb.toString();
 	}
 }

@@ -1,15 +1,16 @@
 package com.abreqadhabra.nflight.application.launcher.concurrent.executor;
 
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.application.launcher.Configure;
-import com.abreqadhabra.nflight.application.launcher.concurrent.executor.test.ThreadPoolServiceTest;
+import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ThreadPoolExecutorServiceImpl implements ThreadPoolExecutorService {
@@ -21,9 +22,10 @@ public class ThreadPoolExecutorServiceImpl implements ThreadPoolExecutorService 
 	private long keepAliveTime;
 	private TimeUnit timeUnit;
 	private int queueCapacity;
-	private RejectedExecutionHandler rejectedExecutionHandler;
 	private ArrayBlockingQueue<Runnable> arrayBlockingQueue;
-
+	private ThreadFactory threadFactory ;
+	private RejectedExecutionHandler rejectedExecutionHandler;
+	
 	public ThreadPoolExecutorServiceImpl() {
 		Configure configure = new ConfigureImpl(
 				Configure.FILE_THREAD_POOL_PROPERTIES);
@@ -36,20 +38,22 @@ public class ThreadPoolExecutorServiceImpl implements ThreadPoolExecutorService 
 		this.queueCapacity = Integer.parseInt(configure
 				.get("nflight.threadpool.queuecapacity"));
 		this.timeUnit = TimeUnit.SECONDS;
-		this.rejectedExecutionHandler = new RejectedExecutionHandlerImpl();
 		this.arrayBlockingQueue = new ArrayBlockingQueue<Runnable>(
 				this.getQueueCapacity());
+		this.threadFactory = Executors.defaultThreadFactory();
+		this.rejectedExecutionHandler = new RejectedExecutionHandlerImpl();
 	}
 
 	@Override
 	public ThreadPoolExecutor createNewThreadPool() {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
-		
+	        
 		ThreadPoolExecutor executor = new ThreadPoolExecutor(
 				this.getCorePoolSize(), this.getMaximumPoolSize(),
 				this.getKeepAliveTime(), getTimeUnit(),
 				this.getArrayBlockingQueue(),
+				this.threadFactory,
 				this.getRejectedExecutionHandler());
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,

@@ -1,5 +1,9 @@
 package com.abreqadhabra.nflight.application.launcher.concurrent.executor.monitor;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,9 +17,13 @@ public class ThreadPoolMonitorServiceImpl implements ThreadPoolMonitorService {
 	ThreadPoolExecutor executor;
 
 	private int delaySeconds;
-
-	public ThreadPoolMonitorServiceImpl(int delay) {
+	private ThreadGroup threadGroup;
+	private String poolName;
+	public ThreadPoolMonitorServiceImpl(int delay, ThreadGroup threadGroup,
+			String poolName) {
 		this.delaySeconds = delay;
+		this.poolName = poolName;
+		this.threadGroup = threadGroup;
 	}
 
 	@Override
@@ -23,12 +31,12 @@ public class ThreadPoolMonitorServiceImpl implements ThreadPoolMonitorService {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		// 현재 실행 중인 쓰레드명을 변경 설정
-		final String threadName = Thread.currentThread().getName();
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "[Thread] "
-				+ threadName);
-		// Thread.currentThread().setName("nflight-" + threadName + "-" +
-		// THIS_CLAZZ.getSimpleName());
+		if (LOGGER.isLoggable(Level.FINER)) {
+			String currentThreadName = Thread.currentThread().getName();
+			Thread.currentThread().setName(currentThreadName);
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+					"current thread is " + Thread.currentThread().getName());
+		}
 
 		try {
 			while (true) {
@@ -38,17 +46,25 @@ public class ThreadPoolMonitorServiceImpl implements ThreadPoolMonitorService {
 		} catch (Exception e) {
 			LOGGER.logp(Level.SEVERE, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void monitorThreadPool() {
+
+		this.threadInfo();
+		this.threadPoolInfo();
+
+	}
+
+	private void threadPoolInfo() {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		String result = String
-				.format("[ThreadPool] [%d/%d] TotalTaskCount: %d [Active: %d, Completed: %d] isShutdown: %s , isTerminated: %s",
-						this.executor.getPoolSize(),
+				.format("[%s] [%d/%d] TotalTaskCount: %d [Active: %d, Completed: %d] isShutdown: %s , isTerminated: %s",
+						this.poolName, this.executor.getPoolSize(),
 						this.executor.getCorePoolSize(),
 						this.executor.getTaskCount(),
 						this.executor.getActiveCount(),
@@ -58,8 +74,65 @@ public class ThreadPoolMonitorServiceImpl implements ThreadPoolMonitorService {
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 				result);
-
 	}
+
+	public void threadInfo() {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+	//	this.threadGroup = this.threadGroup.getParent();
+		StringBuffer sb = new StringBuffer("\n");
+
+		String threadInfo = this.threadInfo(this.threadGroup, "", sb);
+
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+				threadInfo);
+
+		System.out.println("---------------------");
+		this.threadGroup.list();
+	}
+
+	public String threadInfo(ThreadGroup threadGroup, String threadGroupName,
+			StringBuffer sb) {
+		Thread.currentThread().getStackTrace()[1].getMethodName();
+
+		sb.append(threadGroupName + "ThreadGroup name = "
+				+ threadGroup.getName() + "\n");
+		sb.append(threadGroupName + "   Has parent thread group = "
+				+ (threadGroup.getParent() != null) + "\n");
+
+		int activeCount = threadGroup.activeCount();
+		Thread[] activeThreads = new Thread[activeCount];
+		threadGroup.enumerate(activeThreads, false);
+		List<Thread> threadList = new ArrayList<Thread>(
+				Arrays.asList(activeThreads));
+		threadList.removeAll(Collections.singleton(null));
+		sb.append(threadGroupName + "   # of active threads = "
+				+ threadList.size() + "\n");
+		for (Thread thread : threadList) {
+			sb.append(threadGroupName + "   Thread name = " + thread.getName()
+					+ "\n");
+		}
+
+		int activeGroupCount = threadGroup.activeGroupCount();
+		ThreadGroup[] activeThreadGroups = new ThreadGroup[activeGroupCount];
+		threadGroup.enumerate(activeThreadGroups, false);
+		List<ThreadGroup> threadGroupList = new ArrayList<ThreadGroup>(
+				Arrays.asList(activeThreadGroups));
+		threadGroupList.removeAll(Collections.singleton(null));
+		sb.append(threadGroupName + "   # of active sub thread groups = "
+				+ threadGroupList.size() + "\n");
+		for (ThreadGroup activeThreadGroup : threadGroupList) {
+			this.threadInfo(activeThreadGroup, "   " /*
+													 * +
+													 * activeThreadGroup.getName
+													 * ()
+													 */, sb);
+		}
+
+		return sb.toString();
+	}
+
 	@Override
 	public ThreadPoolExecutor getExecutor() {
 		return this.executor;

@@ -15,7 +15,7 @@ import com.abreqadhabra.nflight.application.service.net.INetworkService;
 import com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class BlockingNetworkServiceImpl implements INetworkService {
+public class BlockingNetworkServiceImpl implements INetworkService, Runnable {
 	private static final Class<BlockingNetworkServiceImpl> THIS_CLAZZ = BlockingNetworkServiceImpl.class;
 	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
@@ -40,9 +40,16 @@ public class BlockingNetworkServiceImpl implements INetworkService {
 	}
 
 	@Override
-	public void start() {
+	public void run() {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
+
+		if (LOGGER.isLoggable(Level.FINER)) {
+			String currentThreadName = Thread.currentThread().getName();
+			Thread.currentThread().setName(currentThreadName);
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+					"current thread is " + Thread.currentThread().getName());
+		}
 
 		// create a new server-socket channel
 		try (ServerSocketChannel serverSocket = ServerSocketChannel.open()) {
@@ -73,7 +80,6 @@ public class BlockingNetworkServiceImpl implements INetworkService {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private void pendingConnections(final ServerSocketChannel serverSocket) {
@@ -89,7 +95,7 @@ public class BlockingNetworkServiceImpl implements INetworkService {
 			socket.write(ByteBuffer.wrap(welcomeMessage.getBytes("UTF-8")));
 
 			Future<?> f = this.threadPoolExecutor
-					.submit(new BlockingNetworkServiceWorker(socket));
+					.submit(new BlockingNetworkServiceWorker(configure, socket));
 
 			System.out.println("Future<?>: " + f.getClass().getName());
 

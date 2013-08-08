@@ -6,7 +6,9 @@ import java.nio.channels.SocketChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.application.server.net.socket.NetworkChannelHelper;
+import com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class BlockingNetworkServiceWorker implements Runnable {
@@ -14,9 +16,11 @@ public class BlockingNetworkServiceWorker implements Runnable {
 	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
+	private Configure configure;
 	private final SocketChannel socket;
 
-	public BlockingNetworkServiceWorker(final SocketChannel socket) {
+	public BlockingNetworkServiceWorker(Configure configure, final SocketChannel socket) {
+		this.configure = configure;
 		this.socket = socket;
 	}
 
@@ -28,23 +32,35 @@ public class BlockingNetworkServiceWorker implements Runnable {
 		try {
 			final long startN = System.nanoTime();
 
-			final Thread t = Thread.currentThread();
-			final String name = "nflight-" + t.getName();
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-					name);
+			if (LOGGER.isLoggable(Level.FINER)) {
+				String currentThreadName = Thread.currentThread().getName();
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
+						METHOD_NAME, "current thread is "
+								+ currentThreadName);
+			}
+			
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME, "isOpen=" +
 					Boolean.toString(this.socket.isOpen()) +", isConnected=" +
 					Boolean.toString(this.socket.isConnected()));
 
-			final ByteBuffer dst = NetworkChannelHelper.getByteBuffer(1024);
+			int capacity = configure
+					.getInt(Configure.NONBLOCKING_INCOMING_BUFFER_CAPACITY);
+			ByteBuffer incomingByteBuffer = NetworkServiceHelper.getByteBuffer(capacity);
+			int numRead = socket.read(incomingByteBuffer);
+			incomingByteBuffer.flip();
+			if (incomingByteBuffer.hasRemaining()) {
+				incomingByteBuffer.compact();
+			} else {
+				incomingByteBuffer.clear();
+			}
 
-			final int numRead = this.socket.read(dst);
-
-			final byte[] data = new byte[numRead];
-			System.arraycopy(dst.array(), 0, data, 0, numRead);
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-					new String(data, "UTF-8") + " [" + numRead
-							+ " bytes] from " + this.socket.getRemoteAddress());
+			LOGGER.logp(
+					Level.FINER,
+					THIS_CLAZZ.getSimpleName(),
+					METHOD_NAME,
+					new String(incomingByteBuffer.array(), "UTF-8") + " ["
+							+ numRead + " bytes] from "
+							+ this.socket.getRemoteAddress());
 
 			final long endN = System.nanoTime();
 			final long diffN = endN - startN;

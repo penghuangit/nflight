@@ -33,12 +33,18 @@ public interface Configure {
 	
 	//BLOCKING STREAM SERVER
 	static final String BLOCKING_BIND_BACKLOG="nflight.service.blocking.bind.backlog";
+	static final String BLOCKING_INCOMING_BUFFER_CAPACITY="nflight.service.blocking.buffer.incoming.capacity";
 
+	//NON-BLOCKING STREAM SERVER
+	static final String NONBLOCKING_BIND_BACKLOG="nflight.service.nonblocking.bind.backlog";
+	static final String NONBLOCKING_INCOMING_BUFFER_CAPACITY="nflight.service.nonblocking.buffer.incoming.capacity";
+	
 	
 	//ASYNC SERVER
 	static final String ASYNC_THREADPOOL_INITIALSIZE ="nflight.service.async.init.threadpool.initialsize";
 	static final String ASYNC_BIND_BACKLOG="nflight.service.async.bind.backlog";
-	static final String ACCEPTOR_READ_BUFFER_CAPACITY = "nflight.service.async.acceptor.bytebuffer.capacity";
+	static final String ASYNC_INCOMING_BUFFER_CAPACITY="nflight.service.async.buffer.incoming.capacity";
+	
 
 	public int getInt(String asyncBindBacklog);
 

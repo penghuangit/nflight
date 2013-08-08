@@ -58,7 +58,7 @@ public class AsyncServerAcceptHandler
 		try {
 
 			final int capacity = this.configure
-					.getInt(Configure.ACCEPTOR_READ_BUFFER_CAPACITY);
+					.getInt(Configure.ASYNC_INCOMING_BUFFER_CAPACITY);
 			final ByteBuffer readByteBuffer = NetworkChannelHelper
 					.getByteBuffer(capacity);
 
