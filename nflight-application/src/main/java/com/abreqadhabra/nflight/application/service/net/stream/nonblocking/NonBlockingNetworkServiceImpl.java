@@ -12,60 +12,35 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
-import com.abreqadhabra.nflight.application.service.net.INetworkService;
 import com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper;
+import com.abreqadhabra.nflight.application.service.net.stream.AbstractNetworkServiceImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class NonBlockingNetworkServiceImpl implements INetworkService, Runnable {
+public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 	private static final Class<NonBlockingNetworkServiceImpl> THIS_CLAZZ = NonBlockingNetworkServiceImpl.class;
-	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private final Configure configure;
-	private final InetSocketAddress socketAddress;
-	private boolean isRunning;
 	public NonBlockingNetworkServiceImpl(final Configure configure,
-			final InetSocketAddress socketAddress,
-			final ThreadPoolExecutor threadPoolExecutor) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-
-		this.configure = configure;
-		this.socketAddress = socketAddress;
-		LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-				"instantiated an idle instance of " + CLAZZ_NAME);
+			final ThreadPoolExecutor threadPool,
+			final InetSocketAddress socketAddress) {
+		super(configure, threadPool, socketAddress);
+		this.backlog = this.configure
+				.getInt(Configure.NONBLOCKING_BIND_BACKLOG);
 	}
 
 	@Override
 	public void run() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-
-		if (LOGGER.isLoggable(Level.FINER)) {
-			final String currentThreadName = Thread.currentThread().getName();
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-					"current thread is " + currentThreadName);
-		}
-
-		// create a new server-socket channel & selector
-		try (ServerSocketChannel serverSocket = ServerSocketChannel.open();
-				Selector selector = Selector.open();) {
+		try {
 			this.isRunning = true;
+			boolean isBlock = false;
+			// create a new server-socket channel & selector
+			Selector selector = Selector.open();
+			final ServerSocketChannel serverSocket = this
+					.createServerChannelFactory()
+					.createBlockingServerSocketChannel(isBlock, this.endpoint,
+							this.backlog);
 			// check that both of them were successfully opened
-			if (serverSocket.isOpen() && selector.isOpen()) {
-				// configure non-blocking mode
-				serverSocket.configureBlocking(false);
-				// set some options
-				NetworkServiceHelper.setChannelOption(serverSocket);
-				// maximum number of pending connections
-				final int backlog = this.configure
-						.getInt(Configure.NONBLOCKING_BIND_BACKLOG);
-				// bind the server-socket channel to local address
-				serverSocket.bind(this.socketAddress, backlog);
-				// display a waiting message while ... waiting clients
-				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
-						METHOD_NAME, serverSocket.getLocalAddress()
-								+ " Waiting for connections ...");
+			if (selector.isOpen() && serverSocket.isOpen()) {
 				// Register the server socket channel, indicating an interest in
 				// accepting new connections
 				serverSocket.register(selector, SelectionKey.OP_ACCEPT);
@@ -73,7 +48,6 @@ public class NonBlockingNetworkServiceImpl implements INetworkService, Runnable 
 				while (this.isRunning) {
 					this.pendingConnections(selector);
 				}
-
 			} else {
 				throw new IllegalStateException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
 			}
@@ -82,7 +56,6 @@ public class NonBlockingNetworkServiceImpl implements INetworkService, Runnable 
 		}
 
 	}
-
 	private void pendingConnections(final Selector selector) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
@@ -105,10 +78,11 @@ public class NonBlockingNetworkServiceImpl implements INetworkService, Runnable 
 				if (!selectionKey.isValid()) {
 					continue;
 				}
-				
-				LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
+						METHOD_NAME,
 						NetworkServiceHelper.getReadySetString(selectionKey));
-				
+
 				// 이벤트가 사용할 수 있는지 확인하고 처리
 				if (selectionKey.isAcceptable()) {
 					this.accept(selector, selectionKey);
@@ -159,7 +133,8 @@ public class NonBlockingNetworkServiceImpl implements INetworkService, Runnable 
 
 	private ServerSession createSession(final SocketChannel socket,
 			final SelectionKey selectionKey) {
-		return new NonBlockingServerSessionImpl(configure, socket, selectionKey);
+		return new NonBlockingServerSessionImpl(this.configure, socket,
+				selectionKey);
 	}
 
 }

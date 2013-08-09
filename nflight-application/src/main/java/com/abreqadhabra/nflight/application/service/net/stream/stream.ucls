@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" 
+    name="com.abreqadhabra.nflight.application.service.net.stream.asynchronous.AsyncNetworkServiceImpl" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/asynchronous/AsyncNetworkServiceImpl.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="243" width="404" x="41" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" 
+    name="com.abreqadhabra.nflight.application.service.net.stream.asynchronous.AsyncReceiveCompletionHandler" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/asynchronous/AsyncReceiveCompletionHandler.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="707" y="148"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" 
+    name="com.abreqadhabra.nflight.application.service.net.stream.blocking.BlockingNetworkServiceImpl" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/blocking/BlockingNetworkServiceImpl.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="239" y="772"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" 
+    name="com.abreqadhabra.nflight.application.service.net.stream.blocking.BlockingNetworkServiceWorker" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/blocking/BlockingNetworkServiceWorker.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="636" y="745"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" 
+    name="com.abreqadhabra.nflight.application.service.net.stream.nonblocking.NonBlockingNetworkServiceImpl" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/nonblocking/NonBlockingNetworkServiceImpl.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="245" y="454"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" 
+    name="com.abreqadhabra.nflight.application.service.net.stream.nonblocking.NonBlockingServerSessionImpl" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/nonblocking/NonBlockingServerSessionImpl.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="674" y="434"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="7" language="java" 
+    name="com.abreqadhabra.nflight.application.service.net.stream.nonblocking.ServerSession" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/nonblocking/ServerSession.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1153" y="407"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <realization id="8">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

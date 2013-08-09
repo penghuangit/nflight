@@ -59,7 +59,7 @@ public class AsyncStreamClient extends JFrame {
 //		try {
 //			AsynchronousSocketChannel asyncSocketChannel = AsynchronousSocketChannel
 //					.open();
-//			Future<Void> future = asyncSocketChannel.connect(socketAddress);
+//			Future<Void> future = asyncSocketChannel.connect(endpoint);
 //			future.get();
 //
 //			MessageDTOImpl msg = new MessageDTOImpl();

@@ -6,19 +6,20 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
 import java.net.SocketOption;
 import java.nio.ByteBuffer;
 import java.nio.channels.NetworkChannel;
 import java.nio.channels.SelectionKey;
-import java.nio.channels.SocketChannel;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ServerSocketFactory;
+
 import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
-import com.abreqadhabra.nflight.application.service.net.stream.nonblocking.NonBlockingServerSessionImpl;
-import com.abreqadhabra.nflight.application.service.net.stream.nonblocking.ServerSession;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class NetworkServiceHelper {
@@ -151,4 +152,36 @@ public class NetworkServiceHelper {
 
 		return sb.toString();
 	}
+
+	public static int findAvailableServerSocket(int seed) {
+		for (int i = seed; i < seed + 200; i++) {
+			try {
+				ServerSocket sock = ServerSocketFactory.getDefault()
+						.createServerSocket(i);
+				sock.close();
+				return i;
+			} catch (Exception e) {
+			}
+		}
+		throw new RuntimeException("Cannot find a free server socket");
+	}
+
+	public static int findAvailableServerSocket() {
+		return findAvailableServerSocket(5678);
+	}
+
+	public static int findAvailableUdpSocket(int seed) {
+		for (int i = seed; i < seed + 200; i++) {
+			try {
+				DatagramSocket sock = new DatagramSocket(i);
+				sock.close();
+				Thread.sleep(100);
+				return i;
+			} catch (Exception e) {
+			}
+		}
+		throw new RuntimeException("Cannot find a free server socket");
+	}
+
+
 }
