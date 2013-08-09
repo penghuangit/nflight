@@ -1,11 +1,13 @@
-package com.abreqadhabra.nflight.application.service.net.stream.nonblocking;
+package com.abreqadhabra.nflight.application.service.net.datagram.unicast;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.net.StandardProtocolFamily;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
@@ -17,34 +19,30 @@ import com.abreqadhabra.nflight.application.service.net.stream.AbstractNetworkSe
 import com.abreqadhabra.nflight.application.service.net.stream.ServerSession;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
-	private static final Class<NonBlockingNetworkServiceImpl> THIS_CLAZZ = NonBlockingNetworkServiceImpl.class;
+public class UnicastNetworkServiceImpl extends AbstractNetworkServiceImpl {
+	private static final Class<UnicastNetworkServiceImpl> THIS_CLAZZ = UnicastNetworkServiceImpl.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public NonBlockingNetworkServiceImpl(final Configure configure,
+	public UnicastNetworkServiceImpl(final Configure configure,
 			final ThreadPoolExecutor threadPool,
 			final InetSocketAddress endpoint) {
 		super(configure, threadPool, endpoint);
-		this.backlog = this.configure
-				.getInt(Configure.NONBLOCKING_BIND_BACKLOG);
 	}
 
 	@Override
 	public void run() {
 		try {
 			this.isRunning = true;
-			boolean isBlock = false;
 			// create a new server-socket channel & selector
-			Selector selector = Selector.open();
-			final ServerSocketChannel serverSocket = this
-					.createServerChannelFactory()
-					.createBlockingServerSocketChannel(isBlock, this.endpoint,
-							this.backlog);
+			final Selector selector = Selector.open();
+			final DatagramChannel serverSocket = this
+					.createServerChannelFactory().createUnicastDatagramChannel(
+							StandardProtocolFamily.INET, this.endpoint);
 			// check that both of them were successfully opened
 			if (selector.isOpen() && serverSocket.isOpen()) {
 				// Register the server socket channel, indicating an interest in
 				// accepting new connections
-				serverSocket.register(selector, SelectionKey.OP_ACCEPT);
+				serverSocket.register(selector, SelectionKey.OP_READ);
 				// wait for incoming connections
 				while (this.isRunning) {
 					this.pendingConnections(selector);
@@ -85,12 +83,9 @@ public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 						NetworkServiceHelper.getReadySetString(selectionKey));
 
 				// 이벤트가 사용할 수 있는지 확인하고 처리
-				if (selectionKey.isAcceptable()) {
-					this.accept(selector, selectionKey);
-				} else if (selectionKey.isReadable()) {
-					final ServerSession session = (ServerSession) selectionKey
-							.attachment();
-					session.receive(session);
+				if (selectionKey.isReadable()) {
+					this.receive(selector, selectionKey);
+
 				} else if (selectionKey.isWritable()) {
 					final ServerSession session = (ServerSession) selectionKey
 							.attachment();
@@ -106,36 +101,39 @@ public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 		}
 	}
 
-	private void accept(final Selector selector, final SelectionKey selectionKey) {
+	private void receive(final Selector selector,
+			final SelectionKey selectionKey) {
+
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-				NetworkServiceHelper.getReadySetString(selectionKey));
-
 		try {
-			final SocketChannel socket = ((ServerSocketChannel) selectionKey
-					.channel()).accept();
-			LOGGER.logp(
-					Level.FINER,
-					THIS_CLAZZ.getSimpleName(),
-					METHOD_NAME,
-					"Accepted socket connection from "
-							+ socket.getRemoteAddress());
-			socket.configureBlocking(false);
-			final SelectionKey readyKey = socket.register(selector,
-					SelectionKey.OP_READ);
-			final ServerSession session = this.createSession(socket, readyKey);
-			readyKey.attach(session);
+			final DatagramChannel channel = (DatagramChannel) selectionKey
+					.channel();
+
+			final int capacity = this.configure
+					.getInt(Configure.UNICAST_INCOMING_BUFFER_CAPACITY);
+			final ByteBuffer incomingByteBuffer = NetworkServiceHelper
+					.getByteBuffer(capacity);
+
+			final SocketAddress clientEndpoint = channel
+					.receive(incomingByteBuffer);
+
+			incomingByteBuffer.flip();
+			if (incomingByteBuffer.hasRemaining()) {
+				incomingByteBuffer.compact();
+			} else {
+				incomingByteBuffer.clear();
+			}
+
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+					new String(incomingByteBuffer.array(), "UTF-8") + " ["
+							+ incomingByteBuffer.limit() + " bytes] from "
+							+ clientEndpoint);
+
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private ServerSession createSession(final SocketChannel socket,
-			final SelectionKey selectionKey) {
-		return (ServerSession) new NonBlockingServerSessionImpl(this.configure, socket,
-				selectionKey);
 	}
 
 }

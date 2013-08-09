@@ -20,32 +20,51 @@ public interface Configure {
 	public static final Path FILE_SOCKET_SERVER_PROPERTIES = CODE_BASE_PATH
 			.resolve("com/abreqadhabra/nflight/application/server/aio/conf/socketserver.properties");
 
-	static final Path FILE_SOCKET_OPTION_PROPERTIES = CODE_BASE_PATH
+	static final Path FILE_CHANNEL_OPTION_PROPERTIES = CODE_BASE_PATH
 			.resolve("com/abreqadhabra/nflight/application/server/aio/conf/socketoption.properties");
 
-	static final String PREFIX_KEY_PROPERTIES_SOCKET_OPTION = "nflight.socketoption.";;
+	static final String PREFIX_KEY_PROPERTIES_CHANNEL_OPTION = "nflight.socketoption.";;
+	static final String CHANNEL_OPTION_IP_MULTICAST_IF = "nflight.socketoption.ip_multicast_if";
 	
 	public String get(String key);
 
 	public void set(String key, String value);
 
-	Hashtable<Object, Object> all();
-	
-	//BLOCKING STREAM SERVER
-	static final String BLOCKING_BIND_BACKLOG="nflight.service.blocking.bind.backlog";
-	static final String BLOCKING_INCOMING_BUFFER_CAPACITY="nflight.service.blocking.buffer.incoming.capacity";
-
-	//NON-BLOCKING STREAM SERVER
-	static final String NONBLOCKING_BIND_BACKLOG="nflight.service.nonblocking.bind.backlog";
-	static final String NONBLOCKING_INCOMING_BUFFER_CAPACITY="nflight.service.nonblocking.buffer.incoming.capacity";
-	
-	
-	//ASYNC SERVER
-	static final String ASYNC_THREADPOOL_INITIALSIZE ="nflight.service.async.init.threadpool.initialsize";
-	static final String ASYNC_BIND_BACKLOG="nflight.service.async.bind.backlog";
-	static final String ASYNC_INCOMING_BUFFER_CAPACITY="nflight.service.async.buffer.incoming.capacity";
-	
+	Hashtable<Object, Object> getAll();
 
 	public int getInt(String asyncBindBacklog);
+	
+	// STREAM SERVICE - BLOCKING
+	static final String BLOCKING_DEFAULT_PORT = "nflight.service.stream.blocking.bind.port.default";
+	static final String BLOCKING_BIND_BACKLOG = "nflight.service.stream.blocking.bind.backlog";
+	static final String BLOCKING_INCOMING_BUFFER_CAPACITY = "nflight.service.stream.blocking.buffer.incoming.capacity";
+
+	// STREAM SERVICE - NON-BLOCKING
+	static final String NONBLOCKING_DEFAULT_PORT = "nflight.service.stream.nonblocking.bind.port.default";
+	static final String NONBLOCKING_BIND_BACKLOG = "nflight.service.stream.nonblocking.bind.backlog";
+	static final String NONBLOCKING_INCOMING_BUFFER_CAPACITY = "nflight.service.stream.nonblocking.buffer.incoming.capacity";
+
+	// STREAM SERVICE - ASYNC
+	static final String ASYNC_DEFAULT_PORT = "nflight.service.stream.async.bind.port.default";
+	static final String ASYNC_THREADPOOL_INITIALSIZE = "nflight.service.stream.async.init.threadpool.initialsize";
+	static final String ASYNC_BIND_BACKLOG = "nflight.service.stream.async.bind.backlog";
+	static final String ASYNC_INCOMING_BUFFER_CAPACITY = "nflight.service.stream.async.buffer.incoming.capacity";
+
+	// DATAGRAM SERVICE - UNICAST
+	static final String UNICAST_DEFAULT_PORT = "nflight.service.datagram.unicast.bind.port.default";
+	static final String UNICAST_INCOMING_BUFFER_CAPACITY = "nflight.service.datagram.unicast.buffer.incoming.capacity";
+
+	// DATAGRAM SERVICE - MULTICAST
+	static final String MULTICAST_DEFAULT_PORT = "nflight.service.datagram.multicast.bind.port.default";
+	static final String MULTICAST_INCOMING_BUFFER_CAPACITY = "nflight.service.datagram.multicast.buffer.incoming.capacity";
+
+	static final String MULTICAST_GROUP_ADDRESS = "225.4.5.6";
+
+
+	public static enum STREAM_SERVICE_TYPE {
+
+		blocking, nonblocking, async, unicast, multicast, UNKNOWN;
+	}
+
 
 }

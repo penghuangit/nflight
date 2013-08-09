@@ -7,11 +7,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
+import java.net.SocketException;
 import java.net.SocketOption;
 import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
 import java.nio.channels.NetworkChannel;
 import java.nio.channels.SelectionKey;
+import java.util.Enumeration;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +24,7 @@ import java.util.logging.Logger;
 import javax.net.ServerSocketFactory;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
+import com.abreqadhabra.nflight.application.launcher.Configure.STREAM_SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -28,9 +34,20 @@ public class NetworkServiceHelper {
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private static final Configure configure = new ConfigureImpl(
-			Configure.FILE_SOCKET_OPTION_PROPERTIES);
+			Configure.FILE_CHANNEL_OPTION_PROPERTIES);
 
-	public static void setChannelOption(final NetworkChannel socketChannel) {
+	public static void setMulticastChannelOption(DatagramChannel socketChannel,
+			NetworkInterface networkInterface, STREAM_SERVICE_TYPE type) {
+
+		configure.set(Configure.CHANNEL_OPTION_IP_MULTICAST_IF,
+				networkInterface.toString());
+
+		setChannelOption(socketChannel, type);
+
+	}
+
+	public static void setChannelOption(final NetworkChannel socketChannel,
+			STREAM_SERVICE_TYPE type) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
@@ -45,10 +62,9 @@ public class NetworkServiceHelper {
 
 			for (final SocketOption<?> option : options) {
 				final String optionName = option.name();
-				final String optionValue = configure
-						.get(Configure.PREFIX_KEY_PROPERTIES_SOCKET_OPTION
-								+ optionName.toLowerCase().trim());
-				if (optionValue == null) {
+				final String optionValue = configure.get(Configure.PREFIX_KEY_PROPERTIES_CHANNEL_OPTION
+						+ type.toString() + "." + optionName.toLowerCase());
+				if (optionValue == null || optionValue.length() == 0) {
 					continue;
 				}
 				if (option.type() == Integer.class) {
@@ -135,6 +151,56 @@ public class NetworkServiceHelper {
 		return readObject;
 	}
 
+	public static String getNetworkInterfaceName(final String localAddress)
+			throws SocketException {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		final Enumeration<NetworkInterface> eni = NetworkInterface
+				.getNetworkInterfaces();
+
+		String networkInterfaceName = null;
+
+		StringBuffer sb = new StringBuffer();
+
+		while (eni.hasMoreElements()) {
+			final NetworkInterface ni = eni.nextElement();
+			final Enumeration<InetAddress> inetAddresses = ni
+					.getInetAddresses();
+			if (LOGGER.isLoggable(Level.FINER)) {
+				sb.append("\nNetwork Interface " + ni.getDisplayName());
+				sb.append(": [ ");
+				sb.append("isUp+" + ni.isUp());
+				sb.append("supportsMulticast+" + ni.supportsMulticast());
+				sb.append("isVirtual+" + ni.isVirtual());
+				sb.append("getName+" + ni.getName());
+				sb.append("\n {");
+			}
+
+			while (inetAddresses.hasMoreElements()) {
+				final InetAddress ia = inetAddresses.nextElement();
+				if (!ia.isLinkLocalAddress()) {
+
+					if (LOGGER.isLoggable(Level.FINER)) {
+						sb.append(ni.getDisplayName());
+						sb.append(" IP: ");
+						sb.append(ia.getHostAddress());
+					}
+					if (localAddress.equals(ia.getHostAddress())) {
+						networkInterfaceName = ni.getName();
+						LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
+								METHOD_NAME, "networkInterfaceName : "
+										+ networkInterfaceName);
+					}
+				}
+			}
+		}
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				sb.toString());
+
+		return networkInterfaceName;
+	}
+
 	public static String getReadySetString(SelectionKey selectionKey) {
 		return " [ selectionKey: " + selectionKey.hashCode()
 				+ " interest ops: {"
@@ -153,7 +219,37 @@ public class NetworkServiceHelper {
 		return sb.toString();
 	}
 
-	public static int findAvailableServerSocket(int seed) {
+	public static boolean isAvailableStreamPort(int seed) {
+		try {
+			ServerSocket sock = ServerSocketFactory.getDefault()
+					.createServerSocket(seed);
+			sock.close();
+			return true;
+		} catch (Exception e) {
+		}
+		return false;
+	}
+
+	public static boolean isAvailableDatagramPort(int seed) {
+		try {
+			DatagramSocket sock = new DatagramSocket(seed);
+			sock.close();
+			Thread.sleep(100);
+			return true;
+		} catch (Exception e) {
+		}
+		return false;
+	}
+
+	public static int findAvailableStreamPort() {
+		return findAvailableStreamPort(5678);
+	}
+
+	public static int findAvailableDatagramPort() {
+		return findAvailableDatagramPort(5678);
+	}
+
+	public static int findAvailableStreamPort(int seed) {
 		for (int i = seed; i < seed + 200; i++) {
 			try {
 				ServerSocket sock = ServerSocketFactory.getDefault()
@@ -166,11 +262,7 @@ public class NetworkServiceHelper {
 		throw new RuntimeException("Cannot find a free server socket");
 	}
 
-	public static int findAvailableServerSocket() {
-		return findAvailableServerSocket(5678);
-	}
-
-	public static int findAvailableUdpSocket(int seed) {
+	public static int findAvailableDatagramPort(int seed) {
 		for (int i = seed; i < seed + 200; i++) {
 			try {
 				DatagramSocket sock = new DatagramSocket(i);
@@ -180,8 +272,20 @@ public class NetworkServiceHelper {
 			} catch (Exception e) {
 			}
 		}
-		throw new RuntimeException("Cannot find a free server socket");
+		throw new RuntimeException(
+				" already in use port: Cannot find a free server socket");
 	}
 
+	public static int validatedStreamPort(int port) {
+
+		if (!isAvailableStreamPort(port)) {
+			port = extracted(port);
+		}
+		return port;
+	}
+
+	private static int extracted(int port) {
+		return NetworkServiceHelper.findAvailableStreamPort();
+	}
 
 }

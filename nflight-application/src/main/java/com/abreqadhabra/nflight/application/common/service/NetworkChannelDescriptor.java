@@ -13,13 +13,13 @@ public class NetworkChannelDescriptor implements Serializable {
 
 	private Long sessionId;
 	private NetworkChannel channel;
-	InetSocketAddress socketAddress;
+	InetSocketAddress endpoint;
 
 	public NetworkChannelDescriptor(Long sessionId, NetworkChannel channel)
 			throws IOException {
 		this.sessionId = sessionId;
 		this.channel = channel;
-		this.socketAddress = (InetSocketAddress) this.channel.getLocalAddress();
+		this.endpoint = (InetSocketAddress) this.channel.getLocalAddress();
 
 	}
 
@@ -40,21 +40,21 @@ public class NetworkChannelDescriptor implements Serializable {
 	}
 
 	public InetSocketAddress getLocalAddress() {
-		return this.socketAddress;
+		return this.endpoint;
 	}
 
 	public String getLocalHostName() {
-		return this.socketAddress == null ? null : this.socketAddress
+		return this.endpoint == null ? null : this.endpoint
 				.getHostString();
 	}
 
 	public String getLocalHostAddress() {
-		return this.socketAddress == null ? null : this.socketAddress
+		return this.endpoint == null ? null : this.endpoint
 				.getAddress().getHostAddress();
 	}
 
 	public int getLocalPort() {
-		return this.socketAddress == null ? 0 : this.socketAddress.getPort();
+		return this.endpoint == null ? 0 : this.endpoint.getPort();
 	}
 
 	@Override

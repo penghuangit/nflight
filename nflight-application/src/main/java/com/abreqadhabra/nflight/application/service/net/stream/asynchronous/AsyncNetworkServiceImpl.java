@@ -12,8 +12,8 @@ public class AsyncNetworkServiceImpl extends AbstractNetworkServiceImpl {
 
 	public AsyncNetworkServiceImpl(final Configure configure,
 			final ThreadPoolExecutor threadPool,
-			final InetSocketAddress socketAddress) {
-		super(configure, threadPool, socketAddress);
+			final InetSocketAddress endpoint) {
+		super(configure, threadPool, endpoint);
 		// maximum number of pending connections
 		this.backlog = this.configure.getInt(Configure.ASYNC_BIND_BACKLOG);
 	}

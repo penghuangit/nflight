@@ -23,7 +23,7 @@ public class NetworkChannelHelper {
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private static final Configure configure = new ConfigureImpl(
-			Configure.FILE_SOCKET_OPTION_PROPERTIES);
+			Configure.FILE_CHANNEL_OPTION_PROPERTIES);
 
 	public static void setChannelOption(final NetworkChannel socketChannel) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
@@ -41,7 +41,7 @@ public class NetworkChannelHelper {
 			for (final SocketOption<?> option : options) {
 				final String optionName = option.name();
 				final String optionValue = configure
-						.get(Configure.PREFIX_KEY_PROPERTIES_SOCKET_OPTION
+						.get(Configure.PREFIX_KEY_PROPERTIES_CHANNEL_OPTION
 								+ optionName.toLowerCase().trim());
 				if (optionValue == null) {
 					continue;

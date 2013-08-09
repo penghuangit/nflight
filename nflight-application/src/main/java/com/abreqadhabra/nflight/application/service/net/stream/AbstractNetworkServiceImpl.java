@@ -26,9 +26,9 @@ public abstract class AbstractNetworkServiceImpl
 
 	public AbstractNetworkServiceImpl(final Configure configure,
 			final ThreadPoolExecutor threadPool,
-			final InetSocketAddress socketAddress) {
+			final InetSocketAddress endpoint) {
 		this.configure = configure;
-		this.endpoint = socketAddress;
+		this.endpoint = endpoint;
 		this.threadPool = threadPool;
 	}
 

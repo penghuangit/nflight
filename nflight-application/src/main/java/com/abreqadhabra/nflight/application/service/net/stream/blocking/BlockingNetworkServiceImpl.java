@@ -20,8 +20,8 @@ public class BlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 
 	public BlockingNetworkServiceImpl(final Configure configure,
 			final ThreadPoolExecutor threadPool,
-			final InetSocketAddress socketAddress) {
-		super(configure, threadPool, socketAddress);
+			final InetSocketAddress endpoint) {
+		super(configure, threadPool, endpoint);
 		this.backlog = this.configure.getInt(Configure.BLOCKING_BIND_BACKLOG);
 	}
 

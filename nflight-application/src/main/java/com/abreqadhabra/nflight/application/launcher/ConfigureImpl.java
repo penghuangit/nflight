@@ -34,7 +34,7 @@ public class ConfigureImpl implements Configure {
 	}
 
 	@Override
-	public Hashtable<Object, Object> all() {
+	public Hashtable<Object, Object> getAll() {
 		return this.props;
 	}
 

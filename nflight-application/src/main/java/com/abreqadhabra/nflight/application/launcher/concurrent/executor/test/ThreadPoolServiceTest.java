@@ -5,10 +5,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.concurrent.executor.ThreadPoolExecutorService;
-import com.abreqadhabra.nflight.application.launcher.concurrent.executor.ThreadPoolExecutorServiceImpl;
 import com.abreqadhabra.nflight.application.launcher.concurrent.executor.monitor.ThreadPoolMonitorService;
-import com.abreqadhabra.nflight.application.launcher.concurrent.executor.monitor.ThreadPoolMonitorServiceImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
+
+
 
 public class ThreadPoolServiceTest {
 	private static final Class<ThreadPoolServiceTest> THIS_CLAZZ = ThreadPoolServiceTest.class;
@@ -18,8 +18,8 @@ public class ThreadPoolServiceTest {
 	ThreadPoolExecutorService threadPoolExecutorService;
 
 	public ThreadPoolServiceTest() {
-		threadPoolMonitorService = new ThreadPoolMonitorServiceImpl(3);
-		threadPoolExecutorService = new ThreadPoolExecutorServiceImpl();
+	//	threadPoolMonitorService = new ThreadPoolMonitorServiceImpl(3);
+	//	threadPoolExecutorService = new ThreadPoolExecutorServiceImpl();
 	}
 
 	public static void main(String[] args) {

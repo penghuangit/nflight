@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper;
+import com.abreqadhabra.nflight.application.service.net.stream.ServerSession;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class NonBlockingServerSessionImpl implements ServerSession {
