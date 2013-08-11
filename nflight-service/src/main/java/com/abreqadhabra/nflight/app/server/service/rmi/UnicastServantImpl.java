@@ -44,7 +44,7 @@ public class UnicastServantImpl extends AbstractServant {
 				RMIServiceHelper.rebind(super.registry, RMIServiceHelper
 						.getBoundName(super.host, super.port, "unicast"),
 						servant);
-			} catch (final Exception e) {
+			} catch (final Exception e) { 
 				throw e;
 			}
 		}
