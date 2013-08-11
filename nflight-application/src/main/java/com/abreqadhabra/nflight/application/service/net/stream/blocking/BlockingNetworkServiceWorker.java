@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
-import com.abreqadhabra.nflight.application.server.net.socket.NetworkChannelHelper;
 import com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -16,10 +15,11 @@ public class BlockingNetworkServiceWorker implements Runnable {
 	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private Configure configure;
+	private final Configure configure;
 	private final SocketChannel socket;
 
-	public BlockingNetworkServiceWorker(Configure configure, final SocketChannel socket) {
+	public BlockingNetworkServiceWorker(final Configure configure,
+			final SocketChannel socket) {
 		this.configure = configure;
 		this.socket = socket;
 	}
@@ -33,20 +33,25 @@ public class BlockingNetworkServiceWorker implements Runnable {
 			final long startN = System.nanoTime();
 
 			if (LOGGER.isLoggable(Level.FINER)) {
-				String currentThreadName = Thread.currentThread().getName();
+				final String currentThreadName = Thread.currentThread()
+						.getName();
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
-						METHOD_NAME, "current thread is "
-								+ currentThreadName);
+						METHOD_NAME, "current thread is " + currentThreadName);
 			}
-			
-			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME, "isOpen=" +
-					Boolean.toString(this.socket.isOpen()) +", isConnected=" +
-					Boolean.toString(this.socket.isConnected()));
 
-			int capacity = configure
+			LOGGER.logp(
+					Level.FINER,
+					THIS_CLAZZ.getSimpleName(),
+					METHOD_NAME,
+					"isOpen=" + Boolean.toString(this.socket.isOpen())
+							+ ", isConnected="
+							+ Boolean.toString(this.socket.isConnected()));
+
+			final int capacity = this.configure
 					.getInt(Configure.NONBLOCKING_INCOMING_BUFFER_CAPACITY);
-			ByteBuffer incomingByteBuffer = NetworkServiceHelper.getByteBuffer(capacity);
-			int numRead = socket.read(incomingByteBuffer);
+			final ByteBuffer incomingByteBuffer = NetworkServiceHelper
+					.getByteBuffer(capacity);
+			final int numRead = this.socket.read(incomingByteBuffer);
 			incomingByteBuffer.flip();
 			if (incomingByteBuffer.hasRemaining()) {
 				incomingByteBuffer.compact();
@@ -75,9 +80,13 @@ public class BlockingNetworkServiceWorker implements Runnable {
 		} finally {
 			try {
 				this.socket.close();
-				LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME, "isOpen=" +
-						Boolean.toString(this.socket.isOpen()) +", isConnected=" +
-						Boolean.toString(this.socket.isConnected()));
+				LOGGER.logp(
+						Level.FINER,
+						THIS_CLAZZ.getSimpleName(),
+						METHOD_NAME,
+						"isOpen=" + Boolean.toString(this.socket.isOpen())
+								+ ", isConnected="
+								+ Boolean.toString(this.socket.isConnected()));
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}

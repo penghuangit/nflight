@@ -28,7 +28,7 @@ public class BlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 	@Override
 	public void run() {
 		this.isRunning = true;
-		boolean isBlock = true;
+		final boolean isBlock = true;
 		// create a new server-socket channel
 		final ServerSocketChannel serverSocket = this
 				.createServerChannelFactory()

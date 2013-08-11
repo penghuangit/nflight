@@ -37,8 +37,9 @@ public class NetworkServiceHelper {
 	private static final Configure configure = new ConfigureImpl(
 			Configure.FILE_CHANNEL_OPTION_PROPERTIES);
 
-	public static void setMulticastChannelOption(DatagramChannel socketChannel,
-			String networkInterfaceName, STREAM_SERVICE_TYPE type) {
+	public static void setMulticastChannelOption(
+			final DatagramChannel socketChannel,
+			final String networkInterfaceName, final STREAM_SERVICE_TYPE type) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
@@ -59,7 +60,7 @@ public class NetworkServiceHelper {
 	}
 
 	public static void setChannelOption(final NetworkChannel socketChannel,
-			STREAM_SERVICE_TYPE type) {
+			final STREAM_SERVICE_TYPE type) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
@@ -75,17 +76,18 @@ public class NetworkServiceHelper {
 			for (final SocketOption<?> option : options) {
 				final String optionName = option.name();
 
-				String optionKey = Configure.PREFIX_KEY_PROPERTIES_CHANNEL_OPTION
+				final String optionKey = Configure.PREFIX_KEY_PROPERTIES_CHANNEL_OPTION
 						+ type.toString() + "." + optionName.toLowerCase();
 
 				LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME,
 						"optionKey:  " + optionKey);
 
 				final String optionValue = configure.get(optionKey);
-				if (optionValue == null || optionValue.length() == 0) {
+				if ((optionValue == null) || (optionValue.length() == 0)) {
 					continue;
 				}
 				if (option.type() == Integer.class) {
+					@SuppressWarnings("unchecked")
 					final SocketOption<Integer> stdSocketOption = (SocketOption<Integer>) option;
 					socketChannel.setOption(stdSocketOption,
 							Integer.parseInt(optionValue));
@@ -94,6 +96,7 @@ public class NetworkServiceHelper {
 							+ socketChannel.getOption(stdSocketOption)
 									.toString());
 				} else if (option.type() == Boolean.class) {
+					@SuppressWarnings("unchecked")
 					final SocketOption<Boolean> stdSocketOption = (SocketOption<Boolean>) option;
 					socketChannel.setOption(stdSocketOption,
 							Boolean.parseBoolean(optionValue));
@@ -102,6 +105,7 @@ public class NetworkServiceHelper {
 							+ socketChannel.getOption(stdSocketOption)
 									.toString());
 				} else if (option.type() == NetworkInterface.class) {
+					@SuppressWarnings("unchecked")
 					final SocketOption<NetworkInterface> stdSocketOption = (SocketOption<NetworkInterface>) option;
 
 					// join multicast group on this interface, and also use this
@@ -141,7 +145,7 @@ public class NetworkServiceHelper {
 		return ByteBuffer.allocate(capacity);
 	}
 
-	public static ByteBuffer serializeObject(Object object) {
+	public static ByteBuffer serializeObject(final Object object) {
 		byte[] bytes = null;
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
@@ -157,7 +161,7 @@ public class NetworkServiceHelper {
 					"serializeObject: " + object.getClass().getName() + " ["
 							+ bytes.length + " bytes] " + object);
 
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 		return ByteBuffer.wrap(bytes);
@@ -167,7 +171,7 @@ public class NetworkServiceHelper {
 				.getMethodName();
 
 		Object readObject = null;
-		byte[] bytes = byteBuffer.array();
+		final byte[] bytes = byteBuffer.array();
 
 		try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 				ObjectInputStream ois = new ObjectInputStream(bais);) {
@@ -194,16 +198,18 @@ public class NetworkServiceHelper {
 				.getMethodName();
 
 		String networkInterfaceName = null;
-		StringBuffer sb = new StringBuffer();
-		Enumeration<NetworkInterface> nets = NetworkInterface
+		final StringBuffer sb = new StringBuffer();
+		final Enumeration<NetworkInterface> nets = NetworkInterface
 				.getNetworkInterfaces();
-		for (NetworkInterface netint : Collections.list(nets)) {
-			Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
+		for (final NetworkInterface netint : Collections.list(nets)) {
+			final Enumeration<InetAddress> inetAddresses = netint
+					.getInetAddresses();
 			if (LOGGER.isLoggable(Level.FINER)) {
 				sb.append("\n" + netint.getName() + ": "
 						+ netint.getDisplayName());
 			}
-			for (InetAddress inetAddress : Collections.list(inetAddresses)) {
+			for (final InetAddress inetAddress : Collections
+					.list(inetAddresses)) {
 				if (LOGGER.isLoggable(Level.FINER)) {
 					sb.append("\n\tInetAddress=" + inetAddress.toString());
 				}
@@ -223,7 +229,7 @@ public class NetworkServiceHelper {
 		return networkInterfaceName;
 	}
 
-	public static String getReadySetString(SelectionKey selectionKey) {
+	public static String getReadySetString(final SelectionKey selectionKey) {
 		return " [ selectionKey: " + selectionKey.hashCode()
 				+ " interest ops: {"
 				+ getOperationSetString(selectionKey.interestOps())
@@ -241,24 +247,24 @@ public class NetworkServiceHelper {
 		return sb.toString();
 	}
 
-	public static boolean isAvailableStreamPort(int seed) {
+	public static boolean isAvailableStreamPort(final int seed) {
 		try {
-			ServerSocket sock = ServerSocketFactory.getDefault()
+			final ServerSocket sock = ServerSocketFactory.getDefault()
 					.createServerSocket(seed);
 			sock.close();
 			return true;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 		}
 		return false;
 	}
 
-	public static boolean isAvailableDatagramPort(int seed) {
+	public static boolean isAvailableDatagramPort(final int seed) {
 		try {
-			DatagramSocket sock = new DatagramSocket(seed);
+			final DatagramSocket sock = new DatagramSocket(seed);
 			sock.close();
 			Thread.sleep(100);
 			return true;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 		}
 		return false;
 	}
@@ -271,27 +277,27 @@ public class NetworkServiceHelper {
 		return findAvailableDatagramPort(5678);
 	}
 
-	public static int findAvailableStreamPort(int seed) {
-		for (int i = seed; i < seed + 200; i++) {
+	public static int findAvailableStreamPort(final int seed) {
+		for (int i = seed; i < (seed + 200); i++) {
 			try {
-				ServerSocket sock = ServerSocketFactory.getDefault()
+				final ServerSocket sock = ServerSocketFactory.getDefault()
 						.createServerSocket(i);
 				sock.close();
 				return i;
-			} catch (Exception e) {
+			} catch (final Exception e) {
 			}
 		}
 		throw new RuntimeException("Cannot find a free server socket");
 	}
 
-	public static int findAvailableDatagramPort(int seed) {
-		for (int i = seed; i < seed + 200; i++) {
+	public static int findAvailableDatagramPort(final int seed) {
+		for (int i = seed; i < (seed + 200); i++) {
 			try {
-				DatagramSocket sock = new DatagramSocket(i);
+				final DatagramSocket sock = new DatagramSocket(i);
 				sock.close();
 				Thread.sleep(100);
 				return i;
-			} catch (Exception e) {
+			} catch (final Exception e) {
 			}
 		}
 		throw new RuntimeException(
@@ -306,7 +312,7 @@ public class NetworkServiceHelper {
 		return port;
 	}
 
-	private static int extracted(int port) {
+	private static int extracted(final int port) {
 		return NetworkServiceHelper.findAvailableStreamPort();
 	}
 

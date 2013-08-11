@@ -33,9 +33,9 @@ public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 	public void run() {
 		try {
 			this.isRunning = true;
-			boolean isBlock = false;
+			final boolean isBlock = false;
 			// create a new server-socket channel & selector
-			Selector selector = Selector.open();
+			final Selector selector = Selector.open();
 			final ServerSocketChannel serverSocket = this
 					.createServerChannelFactory()
 					.createBlockingServerSocketChannel(isBlock, this.endpoint,
@@ -134,7 +134,7 @@ public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 
 	private ServerSession createSession(final SocketChannel socket,
 			final SelectionKey selectionKey) {
-		return (ServerSession) new NonBlockingServerSessionImpl(this.configure, socket,
+		return new NonBlockingServerSessionImpl(this.configure, socket,
 				selectionKey);
 	}
 

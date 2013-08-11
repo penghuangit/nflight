@@ -20,15 +20,15 @@ public class AsyncNetworkServiceImpl extends AbstractNetworkServiceImpl {
 
 	@Override
 	public void run() {
-		
+
 		this.isRunning = true;
-		int initialSize = this.configure
+		final int initialSize = this.configure
 				.getInt(Configure.ASYNC_THREADPOOL_INITIALSIZE);
 
 		final AsynchronousServerSocketChannel asyncServerSocketChannel = this
-				.createServerChannelFactory()
-				.createAsyncServerSocketChannel(threadPool, initialSize,
-						this.endpoint, this.backlog);
+				.createServerChannelFactory().createAsyncServerSocketChannel(
+						this.threadPool, initialSize, this.endpoint,
+						this.backlog);
 		// wait for incoming connections
 		this.pendingConnections(asyncServerSocketChannel);
 	}

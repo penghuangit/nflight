@@ -3,14 +3,12 @@ package com.abreqadhabra.nflight.application.service.net;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
 import java.net.ProtocolFamily;
 import java.net.SocketAddress;
 import java.net.StandardProtocolFamily;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.DatagramChannel;
-import java.nio.channels.MembershipKey;
 import java.nio.channels.ServerSocketChannel;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
@@ -98,8 +96,8 @@ public class ServerChannelFactory {
 		return null;
 	}
 
-	public DatagramChannel createUnicastDatagramChannel(ProtocolFamily family,
-			InetSocketAddress endpoint) {
+	public DatagramChannel createUnicastDatagramChannel(
+			final ProtocolFamily family, final InetSocketAddress endpoint) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
@@ -129,19 +127,18 @@ public class ServerChannelFactory {
 	}
 
 	public DatagramChannel createMulticastDatagramChannel(
-			StandardProtocolFamily family, InetSocketAddress endpoint) {
+			final StandardProtocolFamily family,
+			final InetSocketAddress endpoint) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
 			final DatagramChannel serverSocket = DatagramChannel.open(family);
 			if (serverSocket.isOpen()) {
-				
-				
+
 				final String networkInterfaceName = NetworkServiceHelper
 						.getNetworkInterfaceName(InetAddress.getLocalHost()
 								.getHostAddress());
-
 
 				// set some options
 				NetworkServiceHelper.setMulticastChannelOption(serverSocket,
@@ -149,8 +146,7 @@ public class ServerChannelFactory {
 						Configure.STREAM_SERVICE_TYPE.multicast);
 				// bind the server-socket channel to local address
 				serverSocket.bind(endpoint);
-				
-				
+
 				// display a waiting message while ... waiting clients
 				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
 						METHOD_NAME, serverSocket.getLocalAddress()
