@@ -25,7 +25,7 @@ public class ServerChannelFactory {
 	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public AsynchronousServerSocketChannel createAsynchronousServerSocketChannel(
+	public AsynchronousServerSocketChannel createAsyncServerSocketChannel(
 			final ThreadPoolExecutor threadPool, final int initialSize,
 			final SocketAddress endpoint, final int backlog) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
@@ -142,13 +142,10 @@ public class ServerChannelFactory {
 						.getNetworkInterfaceName(InetAddress.getLocalHost()
 								.getHostAddress());
 
-				// get the network interface used for multicast
-				final NetworkInterface networkInterface = NetworkInterface
-						.getByName(networkInterfaceName);
 
 				// set some options
 				NetworkServiceHelper.setMulticastChannelOption(serverSocket,
-						networkInterface,
+						networkInterfaceName,
 						Configure.STREAM_SERVICE_TYPE.multicast);
 				// bind the server-socket channel to local address
 				serverSocket.bind(endpoint);

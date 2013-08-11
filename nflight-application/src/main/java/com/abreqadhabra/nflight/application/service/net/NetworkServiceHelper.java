@@ -16,6 +16,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.NetworkChannel;
 import java.nio.channels.SelectionKey;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.logging.Level;
@@ -37,10 +38,21 @@ public class NetworkServiceHelper {
 			Configure.FILE_CHANNEL_OPTION_PROPERTIES);
 
 	public static void setMulticastChannelOption(DatagramChannel socketChannel,
-			NetworkInterface networkInterface, STREAM_SERVICE_TYPE type) {
+			String networkInterfaceName, STREAM_SERVICE_TYPE type) {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
 
 		configure.set(Configure.CHANNEL_OPTION_IP_MULTICAST_IF,
-				networkInterface.toString());
+				networkInterfaceName);
+
+		LOGGER.logp(
+				Level.FINER,
+				CLAZZ_NAME,
+				METHOD_NAME,
+				Configure.CHANNEL_OPTION_IP_MULTICAST_IF
+						+ ": "
+						+ configure
+								.get(Configure.CHANNEL_OPTION_IP_MULTICAST_IF));
 
 		setChannelOption(socketChannel, type);
 
@@ -62,8 +74,14 @@ public class NetworkServiceHelper {
 
 			for (final SocketOption<?> option : options) {
 				final String optionName = option.name();
-				final String optionValue = configure.get(Configure.PREFIX_KEY_PROPERTIES_CHANNEL_OPTION
-						+ type.toString() + "." + optionName.toLowerCase());
+
+				String optionKey = Configure.PREFIX_KEY_PROPERTIES_CHANNEL_OPTION
+						+ type.toString() + "." + optionName.toLowerCase();
+
+				LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME,
+						"optionKey:  " + optionKey);
+
+				final String optionValue = configure.get(optionKey);
 				if (optionValue == null || optionValue.length() == 0) {
 					continue;
 				}
@@ -83,7 +101,26 @@ public class NetworkServiceHelper {
 							+ "="
 							+ socketChannel.getOption(stdSocketOption)
 									.toString());
+				} else if (option.type() == NetworkInterface.class) {
+					final SocketOption<NetworkInterface> stdSocketOption = (SocketOption<NetworkInterface>) option;
+
+					// join multicast group on this interface, and also use this
+					// interface for outgoing multicast datagrams
+					// get the network interface used for multicast
+					final NetworkInterface networkInterface = NetworkInterface
+							.getByName(optionValue);
+
+					socketChannel.setOption(stdSocketOption, networkInterface);
+					sb.append(optionName
+							+ "="
+							+ socketChannel.getOption(stdSocketOption)
+									.toString());
+				} else {
+
+					LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME,
+							"option.type():  " + option.type());
 				}
+
 				sb.append(",");
 			}
 
@@ -156,47 +193,32 @@ public class NetworkServiceHelper {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		final Enumeration<NetworkInterface> eni = NetworkInterface
-				.getNetworkInterfaces();
-
 		String networkInterfaceName = null;
-
 		StringBuffer sb = new StringBuffer();
-
-		while (eni.hasMoreElements()) {
-			final NetworkInterface ni = eni.nextElement();
-			final Enumeration<InetAddress> inetAddresses = ni
-					.getInetAddresses();
+		Enumeration<NetworkInterface> nets = NetworkInterface
+				.getNetworkInterfaces();
+		for (NetworkInterface netint : Collections.list(nets)) {
+			Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
 			if (LOGGER.isLoggable(Level.FINER)) {
-				sb.append("\nNetwork Interface " + ni.getDisplayName());
-				sb.append(": [ ");
-				sb.append("isUp+" + ni.isUp());
-				sb.append("supportsMulticast+" + ni.supportsMulticast());
-				sb.append("isVirtual+" + ni.isVirtual());
-				sb.append("getName+" + ni.getName());
-				sb.append("\n {");
+				sb.append("\n" + netint.getName() + ": "
+						+ netint.getDisplayName());
 			}
+			for (InetAddress inetAddress : Collections.list(inetAddresses)) {
+				if (LOGGER.isLoggable(Level.FINER)) {
+					sb.append("\n\tInetAddress=" + inetAddress.toString());
+				}
+				if (localAddress.equals(inetAddress.getHostAddress())) {
+					networkInterfaceName = netint.getName();
 
-			while (inetAddresses.hasMoreElements()) {
-				final InetAddress ia = inetAddresses.nextElement();
-				if (!ia.isLinkLocalAddress()) {
-
-					if (LOGGER.isLoggable(Level.FINER)) {
-						sb.append(ni.getDisplayName());
-						sb.append(" IP: ");
-						sb.append(ia.getHostAddress());
-					}
-					if (localAddress.equals(ia.getHostAddress())) {
-						networkInterfaceName = ni.getName();
-						LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
-								METHOD_NAME, "networkInterfaceName : "
-										+ networkInterfaceName);
-					}
 				}
 			}
 		}
+
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 				sb.toString());
+
+		LOGGER.logp(Level.CONFIG, THIS_CLAZZ.getName(), METHOD_NAME,
+				"Network Interface Name is " + networkInterfaceName);
 
 		return networkInterfaceName;
 	}

@@ -24,7 +24,7 @@ public interface Configure {
 			.resolve("com/abreqadhabra/nflight/application/server/aio/conf/socketoption.properties");
 
 	static final String PREFIX_KEY_PROPERTIES_CHANNEL_OPTION = "nflight.socketoption.";;
-	static final String CHANNEL_OPTION_IP_MULTICAST_IF = "nflight.socketoption.ip_multicast_if";
+	static final String CHANNEL_OPTION_IP_MULTICAST_IF = "nflight.socketoption.multicast.ip_multicast_if";
 	
 	public String get(String key);
 

@@ -2,11 +2,11 @@
 <class-diagram version="1.1.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true">  
   <class id="1" language="java" 
-    name="com.abreqadhabra.nflight.application.service.net.stream.asynchronous.AsyncNetworkServiceImpl" 
+    name="com.abreqadhabra.nflight.application.service.net.datagram.multicast.MulticastNetworkServiceImpl" 
     project="nflight-application" 
-    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/asynchronous/AsyncNetworkServiceImpl.java" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/datagram/multicast/MulticastNetworkServiceImpl.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="243" width="404" x="41" y="37"/>    
+    <position height="153" width="413" x="58" y="518"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -14,11 +14,11 @@
     </display>  
   </class>  
   <class id="2" language="java" 
-    name="com.abreqadhabra.nflight.application.service.net.stream.asynchronous.AsyncReceiveCompletionHandler" 
+    name="com.abreqadhabra.nflight.application.service.net.datagram.unicast.UnicastNetworkServiceImpl" 
     project="nflight-application" 
-    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/asynchronous/AsyncReceiveCompletionHandler.java" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/datagram/unicast/UnicastNetworkServiceImpl.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="707" y="148"/>    
+    <position height="171" width="407" x="511" y="518"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -26,11 +26,11 @@
     </display>  
   </class>  
   <class id="3" language="java" 
-    name="com.abreqadhabra.nflight.application.service.net.stream.blocking.BlockingNetworkServiceImpl" 
+    name="com.abreqadhabra.nflight.application.service.net.stream.asynchronous.AsyncNetworkServiceImpl" 
     project="nflight-application" 
-    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/blocking/BlockingNetworkServiceImpl.java" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/asynchronous/AsyncNetworkServiceImpl.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="239" y="772"/>    
+    <position height="117" width="403" x="1284" y="518"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -38,11 +38,11 @@
     </display>  
   </class>  
   <class id="4" language="java" 
-    name="com.abreqadhabra.nflight.application.service.net.stream.blocking.BlockingNetworkServiceWorker" 
+    name="com.abreqadhabra.nflight.application.service.net.stream.blocking.BlockingNetworkServiceImpl" 
     project="nflight-application" 
-    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/blocking/BlockingNetworkServiceWorker.java" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/blocking/BlockingNetworkServiceImpl.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="636" y="745"/>    
+    <position height="171" width="411" x="2197" y="518"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -54,7 +54,7 @@
     project="nflight-application" 
     file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/nonblocking/NonBlockingNetworkServiceImpl.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="245" y="454"/>    
+    <position height="189" width="430" x="1727" y="518"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -62,33 +62,74 @@
     </display>  
   </class>  
   <class id="6" language="java" 
-    name="com.abreqadhabra.nflight.application.service.net.stream.nonblocking.NonBlockingServerSessionImpl" 
+    name="com.abreqadhabra.nflight.application.service.net.stream.AbstractNetworkServiceImpl" 
     project="nflight-application" 
-    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/nonblocking/NonBlockingServerSessionImpl.java" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/AbstractNetworkServiceImpl.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="674" y="434"/>    
+    <position height="-1" width="-1" x="1351" y="331"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="7" language="java" 
-    name="com.abreqadhabra.nflight.application.service.net.stream.nonblocking.ServerSession" 
+  <interface id="7" language="java" name="com.abreqadhabra.nflight.application.service.net.INetworkService" 
     project="nflight-application" 
-    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/stream/nonblocking/ServerSession.java" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/INetworkService.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1153" y="407"/>    
+    <position height="-1" width="-1" x="1343" y="115"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <realization id="8">    
+  <class id="8" language="java" name="com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/NetworkServiceHelper.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="441" width="426" x="58" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="com.abreqadhabra.nflight.application.service.net.ServerChannelFactory" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/net/ServerChannelFactory.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="207" width="584" x="524" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <generalization id="10">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <generalization id="11">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <generalization id="12">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <generalization id="13">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <realization id="14">    
     <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="7"/>  
   </realization>  
+  <generalization id="15">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

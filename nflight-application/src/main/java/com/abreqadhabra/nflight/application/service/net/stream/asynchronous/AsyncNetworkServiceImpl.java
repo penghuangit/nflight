@@ -27,7 +27,7 @@ public class AsyncNetworkServiceImpl extends AbstractNetworkServiceImpl {
 
 		final AsynchronousServerSocketChannel asyncServerSocketChannel = this
 				.createServerChannelFactory()
-				.createAsynchronousServerSocketChannel(threadPool, initialSize,
+				.createAsyncServerSocketChannel(threadPool, initialSize,
 						this.endpoint, this.backlog);
 		// wait for incoming connections
 		this.pendingConnections(asyncServerSocketChannel);
