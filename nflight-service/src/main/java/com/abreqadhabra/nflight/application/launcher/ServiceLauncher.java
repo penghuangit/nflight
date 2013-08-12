@@ -8,13 +8,13 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.app.server.command.ShutdownServerCommand;
-import com.abreqadhabra.nflight.app.server.command.StartupServerCommand;
 import com.abreqadhabra.nflight.application.Globals;
 import com.abreqadhabra.nflight.application.launcher.command.Command;
 import com.abreqadhabra.nflight.application.launcher.command.Invoker;
 import com.abreqadhabra.nflight.application.server.IServer;
 import com.abreqadhabra.nflight.application.server.ServerImpl;
+import com.abreqadhabra.nflight.application.server.command.ShutdownCommand;
+import com.abreqadhabra.nflight.application.server.command.StartupCommand;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 
@@ -88,10 +88,10 @@ public class ServiceLauncher implements Launcher {
 				.getHostAddress(), 9999);
 
 		try {
-			_cmd = new StartupServerCommand(server);
+			_cmd = new StartupCommand(server);
 			_invoker.execute(_cmd);
 		} catch (BindException be) {
-			_cmd = new ShutdownServerCommand(server);
+			_cmd = new ShutdownCommand(server);
 			_invoker.execute(_cmd);
 		}
 

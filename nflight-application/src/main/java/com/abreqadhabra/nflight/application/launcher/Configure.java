@@ -83,6 +83,8 @@ public interface Configure {
 	public static final Path FILE_RMID_POLICY = CODE_BASE_PATH
 			.resolve("com/abreqadhabra/nflight/application/service/rmi/conf/rmid.policy");
 	public static final String ACTIVATABLE_RMI_DEFAULT_PORT = "nflight.service.rmi.activatable.bind.port.default";
+	static final Path FILE_ACTIVATION = CODE_BASE_PATH
+			.resolve("com/abreqadhabra/nflight/application/service/rmi/ActivatableRMIServantImpl.ser");
 	
 
 	public static enum PROPERTIES_ACTIVATION {
