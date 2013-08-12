@@ -30,8 +30,8 @@ public class ServiceClientTest {
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	static HashMap<String, Runnable> serviceGroupMap = new HashMap<String, Runnable>();
-	static int cnt = 1;
-	static int millis = 10;
+	static int cnt = 1000;
+	static int millis = 1;
 
 	public static SocketChannelFactory createSocketChannelFactory() {
 		return new SocketChannelFactory();
@@ -46,46 +46,51 @@ public class ServiceClientTest {
 
 		final Configure rmiConfigure = new ConfigureImpl(
 				Configure.FILE_RMI_SERVICE_PROPERTIES);
+		for (int i = 0; i < cnt; i++) {
 
-//		serviceGroupMap.put(
-//				Configure.STREAM_SERVICE_TYPE.blocking.toString(),
-//				getBlockingNetworkService(DEFAULT_ADDRESS,
-//						netConfigure.getInt(Configure.BLOCKING_DEFAULT_PORT),
-//						Configure.STREAM_SERVICE_TYPE.blocking));
-//		serviceGroupMap
-//				.put(Configure.STREAM_SERVICE_TYPE.nonblocking.toString(),
-//						getBlockingNetworkService(DEFAULT_ADDRESS, netConfigure
-//								.getInt(Configure.NONBLOCKING_DEFAULT_PORT),
-//								Configure.STREAM_SERVICE_TYPE.nonblocking));
-//		serviceGroupMap.put(
-//				Configure.STREAM_SERVICE_TYPE.async.toString(),
-//				getAsyncNetworkService(DEFAULT_ADDRESS,
-//						netConfigure.getInt(Configure.ASYNC_DEFAULT_PORT)));
-//
-//		serviceGroupMap.put(
-//				Configure.STREAM_SERVICE_TYPE.unicast.toString(),
-//				getUnicastNetworkService(DEFAULT_ADDRESS,
-//						netConfigure.getInt(Configure.UNICAST_DEFAULT_PORT)));
-//
-//		final InetAddress multicastGroup = InetAddress
-//				.getByName(Configure.MULTICAST_GROUP_ADDRESS);
-//
-//		serviceGroupMap.put(
-//				Configure.STREAM_SERVICE_TYPE.multicast.toString(),
-//				getMulticastNetworkService(multicastGroup, DEFAULT_ADDRESS,
-//						netConfigure.getInt(Configure.MULTICAST_DEFAULT_PORT)));
-//
-//		serviceGroupMap
-//				.put(Configure.RMI_SERVICE_TYPE.unicast.toString(),
-//						getUnicastRMIService(DEFAULT_ADDRESS, rmiConfigure
-//								.getInt(Configure.UNICAST_RMI_DEFAULT_PORT)));
+			serviceGroupMap.put(
+					Configure.STREAM_SERVICE_TYPE.blocking.toString(),
+					getBlockingNetworkService(DEFAULT_ADDRESS, netConfigure
+							.getInt(Configure.BLOCKING_DEFAULT_PORT),
+							Configure.STREAM_SERVICE_TYPE.blocking));
+			serviceGroupMap.put(
+					Configure.STREAM_SERVICE_TYPE.nonblocking.toString(),
+					getBlockingNetworkService(DEFAULT_ADDRESS, netConfigure
+							.getInt(Configure.NONBLOCKING_DEFAULT_PORT),
+							Configure.STREAM_SERVICE_TYPE.nonblocking));
+			serviceGroupMap.put(
+					Configure.STREAM_SERVICE_TYPE.async.toString(),
+					getAsyncNetworkService(DEFAULT_ADDRESS,
+							netConfigure.getInt(Configure.ASYNC_DEFAULT_PORT)));
 
-		serviceGroupMap
-		.put(Configure.RMI_SERVICE_TYPE.activatable.toString(),
-				getActivatableRMIService(DEFAULT_ADDRESS, rmiConfigure
-						.getInt(Configure.ACTIVATABLE_RMI_DEFAULT_PORT)));
-		
-		executeAll();
+			serviceGroupMap
+					.put(Configure.STREAM_SERVICE_TYPE.unicast.toString(),
+							getUnicastNetworkService(
+									DEFAULT_ADDRESS,
+									netConfigure
+											.getInt(Configure.UNICAST_DEFAULT_PORT)));
+
+			final InetAddress multicastGroup = InetAddress
+					.getByName(Configure.MULTICAST_GROUP_ADDRESS);
+
+			serviceGroupMap.put(
+					Configure.STREAM_SERVICE_TYPE.multicast.toString(),
+					getMulticastNetworkService(multicastGroup, DEFAULT_ADDRESS,
+							netConfigure
+									.getInt(Configure.MULTICAST_DEFAULT_PORT)));
+
+			serviceGroupMap.put(
+					Configure.RMI_SERVICE_TYPE.unicast.toString(),
+					getUnicastRMIService(DEFAULT_ADDRESS, rmiConfigure
+							.getInt(Configure.UNICAST_RMI_DEFAULT_PORT)));
+
+			serviceGroupMap.put(
+					Configure.RMI_SERVICE_TYPE.activatable.toString(),
+					getActivatableRMIService(DEFAULT_ADDRESS, rmiConfigure
+							.getInt(Configure.ACTIVATABLE_RMI_DEFAULT_PORT)));
+
+			executeAll();
+		}
 
 	}
 
@@ -95,9 +100,8 @@ public class ServiceClientTest {
 		String boundName = RMIServiceHelper.getBoundName(addr.getHostAddress(),
 				port, Configure.RMI_SERVICE_TYPE.activatable.toString());
 
-	
-		return rmiClient(addr, port, boundName, cnt, millis);
-		
+		return rmiClient(addr, port, boundName, millis);
+
 	}
 
 	private static Runnable getUnicastRMIService(final InetAddress addr,
@@ -106,10 +110,8 @@ public class ServiceClientTest {
 		String boundName = RMIServiceHelper.getBoundName(addr.getHostAddress(),
 				port, Configure.RMI_SERVICE_TYPE.unicast.toString());
 
-		return rmiClient(addr, port, boundName, cnt, millis);
+		return rmiClient(addr, port, boundName, millis);
 	}
-
-
 
 	private static Runnable getBlockingNetworkService(final InetAddress addr,
 			final int port, final Configure.STREAM_SERVICE_TYPE type) {
@@ -117,8 +119,7 @@ public class ServiceClientTest {
 		final SocketChannel channel = createSocketChannelFactory()
 				.createBlockingSocketChannel(new InetSocketAddress(addr, port),
 						type);
-		return scoketClient(channel, new InetSocketAddress(addr, port), cnt,
-				millis);
+		return scoketClient(channel, new InetSocketAddress(addr, port), millis);
 	}
 
 	private static Runnable getAsyncNetworkService(final InetAddress addr,
@@ -126,8 +127,7 @@ public class ServiceClientTest {
 		// port = NetworkServiceHelper.validatedStreamPort(port);
 		final AsynchronousSocketChannel channel = createSocketChannelFactory()
 				.createAsyncSocketChannel(new InetSocketAddress(addr, port));
-		return scoketClient(channel, new InetSocketAddress(addr, port), cnt,
-				millis);
+		return scoketClient(channel, new InetSocketAddress(addr, port), millis);
 	}
 
 	private static Runnable getUnicastNetworkService(final InetAddress addr,
@@ -136,8 +136,7 @@ public class ServiceClientTest {
 		final DatagramChannel channel = createSocketChannelFactory()
 				.createUnicastSocketChannel(StandardProtocolFamily.INET,
 						new InetSocketAddress(addr, port));
-		return scoketClient(channel, new InetSocketAddress(addr, port), cnt,
-				millis);
+		return scoketClient(channel, new InetSocketAddress(addr, port), millis);
 	}
 
 	private static Runnable getMulticastNetworkService(
@@ -150,26 +149,23 @@ public class ServiceClientTest {
 				.createMulticastSocketChannel(StandardProtocolFamily.INET,
 						groupEndpoint.getAddress(),
 						new InetSocketAddress(addr, port));
-		return scoketClient(channel, new InetSocketAddress(addr, port), cnt,
-				millis);
+		return scoketClient(channel, new InetSocketAddress(addr, port), millis);
 	}
 
 	private static Runnable rmiClient(InetAddress addr, int port,
-			String boundName, int num, int millis) throws Exception {
+			String boundName, int millis) throws Exception {
 
 		return new Runnable() {
 
 			String boundName;
-			int num;
 			private int millis;
 			Registry registry;
 
 			public Runnable init(InetAddress addr, int port, String boundName,
-					int num, int millis) throws Exception {
+					int millis) throws Exception {
 				this.registry = RMIServiceHelper.getRegistry(
 						addr.getHostAddress(), port);
 				this.boundName = boundName;
-				this.num = num;
 				this.millis = millis;
 				return (this);
 			}
@@ -186,41 +182,32 @@ public class ServiceClientTest {
 						"current thread is "
 								+ LoggingHelper.getThreadName(Thread
 										.currentThread()));
-
-				
-
-				
-				for (int i = 0; i < this.num; i++) {
-					try {
-						RMIServant stub = (RMIServant) registry
-								.lookup(boundName);
-						String response = stub.sayHello();
-						Thread.sleep(this.millis);
-						System.out.println(stub + "\t:\t" + response);
-					} catch (Exception e) {
-						System.out.println(WrapperException.getStackTrace(e));
-					}
+				try {
+					RMIServant stub = (RMIServant) registry.lookup(boundName);
+					String response = stub.sayHello();
+					Thread.sleep(this.millis);
+					System.out.println(stub + "\t:\t" + response);
+				} catch (Exception e) {
+					System.out.println(WrapperException.getStackTrace(e));
 				}
+
 			}
 
-		}.init(addr, port, boundName, num, millis);
+		}.init(addr, port, boundName, millis);
 	}
-	
+
 	private static Runnable scoketClient(final NetworkChannel channel,
-			final InetSocketAddress endpoint, final int num, final int millis) {
+			final InetSocketAddress endpoint, final int millis) {
 		return new Runnable() {
 
 			NetworkChannel channel;
-			int num;
 			private int millis;
 			private InetSocketAddress endpoint;
 
 			public Runnable init(final NetworkChannel channel,
-					final InetSocketAddress multicastGroup, final int num,
-					final int millis) {
+					final InetSocketAddress multicastGroup, final int millis) {
 				this.channel = channel;
 				this.endpoint = multicastGroup;
-				this.num = num;
 				this.millis = millis;
 				return (this);
 			}
@@ -238,39 +225,35 @@ public class ServiceClientTest {
 								+ LoggingHelper.getThreadName(Thread
 										.currentThread()));
 
-				for (int i = 0; i < this.num; i++) {
-					try {
+				try {
 
-						final String message = "Hello World! "
-								+ "---------------------> " + this.endpoint;;
+					final String message = "Hello World! "
+							+ "---------------------> " + this.endpoint;;
 
-						if (this.channel instanceof AsynchronousSocketChannel) {
-							((AsynchronousSocketChannel) this.channel).write(
-									getStringToByteBuffer(message)).get();
-						} else if (this.channel instanceof SocketChannel) {
-							((SocketChannel) this.channel)
-									.write(getStringToByteBuffer(message));
-						} else if (this.channel instanceof DatagramChannel) {
-							final int sent = ((DatagramChannel) this.channel)
-									.send(getStringToByteBuffer(message),
-											this.endpoint);
-							System.out.println(message + ": Sccessfully sent "
-									+ sent + " bytes to the Server!");
+					if (this.channel instanceof AsynchronousSocketChannel) {
+						((AsynchronousSocketChannel) this.channel).write(
+								getStringToByteBuffer(message)).get();
+					} else if (this.channel instanceof SocketChannel) {
+						((SocketChannel) this.channel)
+								.write(getStringToByteBuffer(message));
+					} else if (this.channel instanceof DatagramChannel) {
+						final int sent = ((DatagramChannel) this.channel).send(
+								getStringToByteBuffer(message), this.endpoint);
+						System.out.println(message + ": Sccessfully sent "
+								+ sent + " bytes to the Server!");
 
-						} else {
-							// throw
-						}
-						Thread.sleep(this.millis);
-						System.out.println(i + 1 + ":" + this.channel);
-						this.channel.close();
-					} catch (IOException | InterruptedException
-							| ExecutionException e) {
-						e.printStackTrace();
+					} else {
+						// throw
 					}
+					Thread.sleep(this.millis);
+					this.channel.close();
+				} catch (IOException | InterruptedException
+						| ExecutionException e) {
+					e.printStackTrace();
 				}
 			}
 
-		}.init(channel, endpoint, num, millis);
+		}.init(channel, endpoint, millis);
 	}
 	protected static ByteBuffer getStringToByteBuffer(final String str) {
 		return ByteBuffer.wrap((str.getBytes()));

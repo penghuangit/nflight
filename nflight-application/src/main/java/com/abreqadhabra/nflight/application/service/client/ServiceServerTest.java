@@ -45,20 +45,20 @@ public class ServiceServerTest {
 		final Configure rmiConfigure = new ConfigureImpl(
 				Configure.FILE_RMI_SERVICE_PROPERTIES);
 
-//		blockingService = executeBlockingNetworkService(netConfigure,
-//				DEFAULT_ADDRESS, 0);
-//		nonBlockingService = executeNonBlockingNetworkService(netConfigure,
-//				DEFAULT_ADDRESS, 0);
-//		asyncService = executeAsyncNetworkService(netConfigure,
-//				DEFAULT_ADDRESS, 0);
-//
-//		unicastService = executeUnicastNetworkService(netConfigure,
-//				DEFAULT_ADDRESS, 0);
-//
-//		multicastService = executeMulticastNetworkService(netConfigure,
-//				DEFAULT_ADDRESS, 0);
-//
-//		unicastServant = executeUnicastServant(rmiConfigure, DEFAULT_ADDRESS, 0);
+		blockingService = executeBlockingNetworkService(netConfigure,
+				DEFAULT_ADDRESS, 0);
+		nonBlockingService = executeNonBlockingNetworkService(netConfigure,
+				DEFAULT_ADDRESS, 0);
+		asyncService = executeAsyncNetworkService(netConfigure,
+				DEFAULT_ADDRESS, 0);
+
+		unicastService = executeUnicastNetworkService(netConfigure,
+				DEFAULT_ADDRESS, 0);
+
+		multicastService = executeMulticastNetworkService(netConfigure,
+				DEFAULT_ADDRESS, 0);
+
+		unicastServant = executeUnicastServant(rmiConfigure, DEFAULT_ADDRESS, 0);
 
 		activatableServant = executeActivatableServant(rmiConfigure,
 				DEFAULT_ADDRESS, 0);

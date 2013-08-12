@@ -41,8 +41,8 @@ public class MulticastNetworkServiceImpl extends AbstractNetworkServiceImpl {
 		} else {
 			throw new IllegalStateException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
 		}
-
 	}
+
 	private void pendingConnections(final DatagramChannel channel) {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
@@ -72,7 +72,5 @@ public class MulticastNetworkServiceImpl extends AbstractNetworkServiceImpl {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
-
 	}
-
 }

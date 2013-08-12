@@ -17,6 +17,52 @@ public class RMIServiceHelper {
 	private static final Class<RMIServiceHelper> THIS_CLAZZ = RMIServiceHelper.class;
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
+	
+	/**
+	 * Get the RMIRegistry. If a registry is already active on this host and the
+	 * given port, then that registry is returned, otherwise a new registry is
+	 * created and returned.
+	 * 
+	 * @param host
+	 *            host for the remote registry, if null the local host is used
+	 * @param port
+	 *            is the port on which the registry accepts requests
+	 * @throws Exception
+	 **/
+	public static Registry getRegistry(final String host, final int port)
+			throws Exception {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		Registry _registry = null;
+		try {
+			// _registry = LocateRegistry.getRegistry(host, port,
+			// socketFactory);
+			_registry = LocateRegistry.getRegistry(host, port);
+			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+					"already exist registry is returned." + _registry + ":"
+							+ Arrays.toString(_registry.list()));
+		} catch (final RemoteException re) {
+			try {
+				// _registry = LocateRegistry.createRegistry(port,
+				// socketFactory,socketFactory);
+				_registry = LocateRegistry.createRegistry(port);
+				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+						"New registry(using custom socket factories) is created and returned.");
+			} catch (final RemoteException re1) {
+				throw new RMIServiceException(
+						"Local RMI Registry creation failure", re1)
+						.addContextValue("host", host).addContextValue("port",
+								port);
+			}
+		}
+
+		return _registry;
+	}
+	
+	
+	
+	
 	public static String getBoundName(final String host, final int port,
 			final String objName) {
 		return "rmi://" + host + ":" + port + "/" + objName;
@@ -41,51 +87,6 @@ public class RMIServiceHelper {
 		}
 
 		return _boundNameList;
-	}
-
-	/**
-	 * Get the RMIRegistry. If a registry is already active on this host and the
-	 * given port, then that registry is returned, otherwise a new registry is
-	 * created and returned.
-	 * 
-	 * @param host
-	 *            host for the remote registry, if null the local host is used
-	 * @param port
-	 *            is the port on which the registry accepts requests
-	 * @throws Exception
-	 **/
-	public static Registry getRegistry(final String host, final int port)
-			throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-
-		Registry _registry = null;
-		try {
-			// _registry = LocateRegistry.getRegistry(host, port,
-			// socketFactory);
-			_registry = LocateRegistry.getRegistry(host, port);
-			LOGGER.logp(
-					Level.FINER,
-					THIS_CLAZZ.getName(),
-					METHOD_NAME,
-					"already exist registry is returned."
-							+ _registry +":"+ Arrays.toString(_registry.list()));
-		} catch (final RemoteException re) {
-			try {
-				// _registry = LocateRegistry.createRegistry(port,
-				// socketFactory,socketFactory);
-				_registry = LocateRegistry.createRegistry(port);
-				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-						"New registry(using custom socket factories) is created and returned.");
-			} catch (final RemoteException re1) {
-				throw new RMIServiceException(
-						"Local RMI Registry creation failure", re1)
-						.addContextValue("host", host).addContextValue("port",
-								port);
-			}
-		}
-
-		return _registry;
 	}
 
 	/*

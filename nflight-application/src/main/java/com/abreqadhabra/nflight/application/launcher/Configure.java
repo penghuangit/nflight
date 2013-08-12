@@ -75,7 +75,7 @@ public interface Configure {
 
 	
 	// RMI SERVICE - ACTIVATABLE
-	public static final String ACTIVATABLE_FILE_PREFIX = "file://";
+	public static final String PREFIX_FILE_ACTIVATABLE = "file://";
 
 	public static final Path FILE_ACTIVATABLE_POLICY = CODE_BASE_PATH
 			.resolve("com/abreqadhabra/nflight/application/service/rmi/conf/activatable.policy");
