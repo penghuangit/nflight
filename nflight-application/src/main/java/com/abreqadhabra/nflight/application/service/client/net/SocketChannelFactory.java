@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.net.client;
+package com.abreqadhabra.nflight.application.service.client.net;
 
 import java.io.IOException;
 import java.net.InetAddress;

@@ -6,7 +6,7 @@ import java.nio.channels.AsynchronousServerSocketChannel;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
-import com.abreqadhabra.nflight.application.service.net.stream.AbstractNetworkServiceImpl;
+import com.abreqadhabra.nflight.application.service.net.AbstractNetworkServiceImpl;
 
 public class AsyncNetworkServiceImpl extends AbstractNetworkServiceImpl {
 

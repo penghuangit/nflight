@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.net.stream;
+package com.abreqadhabra.nflight.application.service.net.stream.nonblocking;
 
 public interface ServerSession {
 

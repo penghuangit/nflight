@@ -50,7 +50,7 @@ public class ServerImpl implements IServer {
 
 			IBusinessLogic logic = new BusinessLogicImpl();
 			AsyncServerImpl asyncStreamServer = new AsyncServerImpl(
-					new ConfigureImpl(Configure.FILE_SOCKET_SERVER_PROPERTIES),
+					new ConfigureImpl(Configure.FILE_NETWORK_SERVICE_PROPERTIES),
 					threadPoolExecutor, new InetSocketAddress(InetAddress
 							.getLocalHost().getHostAddress(), 9999),
 							logic);

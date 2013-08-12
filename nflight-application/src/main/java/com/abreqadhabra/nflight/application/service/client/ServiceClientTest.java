@@ -1,15 +1,15 @@
-package com.abreqadhabra.nflight.application.service.net.client;
+package com.abreqadhabra.nflight.application.service.client;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.StandardProtocolFamily;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.NetworkChannel;
 import java.nio.channels.SocketChannel;
+import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
@@ -18,10 +18,14 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
+import com.abreqadhabra.nflight.application.service.client.net.SocketChannelFactory;
+import com.abreqadhabra.nflight.application.service.rmi.RMIServant;
+import com.abreqadhabra.nflight.application.service.rmi.RMIServiceHelper;
+import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class NetworkServiceClientTest {
-	private static final Class<NetworkServiceClientTest> THIS_CLAZZ = NetworkServiceClientTest.class;
+public class ServiceClientTest {
+	private static final Class<ServiceClientTest> THIS_CLAZZ = ServiceClientTest.class;
 	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
@@ -33,44 +37,79 @@ public class NetworkServiceClientTest {
 		return new SocketChannelFactory();
 	}
 
-	public static void main(final String[] args) throws UnknownHostException {
+	public static void main(final String[] args) throws Exception {
 
 		final InetAddress DEFAULT_ADDRESS = InetAddress.getLocalHost();
 
-		final Configure configure = new ConfigureImpl(
-				Configure.FILE_SOCKET_SERVER_PROPERTIES);
+		final Configure netConfigure = new ConfigureImpl(
+				Configure.FILE_NETWORK_SERVICE_PROPERTIES);
 
-		serviceGroupMap.put(
-				Configure.STREAM_SERVICE_TYPE.blocking.toString(),
-				getBlockingNetworkService(DEFAULT_ADDRESS,
-						configure.getInt(Configure.BLOCKING_DEFAULT_PORT),
-						Configure.STREAM_SERVICE_TYPE.blocking));
-		serviceGroupMap.put(
-				Configure.STREAM_SERVICE_TYPE.nonblocking.toString(),
-				getBlockingNetworkService(DEFAULT_ADDRESS,
-						configure.getInt(Configure.NONBLOCKING_DEFAULT_PORT),
-						Configure.STREAM_SERVICE_TYPE.nonblocking));
-		serviceGroupMap.put(
-				Configure.STREAM_SERVICE_TYPE.async.toString(),
-				getAsyncNetworkService(DEFAULT_ADDRESS,
-						configure.getInt(Configure.ASYNC_DEFAULT_PORT)));
+		final Configure rmiConfigure = new ConfigureImpl(
+				Configure.FILE_RMI_SERVICE_PROPERTIES);
 
-		serviceGroupMap.put(
-				Configure.STREAM_SERVICE_TYPE.unicast.toString(),
-				getUnicastNetworkService(DEFAULT_ADDRESS,
-						configure.getInt(Configure.UNICAST_DEFAULT_PORT)));
+//		serviceGroupMap.put(
+//				Configure.STREAM_SERVICE_TYPE.blocking.toString(),
+//				getBlockingNetworkService(DEFAULT_ADDRESS,
+//						netConfigure.getInt(Configure.BLOCKING_DEFAULT_PORT),
+//						Configure.STREAM_SERVICE_TYPE.blocking));
+//		serviceGroupMap
+//				.put(Configure.STREAM_SERVICE_TYPE.nonblocking.toString(),
+//						getBlockingNetworkService(DEFAULT_ADDRESS, netConfigure
+//								.getInt(Configure.NONBLOCKING_DEFAULT_PORT),
+//								Configure.STREAM_SERVICE_TYPE.nonblocking));
+//		serviceGroupMap.put(
+//				Configure.STREAM_SERVICE_TYPE.async.toString(),
+//				getAsyncNetworkService(DEFAULT_ADDRESS,
+//						netConfigure.getInt(Configure.ASYNC_DEFAULT_PORT)));
+//
+//		serviceGroupMap.put(
+//				Configure.STREAM_SERVICE_TYPE.unicast.toString(),
+//				getUnicastNetworkService(DEFAULT_ADDRESS,
+//						netConfigure.getInt(Configure.UNICAST_DEFAULT_PORT)));
+//
+//		final InetAddress multicastGroup = InetAddress
+//				.getByName(Configure.MULTICAST_GROUP_ADDRESS);
+//
+//		serviceGroupMap.put(
+//				Configure.STREAM_SERVICE_TYPE.multicast.toString(),
+//				getMulticastNetworkService(multicastGroup, DEFAULT_ADDRESS,
+//						netConfigure.getInt(Configure.MULTICAST_DEFAULT_PORT)));
+//
+//		serviceGroupMap
+//				.put(Configure.RMI_SERVICE_TYPE.unicast.toString(),
+//						getUnicastRMIService(DEFAULT_ADDRESS, rmiConfigure
+//								.getInt(Configure.UNICAST_RMI_DEFAULT_PORT)));
 
-		final InetAddress multicastGroup = InetAddress
-				.getByName(Configure.MULTICAST_GROUP_ADDRESS);
-
-		serviceGroupMap.put(
-				Configure.STREAM_SERVICE_TYPE.multicast.toString(),
-				getMulticastNetworkService(multicastGroup, DEFAULT_ADDRESS,
-						configure.getInt(Configure.MULTICAST_DEFAULT_PORT)));
-
+		serviceGroupMap
+		.put(Configure.RMI_SERVICE_TYPE.activatable.toString(),
+				getActivatableRMIService(DEFAULT_ADDRESS, rmiConfigure
+						.getInt(Configure.ACTIVATABLE_RMI_DEFAULT_PORT)));
+		
 		executeAll();
 
 	}
+
+	private static Runnable getActivatableRMIService(final InetAddress addr,
+			final int port) throws Exception {
+
+		String boundName = RMIServiceHelper.getBoundName(addr.getHostAddress(),
+				port, Configure.RMI_SERVICE_TYPE.activatable.toString());
+
+	
+		return rmiClient(addr, port, boundName, cnt, millis);
+		
+	}
+
+	private static Runnable getUnicastRMIService(final InetAddress addr,
+			final int port) throws Exception {
+
+		String boundName = RMIServiceHelper.getBoundName(addr.getHostAddress(),
+				port, Configure.RMI_SERVICE_TYPE.unicast.toString());
+
+		return rmiClient(addr, port, boundName, cnt, millis);
+	}
+
+
 
 	private static Runnable getBlockingNetworkService(final InetAddress addr,
 			final int port, final Configure.STREAM_SERVICE_TYPE type) {
@@ -78,7 +117,7 @@ public class NetworkServiceClientTest {
 		final SocketChannel channel = createSocketChannelFactory()
 				.createBlockingSocketChannel(new InetSocketAddress(addr, port),
 						type);
-		return clientTest(channel, new InetSocketAddress(addr, port), cnt,
+		return scoketClient(channel, new InetSocketAddress(addr, port), cnt,
 				millis);
 	}
 
@@ -87,7 +126,7 @@ public class NetworkServiceClientTest {
 		// port = NetworkServiceHelper.validatedStreamPort(port);
 		final AsynchronousSocketChannel channel = createSocketChannelFactory()
 				.createAsyncSocketChannel(new InetSocketAddress(addr, port));
-		return clientTest(channel, new InetSocketAddress(addr, port), cnt,
+		return scoketClient(channel, new InetSocketAddress(addr, port), cnt,
 				millis);
 	}
 
@@ -97,7 +136,7 @@ public class NetworkServiceClientTest {
 		final DatagramChannel channel = createSocketChannelFactory()
 				.createUnicastSocketChannel(StandardProtocolFamily.INET,
 						new InetSocketAddress(addr, port));
-		return clientTest(channel, new InetSocketAddress(addr, port), cnt,
+		return scoketClient(channel, new InetSocketAddress(addr, port), cnt,
 				millis);
 	}
 
@@ -111,11 +150,63 @@ public class NetworkServiceClientTest {
 				.createMulticastSocketChannel(StandardProtocolFamily.INET,
 						groupEndpoint.getAddress(),
 						new InetSocketAddress(addr, port));
-		return clientTest(channel, new InetSocketAddress(addr, port), cnt,
+		return scoketClient(channel, new InetSocketAddress(addr, port), cnt,
 				millis);
 	}
 
-	private static Runnable clientTest(final NetworkChannel channel,
+	private static Runnable rmiClient(InetAddress addr, int port,
+			String boundName, int num, int millis) throws Exception {
+
+		return new Runnable() {
+
+			String boundName;
+			int num;
+			private int millis;
+			Registry registry;
+
+			public Runnable init(InetAddress addr, int port, String boundName,
+					int num, int millis) throws Exception {
+				this.registry = RMIServiceHelper.getRegistry(
+						addr.getHostAddress(), port);
+				this.boundName = boundName;
+				this.num = num;
+				this.millis = millis;
+				return (this);
+			}
+
+			@Override
+			public void run() {
+				final String METHOD_NAME = Thread.currentThread()
+						.getStackTrace()[1].getMethodName();
+
+				LOGGER.logp(
+						Level.FINER,
+						THIS_CLAZZ.getSimpleName(),
+						METHOD_NAME,
+						"current thread is "
+								+ LoggingHelper.getThreadName(Thread
+										.currentThread()));
+
+				
+
+				
+				for (int i = 0; i < this.num; i++) {
+					try {
+						RMIServant stub = (RMIServant) registry
+								.lookup(boundName);
+						String response = stub.sayHello();
+						Thread.sleep(this.millis);
+						System.out.println(stub + "\t:\t" + response);
+					} catch (Exception e) {
+						System.out.println(WrapperException.getStackTrace(e));
+					}
+				}
+			}
+
+		}.init(addr, port, boundName, num, millis);
+	}
+	
+	private static Runnable scoketClient(final NetworkChannel channel,
 			final InetSocketAddress endpoint, final int num, final int millis) {
 		return new Runnable() {
 
@@ -151,7 +242,6 @@ public class NetworkServiceClientTest {
 					try {
 
 						final String message = "Hello World! "
-								+ this.channel.getLocalAddress().toString()
 								+ "---------------------> " + this.endpoint;;
 
 						if (this.channel instanceof AsynchronousSocketChannel) {

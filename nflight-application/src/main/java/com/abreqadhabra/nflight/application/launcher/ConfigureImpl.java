@@ -1,7 +1,6 @@
 package com.abreqadhabra.nflight.application.launcher;
 
 import java.nio.file.Path;
-import java.util.Hashtable;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -34,7 +33,7 @@ public class ConfigureImpl implements Configure {
 	}
 
 	@Override
-	public Hashtable<Object, Object> getAll() {
+	public Properties getProperties() {
 		return this.props;
 	}
 
@@ -42,4 +41,8 @@ public class ConfigureImpl implements Configure {
 	public int getInt(String key) {
 		return Integer.parseInt(this.get(key));
 	}
+	
+	
+	
+	
 }

@@ -1,38 +1,36 @@
 package com.abreqadhabra.nflight.application.launcher;
 
 import java.nio.file.Path;
-import java.util.Hashtable;
+import java.util.Properties;
 
 import com.abreqadhabra.nflight.common.util.IOStream;
 
 public interface Configure {
 	static final Class<Configure> THIS_CLAZZ = Configure.class;
-
 	public static final Path CODE_BASE_PATH = IOStream
 			.getCodebasePath(THIS_CLAZZ.getName());
 
+	// launcher
 	public static final Path FILE_BOOT_PROPERTIES = CODE_BASE_PATH
 			.resolve("com/abreqadhabra/nflight/application/launcher/conf/boot.properties");
 
 	public static final Path FILE_THREAD_POOL_PROPERTIES = CODE_BASE_PATH
 			.resolve("com/abreqadhabra/nflight/application/launcher/concurrent/executor/conf/threadpool.properties");
 
-	public static final Path FILE_SOCKET_SERVER_PROPERTIES = CODE_BASE_PATH
-			.resolve("com/abreqadhabra/nflight/application/server/aio/conf/socketserver.properties");
+	// NET
+	
+	public static enum STREAM_SERVICE_TYPE {
+
+		blocking, nonblocking, async, unicast, multicast, UNKNOWN;
+	}
+
+	
+	public static final Path FILE_NETWORK_SERVICE_PROPERTIES = CODE_BASE_PATH
+			.resolve("com/abreqadhabra/nflight/application/service/net/conf/network_service.properties");
 
 	static final Path FILE_CHANNEL_OPTION_PROPERTIES = CODE_BASE_PATH
-			.resolve("com/abreqadhabra/nflight/application/server/aio/conf/socketoption.properties");
-
-	static final String PREFIX_KEY_PROPERTIES_CHANNEL_OPTION = "nflight.socketoption.";;
-	static final String CHANNEL_OPTION_IP_MULTICAST_IF = "nflight.socketoption.multicast.ip_multicast_if";
-	
-	public String get(String key);
-
-	public void set(String key, String value);
-
-	Hashtable<Object, Object> getAll();
-
-	public int getInt(String asyncBindBacklog);
+			.resolve("com/abreqadhabra/nflight/application/service/net/conf/channel_option.properties");
+	static final String PREFIX_KEY_PROPERTIES_CHANNEL_OPTION = "nflight.socketoption.";
 	
 	// STREAM SERVICE - BLOCKING
 	static final String BLOCKING_DEFAULT_PORT = "nflight.service.stream.blocking.bind.port.default";
@@ -54,17 +52,70 @@ public interface Configure {
 	static final String UNICAST_DEFAULT_PORT = "nflight.service.datagram.unicast.bind.port.default";
 	static final String UNICAST_INCOMING_BUFFER_CAPACITY = "nflight.service.datagram.unicast.buffer.incoming.capacity";
 
+	static final String CHANNEL_OPTION_IP_MULTICAST_IF = "nflight.socketoption.multicast.ip_multicast_if";
+	
 	// DATAGRAM SERVICE - MULTICAST
 	static final String MULTICAST_DEFAULT_PORT = "nflight.service.datagram.multicast.bind.port.default";
 	static final String MULTICAST_INCOMING_BUFFER_CAPACITY = "nflight.service.datagram.multicast.buffer.incoming.capacity";
 
 	static final String MULTICAST_GROUP_ADDRESS = "225.4.5.6";
 
+	// RMI
+	static final Path FILE_RMI_SERVICE_PROPERTIES = CODE_BASE_PATH
+			.resolve("com/abreqadhabra/nflight/application/service/rmi/conf/rmi_service.properties");
 
-	public static enum STREAM_SERVICE_TYPE {
+	public static enum RMI_SERVICE_TYPE {
 
-		blocking, nonblocking, async, unicast, multicast, UNKNOWN;
+		unicast, activatable, UNKNOWN;
 	}
+	
+	// RMI SERVICE - UNICAST
+	static final String UNICAST_RMI_DEFAULT_PORT = "nflight.service.rmi.unicast.bind.port.default";
 
 
+	
+	// RMI SERVICE - ACTIVATABLE
+	public static final String ACTIVATABLE_FILE_PREFIX = "file://";
+
+	public static final Path FILE_ACTIVATABLE_POLICY = CODE_BASE_PATH
+			.resolve("com/abreqadhabra/nflight/application/service/rmi/conf/activatable.policy");
+	
+	public static final Path FILE_RMID_POLICY = CODE_BASE_PATH
+			.resolve("com/abreqadhabra/nflight/application/service/rmi/conf/rmid.policy");
+	public static final String ACTIVATABLE_RMI_DEFAULT_PORT = "nflight.service.rmi.activatable.bind.port.default";
+	
+
+	public static enum PROPERTIES_ACTIVATION {
+
+		NFLIGHT_SERVICE_RMI_ACTIVATABLE_SETUP_CODEBASE,
+		NFLIGHT_SERVICE_RMI_ACTIVATABLE_IMPL_CODEBASE,
+		NFLIGHT_SERVICE_RMI_ACTIVATABLE_IMPL_CLASS,
+		NFLIGHT_SERVICE_RMI_ACTIVATABLE_NAME,
+		NFLIGHT_SERVICE_RMI_ACTIVATABLE_FILE,
+		NFLIGHT_SERVICE_RMI_ACTIVATABLE_POLICY;
+
+		private String lowercase = null; // property name in lowercase
+
+		/**
+		 * Returns this property's name in lowercase.
+		 */
+		@Override
+		public String toString() {
+			if (this.lowercase == null) {
+				this.lowercase = this.name().toLowerCase(java.util.Locale.US)
+						.replace("_", ".");
+			}
+			return this.lowercase;
+		}
+	}
+	
+	//Methods
+
+	public String get(String key);
+
+	public void set(String key, String value);
+
+	Properties getProperties();
+
+	public int getInt(String asyncBindBacklog);
 }

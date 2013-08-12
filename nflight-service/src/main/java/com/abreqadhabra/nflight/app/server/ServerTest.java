@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.app.core.command.Command;
 import com.abreqadhabra.nflight.app.core.command.Invoker;
 import com.abreqadhabra.nflight.app.core.rmi.RMIServiceHelper;
-import com.abreqadhabra.nflight.app.server.command.ShutdownServerCommand;
 import com.abreqadhabra.nflight.app.server.command.StartupServerCommand;
 import com.abreqadhabra.nflight.app.server.service.IService;
 import com.abreqadhabra.nflight.app.server.service.ServiceDescriptor;
@@ -54,12 +53,12 @@ public class ServerTest {
 		sd.setServiceName(serviceName);
 		sd.setCodeBase(IOStream.getCodebase(THIS_CLAZZ.getName()));
 
-		// this.testService(sd);
+		 this.testService(sd);
 
 		serviceName = "datagram";
 		sd.setServiceName(serviceName);
 
-		 this.testService(sd);
+//		 this.testService(sd);
 
 		serviceName = "multicast";
 		sd.setServiceName(serviceName);
@@ -79,8 +78,13 @@ public class ServerTest {
 	}
 
 	public IServer getServer(final ServiceDescriptor sd) throws Exception {
-
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+		
 		final IServer _server = new ServerImpl(sd.getServiceName());
+		
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				"service name : " + sd.getServiceName());
 		final IService _service = ServiceFactory.getService(sd);
 		_server.setService(_service);
 
@@ -103,7 +107,7 @@ public class ServerTest {
 		_server = this.getServer(sd);
 
 		try {
-//			_cmd = new StartupServerCommand(_server);
+			_cmd = new StartupServerCommand(_server);
 			_invoker.execute(_cmd);
 //			_cmd = new StatusServerCommand(_server);
 //			_invoker.execute(_cmd);

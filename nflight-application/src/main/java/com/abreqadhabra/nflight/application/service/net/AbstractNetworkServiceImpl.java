@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.net.stream;
+package com.abreqadhabra.nflight.application.service.net;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.ThreadPoolExecutor;
