@@ -3,6 +3,7 @@ package com.abreqadhabra.nflight.application.service.net.stream.asynchronous;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousServerSocketChannel;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
@@ -20,17 +21,22 @@ public class AsyncNetworkServiceImpl extends AbstractNetworkServiceImpl {
 
 	@Override
 	public void run() {
+		try {
+			this.isRunning = true;
+			final int initialSize = this.configure
+					.getInt(Configure.ASYNC_THREADPOOL_INITIALSIZE);
 
-		this.isRunning = true;
-		final int initialSize = this.configure
-				.getInt(Configure.ASYNC_THREADPOOL_INITIALSIZE);
+			final AsynchronousServerSocketChannel asyncServerSocketChannel = this
+					.createServerChannelFactory()
+					.createAsyncServerSocketChannel(this.threadPool,
+							initialSize, this.endpoint, this.backlog);
 
-		final AsynchronousServerSocketChannel asyncServerSocketChannel = this
-				.createServerChannelFactory().createAsyncServerSocketChannel(
-						this.threadPool, initialSize, this.endpoint,
-						this.backlog);
-		// wait for incoming connections
-		this.pendingConnections(asyncServerSocketChannel);
+			// wait for incoming connections
+			this.pendingConnections(asyncServerSocketChannel);
+		} catch (IOException | InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void pendingConnections(

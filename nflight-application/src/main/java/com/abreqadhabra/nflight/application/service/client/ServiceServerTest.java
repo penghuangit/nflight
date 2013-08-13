@@ -2,8 +2,8 @@ package com.abreqadhabra.nflight.application.service.client;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.rmi.registry.Registry;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
@@ -15,10 +15,10 @@ import com.abreqadhabra.nflight.application.service.net.datagram.unicast.Unicast
 import com.abreqadhabra.nflight.application.service.net.stream.asynchronous.AsyncNetworkServiceImpl;
 import com.abreqadhabra.nflight.application.service.net.stream.blocking.BlockingNetworkServiceImpl;
 import com.abreqadhabra.nflight.application.service.net.stream.nonblocking.NonBlockingNetworkServiceImpl;
-import com.abreqadhabra.nflight.application.service.rmi.RMIServant;
-import com.abreqadhabra.nflight.application.service.rmi.RMIServiceHelper;
 import com.abreqadhabra.nflight.application.service.rmi.activatable.ActivatableRMIServantImpl;
+import com.abreqadhabra.nflight.application.service.rmi.activatable.RMIDCommand;
 import com.abreqadhabra.nflight.application.service.rmi.unicast.UnicastRMIServantImpl;
+import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ServiceServerTest {
@@ -45,6 +45,8 @@ public class ServiceServerTest {
 		final Configure rmiConfigure = new ConfigureImpl(
 				Configure.FILE_RMI_SERVICE_PROPERTIES);
 
+
+		
 		blockingService = executeBlockingNetworkService(netConfigure,
 				DEFAULT_ADDRESS, 0);
 		nonBlockingService = executeNonBlockingNetworkService(netConfigure,
@@ -108,7 +110,30 @@ public class ServiceServerTest {
 		if (port == 0) {
 			port = configure.getInt(Configure.ACTIVATABLE_RMI_DEFAULT_PORT);
 		}
+		
+		String systemCommmad = getRMIDStartSystemCommand(configure);
+				
+		RMIDCommand rmidCommand = new RMIDCommand(systemCommmad);
+		
+		new Thread(rmidCommand).start();
+		
 		return new ActivatableRMIServantImpl(configure, addr, port);
+	}
+
+	private static String getRMIDStartSystemCommand(Configure configure) {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+		
+		String command = configure
+				.get(Configure.ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_START);
+
+		command = command + " -J-D"
+				+ Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString() + "="
+				+ Configure.FILE_RMID_POLICY + " -log " + Configure.CODE_BASE_PATH.resolve("rmid.log");
+
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "system command :" + command);
+				
+		return command;
 	}
 
 	private static UnicastRMIServantImpl executeUnicastServant(

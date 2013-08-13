@@ -8,13 +8,15 @@ import java.net.SocketAddress;
 import java.net.StandardProtocolFamily;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.DatagramChannel;
-import java.nio.channels.MembershipKey;
+import java.nio.channels.MulticastChannel;
+import java.nio.channels.NetworkChannel;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
+import com.abreqadhabra.nflight.application.launcher.Configure.STREAM_SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -23,138 +25,129 @@ public class SocketChannelFactory {
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	public AsynchronousSocketChannel createAsyncSocketChannel(
-			final SocketAddress endpoint) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
+			final SocketAddress endpoint) throws IOException,
+			InterruptedException, ExecutionException {
 
-		try {
-			final AsynchronousSocketChannel socketChannel = AsynchronousSocketChannel
-					.open();
-			if (socketChannel.isOpen()) {
-				// display a connecting message while ... waiting clients
-				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
-						METHOD_NAME, socketChannel.getRemoteAddress()
-								+ ": connecting ...");
-				// set some options
-				NetworkServiceHelper.setChannelOption(socketChannel,
-						Configure.STREAM_SERVICE_TYPE.async);
-				socketChannel.connect(endpoint).get();
-
-				return socketChannel;
-			} else {
-				throw new IllegalStateException("채널이 열려있지 않습니다.");
-			}
-		} catch (final IOException | InterruptedException | ExecutionException e) {
-			e.printStackTrace();
-		}
-		return null;
-
+		return (AsynchronousSocketChannel) this.getNetworkChannel(
+				STREAM_SERVICE_TYPE.async, endpoint, null, null);
 	}
 
 	public SocketChannel createBlockingSocketChannel(
 			final InetSocketAddress endpoint,
-			final Configure.STREAM_SERVICE_TYPE type) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
+			final Configure.STREAM_SERVICE_TYPE type) throws IOException,
+			InterruptedException, ExecutionException {
 
-		try {
-			final SocketChannel socketChannel = SocketChannel.open();
-			if (socketChannel.isOpen()) {
-				// display a connecting message while ... waiting clients
-				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
-						METHOD_NAME, socketChannel.getRemoteAddress()
-								+ ": connecting ...");
-				NetworkServiceHelper.setChannelOption(socketChannel, type);
-				socketChannel.connect(endpoint);
-				return socketChannel;
-			} else {
-				throw new IllegalStateException("채널이 열려있지 않습니다.");
-			}
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-
+		return (SocketChannel) this.getNetworkChannel(
+				STREAM_SERVICE_TYPE.blocking, endpoint, null, null);
 	}
 
 	public DatagramChannel createUnicastSocketChannel(
 			final StandardProtocolFamily protocolFamily,
-			final InetSocketAddress endpoint) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
+			final InetSocketAddress endpoint) throws IOException,
+			InterruptedException, ExecutionException {
 
-		try {
-			final DatagramChannel socketChannel = DatagramChannel
-					.open(protocolFamily);
-			if (socketChannel.isOpen()) {
-				// display a connecting message while ... waiting clients
-				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
-						METHOD_NAME, socketChannel.getRemoteAddress()
-								+ ": connecting ...");
-				NetworkServiceHelper.setChannelOption(socketChannel,
-						Configure.STREAM_SERVICE_TYPE.unicast);
-				socketChannel.connect(endpoint);
-				return socketChannel;
-			} else {
-				throw new IllegalStateException("채널이 열려있지 않습니다.");
-			}
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-
+		return (DatagramChannel) this.getNetworkChannel(
+				STREAM_SERVICE_TYPE.unicast, endpoint,
+				StandardProtocolFamily.INET, null);
 	}
 
 	public DatagramChannel createMulticastSocketChannel(
 			final StandardProtocolFamily protocolFamily,
-			final InetAddress multicastGroup, final InetSocketAddress endpoint) {
+			final InetAddress multicastGroup, final InetSocketAddress endpoint)
+			throws IOException, InterruptedException, ExecutionException {
+
+		return (DatagramChannel) this.getNetworkChannel(
+				STREAM_SERVICE_TYPE.multicast, endpoint,
+				StandardProtocolFamily.INET, multicastGroup);
+	}
+
+	private NetworkChannel getNetworkChannel(
+			final STREAM_SERVICE_TYPE serviceType,
+			final SocketAddress endpoint,
+			final StandardProtocolFamily protocolFamily,
+			final InetAddress multicastGroup) throws IOException,
+			InterruptedException, ExecutionException {
+
+		NetworkChannel channel = null;
+		NetworkInterface networkInterface = null;
+
+		switch (serviceType) {
+			case blocking :
+			case nonblocking :
+				channel = SocketChannel.open();
+				break;
+			case async :
+				channel = AsynchronousSocketChannel.open();
+				break;
+			case unicast :
+				channel = DatagramChannel.open(protocolFamily);
+				break;
+			case multicast :
+				// check if the group address is multicast
+				if (!multicastGroup.isMulticastAddress()) {
+					throw new IllegalStateException(
+							"This is not  multicast address!");
+				} else {
+					final String networkInterfaceName = NetworkServiceHelper
+							.getNetworkInterfaceName(InetAddress.getLocalHost()
+									.getHostAddress());
+					// join multicast group on this interface, and also use this
+					// interface for outgoing multicast datagrams
+					// get the network interface used for multicast
+					networkInterface = NetworkInterface
+							.getByName(networkInterfaceName);
+					channel = DatagramChannel.open(protocolFamily);
+				}
+
+				break;
+			default :
+				break;
+		}
+		
+		return this.connect(serviceType, channel, endpoint, multicastGroup,
+				networkInterface);
+	}
+
+	private NetworkChannel connect(final STREAM_SERVICE_TYPE serviceType,
+			final NetworkChannel channel, final SocketAddress endpoint,
+			final InetAddress multicastGroup,
+			final NetworkInterface networkInterface) throws IOException,
+			InterruptedException, ExecutionException {
 		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		try {
+		// display a connecting message while ... waiting clients
+		LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+				"connecting ..." + endpoint);
 
-			final String networkInterfaceName = NetworkServiceHelper
-					.getNetworkInterfaceName(InetAddress.getLocalHost()
-							.getHostAddress());
-
-			// join multicast group on this interface, and also use this
-			// interface for outgoing multicast datagrams
-			// get the network interface used for multicast
-			final NetworkInterface networkInterface = NetworkInterface
-					.getByName(networkInterfaceName);
-
-			final DatagramChannel socketChannel = DatagramChannel
-					.open(protocolFamily);
-
-			// check if the group address is multicast
-			if (multicastGroup.isMulticastAddress()) {
-
-				if (socketChannel.isOpen()) {
-					// display a waiting message while ... waiting clients
-					LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
-							METHOD_NAME, endpoint + ": connecting ...");
-
-					NetworkServiceHelper.setMulticastChannelOption(
-							socketChannel, networkInterfaceName,
-							Configure.STREAM_SERVICE_TYPE.multicast);
-
-					socketChannel.bind(endpoint);
-
-					@SuppressWarnings("unused")
-					final MembershipKey key = socketChannel.join(
-							multicastGroup, networkInterface);
-
-					return socketChannel;
-				} else {
-					throw new IllegalStateException("채널이 열려있지 않습니다.");
-				}
-
+		if (channel.isOpen()) {
+			// set some options
+			if ((channel instanceof DatagramChannel)
+					&& serviceType.equals(STREAM_SERVICE_TYPE.multicast)) {
+				NetworkServiceHelper.setMulticastChannelOption(
+						(DatagramChannel) channel, networkInterface.getName(),
+						serviceType);
 			} else {
-				System.out.println("This is not  multicast address!");
+				NetworkServiceHelper.setChannelOption(channel, serviceType);
 			}
-		} catch (final IOException e) {
-			e.printStackTrace();
+
+			if (channel instanceof AsynchronousSocketChannel) {
+				((AsynchronousSocketChannel) channel).connect(endpoint).get();
+			} else if (channel instanceof SocketChannel) {
+				((SocketChannel) channel).connect(endpoint);
+			} else if ((channel instanceof DatagramChannel)
+					&& serviceType.equals(STREAM_SERVICE_TYPE.unicast)) {
+				((DatagramChannel) channel).connect(endpoint);
+			} else if ((channel instanceof DatagramChannel)
+					&& serviceType.equals(STREAM_SERVICE_TYPE.multicast)) {
+				((DatagramChannel) channel).connect(endpoint);
+				((MulticastChannel) channel).join(multicastGroup,
+						networkInterface);
+			}
+
+			return channel;
+		} else {
+			throw new IllegalStateException("채널이 열려있지 않습니다.");
 		}
-		return null;
 	}
 }

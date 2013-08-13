@@ -82,9 +82,16 @@ public interface Configure {
 	
 	public static final Path FILE_RMID_POLICY = CODE_BASE_PATH
 			.resolve("com/abreqadhabra/nflight/application/service/rmi/conf/rmid.policy");
+	
 	public static final String ACTIVATABLE_RMI_DEFAULT_PORT = "nflight.service.rmi.activatable.bind.port.default";
-	static final Path FILE_ACTIVATION = CODE_BASE_PATH
+	
+	public static final Path FILE_ACTIVATION = CODE_BASE_PATH
 			.resolve("com/abreqadhabra/nflight/application/service/rmi/ActivatableRMIServantImpl.ser");
+	
+	public static final Path FILE_SYSTEM_COMMAND_PROPERTIES = CODE_BASE_PATH
+			.resolve("com/abreqadhabra/nflight/application/launcher/conf/system_command.properties");
+	
+	static final String ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_START = "nflight.service.rmi.activatable.rmi.system.command.rmid.start";
 	
 
 	public static enum PROPERTIES_ACTIVATION {
@@ -110,6 +117,9 @@ public interface Configure {
 			return this.lowercase;
 		}
 	}
+	
+	//SYSTEM COMMAND
+	public static final String LAUNCHER_SYSTEM_COMMAND_SLEEPTIME_1 = "launcher.system.command.sleeptime.1";
 	
 	//Methods
 

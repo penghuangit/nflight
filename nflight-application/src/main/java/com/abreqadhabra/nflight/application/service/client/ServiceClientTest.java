@@ -30,7 +30,7 @@ public class ServiceClientTest {
 	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	static HashMap<String, Runnable> serviceGroupMap = new HashMap<String, Runnable>();
-	static int cnt = 1000;
+	static int cnt = 1;
 	static int millis = 1;
 
 	public static SocketChannelFactory createSocketChannelFactory() {
@@ -114,7 +114,8 @@ public class ServiceClientTest {
 	}
 
 	private static Runnable getBlockingNetworkService(final InetAddress addr,
-			final int port, final Configure.STREAM_SERVICE_TYPE type) {
+			final int port, final Configure.STREAM_SERVICE_TYPE type)
+			throws IOException, InterruptedException, ExecutionException {
 		// port = NetworkServiceHelper.validatedStreamPort(port);
 		final SocketChannel channel = createSocketChannelFactory()
 				.createBlockingSocketChannel(new InetSocketAddress(addr, port),
@@ -123,7 +124,8 @@ public class ServiceClientTest {
 	}
 
 	private static Runnable getAsyncNetworkService(final InetAddress addr,
-			final int port) {
+			final int port) throws IOException, InterruptedException,
+			ExecutionException {
 		// port = NetworkServiceHelper.validatedStreamPort(port);
 		final AsynchronousSocketChannel channel = createSocketChannelFactory()
 				.createAsyncSocketChannel(new InetSocketAddress(addr, port));
@@ -131,7 +133,8 @@ public class ServiceClientTest {
 	}
 
 	private static Runnable getUnicastNetworkService(final InetAddress addr,
-			final int port) {
+			final int port) throws IOException, InterruptedException,
+			ExecutionException {
 		// port = NetworkServiceHelper.validatedStreamPort(port);
 		final DatagramChannel channel = createSocketChannelFactory()
 				.createUnicastSocketChannel(StandardProtocolFamily.INET,
@@ -141,7 +144,8 @@ public class ServiceClientTest {
 
 	private static Runnable getMulticastNetworkService(
 			final InetAddress multicastGroupAddr, final InetAddress addr,
-			final int port) {
+			final int port) throws IOException, InterruptedException,
+			ExecutionException {
 		// port = NetworkServiceHelper.validatedStreamPort(port);
 		final InetSocketAddress groupEndpoint = new InetSocketAddress(
 				multicastGroupAddr, port);

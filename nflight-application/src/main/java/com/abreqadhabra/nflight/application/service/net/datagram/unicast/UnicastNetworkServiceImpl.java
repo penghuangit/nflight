@@ -9,6 +9,7 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.Iterator;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,7 +51,7 @@ public class UnicastNetworkServiceImpl extends AbstractNetworkServiceImpl {
 			} else {
 				throw new IllegalStateException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
 			}
-		} catch (final IOException e) {
+		} catch (final IOException | InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
 

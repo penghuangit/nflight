@@ -7,6 +7,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,12 +33,11 @@ public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 	public void run() {
 		try {
 			this.isRunning = true;
-			final boolean isBlock = false;
 			// create a new server-socket channel & selector
 			final Selector selector = Selector.open();
 			final ServerSocketChannel serverSocket = this
 					.createServerChannelFactory()
-					.createBlockingServerSocketChannel(isBlock, this.endpoint,
+					.createNonBlockingServerSocketChannel(this.endpoint,
 							this.backlog);
 			// check that both of them were successfully opened
 			if (selector.isOpen() && serverSocket.isOpen()) {
@@ -51,7 +51,7 @@ public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 			} else {
 				throw new IllegalStateException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
 			}
-		} catch (final IOException e) {
+		} catch (final IOException | InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
 

@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Logger;
@@ -27,16 +28,21 @@ public class BlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 
 	@Override
 	public void run() {
-		this.isRunning = true;
-		final boolean isBlock = true;
-		// create a new server-socket channel
-		final ServerSocketChannel serverSocket = this
-				.createServerChannelFactory()
-				.createBlockingServerSocketChannel(isBlock, this.endpoint,
-						this.backlog);
-		// wait for incoming connections
-		while (this.isRunning) {
-			this.pendingConnections(serverSocket);
+		try {
+			this.isRunning = true;
+			// create a new server-socket channel
+			ServerSocketChannel serverSocket;
+
+			serverSocket = this.createServerChannelFactory()
+					.createBlockingServerSocketChannel(this.endpoint,
+							this.backlog);
+
+			// wait for incoming connections
+			while (this.isRunning) {
+				this.pendingConnections(serverSocket);
+			}
+		} catch (IOException | InterruptedException | ExecutionException e) {
+			e.printStackTrace();
 		}
 	}
 

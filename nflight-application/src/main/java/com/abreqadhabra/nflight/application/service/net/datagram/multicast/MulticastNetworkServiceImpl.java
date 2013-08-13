@@ -6,6 +6,7 @@ import java.net.SocketAddress;
 import java.net.StandardProtocolFamily;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,19 +28,24 @@ public class MulticastNetworkServiceImpl extends AbstractNetworkServiceImpl {
 
 	@Override
 	public void run() {
-		this.isRunning = true;
-		// create a new server-socket channel & selector
-		final DatagramChannel serverSocket = this.createServerChannelFactory()
-				.createMulticastDatagramChannel(StandardProtocolFamily.INET,
-						this.endpoint);
-		// check that both of them were successfully opened
-		if (serverSocket.isOpen()) {
-			// wait for incoming connections
-			while (this.isRunning) {
-				this.pendingConnections(serverSocket);
+		try {
+			this.isRunning = true;
+			// create a new server-socket channel & selector
+			final DatagramChannel serverSocket = this
+					.createServerChannelFactory()
+					.createMulticastDatagramChannel(
+							StandardProtocolFamily.INET, this.endpoint);
+			// check that both of them were successfully opened
+			if (serverSocket.isOpen()) {
+				// wait for incoming connections
+				while (this.isRunning) {
+					this.pendingConnections(serverSocket);
+				}
+			} else {
+				throw new IllegalStateException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
 			}
-		} else {
-			throw new IllegalStateException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
+		} catch (IOException | InterruptedException | ExecutionException e) {
+			e.printStackTrace();
 		}
 	}
 

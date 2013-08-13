@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.server.reactor;
+package com.abreqadhabra.nflight.samples.reactor;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
