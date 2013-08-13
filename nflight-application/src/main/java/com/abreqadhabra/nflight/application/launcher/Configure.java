@@ -92,7 +92,8 @@ public interface Configure {
 			.resolve("com/abreqadhabra/nflight/application/launcher/conf/system_command.properties");
 	
 	static final String ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_START = "nflight.service.rmi.activatable.rmi.system.command.rmid.start";
-	
+	static final String ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_STOP = "nflight.service.rmi.activatable.rmi.system.command.rmid.stop";
+
 
 	public static enum PROPERTIES_ACTIVATION {
 

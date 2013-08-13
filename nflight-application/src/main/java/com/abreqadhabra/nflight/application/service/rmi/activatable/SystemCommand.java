@@ -7,12 +7,9 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
-import com.abreqadhabra.nflight.application.launcher.Profile;
-import com.abreqadhabra.nflight.application.service.client.ServiceServerTest;
 import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.IOStream;
-import com.abreqadhabra.nflight.common.util.PropertyLoader;
 
 public class SystemCommand {
 	private static final Class<SystemCommand> THIS_CLAZZ = SystemCommand.class;
@@ -104,7 +101,8 @@ public class SystemCommand {
 			try {
 				final Runtime rt = Runtime.getRuntime();
 				final Process proc = rt.exec(command);
-				Thread.sleep(configure.getInt(Configure.LAUNCHER_SYSTEM_COMMAND_SLEEPTIME_1));
+				Thread.sleep(configure
+						.getInt(Configure.LAUNCHER_SYSTEM_COMMAND_SLEEPTIME_1));
 				final String errorString = IOStream.convertStreamToString(proc
 						.getErrorStream());
 				final String outputString = IOStream.convertStreamToString(proc

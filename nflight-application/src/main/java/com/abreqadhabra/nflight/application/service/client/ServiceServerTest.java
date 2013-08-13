@@ -2,6 +2,9 @@ package com.abreqadhabra.nflight.application.service.client;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.rmi.activation.ActivationException;
+import java.rmi.activation.ActivationGroup;
+import java.rmi.activation.ActivationSystem;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,8 +48,8 @@ public class ServiceServerTest {
 		final Configure rmiConfigure = new ConfigureImpl(
 				Configure.FILE_RMI_SERVICE_PROPERTIES);
 
+		rmidProcessStart(rmiConfigure);
 
-		
 		blockingService = executeBlockingNetworkService(netConfigure,
 				DEFAULT_ADDRESS, 0);
 		nonBlockingService = executeNonBlockingNetworkService(netConfigure,
@@ -67,13 +70,81 @@ public class ServiceServerTest {
 
 		executeAll();
 
-		
 		// nonBlockingServer.start();
 
 		// testDatagramAcceptor(DEFAULT_ADDRESS, DEFAULT_PORT);
 
 		// System.exit(0);
 
+	}
+
+	private static void rmidProcessStart(Configure configure)
+			throws InterruptedException {
+
+		String commmad = null;
+
+		try {
+			// 액티베이션 시스템이 기동되어 있을 경우 RMID를 기동을 스킵
+			ActivationSystem activationSystem = ActivationGroup.getSystem();
+
+			System.out.println("액티베이션 시스템이 기동되어 있을 경우 RMID를 기동을 스킵 "
+					+ activationSystem);
+
+		} catch (ActivationException ae) {
+			// Port already in use: 1098 Address already in use: JVM_Bind
+			// 액티베이션 시스템이 기동되어 있지 않을 경우 RMID 시작
+			commmad = getRMIDStartSystemCommand(configure);
+
+			new Thread(new RMIDCommand(commmad)).start();
+
+			// 콜러블로 기동결과에 대한 값이 있을때까지 대기
+
+			Thread.sleep(1000);
+
+			System.out.println("액티베이션 시스템이 기동되어 있지 않을 경우 RMID 시작 ");
+
+		}
+
+	}
+
+	private static String getRMIDStartSystemCommand(Configure configure) {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		String command = configure
+				.get(Configure.ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_START);
+
+		command = command + " -J-D"
+				+ Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString() + "="
+				+ Configure.FILE_RMID_POLICY + " -log "
+				+ Configure.CODE_BASE_PATH.resolve("rmid.log");
+
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				"system command :" + command);
+
+		return command;
+	}
+
+	private static String getRMIDStopSystemCommand(Configure configure) {
+		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		String command = configure
+				.get(Configure.ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_STOP);
+
+		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
+				"system command :" + command);
+
+		return command;
+	}
+
+	private static UnicastRMIServantImpl executeUnicastServant(
+			final Configure configure, final InetAddress addr, int port)
+			throws Exception {
+		if (port == 0) {
+			port = configure.getInt(Configure.UNICAST_RMI_DEFAULT_PORT);
+		}
+		return new UnicastRMIServantImpl(configure, addr, port);
 	}
 
 	private static void executeAll() {
@@ -110,39 +181,8 @@ public class ServiceServerTest {
 		if (port == 0) {
 			port = configure.getInt(Configure.ACTIVATABLE_RMI_DEFAULT_PORT);
 		}
-		
-		String systemCommmad = getRMIDStartSystemCommand(configure);
-				
-		RMIDCommand rmidCommand = new RMIDCommand(systemCommmad);
-		
-		new Thread(rmidCommand).start();
-		
+
 		return new ActivatableRMIServantImpl(configure, addr, port);
-	}
-
-	private static String getRMIDStartSystemCommand(Configure configure) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-		
-		String command = configure
-				.get(Configure.ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_START);
-
-		command = command + " -J-D"
-				+ Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString() + "="
-				+ Configure.FILE_RMID_POLICY + " -log " + Configure.CODE_BASE_PATH.resolve("rmid.log");
-
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "system command :" + command);
-				
-		return command;
-	}
-
-	private static UnicastRMIServantImpl executeUnicastServant(
-			final Configure configure, final InetAddress addr, int port)
-			throws Exception {
-		if (port == 0) {
-			port = configure.getInt(Configure.UNICAST_RMI_DEFAULT_PORT);
-		}
-		return new UnicastRMIServantImpl(configure, addr, port);
 	}
 
 	private static MulticastNetworkServiceImpl executeMulticastNetworkService(
