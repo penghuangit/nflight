@@ -23,7 +23,7 @@ public class DatagramAcceptor implements Runnable, IService  {
 	boolean isOpen;
 
 	public DatagramAcceptor(String address, int port) throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		// create a new datagram channel
@@ -46,7 +46,7 @@ public class DatagramAcceptor implements Runnable, IService  {
 	}
 
 	public void disconnect() throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		datagramChannel.disconnect();
@@ -56,7 +56,7 @@ public class DatagramAcceptor implements Runnable, IService  {
 
 	@Override
 	public void run() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
@@ -76,7 +76,7 @@ public class DatagramAcceptor implements Runnable, IService  {
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 						"Echo acceptor is ready to echo ...");
 
-				final ByteBuffer echoText = ByteBuffer
+				ByteBuffer echoText = ByteBuffer
 						.allocateDirect(MAX_PACKET_SIZE);
 
 				// transmitting data packets

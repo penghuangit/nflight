@@ -30,9 +30,9 @@ import com.abreqadhabra.nflight.samples.benchmark.actor.Message;
  */
 public abstract class AbstractDispatcher implements Dispatcher {
 
-    protected final Mailbox[] mailboxes;
+    protected Mailbox[] mailboxes;
 
-    protected final boolean[] hasInitialMessage;
+    protected boolean[] hasInitialMessage;
 
     public AbstractDispatcher(Actor[] actors) {
 	mailboxes = new Mailbox[actors.length];

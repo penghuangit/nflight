@@ -12,9 +12,9 @@ import com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class NonBlockingServerSessionImpl implements ServerSession {
-	private static final Class<NonBlockingServerSessionImpl> THIS_CLAZZ = NonBlockingServerSessionImpl.class;
-	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<NonBlockingServerSessionImpl> THIS_CLAZZ = NonBlockingServerSessionImpl.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private Configure configure;
 	private SelectionKey selectionKey;
@@ -39,7 +39,7 @@ public class NonBlockingServerSessionImpl implements ServerSession {
 
 	@Override
 	public void send(ServerSession session) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
@@ -51,7 +51,7 @@ public class NonBlockingServerSessionImpl implements ServerSession {
 
 	@Override
 	public void receive(ServerSession session) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
@@ -89,7 +89,7 @@ public class NonBlockingServerSessionImpl implements ServerSession {
 						"isOpen=" + Boolean.toString(this.socket.isOpen())
 								+ ", isConnected="
 								+ Boolean.toString(this.socket.isConnected()));
-			} catch (final IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

@@ -33,16 +33,16 @@ import com.abreqadhabra.nflight.samples.benchmark.document.usertags.UserTagsCalc
  * Benchmark definition for the parallel com.abreqadhabra.nflight.samples.benchmark.document scenario using a {@link ThreadPoolExecutor}. When
  * the com.abreqadhabra.nflight.samples.benchmark.benchmark is started, the input documents array is split into {@link #numThreads} equally
  * sized chunks each of which is submitted as a task to the pool. Once the pool has finished
- * computation of these tasks, the results are combined in a final step by calling the
+ * computation of these tasks, the results are combined in a step by calling the
  * {@link UserTagsCalculator#reduce(UserTagsBundle, UserTagsBundle)} method.
  * 
  * @author patrick.peschlow
  */
 public class ThreadpoolDocumentBenchmark extends DocumentBenchmarkDef {
 
-    private final int numThreads;
+    private int numThreads;
 
-    private final ExecutorService threadPool;
+    private ExecutorService threadPool;
 
     public ThreadpoolDocumentBenchmark(DocumentGenerator documentGenerator, int numThreads) {
 	super(documentGenerator);

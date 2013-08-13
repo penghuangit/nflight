@@ -18,36 +18,36 @@ import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class NetworkChannelHelper {
-	private static final Class<NetworkChannelHelper> THIS_CLAZZ = NetworkChannelHelper.class;
-	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<NetworkChannelHelper> THIS_CLAZZ = NetworkChannelHelper.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private static final Configure configure = new ConfigureImpl(
+	private static Configure configure = new ConfigureImpl(
 			Configure.FILE_CHANNEL_OPTION_PROPERTIES);
 
-	public static void setChannelOption(final NetworkChannel socketChannel) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public static void setChannelOption(NetworkChannel socketChannel) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
-			final Set<SocketOption<?>> options = socketChannel
+			Set<SocketOption<?>> options = socketChannel
 					.supportedOptions();
 
 			LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME, "소켓 채널의 지원 옵션:  "
 					+ options);
 
-			final StringBuffer sb = new StringBuffer(socketChannel + ": ");
+			StringBuffer sb = new StringBuffer(socketChannel + ": ");
 
-			for (final SocketOption<?> option : options) {
-				final String optionName = option.name();
-				final String optionValue = configure
+			for (SocketOption<?> option : options) {
+				String optionName = option.name();
+				String optionValue = configure
 						.get(Configure.PREFIX_KEY_PROPERTIES_CHANNEL_OPTION
 								+ optionName.toLowerCase().trim());
 				if (optionValue == null) {
 					continue;
 				}
 				if (option.type() == Integer.class) {
-					final SocketOption<Integer> stdSocketOption = (SocketOption<Integer>) option;
+					SocketOption<Integer> stdSocketOption = (SocketOption<Integer>) option;
 					socketChannel.setOption(stdSocketOption,
 							Integer.parseInt(optionValue));
 					sb.append(optionName
@@ -55,7 +55,7 @@ public class NetworkChannelHelper {
 							+ socketChannel.getOption(stdSocketOption)
 									.toString());
 				} else if (option.type() == Boolean.class) {
-					final SocketOption<Boolean> stdSocketOption = (SocketOption<Boolean>) option;
+					SocketOption<Boolean> stdSocketOption = (SocketOption<Boolean>) option;
 					socketChannel.setOption(stdSocketOption,
 							Boolean.parseBoolean(optionValue));
 					sb.append(optionName
@@ -68,13 +68,13 @@ public class NetworkChannelHelper {
 
 			LOGGER.logp(Level.CONFIG, CLAZZ_NAME, METHOD_NAME, sb.toString());
 
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static ByteBuffer getByteBuffer(final int capacity) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public static ByteBuffer getByteBuffer(int capacity) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
@@ -85,7 +85,7 @@ public class NetworkChannelHelper {
 
 	public static ByteBuffer serializeObject(Object object) {
 		byte[] bytes = null;
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 				ObjectOutputStream objectOutputStream = new ObjectOutputStream(
@@ -104,8 +104,8 @@ public class NetworkChannelHelper {
 		}
 		return ByteBuffer.wrap(bytes);
 	}
-	public static Object deserializeObject(final ByteBuffer byteBuffer) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public static Object deserializeObject(ByteBuffer byteBuffer) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		Object readObject = null;

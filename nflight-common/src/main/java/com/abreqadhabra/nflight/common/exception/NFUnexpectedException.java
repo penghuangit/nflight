@@ -26,28 +26,28 @@ public class NFUnexpectedException extends WrapperException {
     /**
      * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정
      */
-    private static final long serialVersionUID = 1L;
+    private static long serialVersionUID = 1L;
 
     /**
      * 에러ID
      * 
      * @since STEP1
      */
-    private static final String ERROR_ID = "NF000000";
+    private static String ERROR_ID = "NF000000";
 
     /**
      * 메시지ID
      * 
      * @since STEP1
      */
-    private static final String MESSAGE_ID = "CE000000";
+    private static String MESSAGE_ID = "CE000000";
 
     /**
      * 에러메시지
      * 
      * @since STEP1
      */
-    private static final String MESSAGE = "예기치 않은 오류가 발생했습니다.";
+    private static String MESSAGE = "예기치 않은 오류가 발생했습니다.";
 
     /**
      * <p>

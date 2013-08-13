@@ -4,9 +4,9 @@ import com.abreqadhabra.nflight.application.launcher.command.Command;
 import com.abreqadhabra.nflight.application.server.IServer;
 
 public class StatusCommand implements Command {
-	private final IServer server;
+	private IServer server;
 
-	public StatusCommand(final IServer server) {
+	public StatusCommand(IServer server) {
 		this.server = server;
 	}
 

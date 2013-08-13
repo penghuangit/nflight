@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Benchmark {
 
-    private final BenchmarkConfig config;
+    private BenchmarkConfig config;
 
     public Benchmark(BenchmarkConfig config) {
 	this.config = config;

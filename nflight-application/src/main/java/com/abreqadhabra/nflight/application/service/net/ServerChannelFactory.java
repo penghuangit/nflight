@@ -20,13 +20,13 @@ import com.abreqadhabra.nflight.application.launcher.Configure.STREAM_SERVICE_TY
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ServerChannelFactory {
-	private static final Class<ServerChannelFactory> THIS_CLAZZ = ServerChannelFactory.class;
-	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<ServerChannelFactory> THIS_CLAZZ = ServerChannelFactory.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	public AsynchronousServerSocketChannel createAsyncServerSocketChannel(
-			final ThreadPoolExecutor threadPool, final int initialSize,
-			final SocketAddress endpoint, final int backlog)
+			ThreadPoolExecutor threadPool, int initialSize,
+			SocketAddress endpoint, int backlog)
 			throws IOException, InterruptedException, ExecutionException {
 
 		return (AsynchronousServerSocketChannel) this.getNetworkChannel(
@@ -35,7 +35,7 @@ public class ServerChannelFactory {
 	}
 
 	public ServerSocketChannel createBlockingServerSocketChannel(
-			final InetSocketAddress endpoint, final int backlog)
+			InetSocketAddress endpoint, int backlog)
 			throws IOException, InterruptedException, ExecutionException {
 
 		return (ServerSocketChannel) this.getNetworkChannel(
@@ -43,7 +43,7 @@ public class ServerChannelFactory {
 	}
 
 	public ServerSocketChannel createNonBlockingServerSocketChannel(
-			final InetSocketAddress endpoint, final int backlog)
+			InetSocketAddress endpoint, int backlog)
 			throws IOException, InterruptedException, ExecutionException {
 
 		return (ServerSocketChannel) this.getNetworkChannel(
@@ -52,7 +52,7 @@ public class ServerChannelFactory {
 	}
 
 	public DatagramChannel createUnicastDatagramChannel(
-			final ProtocolFamily family, final InetSocketAddress endpoint)
+			ProtocolFamily family, InetSocketAddress endpoint)
 			throws IOException, InterruptedException, ExecutionException {
 
 		return (DatagramChannel) this.getNetworkChannel(
@@ -61,8 +61,8 @@ public class ServerChannelFactory {
 	}
 
 	public DatagramChannel createMulticastDatagramChannel(
-			final StandardProtocolFamily family,
-			final InetSocketAddress endpoint) throws IOException,
+			StandardProtocolFamily family,
+			InetSocketAddress endpoint) throws IOException,
 			InterruptedException, ExecutionException {
 
 		return (DatagramChannel) this.getNetworkChannel(
@@ -71,10 +71,10 @@ public class ServerChannelFactory {
 	}
 
 	private NetworkChannel getNetworkChannel(
-			final STREAM_SERVICE_TYPE serviceType,
-			final SocketAddress endpoint, final int backlog,
-			final StandardProtocolFamily protocolFamily,
-			final ThreadPoolExecutor threadPool, final int initialSize)
+			STREAM_SERVICE_TYPE serviceType,
+			SocketAddress endpoint, int backlog,
+			StandardProtocolFamily protocolFamily,
+			ThreadPoolExecutor threadPool, int initialSize)
 			throws IOException, InterruptedException, ExecutionException {
 
 		NetworkChannel channel = null;
@@ -88,7 +88,7 @@ public class ServerChannelFactory {
 			case async :
 				// create asynchronous server-socket channel bound to the thread
 				// Group
-				final AsynchronousChannelGroup threadGroup = AsynchronousChannelGroup
+				AsynchronousChannelGroup threadGroup = AsynchronousChannelGroup
 						.withCachedThreadPool(threadPool, initialSize);
 				channel = AsynchronousServerSocketChannel.open(threadGroup);
 				break;
@@ -109,11 +109,11 @@ public class ServerChannelFactory {
 				networkInterfaceName);
 	}
 
-	private NetworkChannel bind(final STREAM_SERVICE_TYPE serviceType,
-			final NetworkChannel channel, final SocketAddress endpoint,
-			final int backlog, final String networkInterfaceName)
+	private NetworkChannel bind(STREAM_SERVICE_TYPE serviceType,
+			NetworkChannel channel, SocketAddress endpoint,
+			int backlog, String networkInterfaceName)
 			throws IOException, InterruptedException, ExecutionException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		if (channel.isOpen()) {

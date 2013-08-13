@@ -23,13 +23,13 @@ package com.abreqadhabra.nflight.samples.benchmark.benchmark.actor;
  */
 public class ActorGeneratorConfig {
 
-    private final int numActors;
+    private int numActors;
 
-    private final int numInitialMessages;
+    private int numInitialMessages;
 
-    private final int messageTtl;
+    private int messageTtl;
 
-    private final long seed;
+    private long seed;
 
     public ActorGeneratorConfig(int numActors, int numInitialMessages, int messageTtl, long seed) {
 	this.numActors = numActors;

@@ -6,8 +6,8 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 
 public class ChangeRequest {
-	public static final String REGISTER = "REGISTER";
-	public static final String CHANGE_OPS = "CHANGE_OPS";
+	public static String REGISTER = "REGISTER";
+	public static String CHANGE_OPS = "CHANGE_OPS";
 
 	public SocketChannel socketChannel;
 	public DatagramChannel datagramChannel;

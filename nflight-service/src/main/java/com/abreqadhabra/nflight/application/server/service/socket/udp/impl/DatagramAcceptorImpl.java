@@ -12,21 +12,21 @@ import com.abreqadhabra.nflight.application.server.service.socket.tcp.impl.Accep
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class DatagramAcceptorImpl extends AbstractDatagramAcceptor {
-	private static final Class<DatagramAcceptorImpl> THIS_CLAZZ = DatagramAcceptorImpl.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<DatagramAcceptorImpl> THIS_CLAZZ = DatagramAcceptorImpl.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public DatagramAcceptorImpl(final InetAddress hostAddress, final int port,
-			final AcceptorWorker worker) throws IOException {
+	public DatagramAcceptorImpl(InetAddress hostAddress, int port,
+			AcceptorWorker worker) throws IOException {
 		super(hostAddress, port, worker);
 	}
 
 	@Override
 	public void run() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		// 현재 실행 중인 쓰레드명을 변경 설정
-		final String threadName = Thread.currentThread().getName();
+		String threadName = Thread.currentThread().getName();
 		Thread.currentThread().setName(
 				threadName + "-" + THIS_CLAZZ.getSimpleName());
 
@@ -38,15 +38,15 @@ public class DatagramAcceptorImpl extends AbstractDatagramAcceptor {
 			try {
 				// 보류 중인 변경 내용들에 대한 처리
 				synchronized (this.pendingChanges) {
-					final Iterator<ChangeRequest> changes = this.pendingChanges
+					Iterator<ChangeRequest> changes = this.pendingChanges
 							.iterator();
 					// 보류 변경 내용이 있을 경우
 					while (changes.hasNext()) {
-						final ChangeRequest change = changes.next();
+						ChangeRequest change = changes.next();
 						// OPS의 변경일 경우
 						if (change.type.equals(ChangeRequest.CHANGE_OPS)) {
 							// 소켓에서 셀렉터에 해당하는 셀렉션키를 취득
-							final SelectionKey key = change.socketChannel
+							SelectionKey key = change.socketChannel
 									.keyFor(super.selector);
 							// 셀렉션키의 OPS를 요청값으로 변경
 							key.interestOps(change.ops);
@@ -80,13 +80,13 @@ public class DatagramAcceptorImpl extends AbstractDatagramAcceptor {
 				}
 
 				// 이벤트를 사용할 수 있는 셀렉터의 키 집합들을 확인
-				final Iterator<?> selectedKeys = this.selector.selectedKeys()
+				Iterator<?> selectedKeys = this.selector.selectedKeys()
 						.iterator();
 
 				// 이벤트가 있을 경우
 				while (selectedKeys.hasNext()) {
 					// 셀렉터의 키를 취득
-					final SelectionKey key = (SelectionKey) selectedKeys.next();
+					SelectionKey key = (SelectionKey) selectedKeys.next();
 					// 취득한 키를 키 집합에서 제거
 					selectedKeys.remove();
 
@@ -110,14 +110,14 @@ public class DatagramAcceptorImpl extends AbstractDatagramAcceptor {
 					this.processSelectionKey(key);
 
 				}
-			} catch (final Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
 	private void processSelectionKey(SelectionKey key) throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		if (LOGGER.isLoggable(Level.FINER)) {

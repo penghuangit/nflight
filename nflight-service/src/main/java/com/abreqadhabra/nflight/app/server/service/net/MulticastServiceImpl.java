@@ -19,34 +19,34 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 //Strategy ConcreteStrategy
 public class MulticastServiceImpl extends AbstractService {
 
-	private static final Class<MulticastServiceImpl> THIS_CLAZZ = MulticastServiceImpl.class;
+	private static Class<MulticastServiceImpl> THIS_CLAZZ = MulticastServiceImpl.class;
 	private static Logger LOGGER = LoggingHelper
 			.getLogger(MulticastServiceImpl.THIS_CLAZZ);
 
 	protected DatagramChannel datagramChannel;
 	protected boolean isOpen;
 
-	public MulticastServiceImpl(final ServiceDescriptor sd) throws Exception {
+	public MulticastServiceImpl(ServiceDescriptor sd) throws Exception {
 		super(sd);
 	}
 
-	private String getNetworkInterfaceName(final String address)
+	private String getNetworkInterfaceName(String address)
 			throws SocketException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		final Enumeration<NetworkInterface> eni = NetworkInterface
+		Enumeration<NetworkInterface> eni = NetworkInterface
 				.getNetworkInterfaces();
 
 		String networkInterfaceName = null;
 
 		while (eni.hasMoreElements()) {
-			final NetworkInterface ni = eni.nextElement();
-			final Enumeration<InetAddress> inetAddresses = ni
+			NetworkInterface ni = eni.nextElement();
+			Enumeration<InetAddress> inetAddresses = ni
 					.getInetAddresses();
 
 			while (inetAddresses.hasMoreElements()) {
-				final InetAddress ia = inetAddresses.nextElement();
+				InetAddress ia = inetAddresses.nextElement();
 				if (!ia.isLinkLocalAddress()) {
 					LOGGER.logp(
 							Level.FINER,
@@ -68,7 +68,7 @@ public class MulticastServiceImpl extends AbstractService {
 
 	@Override
 	public void init() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		/* try { */
@@ -83,11 +83,11 @@ public class MulticastServiceImpl extends AbstractService {
 
 			server = datagramChannel;
 
-			final String networkInterfaceName = this
+			String networkInterfaceName = this
 					.getNetworkInterfaceName(address);
 
 			// get the network interface used for multicast
-			final NetworkInterface networkInterface = NetworkInterface
+			NetworkInterface networkInterface = NetworkInterface
 					.getByName(networkInterfaceName);
 
 			// set some options
@@ -104,7 +104,7 @@ public class MulticastServiceImpl extends AbstractService {
 					"The channel cannot be opened!");
 		}
 		/*
-		 * } catch (final Exception ex) { if (ex instanceof
+		 * } catch (Exception ex) { if (ex instanceof
 		 * ClosedChannelException) { LOGGER.logp(Level.FINER,
 		 * THIS_CLAZZ.getName(), METHOD_NAME,
 		 * "The channel was unexpected closed ..."); } if (ex instanceof
@@ -133,7 +133,7 @@ public class MulticastServiceImpl extends AbstractService {
 
 	@Override
 	public void startup() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		// check if it the channel was successfully opened
@@ -173,7 +173,7 @@ public class MulticastServiceImpl extends AbstractService {
 				// sleep for 10 seconds
 				try {
 					Thread.sleep(10000);
-				} catch (final InterruptedException ex) {
+				} catch (InterruptedException ex) {
 				}
 				System.out.println("Sending data ...");
 

@@ -9,8 +9,8 @@ public abstract class DAOFactory {
 	// created. The concrete factories will have to
 	// implement these methods. public
 
-	public static final String DATABASE_MODE_LOCAL = "local";
-	public static final String DATABASE_MODE_REMOTE = "remote";
+	public static String DATABASE_MODE_LOCAL = "local";
+	public static String DATABASE_MODE_REMOTE = "remote";
 	public static final String DATABASE_TYPE_DERBY = "derby";
 	public static final String DATABASE_TYPE_ORACLE = "oracle";
 
@@ -18,7 +18,7 @@ public abstract class DAOFactory {
 
 	public abstract AirlineDAO getAirlineDAO() throws Exception;
 
-	public static DAOFactory getDAOFactory(final String databaseType) {
+	public static DAOFactory getDAOFactory(String databaseType) {
 		switch (databaseType) {
 			case DATABASE_TYPE_DERBY :
 				return new DAOFactoryImpl(DATABASE_TYPE_DERBY);

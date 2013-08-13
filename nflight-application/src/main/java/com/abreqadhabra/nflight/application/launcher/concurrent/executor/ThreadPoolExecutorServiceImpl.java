@@ -14,8 +14,8 @@ import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ThreadPoolExecutorServiceImpl implements ThreadPoolExecutorService {
-	private static final Class<ThreadPoolExecutorServiceImpl> THIS_CLAZZ = ThreadPoolExecutorServiceImpl.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<ThreadPoolExecutorServiceImpl> THIS_CLAZZ = ThreadPoolExecutorServiceImpl.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private int corePoolSize;
 	private int maximumPoolSize;
@@ -46,7 +46,7 @@ public class ThreadPoolExecutorServiceImpl implements ThreadPoolExecutorService 
 
 	@Override
 	public ThreadPoolExecutor createNewThreadPool() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 	        
 		ThreadPoolExecutor executor = new ThreadPoolExecutor(

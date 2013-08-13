@@ -30,7 +30,7 @@ import java.util.concurrent.ForkJoinTask;
  */
 public class MapReduce<T> {
 
-    private final ForkJoinPool pool;
+    private ForkJoinPool pool;
 
     public MapReduce(int numThreads) {
 	this.pool = new ForkJoinPool(numThreads);

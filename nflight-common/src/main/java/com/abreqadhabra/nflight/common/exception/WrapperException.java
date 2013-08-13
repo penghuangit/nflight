@@ -13,7 +13,7 @@ public abstract class WrapperException extends Exception implements
     /**
      * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정
      */
-    private static final long serialVersionUID = 1L;
+    private static long serialVersionUID = 1L;
 
     /**
      * 자식(중첩) 예외
@@ -30,7 +30,7 @@ public abstract class WrapperException extends Exception implements
      */
     private String messageId;
 
-    private final List<ExceptionContext> contextEntries = new ArrayList<ExceptionContext>();
+    private List<ExceptionContext> contextEntries = new ArrayList<ExceptionContext>();
 
     /**
      * <p>
@@ -157,13 +157,13 @@ public abstract class WrapperException extends Exception implements
 	    buffer.append("  Exception Context:\n");
 
 	    int i = 0;
-	    for (final ExceptionContext contextValue : contextEntries) {
+	    for (ExceptionContext contextValue : contextEntries) {
 		buffer.append("\t[");
 		buffer.append(++i);
 		buffer.append(':');
 		buffer.append(contextValue.getLabel());
 		buffer.append("=");
-		final Object value = contextValue.getValue();
+		Object value = contextValue.getValue();
 		if (value == null) {
 		    buffer.append("null");
 		} else {

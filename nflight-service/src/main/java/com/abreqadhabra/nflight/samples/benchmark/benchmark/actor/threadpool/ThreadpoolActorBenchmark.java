@@ -21,7 +21,7 @@ import com.abreqadhabra.nflight.samples.benchmark.benchmark.actor.ActorGenerator
  */
 public class ThreadpoolActorBenchmark extends ActorBenchmarkDef {
 
-    private final ExecutorService threadPool;
+    private ExecutorService threadPool;
 
     private ThreadpoolDispatcher dispatcher;
 

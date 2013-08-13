@@ -49,8 +49,8 @@ public class ActorBenchmarkConfig {
     public static int NUM_DUMMY_WORK_ITERATIONS = 0;
 
     /** Whether debug mode is enabled. */
-    public static final boolean DEBUG = false;
+    public static boolean DEBUG = false;
 
     /** Whether verbose logging is enabled. */
-    public static final boolean VERBOSE = false;
+    public static boolean VERBOSE = false;
 }

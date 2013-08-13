@@ -17,27 +17,27 @@ import com.abreqadhabra.nflight.common.exception.NFSystemException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class PropertyFile {
-	private static final Class<PropertyFile> THIS_CLAZZ = PropertyFile.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<PropertyFile> THIS_CLAZZ = PropertyFile.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public static void convertAllXMLProperties(final Path dirPath)
+	public static void convertAllXMLProperties(Path dirPath)
 			throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					dirPath.toString());
-			final BasicFileAttributes pathAttr = Files.readAttributes(dirPath,
+			BasicFileAttributes pathAttr = Files.readAttributes(dirPath,
 					BasicFileAttributes.class);
 
 			Properties props = new Properties();
 
 			if (pathAttr.isDirectory()) {
-				final DirectoryStream<Path> ds = Files
+				DirectoryStream<Path> ds = Files
 						.newDirectoryStream(dirPath);
-				for (final Path file : ds) {
-					final BasicFileAttributes fileAttr = Files.readAttributes(
+				for (Path file : ds) {
+					BasicFileAttributes fileAttr = Files.readAttributes(
 							file, BasicFileAttributes.class);
 					if (fileAttr.isRegularFile()
 							&& file.getFileName().toString()
@@ -51,25 +51,25 @@ public class PropertyFile {
 					}
 				}
 			}
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public static Properties readPropertyFilePath(final Path path) throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public static Properties readPropertyFilePath(Path path) throws Exception {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-	//	final Path path = Paths.get(filePath);
+	//	Path path = Paths.get(filePath);
 
-		final Properties props = new Properties();
+		Properties props = new Properties();
 		try {
 
-			final InputStream is = Files.newInputStream(path);
+			InputStream is = Files.newInputStream(path);
 			props.load(is);
 			is.close();
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			throw new NFSystemException("Can't load properties: ", e)
 					.addContextValue("path :", path);
 		}
@@ -79,20 +79,20 @@ public class PropertyFile {
 		return props;
 	}
 	
-	public static Properties readPropertyFilePath(final String className,
-			final String filePath) throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public static Properties readPropertyFilePath(String className,
+			String filePath) throws Exception {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		final Path path = IOStream.getFilePath(className, filePath);
+		Path path = IOStream.getFilePath(className, filePath);
 
-		final Properties props = new Properties();
+		Properties props = new Properties();
 		try {
 
-			final InputStream is = Files.newInputStream(path);
+			InputStream is = Files.newInputStream(path);
 			props.load(is);
 			is.close();
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			throw new NFSystemException("Can't load properties: ", e)
 					.addContextValue("path :", path);
 		}
@@ -102,25 +102,25 @@ public class PropertyFile {
 		return props;
 	}
 
-	public static String renderPropsText(final Properties props)
+	public static String renderPropsText(Properties props)
 
 	{
 
-		final String[] keys = props.keySet().toArray(new String[0]);
+		String[] keys = props.keySet().toArray(new String[0]);
 		Arrays.sort(keys);
-		final StringBuffer sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 
-		for (final String key : keys) {
-			final String formatString = ":: key = %-60s value = %s%n";
-			final String str = String.format(formatString, key, props.get(key));
+		for (String key : keys) {
+			String formatString = ":: key = %-60s value = %s%n";
+			String str = String.format(formatString, key, props.get(key));
 			sb.append(str);
 		}
 		return sb.toString();
 
 	}
 
-	public static String stripFileExtension(final String fileName) {
-		final int dotIdx = fileName.lastIndexOf('.');
+	public static String stripFileExtension(String fileName) {
+		int dotIdx = fileName.lastIndexOf('.');
 
 		// if dot is in the first position,
 		// we are dealing with a hidden file rather than an extension
@@ -131,7 +131,7 @@ public class PropertyFile {
 
 		pathName = pathName.replace("\\", "/");
 
-		final int slashIdx = pathName.lastIndexOf("/");
+		int slashIdx = pathName.lastIndexOf("/");
 
 		// if dot is in the first position,
 		// we are dealing with a hidden file rather than an extension
@@ -139,12 +139,12 @@ public class PropertyFile {
 				pathName.length()) : pathName;
 	}
 
-	private static void writeXMLPropertyFilePath(final Properties props,
+	private static void writeXMLPropertyFilePath(Properties props,
 			Path path) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		final String newFileName = stripFileExtension(path.getFileName()
+		String newFileName = stripFileExtension(path.getFileName()
 				.toString()) + ".xml";
 		path = path.resolveSibling(newFileName);
 
@@ -154,7 +154,7 @@ public class PropertyFile {
 					path.getFileName().toString(), Env.Charset);
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, path
 					+ " written successfully");
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

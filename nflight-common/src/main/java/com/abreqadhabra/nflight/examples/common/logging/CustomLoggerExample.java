@@ -14,7 +14,7 @@ import com.abreqadhabra.nflight.common.util.IOStream;
 
 
 public class CustomLoggerExample {
-	private static final Class<CustomLoggerExample> THIS_CLAZZ = CustomLoggerExample.class;
+	private static Class<CustomLoggerExample> THIS_CLAZZ = CustomLoggerExample.class;
 	
 	private static String resourceBundleName = "com.abreqadhabra.nflight.examples.common.conf.LoggingMessages";
 	private static String configFile = "com/abreqadhabra/nflight/examples/common/conf/logging.properties";

@@ -9,19 +9,19 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 //Command ConcreteCommand 
 public class StartupServerCommand implements Command {
-	private static final Class<StartupServerCommand> THIS_CLAZZ = StartupServerCommand.class;
+	private static Class<StartupServerCommand> THIS_CLAZZ = StartupServerCommand.class;
 	private static Logger LOGGER = LoggingHelper
 			.getLogger(THIS_CLAZZ);
 
-	private final IServer server;
+	private IServer server;
 
-	public StartupServerCommand(final IServer server) {
+	public StartupServerCommand(IServer server) {
 		this.server = server;
 	}
 
 	@Override
 	public void execute() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		this.server.startup();
 		LOGGER.logp(Level.FINER,

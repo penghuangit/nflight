@@ -27,8 +27,8 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
  */
 public class StartupAllServer{
 
-	private static final Class<StartupAllServer> THIS_CLAZZ = StartupAllServer.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<StartupAllServer> THIS_CLAZZ = StartupAllServer.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	public StartupAllServer() throws Exception {
 		super();

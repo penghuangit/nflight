@@ -11,8 +11,8 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 
 public class ThreadPoolServiceTest {
-	private static final Class<ThreadPoolServiceTest> THIS_CLAZZ = ThreadPoolServiceTest.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<ThreadPoolServiceTest> THIS_CLAZZ = ThreadPoolServiceTest.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	ThreadPoolMonitorService threadPoolMonitorService;
 	ThreadPoolExecutorService threadPoolExecutorService;
@@ -28,7 +28,7 @@ public class ThreadPoolServiceTest {
 	}
 
 	private void start() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		// A new thread pool is created...

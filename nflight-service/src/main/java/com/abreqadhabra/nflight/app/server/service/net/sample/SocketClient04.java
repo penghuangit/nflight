@@ -16,16 +16,16 @@ import java.util.Random;
  */
 public class SocketClient04 {
 
-	public static void main(final String[] args) {
+	public static void main(String[] args) {
 
-		final int DEFAULT_PORT = 5555;
-		final String IP = "127.0.0.1";
-		final ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
-		final ByteBuffer helloBuffer = ByteBuffer.wrap("Hello !".getBytes());
+		int DEFAULT_PORT = 5555;
+		String IP = "127.0.0.1";
+		ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+		ByteBuffer helloBuffer = ByteBuffer.wrap("Hello !".getBytes());
 		ByteBuffer randomBuffer;
 		CharBuffer charBuffer;
-		final Charset charset = Charset.defaultCharset();
-		final CharsetDecoder decoder = charset.newDecoder();
+		Charset charset = Charset.defaultCharset();
+		CharsetDecoder decoder = charset.newDecoder();
 
 		// create a new socket channel
 		try (SocketChannel socketChannel = SocketChannel.open()) {
@@ -65,7 +65,7 @@ public class SocketClient04 {
 							buffer.clear();
 						}
 
-						final int r = new Random().nextInt(100);
+						int r = new Random().nextInt(100);
 						if (r == 50) {
 							System.out
 									.println("50 was generated! Close the socket channel!");
@@ -82,7 +82,7 @@ public class SocketClient04 {
 			} else {
 				System.out.println("The socket channel cannot be opened!");
 			}
-		} catch (final IOException ex) {
+		} catch (IOException ex) {
 			System.err.println(ex);
 		}
 

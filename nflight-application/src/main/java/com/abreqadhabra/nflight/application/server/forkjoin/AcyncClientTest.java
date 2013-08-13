@@ -22,8 +22,8 @@ public class AcyncClientTest {
 
     public static void main(String[] args) throws UnknownHostException {
 
-        final int DEFAULT_PORT = 9999;
-        final String IP = InetAddress.getLocalHost().getHostAddress();
+        int DEFAULT_PORT = 9999;
+        String IP = InetAddress.getLocalHost().getHostAddress();
 
         //create asynchronous socket channel bound to the default group
         try (AsynchronousSocketChannel asynchronousSocketChannel = AsynchronousSocketChannel.open()) {
@@ -38,12 +38,12 @@ public class AcyncClientTest {
                 //connect this channel's socket
                 asynchronousSocketChannel.connect(new InetSocketAddress(IP, DEFAULT_PORT), null, new CompletionHandler<Void, Void>() {
 
-                    final ByteBuffer helloBuffer = ByteBuffer.wrap("Hello !".getBytes());
-                    final ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+                    ByteBuffer helloBuffer = ByteBuffer.wrap("Hello !".getBytes());
+                    ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
                     CharBuffer charBuffer = null;
                     ByteBuffer randomBuffer;
-                    final Charset charset = Charset.defaultCharset();
-                    final CharsetDecoder decoder = charset.newDecoder();
+                    Charset charset = Charset.defaultCharset();
+                    CharsetDecoder decoder = charset.newDecoder();
 
                     @Override
                     public void completed(Void result, Void attachment) {

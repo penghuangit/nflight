@@ -13,7 +13,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class NFServerSocketImpl implements IService {
 
-	private static final Class<NFServerSocketImpl> THIS_CLAZZ = NFServerSocketImpl.class;
+	private static Class<NFServerSocketImpl> THIS_CLAZZ = NFServerSocketImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private ServerSocket serverSocket;

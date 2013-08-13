@@ -18,11 +18,11 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 
 public class ServiceExecutorThread {
-	private static final Class<ServiceExecutorThread> THIS_CLAZZ = ServiceExecutorThread.class;
+	private static Class<ServiceExecutorThread> THIS_CLAZZ = ServiceExecutorThread.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	public ServiceExecutorThread() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
@@ -30,14 +30,14 @@ public class ServiceExecutorThread {
 	}
 
 	public void execute() {
-		final BlockingQueue<Runnable> worksQueue = new ArrayBlockingQueue<Runnable>(
+		BlockingQueue<Runnable> worksQueue = new ArrayBlockingQueue<Runnable>(
 				2);
-		final RejectedExecutionHandler executionHandler = new RejectedExecutionHandelerImpl();
-		final ThreadPoolExecutor executor = new ThreadPoolExecutor(12, 24, 10,
+		RejectedExecutionHandler executionHandler = new RejectedExecutionHandelerImpl();
+		ThreadPoolExecutor executor = new ThreadPoolExecutor(12, 24, 10,
 				TimeUnit.SECONDS, worksQueue, executionHandler);
 		executor.allowCoreThreadTimeOut(true);
 
-		final List<Runnable> taskGroup = new ArrayList<Runnable>();
+		List<Runnable> taskGroup = new ArrayList<Runnable>();
 
 		for (SERVICE_NAME serviceName : SERVICE_NAME.values()) {
 			taskGroup.add(new ServiceRunnable(serviceName.toString()));

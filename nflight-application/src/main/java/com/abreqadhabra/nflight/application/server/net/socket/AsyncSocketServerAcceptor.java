@@ -14,28 +14,28 @@ import com.abreqadhabra.nflight.application.server.net.socket.logic.IBusinessLog
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class AsyncSocketServerAcceptor implements ISocketAcceptor {
-	private static final Class<AsyncSocketServerAcceptor> THIS_CLAZZ = AsyncSocketServerAcceptor.class;
+	private static Class<AsyncSocketServerAcceptor> THIS_CLAZZ = AsyncSocketServerAcceptor.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private final Configure configure;
-	private final Long sessionId;
-	private final AsynchronousSocketChannel asyncSocketChannel;
-	// private final MessageDTO messageDTO;
-	private final IBusinessLogicHandler logic;
+	private Configure configure;
+	private Long sessionId;
+	private AsynchronousSocketChannel asyncSocketChannel;
+	// private MessageDTO messageDTO;
+	private IBusinessLogicHandler logic;
 
 	private ByteBuffer readByteBuffer;
 	/** 입력데이터 */
-	private final LinkedBlockingQueue<MessageDTO> inputQueue = new LinkedBlockingQueue<MessageDTO>();
+	private LinkedBlockingQueue<MessageDTO> inputQueue = new LinkedBlockingQueue<MessageDTO>();
 
 	/** 출력데이터 */
-	private final LinkedBlockingQueue<MessageDTO> outputQueue = new LinkedBlockingQueue<MessageDTO>();
-	private final ConcurrentHashMap<String, Object> attrs = new ConcurrentHashMap<String, Object>();
+	private LinkedBlockingQueue<MessageDTO> outputQueue = new LinkedBlockingQueue<MessageDTO>();
+	private ConcurrentHashMap<String, Object> attrs = new ConcurrentHashMap<String, Object>();
 
-	public AsyncSocketServerAcceptor(final Configure configure,
-			final long sessionId,
-			final AsynchronousSocketChannel asyncSocketChannel,
-			final MessageDTO messageDTO,
-			final IBusinessLogicHandler logicHandler) {
+	public AsyncSocketServerAcceptor(Configure configure,
+			long sessionId,
+			AsynchronousSocketChannel asyncSocketChannel,
+			MessageDTO messageDTO,
+			IBusinessLogicHandler logicHandler) {
 		this.configure = configure;
 		this.sessionId = sessionId;
 		this.asyncSocketChannel = asyncSocketChannel;
@@ -46,7 +46,7 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 
 	@Override
 	public void init() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		NetworkChannelHelper.setChannelOption(this.getAsyncSocketChannel());
@@ -57,7 +57,7 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 
 	@Override
 	public void start() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
 			if (this.getAsyncSocketChannel().isOpen()) {
@@ -67,14 +67,14 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 										.getRemoteAddress());
 				this.receive();
 			}
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void close() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
 			if (this.getAsyncSocketChannel().isOpen()) {
@@ -98,8 +98,8 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 		// new ReadHandler(this)
 				new CompletionHandler<Integer, AsyncSocketServerAcceptor>() {
 					@Override
-					public void completed(final Integer result,
-							final AsyncSocketServerAcceptor acceptor) {
+					public void completed(Integer result,
+							AsyncSocketServerAcceptor acceptor) {
 
 						try {
 							LOGGER.logp(
@@ -120,8 +120,8 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 									.flip();
 
 							// ?? 직렬화???
-							final MessageDTO dto = null;
-//									final MessageDTO dto = AsyncSocketServerAcceptor.this.messageDTO
+							MessageDTO dto = null;
+//									MessageDTO dto = AsyncSocketServerAcceptor.this.messageDTO
 //									.transfer(AsyncSocketServerAcceptor.this.readByteBuffer);
 
 							LOGGER.logp(
@@ -133,7 +133,7 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 							try {
 								AsyncSocketServerAcceptor.this.inputQueue
 										.put(dto);
-							} catch (final InterruptedException e) {
+							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
 
@@ -160,8 +160,8 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 						AsyncSocketServerAcceptor.this.receive();
 					}
 					@Override
-					public void failed(final Throwable exc,
-							final AsyncSocketServerAcceptor acceptor) {
+					public void failed(Throwable exc,
+							AsyncSocketServerAcceptor acceptor) {
 					}
 				}
 
@@ -193,8 +193,8 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 									new CompletionHandler<Integer, AsyncSocketServerAcceptor>() {
 										@Override
 										public void completed(
-												final Integer result,
-												final AsyncSocketServerAcceptor acceptor) {
+												Integer result,
+												AsyncSocketServerAcceptor acceptor) {
 											if (result > 0) {
 												try {
 													LOGGER.logp(
@@ -216,39 +216,39 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 										}
 										@Override
 										public void failed(
-												final Throwable exc,
-												final AsyncSocketServerAcceptor attachment) {
+												Throwable exc,
+												AsyncSocketServerAcceptor attachment) {
 										}
 									});
 					messageDTO.getContent().flip();
 				}
 
 			}
-		} catch (final Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void setAttribute(final String key, final Object value) {
+	public void setAttribute(String key, Object value) {
 		this.attrs.put(key, value);
 	}
 
 	@Override
-	public Object getAttribute(final String key) {
+	public Object getAttribute(String key) {
 		return this.attrs.get(key);
 	}
 
 	@Override
-	public void addOutputQueue(final MessageDTO messageDTO) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public void addOutputQueue(MessageDTO messageDTO) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 				messageDTO.toString());
 		try {
 			this.outputQueue.put(messageDTO);
-		} catch (final InterruptedException e) {
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

@@ -18,7 +18,7 @@ import com.abreqadhabra.nflight.dao.DAOFactory;
 import com.abreqadhabra.nflight.dao.dto.Airline;
 
 public class BusinessLogicHandlerImpl implements IBusinessLogicHandler {
-	private static final Class<BusinessLogicHandlerImpl> THIS_CLAZZ = BusinessLogicHandlerImpl.class;
+	private static Class<BusinessLogicHandlerImpl> THIS_CLAZZ = BusinessLogicHandlerImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private ISocketServer server;
@@ -34,7 +34,7 @@ public class BusinessLogicHandlerImpl implements IBusinessLogicHandler {
 	public void doLogic(AsyncSocketServerAcceptor acceptor,
 			LinkedBlockingQueue<MessageDTO> input,
 			LinkedBlockingQueue<MessageDTO> output) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		ConcurrentHashMap<Long, ISocketAcceptor> sessionMap = this.server

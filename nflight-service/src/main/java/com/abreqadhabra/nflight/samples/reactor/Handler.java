@@ -8,10 +8,10 @@ import java.nio.channels.SocketChannel;
 
 public class Handler implements Runnable {
  
-    final SocketChannel socketChannel;
-    final SelectionKey selectionKey;
+    SocketChannel socketChannel;
+    SelectionKey selectionKey;
     ByteBuffer input = ByteBuffer.allocate(1024);
-    static final int READING = 0, SENDING = 1;
+    static int READING = 0, SENDING = 1;
     int state = READING;
     String clientName = "";
  

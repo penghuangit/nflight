@@ -19,8 +19,8 @@ import com.abreqadhabra.nflight.dao.exception.NFDAOException;
  */
 
 public class AirlineDAOExample {
-	private static final Class<AirlineDAOExample> THIS_CLAZZ = AirlineDAOExample.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<AirlineDAOExample> THIS_CLAZZ = AirlineDAOExample.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	String resourceBundleName = "com.abreqadhabra.nflight.common.resources.logging.LoggingMessages";
 

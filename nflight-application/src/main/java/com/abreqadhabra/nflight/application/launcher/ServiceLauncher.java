@@ -18,11 +18,11 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 
 public class ServiceLauncher implements Launcher {
-	private static final Class<ServiceLauncher> THIS_CLAZZ = ServiceLauncher.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<ServiceLauncher> THIS_CLAZZ = ServiceLauncher.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	public ServiceLauncher() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
@@ -34,8 +34,8 @@ public class ServiceLauncher implements Launcher {
 	}
 
 	@Override
-	public void launch(final String[] cmdLineArgs) throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public void launch(String[] cmdLineArgs) throws Exception {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
@@ -77,10 +77,10 @@ public class ServiceLauncher implements Launcher {
 			props = LauncherHelper.parseCMDLineArgs(cmdLineArgs);
 		}
 
-		final ProfileImpl profile = new ProfileImpl(props);
+		ProfileImpl profile = new ProfileImpl(props);
 
 		Command _cmd = null;
-		final Invoker _invoker = new Invoker();
+		Invoker _invoker = new Invoker();
 
 		// new ServerImpl(profile);
 		IServer server = new ServerImpl(profile);

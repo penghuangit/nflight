@@ -7,15 +7,15 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ServiceForkJoinTask extends RecursiveTask<Object> {
-	private static final Class<ServiceForkJoinTask> THIS_CLAZZ = ServiceForkJoinTask.class;
+	private static Class<ServiceForkJoinTask> THIS_CLAZZ = ServiceForkJoinTask.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private static final long serialVersionUID = 1L;
+	private static long serialVersionUID = 1L;
 
 	String serviceName;
 
-	public ServiceForkJoinTask(final String serviceName) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public ServiceForkJoinTask(String serviceName) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		this.serviceName = serviceName;
@@ -29,12 +29,12 @@ public class ServiceForkJoinTask extends RecursiveTask<Object> {
 
 	@Override
 	protected Object compute() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		
-		final Thread t = Thread.currentThread();
-		final String name = t.getName();
+		Thread t = Thread.currentThread();
+		String name = t.getName();
 
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					  name + "\t" + this.serviceName + "\t" 

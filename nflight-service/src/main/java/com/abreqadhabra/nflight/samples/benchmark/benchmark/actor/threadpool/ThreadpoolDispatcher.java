@@ -15,7 +15,7 @@ import com.abreqadhabra.nflight.samples.benchmark.benchmark.actor.parallel.Abstr
  */
 public class ThreadpoolDispatcher extends AbstractDispatcher {
 
-    protected final ExecutorService pool;
+    protected ExecutorService pool;
 
     public ThreadpoolDispatcher(Actor[] actors, ExecutorService threadPool) {
 	super(actors);

@@ -9,11 +9,11 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 
-final class UDPClient extends Client {
+class UDPClient extends Client {
 
-	private static final int EPHEMERAL_START = 1024;
-	private static final int EPHEMERAL_STOP = 65535;
-	private static final int EPHEMERAL_RANGE = EPHEMERAL_STOP - EPHEMERAL_START;
+	private static int EPHEMERAL_START = 1024;
+	private static int EPHEMERAL_STOP = 65535;
+	private static int EPHEMERAL_RANGE = EPHEMERAL_STOP - EPHEMERAL_START;
 
 	// private static SecureRandom prng = new SecureRandom();
 

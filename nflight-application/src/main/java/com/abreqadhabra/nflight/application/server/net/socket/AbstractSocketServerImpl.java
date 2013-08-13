@@ -8,9 +8,9 @@ import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public abstract class AbstractSocketServerImpl implements ISocketServer {
-	private static final Class<AbstractSocketServerImpl> THIS_CLAZZ = AbstractSocketServerImpl.class;
-	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<AbstractSocketServerImpl> THIS_CLAZZ = AbstractSocketServerImpl.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	protected Configure configure;
 	protected ThreadPoolExecutor threadPoolExecutor;
@@ -24,7 +24,7 @@ public abstract class AbstractSocketServerImpl implements ISocketServer {
 
 	@Override
 	public void startup() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		if (open()) {

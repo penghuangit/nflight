@@ -15,11 +15,11 @@ public abstract class Profile {
 
 		startup, shutdown, status, UNKNOWN;
 
-		public static BOOT_OPTION_SERVICE_COMMAND getValue(final String value) {
+		public static BOOT_OPTION_SERVICE_COMMAND getValue(String value) {
 			try {
 				return BOOT_OPTION_SERVICE_COMMAND.valueOf(value.replace(".",
 						"_"));
-			} catch (final Exception e) {
+			} catch (Exception e) {
 				return UNKNOWN;
 			}
 		}
@@ -35,8 +35,8 @@ public abstract class Profile {
 		// com_abareqadhabra_nflight_service_rmi_server_activatable_ActivatableRMIServerImpl,
 		UNKNOWN;
 
-		public static boolean contains(final String name) {
-			for (final BOOT_OPTION_SERVICE_MAINCLASS className : BOOT_OPTION_SERVICE_MAINCLASS
+		public static boolean contains(String name) {
+			for (BOOT_OPTION_SERVICE_MAINCLASS className : BOOT_OPTION_SERVICE_MAINCLASS
 					.values()) {
 				if (className.name().equals(name.replace(".", "_"))) {
 					return true;
@@ -45,11 +45,11 @@ public abstract class Profile {
 			return false;
 		}
 
-		public static BOOT_OPTION_SERVICE_MAINCLASS getValue(final String value) {
+		public static BOOT_OPTION_SERVICE_MAINCLASS getValue(String value) {
 			try {
 				return BOOT_OPTION_SERVICE_MAINCLASS.valueOf(value.replace(".",
 						"_"));
-			} catch (final Exception e) {
+			} catch (Exception e) {
 				return UNKNOWN;
 			}
 		}
@@ -140,26 +140,26 @@ public abstract class Profile {
 		stream, datagram, multicast;
 	}
 
-	public static final String FILE_BOOT_PROPERTIES = "com/abreqadhabra/nflight/app/core/conf/boot.properties";
+	public static String FILE_BOOT_PROPERTIES = "com/abreqadhabra/nflight/app/core/conf/boot.properties";
 
-	public static final String FILE_BOOT_POLICY = "com/abreqadhabra/nflight/app/core/conf/boot.policy";
+	public static String FILE_BOOT_POLICY = "com/abreqadhabra/nflight/app/core/conf/boot.policy";
 
-	public static final String BOOT_OPTION_PREFIX = "--";
+	public static String BOOT_OPTION_PREFIX = "--";
 
-	public static final String FILE_BOOTCOMMAND_PROPERTIES = "com/abreqadhabra/nflight/app/core/conf/bootcommand.properties";
+	public static String FILE_BOOTCOMMAND_PROPERTIES = "com/abreqadhabra/nflight/app/core/conf/bootcommand.properties";
 
-	public static final BOOTCOMMAND_OS BOOTCOMMAND_OS_DEFAULT = BOOTCOMMAND_OS.windows;
+	public static BOOTCOMMAND_OS BOOTCOMMAND_OS_DEFAULT = BOOTCOMMAND_OS.windows;
 
-	public static final int BOOTCOMMAND_SLEEPTIME_1 = 2000;
-	public static final int BOOTCOMMAND_SLEEPTIME_2 = 10000;
-	public static final String FILE_ACTIVATION_PROPERTIES = "com/abreqadhabra/nflight/app/server/service/rmi/conf/activatable.properties";
+	public static int BOOTCOMMAND_SLEEPTIME_1 = 2000;
+	public static int BOOTCOMMAND_SLEEPTIME_2 = 10000;
+	public static String FILE_ACTIVATION_PROPERTIES = "com/abreqadhabra/nflight/app/server/service/rmi/conf/activatable.properties";
 
-	public static final String FILE_ACTIVATION_POLICY = "com/abreqadhabra/nflight/app/server/service/rmi/conf/activatable.policy";
+	public static String FILE_ACTIVATION_POLICY = "com/abreqadhabra/nflight/app/server/service/rmi/conf/activatable.policy";
 
-	public static final String FILE_RMID_POLICY = "com/abreqadhabra/nflight/app/server/service/rmi/conf/rmid.policy";
+	public static String FILE_RMID_POLICY = "com/abreqadhabra/nflight/app/server/service/rmi/conf/rmid.policy";
 
-	public static final String ACTIVATION_FILE_PREFIX = "file://";
+	public static String ACTIVATION_FILE_PREFIX = "file://";
 
-	public static final Object BOOT_OPTION_CONF = "--conf";
+	public static Object BOOT_OPTION_CONF = "--conf";
 
 }

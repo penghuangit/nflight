@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class TestTask implements Runnable {
-	private static final Class<TestTask> THIS_CLAZZ = TestTask.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<TestTask> THIS_CLAZZ = TestTask.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 	
     String taskName;
  
@@ -19,7 +19,7 @@ public class TestTask implements Runnable {
     }
  
     public void run() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		
         try {

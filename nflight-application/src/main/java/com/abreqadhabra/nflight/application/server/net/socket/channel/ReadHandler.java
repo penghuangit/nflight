@@ -12,7 +12,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 public class ReadHandler
 		implements
 			CompletionHandler<Integer, AsyncSocketServerAcceptor> {
-	private static final Class<ReadHandler> THIS_CLAZZ = ReadHandler.class;
+	private static Class<ReadHandler> THIS_CLAZZ = ReadHandler.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private AsyncSocketServerAcceptor asyncSocketServerAcceptor;
@@ -22,9 +22,9 @@ public class ReadHandler
 	}
 
 	@Override
-	public void completed(final Integer result,
-			final AsyncSocketServerAcceptor acceptor) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public void completed(Integer result,
+			AsyncSocketServerAcceptor acceptor) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
@@ -45,14 +45,14 @@ public class ReadHandler
 			asyncSocketServerAcceptor.getReadByteBuffer().flip();
 
 			// ?? 직렬화???
-//			final MessageDTO dto = asyncSocketServerAcceptor.messageDTO
+//			MessageDTO dto = asyncSocketServerAcceptor.messageDTO
 //					.transfer(asyncSocketServerAcceptor.getReadByteBuffer());
 //
 //			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 //					dto.getClass().getName() + ":" + dto.toString());
 //			try {
 //				asyncSocketServerAcceptor.getInputQueue().put(dto);
-//			} catch (final InterruptedException e) {
+//			} catch (InterruptedException e) {
 //				e.printStackTrace();
 //			}
 
@@ -75,7 +75,7 @@ public class ReadHandler
 	}
 
 	@Override
-	public void failed(final Throwable exc,
-			final AsyncSocketServerAcceptor acceptor) {
+	public void failed(Throwable exc,
+			AsyncSocketServerAcceptor acceptor) {
 	}
 }

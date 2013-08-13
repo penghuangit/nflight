@@ -32,22 +32,22 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public abstract class AbstractDatagramAcceptor implements SocketAcceptor,
 		Runnable {
-	private static final Class<AbstractDatagramAcceptor> THIS_CLAZZ = AbstractDatagramAcceptor.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<AbstractDatagramAcceptor> THIS_CLAZZ = AbstractDatagramAcceptor.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	// The host:port combination to listen on
-	private final InetAddress hostAddress;
-	private final int port;
+	private InetAddress hostAddress;
+	private int port;
 
 	// The channel on which we'll accept connections
 	protected DatagramChannel datagramChannel;
 	// The selector we'll be monitoring
 	protected Selector selector;
 
-	private final AcceptorWorker worker;
+	private AcceptorWorker worker;
 
 	// The buffer into which we'll read data when it's available
-	private final ByteBuffer readBuffer = ByteBuffer.allocate(1024*1024);
+	private ByteBuffer readBuffer = ByteBuffer.allocate(1024*1024);
 
 	// Maps a SocketChannel to a list of ByteBuffer instances
 	private Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
@@ -55,9 +55,9 @@ public abstract class AbstractDatagramAcceptor implements SocketAcceptor,
 	// A list of PendingChange instances
 	protected List<ChangeRequest> pendingChanges = new LinkedList<ChangeRequest>();
 
-	public AbstractDatagramAcceptor(final InetAddress hostAddress,
-			final int port, final AcceptorWorker worker) throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public AbstractDatagramAcceptor(InetAddress hostAddress,
+			int port, AcceptorWorker worker) throws IOException {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		
 		this.hostAddress = hostAddress;
@@ -68,7 +68,7 @@ public abstract class AbstractDatagramAcceptor implements SocketAcceptor,
 
 	@Override
 	public void bind() throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		// 새로운 데이터그램 채널 생성
@@ -103,7 +103,7 @@ public abstract class AbstractDatagramAcceptor implements SocketAcceptor,
 			.setOption(StandardSocketOptions.SO_SNDBUF, 4 * 1024);
 
 			// 네트워크 주소와 포트 번호를 지정하여 InetSocketAddress 생성
-			final InetSocketAddress isa = new InetSocketAddress(
+			InetSocketAddress isa = new InetSocketAddress(
 					hostAddress, port);
 			
 			// 지정된 네트워크 주소로 소켓을 바인딩
@@ -123,17 +123,17 @@ public abstract class AbstractDatagramAcceptor implements SocketAcceptor,
 	}
 
 	@Override
-	public void accept(final SelectionKey key) throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public void accept(SelectionKey key) throws IOException {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 //		// For an accept to be pending the channel must be a acceptor socket
 //		// channel.
-//		final DatagramChannel datagramChannel = (DatagramChannel) key
+//		DatagramChannel datagramChannel = (DatagramChannel) key
 //				.channel();
 //
 //		// Accept the connection and make it non-blocking
-//		final SocketChannel socketChannel = datagramChannel.accept();
+//		SocketChannel socketChannel = datagramChannel.accept();
 //		socketChannel.socket();
 //		socketChannel.configureBlocking(false);
 //
@@ -146,11 +146,11 @@ public abstract class AbstractDatagramAcceptor implements SocketAcceptor,
 	}
 
 	@Override
-	public void read(final SelectionKey key) throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public void read(SelectionKey key) throws IOException {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		final DatagramChannel datagramChannel = (DatagramChannel) key.channel();
+		DatagramChannel datagramChannel = (DatagramChannel) key.channel();
 
 
 		// Clear out our read buffer so it's ready for new data
@@ -160,7 +160,7 @@ public abstract class AbstractDatagramAcceptor implements SocketAcceptor,
 		int numRead = -1;
 		try {
 			numRead = datagramChannel.read(this.readBuffer);
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			// The remote forcibly closed the connection, cancel
 			// the selection key and close the channel.
 			key.cancel();
@@ -190,15 +190,15 @@ public abstract class AbstractDatagramAcceptor implements SocketAcceptor,
 	}
 
 	@Override
-	public void write(final SelectionKey key) throws IOException {
-		final DatagramChannel datagramChannel = (DatagramChannel) key.channel();
+	public void write(SelectionKey key) throws IOException {
+		DatagramChannel datagramChannel = (DatagramChannel) key.channel();
 
 		synchronized (this.pendingData) {
-			final List<?> queue = this.pendingData.get(datagramChannel);
+			List<?> queue = this.pendingData.get(datagramChannel);
 
 			// Write until there's not more data ...
 			while (!queue.isEmpty()) {
-				final ByteBuffer buf = (ByteBuffer) queue.get(0);
+				ByteBuffer buf = (ByteBuffer) queue.get(0);
 				datagramChannel.write(buf);
 				if (buf.remaining() > 0) {
 					// ... or the socket's buffer fills up
@@ -243,8 +243,8 @@ public abstract class AbstractDatagramAcceptor implements SocketAcceptor,
 	}
 
 	@Override
-	public void execute(final DataEvent dataEvent) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public void execute(DataEvent dataEvent) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		Object object = ResponseHandler.deserializeObject(dataEvent.data);
@@ -259,17 +259,17 @@ public abstract class AbstractDatagramAcceptor implements SocketAcceptor,
 			exit();
 		}
 
-		final String response = "acceptor";
+		String response = "acceptor";
 
 		
-		final ByteBuffer data = ResponseHandler.serializeObject(response);
+		ByteBuffer data = ResponseHandler.serializeObject(response);
 
 		this.send(dataEvent.socket, data);
 
 	}
 	
 	public static void exit() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		// 3초간 대기후 어플리케이션을 종료합니다.
@@ -278,7 +278,7 @@ public abstract class AbstractDatagramAcceptor implements SocketAcceptor,
 			public void run() {
 				try {
 					Thread.sleep(3000);
-				} catch (final InterruptedException ie) {
+				} catch (InterruptedException ie) {
 					// 이 예외는 발생하지 않습니다.
 					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
 							METHOD_NAME, "Thread was interrupted\n"

@@ -26,17 +26,17 @@ import com.abreqadhabra.nflight.dao.util.ResultSetBeanUtil;
 
 public class CommonDAO {
 
-	private static final Class<CommonDAO> THIS_CLAZZ = CommonDAO.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<CommonDAO> THIS_CLAZZ = CommonDAO.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private String databaseType;
 	private Properties dbProperties;
 	private Connection connection;
 
-	private static final String JDBC_DRIVER = ".jdbc.driver";
-	private static final String JDBC_URL = ".jdbc.url";
-	private static final String JDBC_USER = ".jdbc.user";
-	private static final String JDBC_PASSWORD = ".jdbc.password";
+	private static String JDBC_DRIVER = ".jdbc.driver";
+	private static String JDBC_URL = ".jdbc.url";
+	private static String JDBC_USER = ".jdbc.user";
+	private static String JDBC_PASSWORD = ".jdbc.password";
 
 	/**
 	 * Finder methods will pass this value to the JDBC setMaxRows method
@@ -54,7 +54,7 @@ public class CommonDAO {
 	}
 
 	public synchronized Connection getConnection() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		String jdbcDriver = getPropertyByDatabaseType(JDBC_DRIVER);

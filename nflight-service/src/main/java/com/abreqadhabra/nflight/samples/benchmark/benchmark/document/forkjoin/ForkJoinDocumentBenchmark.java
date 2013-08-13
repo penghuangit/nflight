@@ -32,7 +32,7 @@ import com.abreqadhabra.nflight.samples.benchmark.mapreduce.MapReduce;
  */
 public class ForkJoinDocumentBenchmark extends DocumentBenchmarkDef {
 
-    private final MapReduce<UserTagsBundle> mapReduce;
+    private MapReduce<UserTagsBundle> mapReduce;
 
     public ForkJoinDocumentBenchmark(DocumentGenerator documentGenerator, int numThreads) {
 	super(documentGenerator);

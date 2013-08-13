@@ -3,30 +3,30 @@ package com.abreqadhabra.nflight.samples.data;
 
 public class Constants {
 /*
-    public static final class DERBY_DATABASE {
+    public static class DERBY_DATABASE {
 
-	public static final String STRING_FRAMEWORK = "embedded";
-	public static final String STRING_DERBY_EMBEDED_DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
-	public static final String STRING_DERBY_CLIENT_DRIVER_NAME = "org.apache.derby.jdbc.ClientDriver";
+	public static String STRING_FRAMEWORK = "embedded";
+	public static String STRING_DERBY_EMBEDED_DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
+	public static String STRING_DERBY_CLIENT_DRIVER_NAME = "org.apache.derby.jdbc.ClientDriver";
 	// network acceptor control specific
-	public static final int STRING_DERBY_NETWORK_SERVER_PORT = 1621;
+	public static int STRING_DERBY_NETWORK_SERVER_PORT = 1621;
 
 	// Derby Connect URL
-	public static final String STRING_PROTOOL = "jdbc:derby:";
-	public static final String STRING_DB_USER = "freelec";
-	public static final String STRING_DB_PASSWORD = "freelec!@#123";
-	public static final String STRING_DATABASE_NAME = "FREELEC";
-	public static final String STRING_DATASOURCE_NAME = "jdbc/datasource";
+	public static String STRING_PROTOOL = "jdbc:derby:";
+	public static String STRING_DB_USER = "freelec";
+	public static String STRING_DB_PASSWORD = "freelec!@#123";
+	public static String STRING_DATABASE_NAME = "FREELEC";
+	public static String STRING_DATASOURCE_NAME = "jdbc/datasource";
 
     }
     */
 
-    public static final class DERBY_ADDRESS_DAO {
+    public static class DERBY_ADDRESS_DAO {
 
-	public static final String STR_FRAMEWORK = "embedded";
-	public static final String STR_DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
+	public static String STR_FRAMEWORK = "embedded";
+	public static String STR_DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
 
-	public static final String STR_SQL_CREATE_ADDRESS_TABLE = "create table FREELEC.ADDRESS ("
+	public static String STR_SQL_CREATE_ADDRESS_TABLE = "create table FREELEC.ADDRESS ("
 		+ "    ID          INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
 		+ "    LASTNAME    VARCHAR(30), "
 		+ "    FIRSTNAME   VARCHAR(30), "
@@ -40,35 +40,35 @@ public class Constants {
 		+ "    POSTALCODE  VARCHAR(20), "
 		+ "    COUNTRY     VARCHAR(30) " + ")";
 
-	public static final String STR_SQL_SAVE_ADDRESS = "INSERT INTO FREELEC.ADDRESS "
+	public static String STR_SQL_SAVE_ADDRESS = "INSERT INTO FREELEC.ADDRESS "
 		+ "   (LASTNAME, FIRSTNAME, MIDDLENAME, PHONE, EMAIL, ADDRESS1, ADDRESS2, "
 		+ "    CITY, STATE, POSTALCODE, COUNTRY) "
 		+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-	public static final String STR_GET_LIST_ENTRIES = "SELECT ID, LASTNAME, FIRSTNAME, MIDDLENAME FROM FREELEC.ADDRESS "
+	public static String STR_GET_LIST_ENTRIES = "SELECT ID, LASTNAME, FIRSTNAME, MIDDLENAME FROM FREELEC.ADDRESS "
 		+ "ORDER BY LASTNAME ASC";
 
-	public static final String STR_SQL_GET_ADDRESS_LIST = "SELECT ID, LASTNAME, FIRSTNAME, MIDDLENAME, PHONE, EMAIL, ADDRESS1, ADDRESS2, CITY, STATE, POSTALCODE, COUNTRY FROM FREELEC.ADDRESS "
+	public static String STR_SQL_GET_ADDRESS_LIST = "SELECT ID, LASTNAME, FIRSTNAME, MIDDLENAME, PHONE, EMAIL, ADDRESS1, ADDRESS2, CITY, STATE, POSTALCODE, COUNTRY FROM FREELEC.ADDRESS "
 		+ "ORDER BY LASTNAME ASC";
 
-	public static final String STR_GET_ADDRESS = "SELECT * FROM FREELEC.ADDRESS "
+	public static String STR_GET_ADDRESS = "SELECT * FROM FREELEC.ADDRESS "
 		+ "WHERE ID = ?";
 
-	public static final String STR_EDIT_ADDRESS = "UPDATE FREELEC.ADDRESS "
+	public static String STR_EDIT_ADDRESS = "UPDATE FREELEC.ADDRESS "
 		+ "SET LASTNAME = ?, " + "    FIRSTNAME = ?, "
 		+ "    MIDDLENAME = ?, " + "    PHONE = ?, "
 		+ "    EMAIL = ?, " + "    ADDRESS1 = ?, "
 		+ "    ADDRESS2 = ?, " + "    CITY = ?, " + "    STATE = ?, "
 		+ "    POSTALCODE = ?, " + "    COUNTRY = ? " + "WHERE ID = ?";
 
-	public static final String STR_REMOVE_ADDRESS = "DELETE FROM FREELEC.ADDRESS "
+	public static String STR_REMOVE_ADDRESS = "DELETE FROM FREELEC.ADDRESS "
 		+ "WHERE ID = ?";
 
     }
 
-    public static final class DERBY_flight_DAO {
+    public static class DERBY_flight_DAO {
 
-	public static final String STR_SQL_CREATE_FLIGHTS_TABLE = "CREATE TABLE FREELEC.flight ("
+	public static String STR_SQL_CREATE_FLIGHTS_TABLE = "CREATE TABLE FREELEC.flight ("
 		+ "id INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
 		+ "flight_number VARCHAR(10)  NOT NULL, "
 		+ "origin_airport VARCHAR(10)  NOT NULL, "
@@ -80,7 +80,7 @@ public class Constants {
 		+ "available_seats INTEGER " 
 		+ ")";
 
-	public static final String STR_SQL_INSERT_DUMMY_DATA = "INSERT INTO FREELEC.flight ("
+	public static String STR_SQL_INSERT_DUMMY_DATA = "INSERT INTO FREELEC.flight ("
 		+ "flight_number, origin_airport, destination_airport, carrier, price, departure, flight_type, available_seats"
 		+ ") VALUES "
 		+ "('OZ8921', '김포', '제주', '아시아나항공', 400, TIMESTAMP('2012-09-23 12:00:00'), '국내선', 50), "
@@ -111,13 +111,13 @@ public class Constants {
 		+ "('KE1231', '김포', '제주', '대한항공', 101, TIMESTAMP('2012-10-16 14:00:00'), '국내선', 43), "
 		+ "('KE1115', '김포', '김해(부산)', '대한항공', 102, TIMESTAMP('2012-10-17 14:00:00'), '국내선', 95)";
 
-	public static final String STR_SQL_GET_COLUMN_NAMES = "SELECT c.columnnumber, c.columnname FROM sys.systables t, sys.syscolumns c  WHERE t.tableid = c.referenceid AND t.tablename = 'flight' ORDER BY c.columnnumber";
-	public static final String STR_SQL_GET_flight = "SELECT * FROM FREELEC.flight";
+	public static String STR_SQL_GET_COLUMN_NAMES = "SELECT c.columnnumber, c.columnname FROM sys.systables t, sys.syscolumns c  WHERE t.tableid = c.referenceid AND t.tablename = 'flight' ORDER BY c.columnnumber";
+	public static String STR_SQL_GET_flight = "SELECT * FROM FREELEC.flight";
 
-	public static final String STR_SQL_GET_RECORD_COUNT = "SELECT COUNT(*) cnt FROM FREELEC.flight";
+	public static String STR_SQL_GET_RECORD_COUNT = "SELECT COUNT(*) cnt FROM FREELEC.flight";
 
-	public static final String STR_SQL_GET_RECORD_BY_ID = "SELECT * FROM FREELEC.flight WHERE id = ?";
+	public static String STR_SQL_GET_RECORD_BY_ID = "SELECT * FROM FREELEC.flight WHERE id = ?";
 
-	public static final String STR_SQL_FIND_BY_FLIGHT_NUMBER = "SELECT * FROM FREELEC.flight WHERE flight_number = ?";
+	public static String STR_SQL_FIND_BY_FLIGHT_NUMBER = "SELECT * FROM FREELEC.flight WHERE flight_number = ?";
     }
 }

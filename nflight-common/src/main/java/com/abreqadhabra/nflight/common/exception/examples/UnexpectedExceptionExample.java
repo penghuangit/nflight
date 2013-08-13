@@ -9,11 +9,11 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class UnexpectedExceptionExample {
 
-    private static final Class<UnexpectedExceptionExample> THIS_CLAZZ = UnexpectedExceptionExample.class;
-    private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+    private static Class<UnexpectedExceptionExample> THIS_CLAZZ = UnexpectedExceptionExample.class;
+    private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
     public static void main(String[] args) {
-	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+	String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 	try {
 	    // Log object entry
 	    if (LOGGER.isLoggable(Level.FINER)) {

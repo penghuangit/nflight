@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class NetworkChannelDescriptor implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static long serialVersionUID = 1L;
 
 	private Long sessionId;
 	private NetworkChannel channel;

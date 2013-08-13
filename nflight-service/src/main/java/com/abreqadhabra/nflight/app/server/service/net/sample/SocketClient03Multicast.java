@@ -19,29 +19,29 @@ import java.nio.charset.CharsetDecoder;
  */
 public class SocketClient03Multicast {
 
-	public static void main(final String[] args) {
+	public static void main(String[] args) {
 
-		final int DEFAULT_PORT = 5555;
-		final int MAX_PACKET_SIZE = 65507;
-		final String GROUP = "225.4.5.6";
+		int DEFAULT_PORT = 5555;
+		int MAX_PACKET_SIZE = 65507;
+		String GROUP = "225.4.5.6";
 
 		CharBuffer charBuffer = null;
-		final Charset charset = Charset.defaultCharset();
-		final CharsetDecoder decoder = charset.newDecoder();
-		final ByteBuffer datetime = ByteBuffer.allocateDirect(MAX_PACKET_SIZE);
+		Charset charset = Charset.defaultCharset();
+		CharsetDecoder decoder = charset.newDecoder();
+		ByteBuffer datetime = ByteBuffer.allocateDirect(MAX_PACKET_SIZE);
 
 		// create a new channel
 		try (DatagramChannel datagramChannel = DatagramChannel
 				.open(StandardProtocolFamily.INET)) {
 
-			final InetAddress group = InetAddress.getByName(GROUP);
+			InetAddress group = InetAddress.getByName(GROUP);
 			// check if the group socketAddress is multicast
 			if (group.isMulticastAddress()) {
 				// check if the channel was successfully created
 				if (datagramChannel.isOpen()) {
 
 					// get the network interface used for multicast
-					final NetworkInterface networkInterface = NetworkInterface
+					NetworkInterface networkInterface = NetworkInterface
 							.getByName("eth3");
 
 					// set some options
@@ -51,7 +51,7 @@ public class SocketClient03Multicast {
 					datagramChannel.bind(new InetSocketAddress(DEFAULT_PORT));
 					// join the multicast group and get ready to receive
 					// datagrams
-					final MembershipKey key = datagramChannel.join(group,
+					MembershipKey key = datagramChannel.join(group,
 							networkInterface);
 
 					// wait for datagrams
@@ -76,7 +76,7 @@ public class SocketClient03Multicast {
 				System.out.println("This is not  multicast socketAddress!");
 			}
 
-		} catch (final IOException ex) {
+		} catch (IOException ex) {
 			System.err.println(ex);
 		}
 

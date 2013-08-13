@@ -15,10 +15,10 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class AcceptTask extends RecursiveTask<AsynchronousServerSocketChannel> {
-	private static final Class<AcceptTask> THIS_CLAZZ = AcceptTask.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<AcceptTask> THIS_CLAZZ = AcceptTask.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private static final long serialVersionUID = 1L;
+	private static long serialVersionUID = 1L;
 
 	InetSocketAddress socketAddress;
 
@@ -28,7 +28,7 @@ public class AcceptTask extends RecursiveTask<AsynchronousServerSocketChannel> {
 
 	@Override
 	protected AsynchronousServerSocketChannel compute() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		// create asynchronous server-socket channel bound to the default group
@@ -74,7 +74,7 @@ public class AcceptTask extends RecursiveTask<AsynchronousServerSocketChannel> {
 			implements
 				CompletionHandler<AsynchronousSocketChannel, Void> {
 
-		final ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+		ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
 		AsynchronousServerSocketChannel channel;
 
 		public AsyncCompletionHandler(AsynchronousServerSocketChannel channel) {

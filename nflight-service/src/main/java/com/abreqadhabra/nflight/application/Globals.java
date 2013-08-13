@@ -4,17 +4,17 @@ import java.nio.file.Path;
 
 import com.abreqadhabra.nflight.common.util.IOStream;
 
-public final class Globals {
-	private static final Class<Globals> THIS_CLAZZ = Globals.class;
-	public static final String LAUNCHER_CLASS = "com.abreqadhabra.nflight.application.launcher.ServiceLauncher";
-	public static final Path CODE_BASE_PATH = IOStream
+public class Globals {
+	private static Class<Globals> THIS_CLAZZ = Globals.class;
+	public static String LAUNCHER_CLASS = "com.abreqadhabra.nflight.application.launcher.ServiceLauncher";
+	public static Path CODE_BASE_PATH = IOStream
 			.getCodebasePath(THIS_CLAZZ.getName());
-	public static final Path FILE_BOOT_PROPERTIES = CODE_BASE_PATH
+	public static Path FILE_BOOT_PROPERTIES = CODE_BASE_PATH
 			.resolve("com/abreqadhabra/nflight/application/launcher/conf/boot.properties");
-	public static final Path FILE_BOOT_POLICY = CODE_BASE_PATH
+	public static Path FILE_BOOT_POLICY = CODE_BASE_PATH
 			.resolve("com/abreqadhabra/nflight/application/launcher/conf/boot.policy");
-	public static final String BOOT_OPTION_PREFIX = "--";
-	public static final Object BOOT_OPTION_CONF = BOOT_OPTION_PREFIX + "conf";
+	public static String BOOT_OPTION_PREFIX = "--";
+	public static Object BOOT_OPTION_CONF = BOOT_OPTION_PREFIX + "conf";
 	public static String Charset = "UTF-8";
 
 	public static enum SERVICE_NAME {

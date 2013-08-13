@@ -12,20 +12,20 @@ import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class StreamAcceptorImplBAK extends AbstractStreamAcceptorBAK {
-    private final static Class<StreamAcceptorImplBAK> THIS_CLAZZ = StreamAcceptorImplBAK.class;
-    private final static String CLASS_NAME = THIS_CLAZZ.getName();
-    private final static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+    private static Class<StreamAcceptorImplBAK> THIS_CLAZZ = StreamAcceptorImplBAK.class;
+    private static String CLASS_NAME = THIS_CLAZZ.getName();
+    private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-    public StreamAcceptorImplBAK(final InetAddress hostAddress, final int port, final AcceptorWorker worker) throws IOException {
+    public StreamAcceptorImplBAK(InetAddress hostAddress, int port, AcceptorWorker worker) throws IOException {
 	super(hostAddress, port, worker);
     }
 
     @Override
     public void run() {
-	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+	String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 	try {
 	    // 현재 실행 중인 쓰레드명을 변경 설정
-	    final String threadName = Thread.currentThread().getName();
+	    String threadName = Thread.currentThread().getName();
 	    Thread.currentThread().setName(threadName + "-" + THIS_CLAZZ.getSimpleName());
 
 	    // 메시지를 표시하고 연결 유입을 대기
@@ -35,13 +35,13 @@ public class StreamAcceptorImplBAK extends AbstractStreamAcceptorBAK {
 		// 보류 중인 변경 내용들에 대한 확인
 		synchronized (pendingChanges) {
 		    // 보류 변경 내용이 있을 경우를 확인
-		    for (final ChangeRequest change : pendingChanges) {
+		    for (ChangeRequest change : pendingChanges) {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME, change.toString());
 			// OPS의 변경일 경우
 			switch (change.type) {
 			case ChangeRequest.CHANGE_OPS:
 			    // 소켓에서 셀렉터에 해당하는 셀렉션키를 취득
-			    final SelectionKey key = change.socketChannel.keyFor(super.selector);
+			    SelectionKey key = change.socketChannel.keyFor(super.selector);
 			    // 셀렉션키의 OPS를 요청값으로 변경
 			    key.interestOps(change.ops);
 			    LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME, change.toString());
@@ -61,7 +61,7 @@ public class StreamAcceptorImplBAK extends AbstractStreamAcceptorBAK {
 		selector.select();
 
 		// 이벤트를 가진 셀렉터의 키 집합들을 확인
-		for (final SelectionKey key : selector.selectedKeys()) {
+		for (SelectionKey key : selector.selectedKeys()) {
 
 		    if (!key.isValid()) {
 			continue;
@@ -83,17 +83,17 @@ public class StreamAcceptorImplBAK extends AbstractStreamAcceptorBAK {
 	}
     }
 
-    private void processSelectionKey(final SelectionKey key) throws IOException {
-	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+    private void processSelectionKey(SelectionKey key) throws IOException {
+	String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	if (LOGGER.isLoggable(Level.FINER)) {
-	    final int readySet = key.readyOps();
-	    final int interestSet = key.interestOps();
-	    final boolean isValid = key.isValid();
-	    final boolean isAcceptable = key.isAcceptable();
-	    final boolean isConnectable = key.isConnectable();
-	    final boolean isReadable = key.isReadable();
-	    final boolean isWritable = key.isWritable();
+	    int readySet = key.readyOps();
+	    int interestSet = key.interestOps();
+	    boolean isValid = key.isValid();
+	    boolean isAcceptable = key.isAcceptable();
+	    boolean isConnectable = key.isConnectable();
+	    boolean isReadable = key.isReadable();
+	    boolean isWritable = key.isWritable();
 	    if (key.attachment() != null) {
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME, "attachment: " + key.attachment().getClass().getName());
 	    }
@@ -106,8 +106,8 @@ public class StreamAcceptorImplBAK extends AbstractStreamAcceptorBAK {
 	// Get channel with connection request
 	if (key.isConnectable()) {
 	    LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME, "a connection was established with a remote server.");
-	    final SocketChannel sc = (SocketChannel) key.channel();
-	    final boolean success = sc.finishConnect();
+	    SocketChannel sc = (SocketChannel) key.channel();
+	    boolean success = sc.finishConnect();
 	    if (!success) {
 		// An error occurred; handle it
 		// Unregister the channel with this selector

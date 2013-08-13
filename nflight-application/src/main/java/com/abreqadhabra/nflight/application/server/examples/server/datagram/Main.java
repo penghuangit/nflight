@@ -16,9 +16,9 @@ import com.abreqadhabra.nflight.application.common.service.NetworkChannelDescrip
 public class Main {
 
     public static void main(String[] args) {
-        final int LOCAL_PORT = 5555;
-        final String LOCAL_IP = "127.0.0.1";  //modify this to your local IP       
-        final int MAX_PACKET_SIZE = 65507;
+        int LOCAL_PORT = 5555;
+        String LOCAL_IP = "127.0.0.1";  //modify this to your local IP       
+        int MAX_PACKET_SIZE = 65507;
 
         ByteBuffer echoText = ByteBuffer.allocateDirect(MAX_PACKET_SIZE);
 

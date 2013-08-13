@@ -17,37 +17,37 @@ public class AsyncReceiveCompletionHandler
 		implements
 			CompletionHandler<AsynchronousSocketChannel, Void> {
 
-	private static final Class<AsyncReceiveCompletionHandler> THIS_CLAZZ = AsyncReceiveCompletionHandler.class;
-	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
-	private final Configure configure;
-	private final AsynchronousServerSocketChannel asyncServerSocketChannel;
+	private static Class<AsyncReceiveCompletionHandler> THIS_CLAZZ = AsyncReceiveCompletionHandler.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private Configure configure;
+	private AsynchronousServerSocketChannel asyncServerSocketChannel;
 
-	public AsyncReceiveCompletionHandler(final Configure configure,
-			final AsynchronousServerSocketChannel asyncServerSocketChannel) {
+	public AsyncReceiveCompletionHandler(Configure configure,
+			AsynchronousServerSocketChannel asyncServerSocketChannel) {
 		this.configure = configure;
 		this.asyncServerSocketChannel = asyncServerSocketChannel;
 	}
 
 	@Override
-	public void completed(final AsynchronousSocketChannel result,
-			final Void attachment) {
+	public void completed(AsynchronousSocketChannel result,
+			Void attachment) {
 		this.asyncServerSocketChannel.accept(null, this);
 
 		this.receive(result);
 	}
 
-	private void receive(final AsynchronousSocketChannel socket) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	private void receive(AsynchronousSocketChannel socket) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
-			final int capacity = this.configure
+			int capacity = this.configure
 					.getInt(Configure.ASYNC_INCOMING_BUFFER_CAPACITY);
-			final ByteBuffer incomingByteBuffer = NetworkChannelHelper
+			ByteBuffer incomingByteBuffer = NetworkChannelHelper
 					.getByteBuffer(capacity);
 
-			final Integer numRead = socket.read(incomingByteBuffer).get();
+			Integer numRead = socket.read(incomingByteBuffer).get();
 			incomingByteBuffer.flip();
 			if (incomingByteBuffer.hasRemaining()) {
 				incomingByteBuffer.compact();
@@ -70,7 +70,7 @@ public class AsyncReceiveCompletionHandler
 	}
 
 	@Override
-	public void failed(final Throwable exc, final Void attachment) {
+	public void failed(Throwable exc, Void attachment) {
 		this.asyncServerSocketChannel.accept(null, this);
 
 		throw new UnsupportedOperationException("Cannot accept connections!");

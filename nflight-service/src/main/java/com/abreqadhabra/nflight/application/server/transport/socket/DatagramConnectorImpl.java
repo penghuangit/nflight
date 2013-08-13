@@ -13,9 +13,9 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public final class DatagramConnectorImpl implements DatagramConnector {
-	private static final Class<DatagramConnectorImpl> THIS_CLAZZ = DatagramConnectorImpl.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+public class DatagramConnectorImpl implements DatagramConnector {
+	private static Class<DatagramConnectorImpl> THIS_CLAZZ = DatagramConnectorImpl.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	InetSocketAddress remoteSocketAddress;
 
@@ -51,7 +51,7 @@ public final class DatagramConnectorImpl implements DatagramConnector {
 	@Override
 	public DatagramChannel connect()
 			throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		if (remoteSocketAddress == null) {
@@ -80,7 +80,7 @@ public final class DatagramConnectorImpl implements DatagramConnector {
 
 	@Override
 	public DatagramChannel bind() throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		if (remoteSocketAddress == null) {

@@ -48,7 +48,7 @@ class XorServerSocket extends ServerSocket {
      * The pattern used to "encrypt" and "decrypt" each byte sent
      * or received by the socket.
      */
-    private final byte pattern;
+    private byte pattern;
   
     /* 
      * Constructor for class XorServerSocket.

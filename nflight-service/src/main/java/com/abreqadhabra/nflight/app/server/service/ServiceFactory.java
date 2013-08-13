@@ -14,7 +14,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 // Flyweight FlyweightFactory
 public class ServiceFactory {
 
-	private static final Class<ServiceFactory> THIS_CLAZZ = ServiceFactory.class;
+	private static Class<ServiceFactory> THIS_CLAZZ = ServiceFactory.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	/**
@@ -22,7 +22,7 @@ public class ServiceFactory {
 	 * array or list or better a HashMap
 	 * 
 	 */
-	private static final HashMap<String, IService> operationMap = new HashMap<String, IService>();
+	private static HashMap<String, IService> operationMap = new HashMap<String, IService>();
 
 	/**
 	 * getFlyweight
@@ -30,14 +30,14 @@ public class ServiceFactory {
 	 * @return
 	 * @throws Exception
 	 */
-	public static IService getService(final ServiceDescriptor sd)
+	public static IService getService(ServiceDescriptor sd)
 			throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		IService _operation = operationMap.get(sd.getServiceName());
 		if (_operation == null) {
-			final SERVICE_NAME _service = SERVICE_NAME.valueOf(sd
+			SERVICE_NAME _service = SERVICE_NAME.valueOf(sd
 					.getServiceName());
 			switch (_service) {
 			case unicast:

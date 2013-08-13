@@ -13,11 +13,11 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 
 public class LauncherHelper {
-	private static final Class<ServiceLauncher> THIS_CLAZZ = ServiceLauncher.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<ServiceLauncher> THIS_CLAZZ = ServiceLauncher.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	protected static void setSecurityManager() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINEST, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
@@ -34,13 +34,13 @@ public class LauncherHelper {
 	}
 
 	protected static Properties parseCMDLineArgs(String[] cmdLineArgs) throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		Properties argsProps = new Properties();
 		try {
 			// an iterator for the command line tokens
-			final Iterator<String> options = Arrays.asList(cmdLineArgs)
+			Iterator<String> options = Arrays.asList(cmdLineArgs)
 					.iterator();
 
 			// process each command line token
@@ -101,7 +101,7 @@ public class LauncherHelper {
 												+ value);
 								return argsProps;
 							}
-						} catch (final NoSuchElementException nsee) {
+						} catch (NoSuchElementException nsee) {
 							throw new IllegalArgumentException(
 									"No value specified for property --" + key);
 						}
@@ -117,7 +117,7 @@ public class LauncherHelper {
 							"No value specified for property --" + key);
 				}
 			}
-		} catch (final Exception e) {
+		} catch (Exception e) {
 	    throw new LauncherException("Command line arguments format error. ",
 					e);
 		}
@@ -134,7 +134,7 @@ public class LauncherHelper {
 	 * 
 	 * @return the new String.
 	 */
-	private static String stripLeadingHyphens(final String str) {
+	private static String stripLeadingHyphens(String str) {
 		if (str == null) {
 			return null;
 		}
@@ -147,8 +147,8 @@ public class LauncherHelper {
 		return str;
 	}
 	
-	private static boolean checkNotLeadingHyphens(final String key,
-			final String value) {
+	private static boolean checkNotLeadingHyphens(String key,
+			String value) {
 		if (value.startsWith("--")) {
 			throw new IllegalArgumentException("No " + key
 					+ "name specified after \"--" + key + "\" option");

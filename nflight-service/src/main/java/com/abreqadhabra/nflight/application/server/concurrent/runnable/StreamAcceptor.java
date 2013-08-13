@@ -18,7 +18,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 //Strategy ConcreteStrategy
 public class StreamAcceptor implements IService {
 
-	private static final Class<StreamAcceptor> THIS_CLAZZ = StreamAcceptor.class;
+	private static Class<StreamAcceptor> THIS_CLAZZ = StreamAcceptor.class;
 	private static Logger LOGGER = LoggingHelper
 			.getLogger(StreamAcceptor.THIS_CLAZZ);
 
@@ -26,9 +26,9 @@ public class StreamAcceptor implements IService {
 	private AsynchronousServerSocketChannel asyncServerSocketChannel;
 	private boolean isOpen;
 
-	public StreamAcceptor(final String address, final int port)
+	public StreamAcceptor(String address, int port)
 			throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		ExecutorService executorService = Executors
@@ -79,7 +79,7 @@ public class StreamAcceptor implements IService {
 
 	@Override
 	public void startup() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
@@ -87,7 +87,7 @@ public class StreamAcceptor implements IService {
 
 		if (isOpen) {
 
-			final ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+			ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
 
 			asyncServerSocketChannel.accept(null,
 					new StreamAcceptorServerHandler(asyncServerSocketChannel));

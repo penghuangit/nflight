@@ -4,9 +4,9 @@ import com.abreqadhabra.nflight.application.launcher.command.Command;
 import com.abreqadhabra.nflight.application.server.IServer;
 
 public class ShutdownCommand implements Command {
-	private final IServer server;
+	private IServer server;
 
-	public ShutdownCommand(final IServer server) {
+	public ShutdownCommand(IServer server) {
 		this.server = server;
 	}
 

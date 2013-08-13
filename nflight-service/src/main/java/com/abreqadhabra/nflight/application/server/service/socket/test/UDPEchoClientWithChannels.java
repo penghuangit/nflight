@@ -13,9 +13,9 @@ import java.util.Set;
 
 public class UDPEchoClientWithChannels {
 
-	public final static int DEFAULT_PORT = 5555;
+	public static int DEFAULT_PORT = 5555;
 
-	private final static int LIMIT = 100;
+	private static int LIMIT = 100;
 
 	public static void main(String[] args) throws Exception {
 

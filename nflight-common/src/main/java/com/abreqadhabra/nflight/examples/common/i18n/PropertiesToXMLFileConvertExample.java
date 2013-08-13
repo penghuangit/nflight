@@ -9,8 +9,8 @@ import com.abreqadhabra.nflight.common.util.IOStream;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 
 public class PropertiesToXMLFileConvertExample {
-	private static final Class<PropertiesToXMLFileConvertExample> THIS_CLAZZ = PropertiesToXMLFileConvertExample.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<PropertiesToXMLFileConvertExample> THIS_CLAZZ = PropertiesToXMLFileConvertExample.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 
 	public static void main(String[] args) throws IOException {

@@ -33,9 +33,9 @@ import com.abreqadhabra.nflight.samples.benchmark.benchmark.actor.ActorBenchmark
  */
 public class ActorContext {
 
-    private final Dispatcher dispatcher;
+    private Dispatcher dispatcher;
 
-    private final Semaphore countFinishedMessages;
+    private Semaphore countFinishedMessages;
 
     public ActorContext(Dispatcher dispatcher, Actor[] actors,
 	    Map<Integer, List<Message>> initialMessages) {

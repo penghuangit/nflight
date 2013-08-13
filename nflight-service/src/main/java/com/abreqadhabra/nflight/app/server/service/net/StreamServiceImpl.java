@@ -22,7 +22,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 //Strategy ConcreteStrategy
 public class StreamServiceImpl extends AbstractService {
 
-	private static final Class<StreamServiceImpl> THIS_CLAZZ = StreamServiceImpl.class;
+	private static Class<StreamServiceImpl> THIS_CLAZZ = StreamServiceImpl.class;
 	private static Logger LOGGER = LoggingHelper
 			.getLogger(StreamServiceImpl.THIS_CLAZZ);
 
@@ -31,21 +31,21 @@ public class StreamServiceImpl extends AbstractService {
 	private boolean isSocketOpen;
 	private boolean isSelectorOpen;
 
-	private final Map<SocketChannel, List<byte[]>> keepDataTrack = new HashMap<>();
+	private Map<SocketChannel, List<byte[]>> keepDataTrack = new HashMap<>();
 
-	private final ByteBuffer buffer = ByteBuffer.allocate(2 * 1024);
+	private ByteBuffer buffer = ByteBuffer.allocate(2 * 1024);
 
-	public StreamServiceImpl(final ServiceDescriptor sd) throws Exception {
+	public StreamServiceImpl(ServiceDescriptor sd) throws Exception {
 		super(sd);
 	}
 
 	// isAcceptable returned true
-	private void acceptOP(final SelectionKey key, final Selector selector)
+	private void acceptOP(SelectionKey key, Selector selector)
 			throws IOException {
 
-		final ServerSocketChannel serverChannel = (ServerSocketChannel) key
+		ServerSocketChannel serverChannel = (ServerSocketChannel) key
 				.channel();
-		final SocketChannel socketChannel = serverChannel.accept();
+		SocketChannel socketChannel = serverChannel.accept();
 		socketChannel.configureBlocking(false);
 
 		System.out.println("Incoming connection from: "
@@ -59,9 +59,9 @@ public class StreamServiceImpl extends AbstractService {
 		socketChannel.register(selector, SelectionKey.OP_READ);
 	}
 
-	private void doEchoJob(final SelectionKey key, final byte[] data) {
-		final SocketChannel socketChannel = (SocketChannel) key.channel();
-		final List<byte[]> channelData = keepDataTrack.get(socketChannel);
+	private void doEchoJob(SelectionKey key, byte[] data) {
+		SocketChannel socketChannel = (SocketChannel) key.channel();
+		List<byte[]> channelData = keepDataTrack.get(socketChannel);
 		channelData.add(data);
 
 		key.interestOps(SelectionKey.OP_WRITE);
@@ -69,7 +69,7 @@ public class StreamServiceImpl extends AbstractService {
 
 	@Override
 	public void init() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		selector = Selector.open();
@@ -105,16 +105,16 @@ public class StreamServiceImpl extends AbstractService {
 	}
 
 	// isReadable returned true
-	private void readOP(final SelectionKey key) {
+	private void readOP(SelectionKey key) {
 		try {
-			final SocketChannel socketChannel = (SocketChannel) key.channel();
+			SocketChannel socketChannel = (SocketChannel) key.channel();
 
 			buffer.clear();
 
 			int numRead = -1;
 			try {
 				numRead = socketChannel.read(buffer);
-			} catch (final IOException e) {
+			} catch (IOException e) {
 				System.err.println("Cannot read error!");
 			}
 
@@ -127,14 +127,14 @@ public class StreamServiceImpl extends AbstractService {
 				return;
 			}
 
-			final byte[] data = new byte[numRead];
+			byte[] data = new byte[numRead];
 			System.arraycopy(buffer.array(), 0, data, 0, numRead);
 			System.out.println(new String(data, "UTF-8") + " from "
 					+ socketChannel.getRemoteAddress());
 
 			// write back to client
 			this.doEchoJob(key, data);
-		} catch (final IOException ex) {
+		} catch (IOException ex) {
 			System.err.println(ex);
 		}
 	}
@@ -155,10 +155,10 @@ public class StreamServiceImpl extends AbstractService {
 			selector.select();
 
 			// there is something to process on selected keys
-			final Iterator keys = selector.selectedKeys().iterator();
+			Iterator keys = selector.selectedKeys().iterator();
 
 			while (keys.hasNext()) {
-				final SelectionKey key = (SelectionKey) keys.next();
+				SelectionKey key = (SelectionKey) keys.next();
 
 				// prevent the same key from coming up again
 				keys.remove();
@@ -186,15 +186,15 @@ public class StreamServiceImpl extends AbstractService {
 	}
 
 	// isWritable returned true
-	private void writeOP(final SelectionKey key) throws IOException {
+	private void writeOP(SelectionKey key) throws IOException {
 
-		final SocketChannel socketChannel = (SocketChannel) key.channel();
+		SocketChannel socketChannel = (SocketChannel) key.channel();
 
-		final List<byte[]> channelData = keepDataTrack.get(socketChannel);
-		final Iterator<byte[]> its = channelData.iterator();
+		List<byte[]> channelData = keepDataTrack.get(socketChannel);
+		Iterator<byte[]> its = channelData.iterator();
 
 		while (its.hasNext()) {
-			final byte[] it = its.next();
+			byte[] it = its.next();
 			its.remove();
 			socketChannel.write(ByteBuffer.wrap(it));
 		}

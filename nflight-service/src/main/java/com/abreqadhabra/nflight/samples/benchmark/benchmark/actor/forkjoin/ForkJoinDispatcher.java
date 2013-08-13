@@ -31,7 +31,7 @@ import com.abreqadhabra.nflight.samples.benchmark.benchmark.actor.parallel.Abstr
  */
 public class ForkJoinDispatcher extends AbstractDispatcher {
 
-    private final ForkJoinPool pool;
+    private ForkJoinPool pool;
 
     public ForkJoinDispatcher(Actor[] actors, ForkJoinPool pool) {
 	super(actors);

@@ -14,9 +14,9 @@ public abstract class AbstractNetworkServiceImpl
 		implements
 			INetworkService,
 			Runnable {
-	private static final Class<BlockingNetworkServiceImpl> THIS_CLAZZ = BlockingNetworkServiceImpl.class;
-	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<BlockingNetworkServiceImpl> THIS_CLAZZ = BlockingNetworkServiceImpl.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	protected Configure configure;
 	protected ThreadPoolExecutor threadPool;
@@ -24,9 +24,9 @@ public abstract class AbstractNetworkServiceImpl
 	protected InetSocketAddress endpoint;
 	protected boolean isRunning;
 
-	public AbstractNetworkServiceImpl(final Configure configure,
-			final ThreadPoolExecutor threadPool,
-			final InetSocketAddress endpoint) {
+	public AbstractNetworkServiceImpl(Configure configure,
+			ThreadPoolExecutor threadPool,
+			InetSocketAddress endpoint) {
 		this.configure = configure;
 		this.endpoint = endpoint;
 		this.threadPool = threadPool;

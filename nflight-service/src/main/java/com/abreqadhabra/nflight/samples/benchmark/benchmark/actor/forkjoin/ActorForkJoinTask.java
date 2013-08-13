@@ -33,11 +33,11 @@ import com.abreqadhabra.nflight.samples.benchmark.benchmark.actor.parallel.Mailb
  */
 public class ActorForkJoinTask extends RecursiveAction {
 
-    private static final long serialVersionUID = 1L;
+    private static long serialVersionUID = 1L;
 
-    private final AbstractDispatcher dispatcher;
+    private AbstractDispatcher dispatcher;
 
-    private final Mailbox mailbox;
+    private Mailbox mailbox;
 
     public ActorForkJoinTask(AbstractDispatcher dispatcher, Mailbox mailbox) {
 	this.dispatcher = dispatcher;

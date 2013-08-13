@@ -20,8 +20,8 @@ public class Misc {
 	 */
 	public static String getDateTime() {
 
-		final Calendar cal = Calendar.getInstance();
-		final SimpleDateFormat dateType = new SimpleDateFormat(
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat dateType = new SimpleDateFormat(
 				"yyyy-MM-dd HH:mm:ss.SSS");
 
 		return dateType.format(cal.getTime());

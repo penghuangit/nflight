@@ -34,9 +34,9 @@ import com.abreqadhabra.nflight.samples.benchmark.benchmark.actor.ActorBenchmark
  */
 public class SequentialDispatcher implements Dispatcher {
 
-    private final Actor[] actors;
+    private Actor[] actors;
 
-    private final ArrayDeque<Message>[] mailboxes;
+    private ArrayDeque<Message>[] mailboxes;
 
     @SuppressWarnings("unchecked")
     public SequentialDispatcher(Actor[] actors) {

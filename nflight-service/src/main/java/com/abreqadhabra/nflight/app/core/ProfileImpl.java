@@ -16,12 +16,12 @@ import com.abreqadhabra.nflight.common.util.PropertyLoader;
 
 public class ProfileImpl extends Profile {
 
-	private static final Class<ProfileImpl> THIS_CLAZZ = ProfileImpl.class;
-	private static final Logger LOGGER = LoggingHelper
+	private static Class<ProfileImpl> THIS_CLAZZ = ProfileImpl.class;
+	private static Logger LOGGER = LoggingHelper
 			.getLogger(THIS_CLAZZ);
 
-	private static boolean checkNotLeadingHyphens(final String key,
-			final String value) {
+	private static boolean checkNotLeadingHyphens(String key,
+			String value) {
 		if (value.startsWith("--")) {
 			throw new IllegalArgumentException("No " + key
 					+ "name specified after \"--" + key + "\" option");
@@ -30,15 +30,15 @@ public class ProfileImpl extends Profile {
 		}
 	}
 
-	public static Properties parseCMDLineArgs(final String[] args)
+	public static Properties parseCMDLineArgs(String[] args)
 			throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		Properties argsProps = new Properties();
 		try {
 			// an iterator for the command line tokens
-			final Iterator<String> options = Arrays.asList(args).iterator();
+			Iterator<String> options = Arrays.asList(args).iterator();
 
 			// process each command line token
 			while (options.hasNext()) {
@@ -101,7 +101,7 @@ public class ProfileImpl extends Profile {
 												+ value);
 								return argsProps;
 							}
-						} catch (final NoSuchElementException nsee) {
+						} catch (NoSuchElementException nsee) {
 							throw new IllegalArgumentException(
 									"No value specified for property --" + key);
 						}
@@ -117,7 +117,7 @@ public class ProfileImpl extends Profile {
 							"No value specified for property --" + key);
 				}
 			}
-		} catch (final Exception e) {
+		} catch (Exception e) {
 			throw new NFBootException("Command line arguments format error. ",
 					e);
 		}
@@ -125,19 +125,19 @@ public class ProfileImpl extends Profile {
 		return argsProps;
 	}
 
-	public static Properties parseServiceSpecifiers(final Properties props) {
+	public static Properties parseServiceSpecifiers(Properties props) {
 
-		final String service = props.getProperty(Profile.FILE_BOOT_PROPERTIES);
+		String service = props.getProperty(Profile.FILE_BOOT_PROPERTIES);
 
-		final int index1 = service.indexOf(':');
-		final int index2 = service.indexOf(';');
+		int index1 = service.indexOf(':');
+		int index2 = service.indexOf(';');
 
 		// Cursor on the given string: marks the parser position
-		final int cursor = 0;
+		int cursor = 0;
 
 		service.substring(cursor, index1);
-		final String serviceMainClass = service.substring(index1 + 1, index2);
-		final String serviceCommand = service.substring(index2 + 1,
+		String serviceMainClass = service.substring(index1 + 1, index2);
+		String serviceCommand = service.substring(index2 + 1,
 				service.length());
 
 		props.setProperty(
@@ -160,7 +160,7 @@ public class ProfileImpl extends Profile {
 	 * 
 	 * @return the new String.
 	 */
-	private static String stripLeadingHyphens(final String str) {
+	private static String stripLeadingHyphens(String str) {
 		if (str == null) {
 			return null;
 		}
@@ -181,7 +181,7 @@ public class ProfileImpl extends Profile {
 
 	private int servicePort;
 
-	public ProfileImpl(final Properties props) {
+	public ProfileImpl(Properties props) {
 
 		PropertyLoader.setSystemProperties(props);
 
@@ -206,7 +206,7 @@ public class ProfileImpl extends Profile {
 	}
 
 	public boolean getBooleanProperty(
-			final PROPERTIES_BOOT nflightBootOptionServiceName) {
+			PROPERTIES_BOOT nflightBootOptionServiceName) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -227,12 +227,12 @@ public class ProfileImpl extends Profile {
 		return this.servicePort;
 	}
 
-	public void setCodeBase(final String codeBase) {
+	public void setCodeBase(String codeBase) {
 		this.codeBase = codeBase;
 	}
 
 	public void setSecurityManager() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		System.setProperty(
@@ -252,15 +252,15 @@ public class ProfileImpl extends Profile {
 		}
 	}
 
-	public void setServiceCommand(final String serviceCommand) {
+	public void setServiceCommand(String serviceCommand) {
 		this.serviceCommand = serviceCommand;
 	}
 
-	public void setServiceMainClass(final String serviceMainClass) {
+	public void setServiceMainClass(String serviceMainClass) {
 		this.serviceMainClass = serviceMainClass;
 	}
 
-	public void setServicePort(final int servicePort) {
+	public void setServicePort(int servicePort) {
 		this.servicePort = servicePort;
 	}
 

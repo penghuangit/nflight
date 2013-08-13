@@ -4,13 +4,13 @@ import java.nio.file.Path;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
 
-public final class Configuration {
-	public static final String LAUNCHER_CLASS = "com.abreqadhabra.nflight.application.launcher.ServiceLauncher";
+public class Configuration {
+	public static String LAUNCHER_CLASS = "com.abreqadhabra.nflight.application.launcher.ServiceLauncher";
 
-	public static final Path FILE_BOOT_POLICY = Configure.CODE_BASE_PATH
+	public static Path FILE_BOOT_POLICY = Configure.CODE_BASE_PATH
 			.resolve("com/abreqadhabra/nflight/application/launcher/conf/boot.policy");
-	public static final String BOOT_OPTION_PREFIX = "--";
-	public static final Object BOOT_OPTION_CONF = BOOT_OPTION_PREFIX + "conf";
+	public static String BOOT_OPTION_PREFIX = "--";
+	public static Object BOOT_OPTION_CONF = BOOT_OPTION_PREFIX + "conf";
 	public static String Charset = "UTF-8";
 
 	public static enum SERVICE_NAME {

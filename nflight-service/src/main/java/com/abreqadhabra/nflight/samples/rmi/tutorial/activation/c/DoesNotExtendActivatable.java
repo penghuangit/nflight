@@ -47,7 +47,7 @@ public class DoesNotExtendActivatable implements MyRemoteInterface {
     /*
      * The activation ID.
      */
-    private final ActivationID id;
+    private ActivationID id;
     
     /**
      * Constructs a <code>DoesNotExtendActivatable</code> instance with

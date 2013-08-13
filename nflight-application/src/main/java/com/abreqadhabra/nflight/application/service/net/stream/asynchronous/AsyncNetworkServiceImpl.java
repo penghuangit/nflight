@@ -11,9 +11,9 @@ import com.abreqadhabra.nflight.application.service.net.AbstractNetworkServiceIm
 
 public class AsyncNetworkServiceImpl extends AbstractNetworkServiceImpl {
 
-	public AsyncNetworkServiceImpl(final Configure configure,
-			final ThreadPoolExecutor threadPool,
-			final InetSocketAddress endpoint) {
+	public AsyncNetworkServiceImpl(Configure configure,
+			ThreadPoolExecutor threadPool,
+			InetSocketAddress endpoint) {
 		super(configure, threadPool, endpoint);
 		// maximum number of pending connections
 		this.backlog = this.configure.getInt(Configure.ASYNC_BIND_BACKLOG);
@@ -23,10 +23,10 @@ public class AsyncNetworkServiceImpl extends AbstractNetworkServiceImpl {
 	public void run() {
 		try {
 			this.isRunning = true;
-			final int initialSize = this.configure
+			int initialSize = this.configure
 					.getInt(Configure.ASYNC_THREADPOOL_INITIALSIZE);
 
-			final AsynchronousServerSocketChannel asyncServerSocketChannel = this
+			AsynchronousServerSocketChannel asyncServerSocketChannel = this
 					.createServerChannelFactory()
 					.createAsyncServerSocketChannel(this.threadPool,
 							initialSize, this.endpoint, this.backlog);
@@ -40,13 +40,13 @@ public class AsyncNetworkServiceImpl extends AbstractNetworkServiceImpl {
 	}
 
 	private void pendingConnections(
-			final AsynchronousServerSocketChannel asyncServerSocketChannel) {
+			AsynchronousServerSocketChannel asyncServerSocketChannel) {
 		try {
 			asyncServerSocketChannel.accept(null,
 					new AsyncReceiveCompletionHandler(this.configure,
 							asyncServerSocketChannel));
 			System.in.read();
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

@@ -19,7 +19,7 @@ package com.abreqadhabra.nflight.samples.benchmark.mapreduce;
 /**
  * Interface for Map/Reduce output entities. An output entity is produced by the map phase of the
  * job and will be subject to the reduce phase of the job where it will be combined (reduced) with
- * other output entities. Eventually, the final output entity remaining will provide the overall
+ * other output entities. Eventually, the output entity remaining will provide the overall
  * result of the job.
  * 
  * @author patrick.peschlow

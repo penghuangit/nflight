@@ -13,9 +13,9 @@ import java.nio.channels.DatagramChannel;
 public class UDPDiscardServerWithChannels {
 
 
-  public final static int DEFAULT_PORT = 5555;
+  public static int DEFAULT_PORT = 5555;
 
-  public final static int MAX_PACKET_SIZE = 65507;
+  public static int MAX_PACKET_SIZE = 65507;
 
 
   public static void main(String[] args) {

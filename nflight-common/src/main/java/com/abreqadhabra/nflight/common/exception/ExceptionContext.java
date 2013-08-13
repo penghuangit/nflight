@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class ExceptionContext implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static long serialVersionUID = 1L;
     private String label = null;
     private Object value = null;
 

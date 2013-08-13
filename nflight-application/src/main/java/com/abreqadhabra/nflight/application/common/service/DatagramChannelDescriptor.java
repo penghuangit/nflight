@@ -6,7 +6,7 @@ import java.nio.channels.DatagramChannel;
 
 public class DatagramChannelDescriptor extends NetworkChannelDescriptor {
 
-	private static final long serialVersionUID = 1L;
+	private static long serialVersionUID = 1L;
 
 	boolean isConnected;
 

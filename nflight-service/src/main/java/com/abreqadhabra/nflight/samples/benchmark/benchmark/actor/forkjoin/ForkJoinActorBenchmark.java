@@ -36,7 +36,7 @@ import com.abreqadhabra.nflight.samples.benchmark.benchmark.actor.ActorGenerator
  */
 public class ForkJoinActorBenchmark extends ActorBenchmarkDef {
 
-    private final ForkJoinPool forkJoinPool;
+    private ForkJoinPool forkJoinPool;
 
     private ForkJoinDispatcher dispatcher;
 

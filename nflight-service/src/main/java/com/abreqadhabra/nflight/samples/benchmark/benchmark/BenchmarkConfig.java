@@ -24,13 +24,13 @@ package com.abreqadhabra.nflight.samples.benchmark.benchmark;
  */
 public class BenchmarkConfig {
 
-    private static final int DEFAULT_NUM_WARMUP_RUNS = 10;
+    private static int DEFAULT_NUM_WARMUP_RUNS = 10;
 
-    private static final int DEFAULT_NUM_TIMES_RUNS = 100;
+    private static int DEFAULT_NUM_TIMES_RUNS = 100;
 
-    private final int numWarmupRuns;
+    private int numWarmupRuns;
 
-    private final int numTimedRuns;
+    private int numTimedRuns;
 
     public BenchmarkConfig() {
 	this(DEFAULT_NUM_WARMUP_RUNS, DEFAULT_NUM_TIMES_RUNS);

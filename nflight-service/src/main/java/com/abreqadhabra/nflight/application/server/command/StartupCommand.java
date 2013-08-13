@@ -5,9 +5,9 @@ import com.abreqadhabra.nflight.application.server.IServer;
 
 //Command ConcreteCommand 
 public class StartupCommand implements Command {
-	private final IServer server;
+	private IServer server;
 
-	public StartupCommand(final IServer server) {
+	public StartupCommand(IServer server) {
 		this.server = server;
 	}
 

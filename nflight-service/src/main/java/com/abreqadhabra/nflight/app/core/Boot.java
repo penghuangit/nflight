@@ -16,16 +16,16 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 
 public class Boot {
-	private static final Class<Boot> THIS_CLAZZ = Boot.class;
-	private static final Logger LOGGER = LoggingHelper
+	private static Class<Boot> THIS_CLAZZ = Boot.class;
+	private static Logger LOGGER = LoggingHelper
 			.getLogger(THIS_CLAZZ);
 
-	private static void execute(final String className,
-			final Class<?>[] parameterTypes, final Object[] initArgs)
+	private static void execute(String className,
+			Class<?>[] parameterTypes, Object[] initArgs)
 			throws Exception {
-		final ClassLoader classLoader = THIS_CLAZZ.getClassLoader();
+		ClassLoader classLoader = THIS_CLAZZ.getClassLoader();
 		try {
-			final Class<?> clazz = classLoader.loadClass(className);
+			Class<?> clazz = classLoader.loadClass(className);
 			Constructor<?> constructor = null;
 			if (parameterTypes.length != 0) {
 				constructor = clazz.getDeclaredConstructor(parameterTypes);
@@ -60,7 +60,7 @@ public class Boot {
 	 */
 
 	public static void exit() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		// 3초간 대기후 어플리케이션을 종료합니다.
@@ -69,7 +69,7 @@ public class Boot {
 			public void run() {
 				try {
 					Thread.sleep(3000);
-				} catch (final InterruptedException ie) {
+				} catch (InterruptedException ie) {
 					// 이 예외는 발생하지 않습니다.
 					LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
 							METHOD_NAME, "Thread was interrupted\n"
@@ -89,8 +89,8 @@ public class Boot {
 	 * Profile Manager and then starts the bootstrap process for the <B>
 	 * <em>NFlight</em></b> acceptor platform.
 	 */
-	public static void main(final String[] args) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public static void main(String[] args) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		Properties props = null;
@@ -115,16 +115,16 @@ public class Boot {
 								Profile.FILE_BOOT_PROPERTIES);
 			}
 
-			final ProfileImpl p = new ProfileImpl(props);
+			ProfileImpl p = new ProfileImpl(props);
 
 			p.setSecurityManager();
 
-			final String className = p.getServiceMainClass();
-			final ArrayList<Class<?>> parameterTypeList = new ArrayList<Class<?>>();
-			final ArrayList<Object> initArgList = new ArrayList<Object>();
+			String className = p.getServiceMainClass();
+			ArrayList<Class<?>> parameterTypeList = new ArrayList<Class<?>>();
+			ArrayList<Object> initArgList = new ArrayList<Object>();
 
 			if (Profile.BOOT_OPTION_SERVICE_MAINCLASS.contains(className)) {
-				final Profile.BOOT_OPTION_SERVICE_MAINCLASS mainClass = Profile.BOOT_OPTION_SERVICE_MAINCLASS
+				Profile.BOOT_OPTION_SERVICE_MAINCLASS mainClass = Profile.BOOT_OPTION_SERVICE_MAINCLASS
 						.getValue(className);
 				switch (mainClass) {
 				case com_abreqadhabra_nflight_app_server_ServerTest:
@@ -168,8 +168,8 @@ public class Boot {
 			// (properties.getBooleanProperty(BootProfileImpl.DUMP_KEY, false))
 			// { listProperties(System.out); } }
 
-		} catch (final Exception e) {
-			final StackTraceElement[] current = e.getStackTrace();
+		} catch (Exception e) {
+			StackTraceElement[] current = e.getStackTrace();
 			if (e instanceof WrapperException) {
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(),
@@ -191,7 +191,7 @@ public class Boot {
 	 * @param out
 	 *            The print stream to output to.
 	 */
-	public static void printUsage(final PrintStream out) {
+	public static void printUsage(PrintStream out) {
 		// out.println("Usage: java -cp <classpath> com.abreqadhabra.nflight.Boot [--options]");
 		// out.println("");
 		// out.println("where options are:");
@@ -203,7 +203,7 @@ public class Boot {
 		// out.println("  -service <service name>\tThe symbolic platform name specified only for the main container.");
 		// out.println("  -help\t\t\tPrints out usage informations.");
 
-		final StringBuffer sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		sb.append("    Usage: java -jar nflight-<service-name>.jar [optional parameters]");
 		sb.append("");
 		sb.append("    		where options are:");

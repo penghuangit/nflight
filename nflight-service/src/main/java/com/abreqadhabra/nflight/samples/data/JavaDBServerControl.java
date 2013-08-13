@@ -23,11 +23,11 @@ import com.abreqadhabra.nflight.samples.data.exception.NFDataServerException;
 
 public class JavaDBServerControl {
 
-	private static final Class<JavaDBServer> THIS_CLAZZ = JavaDBServer.class;
+	private static Class<JavaDBServer> THIS_CLAZZ = JavaDBServer.class;
 	// 로그 출력을 위한 선언
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public final String STR_SQL_CREATE_FLIGHTS_TABLE = "CREATE TABLE FREELEC.flight ("
+	public String STR_SQL_CREATE_FLIGHTS_TABLE = "CREATE TABLE FREELEC.flight ("
 			+ "id INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
 			+ "flight_number VARCHAR(10)  NOT NULL, "
 			+ "origin_airport VARCHAR(10)  NOT NULL, "
@@ -38,7 +38,7 @@ public class JavaDBServerControl {
 			+ "flight_type VARCHAR(8), "
 			+ "available_seats INTEGER " + ")";
 
-	public final String STR_SQL_INSERT_DUMMY_DATA = "INSERT INTO FREELEC.flight ("
+	public String STR_SQL_INSERT_DUMMY_DATA = "INSERT INTO FREELEC.flight ("
 			+ "flight_number, origin_airport, destination_airport, carrier, price, departure, flight_type, available_seats"
 			+ ") VALUES "
 			+ "('OZ8921', '김포', '제주', '아시아나항공', 400, TIMESTAMP('2012-09-23 12:00:00'), '국내선', 50), "
@@ -69,9 +69,9 @@ public class JavaDBServerControl {
 			+ "('KE1231', '김포', '제주', '대한항공', 101, TIMESTAMP('2012-10-16 14:00:00'), '국내선', 43), "
 			+ "('KE1115', '김포', '김해(부산)', '대한항공', 102, TIMESTAMP('2012-10-17 14:00:00'), '국내선', 95)";
 
-	public static final String STRING_DATABASE_NAME = "FREELEC";
+	public static String STRING_DATABASE_NAME = "FREELEC";
 
-	public static final String STRING_PROTOOL = "jdbc:derby:";
+	public static String STRING_PROTOOL = "jdbc:derby:";
 
 	// Server instance for testing connection
 	NetworkServerControl networkServerControl = null;
@@ -83,7 +83,7 @@ public class JavaDBServerControl {
 	}
 
 	public JavaDBServerControl(int port) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		try {
 			networkServerControl = new NetworkServerControl(
@@ -108,7 +108,7 @@ public class JavaDBServerControl {
 	 * 
 	 */
 	public void start() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		networkServerControl.start(pw);
 
@@ -174,7 +174,7 @@ public class JavaDBServerControl {
 	}
 
 	private boolean isDatabaseExists() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		boolean isExists = false;
 		String dbLocation = getDatabaseLocation();
@@ -192,7 +192,7 @@ public class JavaDBServerControl {
 	}
 
 	private String getDatabaseLocation() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		String dbLocation = System.getProperty("derby.system.home") + "/"
 				+ STRING_DATABASE_NAME;

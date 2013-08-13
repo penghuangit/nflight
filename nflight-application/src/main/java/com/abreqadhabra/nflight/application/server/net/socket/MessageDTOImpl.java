@@ -8,11 +8,11 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.dao.dto.Airline;
 
 public class MessageDTOImpl implements MessageDTO {
-	private transient static final Class<MessageDTOImpl> THIS_CLAZZ = MessageDTOImpl.class;
-	private transient static final Logger LOGGER = LoggingHelper
+	private transient static Class<MessageDTOImpl> THIS_CLAZZ = MessageDTOImpl.class;
+	private transient static Logger LOGGER = LoggingHelper
 			.getLogger(THIS_CLAZZ);
 
-	private static final long serialVersionUID = 1L;
+	private static long serialVersionUID = 1L;
 
 	private String type;
 	private String name;
@@ -22,7 +22,7 @@ public class MessageDTOImpl implements MessageDTO {
 
 	// @Override
 	// public MessageDTO transfer(ByteBuffer buffer) {
-	// final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	// String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 	// .getMethodName();
 	//
 	// MessageDTOImpl msg = new MessageDTOImpl();

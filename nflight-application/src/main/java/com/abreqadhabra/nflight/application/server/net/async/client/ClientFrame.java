@@ -9,10 +9,10 @@ import com.abreqadhabra.nflight.application.server.net.socket.MessageDTOImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ClientFrame extends JFrame {
-	private static final Class<ClientFrame> THIS_CLAZZ = ClientFrame.class;
+	private static Class<ClientFrame> THIS_CLAZZ = ClientFrame.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private static final long serialVersionUID = 1L;
+	private static long serialVersionUID = 1L;
 
 	ClientController controller;
 

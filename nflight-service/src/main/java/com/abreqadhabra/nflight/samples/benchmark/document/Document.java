@@ -27,9 +27,9 @@ import java.util.Set;
  */
 public class Document {
 
-    private final Set<String> users;
+    private Set<String> users;
 
-    private final List<String> tags;
+    private List<String> tags;
 
     public Document(Set<String> users, List<String> tags) {
 	this.users = users;

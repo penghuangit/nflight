@@ -9,8 +9,8 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.IOStream;
 
 public class FileAttributesDemo {
-    private static final Class<FileAttributesDemo> THIS_CLAZZ = FileAttributesDemo.class;
-    private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+    private static Class<FileAttributesDemo> THIS_CLAZZ = FileAttributesDemo.class;
+    private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
     
     public static void main(String[] args) throws Exception {
 

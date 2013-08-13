@@ -15,18 +15,18 @@ import com.abreqadhabra.nflight.common.util.PropertyLoader;
 
 public class BootCommand {
 
-	private static final Class<BootCommand> THIS_CLAZZ = BootCommand.class;
-	private static final Logger LOGGER = LoggingHelper
+	private static Class<BootCommand> THIS_CLAZZ = BootCommand.class;
+	private static Logger LOGGER = LoggingHelper
 			.getLogger(THIS_CLAZZ);
 
 	static {
 		try {
-			final Properties props = PropertyFile.readPropertyFilePath(
+			Properties props = PropertyFile.readPropertyFilePath(
 					THIS_CLAZZ.getName(),
 					Profile.FILE_BOOTCOMMAND_PROPERTIES);
 			PropertyLoader.setSystemProperties(props);
-		} catch (final Exception e) {
-			final StackTraceElement[] current = e.getStackTrace();
+		} catch (Exception e) {
+			StackTraceElement[] current = e.getStackTrace();
 			if (e instanceof WrapperException) {
 				LOGGER.logp(Level.SEVERE,
 						current[0].getClassName(), current[0].getMethodName(),
@@ -47,14 +47,14 @@ public class BootCommand {
 	 * @param args
 	 *            The port of naming service like rmi registry.
 	 */
-	public static void main(final String[] args) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public static void main(String[] args) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(),
 				METHOD_NAME, "args: " + Arrays.toString(args));
 
-		final BootCommand bootCommand = new BootCommand();
+		BootCommand bootCommand = new BootCommand();
 		String command = null;
 
 		if (args.length == 1) {
@@ -72,8 +72,8 @@ public class BootCommand {
 				METHOD_NAME, "command: " + command);
 		try {
 			bootCommand.execute(command);
-		} catch (final Exception e) {
-			final StackTraceElement[] current = e.getStackTrace();
+		} catch (Exception e) {
+			StackTraceElement[] current = e.getStackTrace();
 			if (e instanceof WrapperException) {
 				LOGGER.logp(Level.SEVERE,
 						current[0].getClassName(), current[0].getMethodName(),
@@ -102,20 +102,20 @@ public class BootCommand {
 	 * @throws Exception
 	 * @since STEP1
 	 */
-	public void execute(final String command) throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public void execute(String command) throws Exception {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(),
 				METHOD_NAME, "command: " + command);
 
 		if (command != null) {
 			try {
-				final Runtime rt = Runtime.getRuntime();
-				final Process proc = rt.exec(command);
+				Runtime rt = Runtime.getRuntime();
+				Process proc = rt.exec(command);
 				Thread.sleep(Profile.BOOTCOMMAND_SLEEPTIME_1);
-				final String errorString = IOStream.convertStreamToString(proc
+				String errorString = IOStream.convertStreamToString(proc
 						.getErrorStream());
-				final String outputString = IOStream.convertStreamToString(proc
+				String outputString = IOStream.convertStreamToString(proc
 						.getInputStream());
 				// any error message?
 				if (errorString.length() != 0) {
@@ -132,7 +132,7 @@ public class BootCommand {
 									+ outputString);
 				}
 				// any error???
-				final int exitValue = proc.waitFor();
+				int exitValue = proc.waitFor();
 				if (exitValue == 0) {
 					LOGGER.logp(Level.FINER,
 							THIS_CLAZZ.getName(), METHOD_NAME,
@@ -142,12 +142,12 @@ public class BootCommand {
 							+ ": subprocess abnormal termination :" + exitValue);
 				}
 
-			} catch (final InterruptedException e) {
-				final StackTraceElement[] current = e.getStackTrace();
+			} catch (InterruptedException e) {
+				StackTraceElement[] current = e.getStackTrace();
 				LOGGER.logp(Level.SEVERE,
 						current[0].getClassName(), current[0].getMethodName(),
 						"이 오류는 발생하지 않습니다.");
-			} catch (final IOException ioe) {
+			} catch (IOException ioe) {
 				throw new NFBootCommandException(
 						"Can't boot background process.Command: " + command,
 						ioe);

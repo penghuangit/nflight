@@ -8,19 +8,19 @@ import com.abreqadhabra.nflight.common.util.PropertyFile;
 import com.abreqadhabra.nflight.dao.DAOFactory;
 
 public abstract class DatabaseFactory {
-	private static final Class<DatabaseFactory> THIS_CLAZZ = DatabaseFactory.class;
+	private static Class<DatabaseFactory> THIS_CLAZZ = DatabaseFactory.class;
 	// 로그 출력을 위한 선언
 	static Logger logger = Logger.getLogger(DatabaseFactory.class
 			.getCanonicalName());
 
 	// List of DAO types supported by the factory
 
-	private static final String DATABASE_TYPE = "database.type";
-	private static final String DATABASE_MODE = "database.mode";
-	private static final String DB_PROPERTY_FILE_NAME = "com/abreqadhabra/nflight/dao/resources/config/db.properties";
+	private static String DATABASE_TYPE = "database.type";
+	private static String DATABASE_MODE = "database.mode";
+	private static String DB_PROPERTY_FILE_NAME = "com/abreqadhabra/nflight/dao/resources/config/db.properties";
 	private static  Properties  DB_PROPERTIES;
-	public static final String DATABASE_TYPE_DERBY = "derby";
-	public static final String DATABASE_TYPE_ORACLE = "oracle";
+	public static String DATABASE_TYPE_DERBY = "derby";
+	public static String DATABASE_TYPE_ORACLE = "oracle";
 
 	/**
 	 * This method instantiates the DAO class that is used in this applications

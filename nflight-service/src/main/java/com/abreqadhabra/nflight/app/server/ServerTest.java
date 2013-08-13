@@ -19,12 +19,12 @@ import com.abreqadhabra.nflight.common.util.IOStream;
 //Strategy Context
 public class ServerTest {
 
-	private static final Class<ServerTest> THIS_CLAZZ = ServerTest.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<ServerTest> THIS_CLAZZ = ServerTest.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public static void main(final String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 
-		final ServerTest test = new ServerTest();
+		ServerTest test = new ServerTest();
 		test.doTest();
 
 	}
@@ -41,7 +41,7 @@ public class ServerTest {
 
 		String serviceName = "unicast";
 
-		final ServiceDescriptor sd = new ServiceDescriptor();
+		ServiceDescriptor sd = new ServiceDescriptor();
 		sd.setServiceName(serviceName);
 		sd.setHost(host);
 		sd.setAddress(address);
@@ -77,26 +77,26 @@ public class ServerTest {
 
 	}
 
-	public IServer getServer(final ServiceDescriptor sd) throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public IServer getServer(ServiceDescriptor sd) throws Exception {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		
-		final IServer _server = new ServerImpl(sd.getServiceName());
+		IServer _server = new ServerImpl(sd.getServiceName());
 		
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 				"service name : " + sd.getServiceName());
-		final IService _service = ServiceFactory.getService(sd);
+		IService _service = ServiceFactory.getService(sd);
 		_server.setService(_service);
 
 		return _server;
 
 	}
 
-	private void testService(final ServiceDescriptor sd) throws Exception {
+	private void testService(ServiceDescriptor sd) throws Exception {
 		Command _cmd = null;
-		final Invoker _invoker = new Invoker();
+		Invoker _invoker = new Invoker();
 
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
@@ -113,7 +113,7 @@ public class ServerTest {
 //			_invoker.execute(_cmd);
 //			_cmd = new ShutdownServerCommand(_server);
 //			_invoker.execute(_cmd);
-		} catch (final Exception e) {
+		} catch (Exception e) {
 	//		_cmd = new ShutdownServerCommand(_server);
 			_invoker.execute(_cmd);
 			e.printStackTrace();
@@ -121,28 +121,28 @@ public class ServerTest {
 
 		if (sd.getServiceName().equals("unicast")
 				| sd.getServiceName().equals("activatable")) {
-			final Registry registry = RMIServiceHelper.getRegistry(host, port);
+			Registry registry = RMIServiceHelper.getRegistry(host, port);
 
-			final String name1 = "rmi://" + host + ":" + port + "/unicast";
-			final String name2 = "rmi://" + host + ":" + port + "/activatable";
+			String name1 = "rmi://" + host + ":" + port + "/unicast";
+			String name2 = "rmi://" + host + ":" + port + "/activatable";
 			String response = null;
 
 			try {
-				final IService stub1 = (IService) registry.lookup(name1);
+				IService stub1 = (IService) registry.lookup(name1);
 				// registry.lookup("rmi://192.168.0.100:9999/NFlight/UnicastRemoteObjectNFlightServiceImpl");
 				response = stub1.sayHello();
 				System.out.println(stub1 + "\t:\t" + response);
-			} catch (final Exception e) {
+			} catch (Exception e) {
 				System.out.println(WrapperException.getStackTrace(e));
 			}
 			try {
 
-				final IService stub2 = (IService) registry.lookup(name2);
+				IService stub2 = (IService) registry.lookup(name2);
 
 				response = stub2.sayHello();
 				System.out.println(stub2 + "\t:\t" + response);
 
-			} catch (final Exception e) {
+			} catch (Exception e) {
 				System.out.println(WrapperException.getStackTrace(e));
 			}
 		}

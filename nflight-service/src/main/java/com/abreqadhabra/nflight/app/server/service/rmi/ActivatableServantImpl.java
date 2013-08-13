@@ -29,7 +29,7 @@ import com.abreqadhabra.nflight.common.util.PropertyLoader;
 //Strategy ConcreteStrategy
 public class ActivatableServantImpl extends AbstractServant {
 
-	private static final Class<ActivatableServantImpl> THIS_CLAZZ = ActivatableServantImpl.class;
+	private static Class<ActivatableServantImpl> THIS_CLAZZ = ActivatableServantImpl.class;
 	private static Logger LOGGER = LoggingHelper
 			.getLogger(THIS_CLAZZ);
 
@@ -37,14 +37,14 @@ public class ActivatableServantImpl extends AbstractServant {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ActivatableServantImpl(final ActivationID id,
-			final MarshalledObject<?> data) throws RemoteException {
+	public ActivatableServantImpl(ActivationID id,
+			MarshalledObject<?> data) throws RemoteException {
 
 		// Register the object with the activation system
 		// then export it on an anonymous port
 		//
 		Activatable.exportObject(this, id, 0);
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(
@@ -57,14 +57,14 @@ public class ActivatableServantImpl extends AbstractServant {
 	}
 
 	// public ActivatableRMIServiceImpl(){}
-	public ActivatableServantImpl(final ServiceDescriptor _desc)
+	public ActivatableServantImpl(ServiceDescriptor _desc)
 			throws Exception {
 		super(_desc);
 	}
 
 	@Override
 	public void startup() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
@@ -76,11 +76,11 @@ public class ActivatableServantImpl extends AbstractServant {
 			throw new NFRemoteException(this.boundName
 					+ "가 레지스트리에 이미 등록되어 있습니다.");
 		} else {
-			final Properties _props = PropertyFile.readPropertyFilePath(
+			Properties _props = PropertyFile.readPropertyFilePath(
 					THIS_CLAZZ.getName(),
 					Profile.FILE_ACTIVATION_PROPERTIES);
 
-			final String codeBase = super.desc.getCodeBase();
+			String codeBase = super.desc.getCodeBase();
 
 			_props.put(
 					Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_IMPL_CODEBASE
@@ -89,7 +89,7 @@ public class ActivatableServantImpl extends AbstractServant {
 
 			PropertyLoader.setSystemProperties(_props);
 
-			final String securityPolicy = codeBase
+			String securityPolicy = codeBase
 					+ Profile.FILE_ACTIVATION_POLICY;
 
 			System.setProperty(
@@ -103,13 +103,13 @@ public class ActivatableServantImpl extends AbstractServant {
 			String implCodebase = System
 					.getProperty(Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_IMPL_CODEBASE
 							.toString());
-			final String filename = implCodebase
+			String filename = implCodebase
 					+ System.getProperty(Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_FILE
 							.toString());
-			final String groupPolicy = implCodebase
+			String groupPolicy = implCodebase
 					+ System.getProperty(Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_POLICY
 							.toString());
-			final String implClass = System
+			String implClass = System
 					.getProperty(Profile.PROPERTIES_ACTIVATION.NFLIGHT_SERVANT_ACTIVATION_IMPL_CLASS
 							.toString());
 
@@ -136,22 +136,22 @@ public class ActivatableServantImpl extends AbstractServant {
 			// implClass
 			// ="com.abreqadhabra.nflight.app.server.service.rmi.ActivatableRMIService";
 
-			final Properties props = new Properties();
+			Properties props = new Properties();
 			props.put("java.security.policy", groupPolicy);
 			// props.put("java.class.path",System.getProperty("java.class.path"));
 			// props.put("nflight.servant.activation.impl.codebase",
 			// implCodebase);
 
-			final ActivationGroupDesc groupDesc = new ActivationGroupDesc(
+			ActivationGroupDesc groupDesc = new ActivationGroupDesc(
 					props, null);
 
 			LOGGER.logp(Level.FINER,
 					THIS_CLAZZ.getName(), METHOD_NAME,
 					"groupDesc : " + groupDesc);
 
-			final ActivationSystem system = ActivationGroup.getSystem();
+			ActivationSystem system = ActivationGroup.getSystem();
 
-			final ActivationGroupID groupID = system.registerGroup(groupDesc);
+			ActivationGroupID groupID = system.registerGroup(groupDesc);
 
 			LOGGER.logp(Level.FINER,
 					THIS_CLAZZ.getName(), METHOD_NAME,
@@ -164,7 +164,7 @@ public class ActivatableServantImpl extends AbstractServant {
 				data = new MarshalledObject(filename);
 			}
 
-			final ActivationDesc desc = new ActivationDesc(groupID, implClass,
+			ActivationDesc desc = new ActivationDesc(groupID, implClass,
 					implCodebase, data);
 
 			// desc = new ActivationDesc
@@ -179,15 +179,15 @@ public class ActivatableServantImpl extends AbstractServant {
 							+ "\nimplCodebase : " + implCodebase + "\ndata : "
 							+ data);
 
-			final Remote stub = Activatable.register(desc);
+			Remote stub = Activatable.register(desc);
 			LOGGER.logp(Level.FINER,
 					THIS_CLAZZ.getName(), METHOD_NAME,
 					"Activation descriptor registered : " + stub);
 
-			final String host = InetAddress.getLocalHost().getHostAddress();
-			final int port = 9999;
+			String host = InetAddress.getLocalHost().getHostAddress();
+			int port = 9999;
 
-			final Registry registry = RMIServiceHelper.getRegistry(host, port);
+			Registry registry = RMIServiceHelper.getRegistry(host, port);
 			registry.rebind(RMIServiceHelper.getBoundName(super.host,
 					super.port, "activatable"), stub);
 			LOGGER.logp(

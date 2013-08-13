@@ -14,7 +14,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 //Strategy ConcreteStrategy  / Flyweight ConcreteFlyweight
 public abstract class AbstractServant implements IService {
 
-	private static final Class<AbstractServant> THIS_CLAZZ = AbstractServant.class;
+	private static Class<AbstractServant> THIS_CLAZZ = AbstractServant.class;
 	private static Logger LOGGER = LoggingHelper
 			.getLogger(THIS_CLAZZ);
 
@@ -28,14 +28,14 @@ public abstract class AbstractServant implements IService {
 	public AbstractServant() {
 	}
 
-	public AbstractServant(final ServiceDescriptor _desc) throws Exception {
+	public AbstractServant(ServiceDescriptor _desc) throws Exception {
 		this.desc = _desc;
 		this.init();
 	}
 
 	@Override
 	public void init() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER,
@@ -64,7 +64,7 @@ public abstract class AbstractServant implements IService {
 
 	@Override
 	public void shutdown() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER,
@@ -75,7 +75,7 @@ public abstract class AbstractServant implements IService {
 		if (RMIServiceHelper.isActivatedRegistry(this.registry, this.boundName)) {
 			try {
 				RMIServiceHelper.unbind(this.registry, this.boundName);
-			} catch (final Exception e) {
+			} catch (Exception e) {
 				throw e;
 			}
 		} else {
@@ -86,7 +86,7 @@ public abstract class AbstractServant implements IService {
 
 	@Override
 	public boolean status() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER,
@@ -96,12 +96,12 @@ public abstract class AbstractServant implements IService {
 
 		boolean _isRunning = false;
 		if (RMIServiceHelper.isActivatedRegistry(this.registry, this.boundName)) {
-			final IService service = (IService) RMIServiceHelper.lookup(
+			IService service = (IService) RMIServiceHelper.lookup(
 					this.registry, this.boundName);
 			if (service != null) {
 				try {
 					_isRunning = service.isRunning();
-				} catch (final RemoteException re) {
+				} catch (RemoteException re) {
 					throw new NFRemoteException(re.getLocalizedMessage(), re)
 							.addContextValue("service", service)
 							.addContextValue("boundName", this.boundName)

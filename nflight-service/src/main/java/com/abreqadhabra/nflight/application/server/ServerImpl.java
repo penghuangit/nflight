@@ -23,7 +23,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 //Strategy Context
 public class ServerImpl implements IServer {
-	private static final Class<ServerImpl> THIS_CLAZZ = ServerImpl.class;
+	private static Class<ServerImpl> THIS_CLAZZ = ServerImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 	private Thread serviceThread;
 	private String address;
@@ -31,8 +31,8 @@ public class ServerImpl implements IServer {
 	IService service;
 	private ThreadPoolExecutor executor;
 
-	public ServerImpl(final Profile profile) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public ServerImpl(Profile profile) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
@@ -41,8 +41,8 @@ public class ServerImpl implements IServer {
 		this.init();
 	}
 
-	public ServerImpl(final String address, final int port) throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public ServerImpl(String address, int port) throws Exception {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		this.address = address;
 		this.port = port;
@@ -59,13 +59,13 @@ public class ServerImpl implements IServer {
 		// ServiceExecutorThread threadExcutor = new ServiceExecutorThread();
 		// threadExcutor.execute();
 
-		final ServiceExecutorForkJoin forkJoinExcutor = new ServiceExecutorForkJoin();
+		ServiceExecutorForkJoin forkJoinExcutor = new ServiceExecutorForkJoin();
 		forkJoinExcutor.execute();
 	}
 
 	@Override
 	public void shutdown() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		DatagramConnectorImpl connector = new DatagramConnectorImpl();
@@ -82,19 +82,19 @@ public class ServerImpl implements IServer {
 	@Override
 	public void startup() throws Exception {
 
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		// new StreamAcceptor(socketAddress, port);
 
-		final BlockingQueue<Runnable> worksQueue = new ArrayBlockingQueue<Runnable>(
+		BlockingQueue<Runnable> worksQueue = new ArrayBlockingQueue<Runnable>(
 				2);
-		final RejectedExecutionHandler executionHandler = new RejectedExecutionHandelerImpl();
+		RejectedExecutionHandler executionHandler = new RejectedExecutionHandelerImpl();
 		executor = new ThreadPoolExecutor(12, 24, 10, TimeUnit.SECONDS,
 				worksQueue, executionHandler);
 		executor.allowCoreThreadTimeOut(true);
 
-		final List<Runnable> taskGroup = new ArrayList<Runnable>();
+		List<Runnable> taskGroup = new ArrayList<Runnable>();
 
 		service = (IService) new DatagramAcceptor(address, port);
 

@@ -47,7 +47,7 @@ class XorInputStream extends FilterInputStream {
    /*
     * The byte being used to "decrypt" each byte of data.
     */
-    private final byte pattern;
+    private byte pattern;
   
     /*
      * Constructs an input stream that uses the specified pattern

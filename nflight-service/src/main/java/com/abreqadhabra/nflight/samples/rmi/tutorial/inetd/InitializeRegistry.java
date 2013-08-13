@@ -60,7 +60,7 @@ import java.rmi.server.RMIServerSocketFactory;
  **/
 public class InitializeRegistry {
 
-    private static final Object lock = new Object();
+    private static Object lock = new Object();
     private static boolean serviceAvailable = false;
     private static boolean initialized = false;
 
@@ -204,7 +204,7 @@ public class InitializeRegistry {
     private static class RegistryServerSocketFactory
 	implements RMIServerSocketFactory
     {
-	private final ServerSocket serverSocket;
+	private ServerSocket serverSocket;
 
 	/**
 	 * Constructs a 'RegistryServerSocketFactory' with the specified
@@ -235,7 +235,7 @@ public class InitializeRegistry {
      **/
     private static class DelayedAcceptServerSocket extends ServerSocket {
 
-	private final ServerSocket serverSocket;
+	private ServerSocket serverSocket;
 
 	/**
 	 * Constructs a 'DelayedAcceptServerSocket' with the specified

@@ -15,9 +15,9 @@ import com.abreqadhabra.nflight.samples.benchmark.benchmark.actor.parallel.Mailb
  */
 public class ActorRunnable implements Runnable {
 
-    private final AbstractDispatcher dispatcher;
+    private AbstractDispatcher dispatcher;
 
-    private final Mailbox mailbox;
+    private Mailbox mailbox;
 
     public ActorRunnable(AbstractDispatcher dispatcher, Mailbox mailbox) {
 	this.dispatcher = dispatcher;

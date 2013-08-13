@@ -30,17 +30,17 @@ import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class NetworkServiceHelper {
-	private static final Class<NetworkServiceHelper> THIS_CLAZZ = NetworkServiceHelper.class;
-	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<NetworkServiceHelper> THIS_CLAZZ = NetworkServiceHelper.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private static final Configure configure = new ConfigureImpl(
+	private static Configure configure = new ConfigureImpl(
 			Configure.FILE_CHANNEL_OPTION_PROPERTIES);
 
 	public static void setMulticastChannelOption(
-			final DatagramChannel socketChannel,
-			final String networkInterfaceName, final STREAM_SERVICE_TYPE type) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+			DatagramChannel socketChannel,
+			String networkInterfaceName, STREAM_SERVICE_TYPE type) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		configure.set(Configure.CHANNEL_OPTION_IP_MULTICAST_IF,
@@ -59,36 +59,36 @@ public class NetworkServiceHelper {
 
 	}
 
-	public static void setChannelOption(final NetworkChannel socketChannel,
-			final STREAM_SERVICE_TYPE type) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public static void setChannelOption(NetworkChannel socketChannel,
+			STREAM_SERVICE_TYPE type) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
-			final Set<SocketOption<?>> options = socketChannel
+			Set<SocketOption<?>> options = socketChannel
 					.supportedOptions();
 
 			LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME, "소켓 채널의 지원 옵션:  "
 					+ options);
 
-			final StringBuffer sb = new StringBuffer(socketChannel + ": ");
+			StringBuffer sb = new StringBuffer(socketChannel + ": ");
 
-			for (final SocketOption<?> option : options) {
-				final String optionName = option.name();
+			for (SocketOption<?> option : options) {
+				String optionName = option.name();
 
-				final String optionKey = Configure.PREFIX_KEY_PROPERTIES_CHANNEL_OPTION
+				String optionKey = Configure.PREFIX_KEY_PROPERTIES_CHANNEL_OPTION
 						+ type.toString() + "." + optionName.toLowerCase();
 
 				LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME,
 						"optionKey:  " + optionKey);
 
-				final String optionValue = configure.get(optionKey);
+				String optionValue = configure.get(optionKey);
 				if ((optionValue == null) || (optionValue.length() == 0)) {
 					continue;
 				}
 				if (option.type() == Integer.class) {
 					@SuppressWarnings("unchecked")
-					final SocketOption<Integer> stdSocketOption = (SocketOption<Integer>) option;
+					SocketOption<Integer> stdSocketOption = (SocketOption<Integer>) option;
 					socketChannel.setOption(stdSocketOption,
 							Integer.parseInt(optionValue));
 					sb.append(optionName
@@ -97,7 +97,7 @@ public class NetworkServiceHelper {
 									.toString());
 				} else if (option.type() == Boolean.class) {
 					@SuppressWarnings("unchecked")
-					final SocketOption<Boolean> stdSocketOption = (SocketOption<Boolean>) option;
+					SocketOption<Boolean> stdSocketOption = (SocketOption<Boolean>) option;
 					socketChannel.setOption(stdSocketOption,
 							Boolean.parseBoolean(optionValue));
 					sb.append(optionName
@@ -106,12 +106,12 @@ public class NetworkServiceHelper {
 									.toString());
 				} else if (option.type() == NetworkInterface.class) {
 					@SuppressWarnings("unchecked")
-					final SocketOption<NetworkInterface> stdSocketOption = (SocketOption<NetworkInterface>) option;
+					SocketOption<NetworkInterface> stdSocketOption = (SocketOption<NetworkInterface>) option;
 
 					// join multicast group on this interface, and also use this
 					// interface for outgoing multicast datagrams
 					// get the network interface used for multicast
-					final NetworkInterface networkInterface = NetworkInterface
+					NetworkInterface networkInterface = NetworkInterface
 							.getByName(optionValue);
 
 					socketChannel.setOption(stdSocketOption, networkInterface);
@@ -130,13 +130,13 @@ public class NetworkServiceHelper {
 
 			LOGGER.logp(Level.CONFIG, CLAZZ_NAME, METHOD_NAME, sb.toString());
 
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static ByteBuffer getByteBuffer(final int capacity) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public static ByteBuffer getByteBuffer(int capacity) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
@@ -145,9 +145,9 @@ public class NetworkServiceHelper {
 		return ByteBuffer.allocate(capacity);
 	}
 
-	public static ByteBuffer serializeObject(final Object object) {
+	public static ByteBuffer serializeObject(Object object) {
 		byte[] bytes = null;
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 				ObjectOutputStream objectOutputStream = new ObjectOutputStream(
@@ -161,17 +161,17 @@ public class NetworkServiceHelper {
 					"serializeObject: " + object.getClass().getName() + " ["
 							+ bytes.length + " bytes] " + object);
 
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return ByteBuffer.wrap(bytes);
 	}
-	public static Object deserializeObject(final ByteBuffer byteBuffer) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public static Object deserializeObject(ByteBuffer byteBuffer) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		Object readObject = null;
-		final byte[] bytes = byteBuffer.array();
+		byte[] bytes = byteBuffer.array();
 
 		try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 				ObjectInputStream ois = new ObjectInputStream(bais);) {
@@ -192,23 +192,23 @@ public class NetworkServiceHelper {
 		return readObject;
 	}
 
-	public static String getNetworkInterfaceName(final String localAddress)
+	public static String getNetworkInterfaceName(String localAddress)
 			throws SocketException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		String networkInterfaceName = null;
-		final StringBuffer sb = new StringBuffer();
-		final Enumeration<NetworkInterface> nets = NetworkInterface
+		StringBuffer sb = new StringBuffer();
+		Enumeration<NetworkInterface> nets = NetworkInterface
 				.getNetworkInterfaces();
-		for (final NetworkInterface netint : Collections.list(nets)) {
-			final Enumeration<InetAddress> inetAddresses = netint
+		for (NetworkInterface netint : Collections.list(nets)) {
+			Enumeration<InetAddress> inetAddresses = netint
 					.getInetAddresses();
 			if (LOGGER.isLoggable(Level.FINER)) {
 				sb.append("\n" + netint.getName() + ": "
 						+ netint.getDisplayName());
 			}
-			for (final InetAddress inetAddress : Collections
+			for (InetAddress inetAddress : Collections
 					.list(inetAddresses)) {
 				if (LOGGER.isLoggable(Level.FINER)) {
 					sb.append("\n\tInetAddress=" + inetAddress.toString());
@@ -229,7 +229,7 @@ public class NetworkServiceHelper {
 		return networkInterfaceName;
 	}
 
-	public static String getReadySetString(final SelectionKey selectionKey) {
+	public static String getReadySetString(SelectionKey selectionKey) {
 		return " [ selectionKey: " + selectionKey.hashCode()
 				+ " interest ops: {"
 				+ getOperationSetString(selectionKey.interestOps())
@@ -237,8 +237,8 @@ public class NetworkServiceHelper {
 				+ getOperationSetString(selectionKey.readyOps()) + " } ]";
 	}
 
-	private static String getOperationSetString(final int ops) {
-		final StringBuffer sb = new StringBuffer();
+	private static String getOperationSetString(int ops) {
+		StringBuffer sb = new StringBuffer();
 		sb.append(((ops & SelectionKey.OP_ACCEPT) != 0 ? " OP_ACCEPT" : ""));
 		sb.append(((ops & SelectionKey.OP_CONNECT) != 0 ? " OP_CONNECT" : ""));
 		sb.append(((ops & SelectionKey.OP_READ) != 0 ? " OP_READ" : ""));
@@ -247,24 +247,24 @@ public class NetworkServiceHelper {
 		return sb.toString();
 	}
 
-	public static boolean isAvailableStreamPort(final int seed) {
+	public static boolean isAvailableStreamPort(int seed) {
 		try {
-			final ServerSocket sock = ServerSocketFactory.getDefault()
+			ServerSocket sock = ServerSocketFactory.getDefault()
 					.createServerSocket(seed);
 			sock.close();
 			return true;
-		} catch (final Exception e) {
+		} catch (Exception e) {
 		}
 		return false;
 	}
 
-	public static boolean isAvailableDatagramPort(final int seed) {
+	public static boolean isAvailableDatagramPort(int seed) {
 		try {
-			final DatagramSocket sock = new DatagramSocket(seed);
+			DatagramSocket sock = new DatagramSocket(seed);
 			sock.close();
 			Thread.sleep(100);
 			return true;
-		} catch (final Exception e) {
+		} catch (Exception e) {
 		}
 		return false;
 	}
@@ -277,27 +277,27 @@ public class NetworkServiceHelper {
 		return findAvailableDatagramPort(5678);
 	}
 
-	public static int findAvailableStreamPort(final int seed) {
+	public static int findAvailableStreamPort(int seed) {
 		for (int i = seed; i < (seed + 200); i++) {
 			try {
-				final ServerSocket sock = ServerSocketFactory.getDefault()
+				ServerSocket sock = ServerSocketFactory.getDefault()
 						.createServerSocket(i);
 				sock.close();
 				return i;
-			} catch (final Exception e) {
+			} catch (Exception e) {
 			}
 		}
 		throw new RuntimeException("Cannot find a free server socket");
 	}
 
-	public static int findAvailableDatagramPort(final int seed) {
+	public static int findAvailableDatagramPort(int seed) {
 		for (int i = seed; i < (seed + 200); i++) {
 			try {
-				final DatagramSocket sock = new DatagramSocket(i);
+				DatagramSocket sock = new DatagramSocket(i);
 				sock.close();
 				Thread.sleep(100);
 				return i;
-			} catch (final Exception e) {
+			} catch (Exception e) {
 			}
 		}
 		throw new RuntimeException(
@@ -312,7 +312,7 @@ public class NetworkServiceHelper {
 		return port;
 	}
 
-	private static int extracted(final int port) {
+	private static int extracted(int port) {
 		return NetworkServiceHelper.findAvailableStreamPort();
 	}
 

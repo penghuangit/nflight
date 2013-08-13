@@ -49,7 +49,7 @@ class XorSocket extends Socket {
      * The pattern used to "encrypt" and "decrypt" each byte sent
      * or received by the socket.
      */
-    private final byte pattern;
+    private byte pattern;
   
     /* The InputStream used by the socket. */
     private InputStream in = null;

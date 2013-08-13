@@ -21,30 +21,28 @@ import com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class SocketChannelFactory {
-	private static final Class<SocketChannelFactory> THIS_CLAZZ = SocketChannelFactory.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<SocketChannelFactory> THIS_CLAZZ = SocketChannelFactory.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	public AsynchronousSocketChannel createAsyncSocketChannel(
-			final SocketAddress endpoint) throws IOException,
-			InterruptedException, ExecutionException {
+			SocketAddress endpoint) throws IOException, InterruptedException,
+			ExecutionException {
 
 		return (AsynchronousSocketChannel) this.getNetworkChannel(
 				STREAM_SERVICE_TYPE.async, endpoint, null, null);
 	}
 
 	public SocketChannel createBlockingSocketChannel(
-			final InetSocketAddress endpoint,
-			final Configure.STREAM_SERVICE_TYPE type) throws IOException,
-			InterruptedException, ExecutionException {
+			InetSocketAddress endpoint, Configure.STREAM_SERVICE_TYPE type)
+			throws IOException, InterruptedException, ExecutionException {
 
 		return (SocketChannel) this.getNetworkChannel(
 				STREAM_SERVICE_TYPE.blocking, endpoint, null, null);
 	}
 
 	public DatagramChannel createUnicastSocketChannel(
-			final StandardProtocolFamily protocolFamily,
-			final InetSocketAddress endpoint) throws IOException,
-			InterruptedException, ExecutionException {
+			StandardProtocolFamily protocolFamily, InetSocketAddress endpoint)
+			throws IOException, InterruptedException, ExecutionException {
 
 		return (DatagramChannel) this.getNetworkChannel(
 				STREAM_SERVICE_TYPE.unicast, endpoint,
@@ -52,20 +50,18 @@ public class SocketChannelFactory {
 	}
 
 	public DatagramChannel createMulticastSocketChannel(
-			final StandardProtocolFamily protocolFamily,
-			final InetAddress multicastGroup, final InetSocketAddress endpoint)
-			throws IOException, InterruptedException, ExecutionException {
+			StandardProtocolFamily protocolFamily, InetAddress multicastGroup,
+			InetSocketAddress endpoint) throws IOException,
+			InterruptedException, ExecutionException {
 
 		return (DatagramChannel) this.getNetworkChannel(
 				STREAM_SERVICE_TYPE.multicast, endpoint,
 				StandardProtocolFamily.INET, multicastGroup);
 	}
 
-	private NetworkChannel getNetworkChannel(
-			final STREAM_SERVICE_TYPE serviceType,
-			final SocketAddress endpoint,
-			final StandardProtocolFamily protocolFamily,
-			final InetAddress multicastGroup) throws IOException,
+	private NetworkChannel getNetworkChannel(STREAM_SERVICE_TYPE serviceType,
+			SocketAddress endpoint, StandardProtocolFamily protocolFamily,
+			InetAddress multicastGroup) throws IOException,
 			InterruptedException, ExecutionException {
 
 		NetworkChannel channel = null;
@@ -88,7 +84,7 @@ public class SocketChannelFactory {
 					throw new IllegalStateException(
 							"This is not  multicast address!");
 				} else {
-					final String networkInterfaceName = NetworkServiceHelper
+					String networkInterfaceName = NetworkServiceHelper
 							.getNetworkInterfaceName(InetAddress.getLocalHost()
 									.getHostAddress());
 					// join multicast group on this interface, and also use this
@@ -103,17 +99,16 @@ public class SocketChannelFactory {
 			default :
 				break;
 		}
-		
+
 		return this.connect(serviceType, channel, endpoint, multicastGroup,
 				networkInterface);
 	}
 
-	private NetworkChannel connect(final STREAM_SERVICE_TYPE serviceType,
-			final NetworkChannel channel, final SocketAddress endpoint,
-			final InetAddress multicastGroup,
-			final NetworkInterface networkInterface) throws IOException,
-			InterruptedException, ExecutionException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	private NetworkChannel connect(STREAM_SERVICE_TYPE serviceType,
+			NetworkChannel channel, SocketAddress endpoint,
+			InetAddress multicastGroup, NetworkInterface networkInterface)
+			throws IOException, InterruptedException, ExecutionException {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		// display a connecting message while ... waiting clients

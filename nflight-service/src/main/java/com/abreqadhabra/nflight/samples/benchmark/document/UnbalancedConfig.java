@@ -24,11 +24,11 @@ package com.abreqadhabra.nflight.samples.benchmark.document;
  */
 public class UnbalancedConfig {
 
-    private final int unbalancedIntervalLo;
+    private int unbalancedIntervalLo;
 
-    private final int unbalancedIntervalHi;
+    private int unbalancedIntervalHi;
 
-    private final int factor;
+    private int factor;
 
     public UnbalancedConfig(int unbalancedIntervalLo, int unbalancedIntervalHi, int factor) {
 	this.unbalancedIntervalLo = unbalancedIntervalLo;

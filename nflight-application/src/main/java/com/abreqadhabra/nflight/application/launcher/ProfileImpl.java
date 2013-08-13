@@ -9,11 +9,11 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ProfileImpl implements Profile {
-    private static final Class<ProfileImpl> THIS_CLAZZ = ProfileImpl.class;
-    private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+    private static Class<ProfileImpl> THIS_CLAZZ = ProfileImpl.class;
+    private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
     public ProfileImpl(Properties props) {
-	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+	String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
     }
 
     // 네트워크 주소와 포트 번호를 지정하여 InetSocketAddress 생성

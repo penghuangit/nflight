@@ -31,7 +31,7 @@ import com.abreqadhabra.nflight.samples.benchmark.mapreduce.Output;
  */
 public class DocumentOutput implements Output<UserTagsBundle> {
 
-    private final UserTagsBundle userTagBundle;
+    private UserTagsBundle userTagBundle;
 
     public DocumentOutput(UserTagsBundle userTagBundle) {
 	this.userTagBundle = userTagBundle;

@@ -46,7 +46,7 @@ import java.rmi.server.RMIClientSocketFactory;
 public class XorClientSocketFactory
     implements RMIClientSocketFactory, Serializable {
 
-    private final byte pattern;
+    private byte pattern;
 
     public XorClientSocketFactory(byte pattern) {
 	this.pattern = pattern;

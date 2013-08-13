@@ -27,8 +27,8 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
  */
 public class ShutdownAllServer {
 
-	private static final Class<ShutdownAllServer> THIS_CLAZZ = ShutdownAllServer.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<ShutdownAllServer> THIS_CLAZZ = ShutdownAllServer.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	/**
 	 * <p>
@@ -47,7 +47,7 @@ public class ShutdownAllServer {
 	 */
 
 	public static void main(String[] args) throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		// RMI Server Shutdown
 	//	NFlightServer  rmiServer = new RMIServer();

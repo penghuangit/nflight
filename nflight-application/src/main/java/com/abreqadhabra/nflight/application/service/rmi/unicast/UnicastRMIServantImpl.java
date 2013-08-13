@@ -14,11 +14,11 @@ import com.abreqadhabra.nflight.application.service.rmi.RMIServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class UnicastRMIServantImpl extends AbstractRMIServant {
-	private static final Class<UnicastRMIServantImpl> THIS_CLAZZ = UnicastRMIServantImpl.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<UnicastRMIServantImpl> THIS_CLAZZ = UnicastRMIServantImpl.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public UnicastRMIServantImpl(final Configure configure,
-			final InetAddress addr, final int port) throws Exception {
+	public UnicastRMIServantImpl(Configure configure,
+			InetAddress addr, int port) throws Exception {
 		super(configure, addr, port);
 		this.serviceName = Configure.RMI_SERVICE_TYPE.unicast.toString();
 		this.boundName = RMIServiceHelper.getBoundName(
@@ -27,7 +27,7 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 
 	@Override
 	public void run() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
 			if (RMIServiceHelper.isActivatedRegistry(this.registry,
@@ -35,7 +35,7 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 				throw new RMIServiceException(this.boundName
 						+ "가 레지스트리에 이미 등록되어 있습니다.");
 			} else {
-				final Remote stub = UnicastRemoteObject.exportObject(this, 0);
+				Remote stub = UnicastRemoteObject.exportObject(this, 0);
 				RMIServiceHelper.rebind(this.registry, this.boundName, stub);
 				LOGGER.logp(
 						Level.FINER,
@@ -44,7 +44,7 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 						stub + " Stub bound in registry."
 								+ Arrays.toString(registry.list()));
 			}
-		} catch (final Exception e1) {
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 	}

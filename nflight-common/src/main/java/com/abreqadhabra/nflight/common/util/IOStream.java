@@ -18,25 +18,25 @@ import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class IOStream {
-	private static final Class<IOStream> THIS_CLAZZ = IOStream.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<IOStream> THIS_CLAZZ = IOStream.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public static String convertStreamToString(final InputStream inputStream) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public static String convertStreamToString(InputStream inputStream) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		final StringBuffer sb = new StringBuffer();
-		final String charsetName = System
+		StringBuffer sb = new StringBuffer();
+		String charsetName = System
 				.getProperty(Env.PROPERTIES_SYSTEM.SUN_JNU_ENCODING.toString());
 		try {
-			final InputStreamReader isr = new InputStreamReader(inputStream,
+			InputStreamReader isr = new InputStreamReader(inputStream,
 					charsetName);
-			final BufferedReader br = new BufferedReader(isr);
+			BufferedReader br = new BufferedReader(isr);
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				sb.append("\n" + line);
 			}
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
@@ -47,17 +47,17 @@ public class IOStream {
 	}
 
 	
-	public static Path getCodebasePath(final String className) {
+	public static Path getCodebasePath(String className) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(className);
-		} catch (final ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		final ProtectionDomain pd = cls.getProtectionDomain();
-		final CodeSource cs = pd.getCodeSource();
-		final URL url = cs.getLocation();
+		ProtectionDomain pd = cls.getProtectionDomain();
+		CodeSource cs = pd.getCodeSource();
+		URL url = cs.getLocation();
 		try {
 			return Paths.get(url.toURI());
 		} catch (URISyntaxException e) {
@@ -68,35 +68,35 @@ public class IOStream {
 		return null;
 	}
 	
-	public static String getCodebase(final String className) {
+	public static String getCodebase(String className) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(className);
-		} catch (final ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		final ProtectionDomain pd = cls.getProtectionDomain();
-		final CodeSource cs = pd.getCodeSource();
-		final URL url = cs.getLocation();
+		ProtectionDomain pd = cls.getProtectionDomain();
+		CodeSource cs = pd.getCodeSource();
+		URL url = cs.getLocation();
 		return url.getFile();//.replace(":", "/");
 	}
 
-	public static URI getCodebaseURI(final String className) {
+	public static URI getCodebaseURI(String className) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(className);
-		} catch (final ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		final ProtectionDomain pd = cls.getProtectionDomain();
-		final CodeSource cs = pd.getCodeSource();
-		final URL url = cs.getLocation();
+		ProtectionDomain pd = cls.getProtectionDomain();
+		CodeSource cs = pd.getCodeSource();
+		URL url = cs.getLocation();
 		URI uri = null;
 		try {
 			uri = url.toURI();
-		} catch (final URISyntaxException e) {
+		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -104,14 +104,14 @@ public class IOStream {
 		return uri;
 	}
 
-	public static Path getFilePath(final String className,
-			final String... paths) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public static Path getFilePath(String className,
+			String... paths) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		final URI codebaseURI = IOStream.getCodebaseURI(className);
+		URI codebaseURI = IOStream.getCodebaseURI(className);
 		Path filePath = Paths.get(codebaseURI);
-		for (final String path : paths) {
+		for (String path : paths) {
 			filePath = filePath.resolve(path);
 		}
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,

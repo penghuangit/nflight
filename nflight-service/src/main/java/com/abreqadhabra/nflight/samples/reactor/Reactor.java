@@ -11,9 +11,9 @@ import java.util.Set;
 
 public class Reactor implements Runnable {
 	 
-    final Selector selector;
-    final ServerSocketChannel serverSocketChannel;
-    final boolean isWithThreadPool;
+    Selector selector;
+    ServerSocketChannel serverSocketChannel;
+    boolean isWithThreadPool;
  
     Reactor(int port, boolean isWithThreadPool) throws IOException {
  

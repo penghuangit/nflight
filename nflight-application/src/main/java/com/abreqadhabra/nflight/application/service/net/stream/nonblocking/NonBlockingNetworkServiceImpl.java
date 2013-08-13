@@ -18,12 +18,12 @@ import com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
-	private static final Class<NonBlockingNetworkServiceImpl> THIS_CLAZZ = NonBlockingNetworkServiceImpl.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<NonBlockingNetworkServiceImpl> THIS_CLAZZ = NonBlockingNetworkServiceImpl.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public NonBlockingNetworkServiceImpl(final Configure configure,
-			final ThreadPoolExecutor threadPool,
-			final InetSocketAddress endpoint) {
+	public NonBlockingNetworkServiceImpl(Configure configure,
+			ThreadPoolExecutor threadPool,
+			InetSocketAddress endpoint) {
 		super(configure, threadPool, endpoint);
 		this.backlog = this.configure
 				.getInt(Configure.NONBLOCKING_BIND_BACKLOG);
@@ -34,8 +34,8 @@ public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 		try {
 			this.isRunning = true;
 			// create a new server-socket channel & selector
-			final Selector selector = Selector.open();
-			final ServerSocketChannel serverSocket = this
+			Selector selector = Selector.open();
+			ServerSocketChannel serverSocket = this
 					.createServerChannelFactory()
 					.createNonBlockingServerSocketChannel(this.endpoint,
 							this.backlog);
@@ -51,27 +51,27 @@ public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 			} else {
 				throw new IllegalStateException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
 			}
-		} catch (final IOException | InterruptedException | ExecutionException e) {
+		} catch (IOException | InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
 
 	}
-	private void pendingConnections(final Selector selector) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	private void pendingConnections(Selector selector) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
 			// wait for incoming an event one of the registered channels
 			// 등록된 서버 소켓 채널에 대한 이벤트 발생을 대기
-			final long timeout = 1000;
+			long timeout = 1000;
 			selector.select(timeout);
 
 			// there is something to process on selected keys
-			final Iterator<SelectionKey> iterator = selector.selectedKeys()
+			Iterator<SelectionKey> iterator = selector.selectedKeys()
 					.iterator();
 
 			while (iterator.hasNext()) {
-				final SelectionKey selectionKey = iterator.next();
+				SelectionKey selectionKey = iterator.next();
 				// 취득한 키를 키 집합에서 제거
 				// prevent the same key from coming up again
 				iterator.remove();
@@ -87,11 +87,11 @@ public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 				if (selectionKey.isAcceptable()) {
 					this.accept(selector, selectionKey);
 				} else if (selectionKey.isReadable()) {
-					final ServerSession session = (ServerSession) selectionKey
+					ServerSession session = (ServerSession) selectionKey
 							.attachment();
 					session.receive(session);
 				} else if (selectionKey.isWritable()) {
-					final ServerSession session = (ServerSession) selectionKey
+					ServerSession session = (ServerSession) selectionKey
 							.attachment();
 					session.send(session);
 				} else {
@@ -100,20 +100,20 @@ public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 									+ selectionKey.readyOps());
 				}
 			}
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void accept(final Selector selector, final SelectionKey selectionKey) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	private void accept(Selector selector, SelectionKey selectionKey) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 				NetworkServiceHelper.getReadySetString(selectionKey));
 
 		try {
-			final SocketChannel socket = ((ServerSocketChannel) selectionKey
+			SocketChannel socket = ((ServerSocketChannel) selectionKey
 					.channel()).accept();
 			LOGGER.logp(
 					Level.FINER,
@@ -122,17 +122,17 @@ public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 					"Accepted socket connection from "
 							+ socket.getRemoteAddress());
 			socket.configureBlocking(false);
-			final SelectionKey readyKey = socket.register(selector,
+			SelectionKey readyKey = socket.register(selector,
 					SelectionKey.OP_READ);
-			final ServerSession session = this.createSession(socket, readyKey);
+			ServerSession session = this.createSession(socket, readyKey);
 			readyKey.attach(session);
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private ServerSession createSession(final SocketChannel socket,
-			final SelectionKey selectionKey) {
+	private ServerSession createSession(SocketChannel socket,
+			SelectionKey selectionKey) {
 		return new NonBlockingServerSessionImpl(this.configure, socket,
 				selectionKey);
 	}

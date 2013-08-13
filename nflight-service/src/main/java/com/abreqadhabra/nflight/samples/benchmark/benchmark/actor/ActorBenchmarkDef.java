@@ -33,7 +33,7 @@ import com.abreqadhabra.nflight.samples.benchmark.benchmark.BenchmarkDef;
  */
 public abstract class ActorBenchmarkDef extends BenchmarkDef {
 
-    private final ActorGenerator generator;
+    private ActorGenerator generator;
 
     protected Actor[] actors;
 

@@ -18,12 +18,12 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 //Strategy Context
 public class ServerImpl implements IServer {
-	private static final Class<ServerImpl> THIS_CLAZZ = ServerImpl.class;
+	private static Class<ServerImpl> THIS_CLAZZ = ServerImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public ServerImpl(final Profile profile) {
+	public ServerImpl(Profile profile) {
 
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,

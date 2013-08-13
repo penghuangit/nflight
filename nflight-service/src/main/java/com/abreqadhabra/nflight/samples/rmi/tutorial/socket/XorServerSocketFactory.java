@@ -45,7 +45,7 @@ import java.rmi.server.RMIServerSocketFactory;
 public class XorServerSocketFactory
     implements RMIServerSocketFactory {
 
-    private final byte pattern;
+    private byte pattern;
 
     public XorServerSocketFactory(byte pattern) {
 	this.pattern = pattern;

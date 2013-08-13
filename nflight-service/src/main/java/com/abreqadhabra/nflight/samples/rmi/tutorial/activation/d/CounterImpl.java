@@ -48,7 +48,7 @@ import java.rmi.activation.ActivationID;
 public class CounterImpl implements Counter {
     private RandomAccessFile raf;
     private int count;
-    private final Object countLock = new Object();
+    private Object countLock = new Object();
     
     /**
      * Constructs a <code>CounterImpl</code> instance with the specified

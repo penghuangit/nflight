@@ -15,7 +15,7 @@ import com.abreqadhabra.nflight.app.server.service.IService;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ServerSocketThread extends Thread {
-	private static final Class<ServerSocketThread> THIS_CLAZZ = ServerSocketThread.class;
+	private static Class<ServerSocketThread> THIS_CLAZZ = ServerSocketThread.class;
 	private Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	protected Socket socket;

@@ -9,8 +9,8 @@ import com.abreqadhabra.nflight.application.server.service.socket.udp.common.Att
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class tDatagramAcceptorImpl  {
-	private static final Class<tDatagramAcceptorImpl> THIS_CLAZZ = tDatagramAcceptorImpl.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<tDatagramAcceptorImpl> THIS_CLAZZ = tDatagramAcceptorImpl.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	
 

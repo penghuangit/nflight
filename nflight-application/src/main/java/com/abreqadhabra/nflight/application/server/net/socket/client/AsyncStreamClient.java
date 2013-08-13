@@ -14,7 +14,7 @@ import com.abreqadhabra.nflight.application.server.net.socket.MessageDTOImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class AsyncStreamClient extends JFrame {
-	private static final Class<AsyncStreamClient> THIS_CLAZZ = AsyncStreamClient.class;
+	private static Class<AsyncStreamClient> THIS_CLAZZ = AsyncStreamClient.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	ClientControllerImpl controller;
@@ -31,7 +31,7 @@ public class AsyncStreamClient extends JFrame {
 
 	}
 
-	public static void main(final String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 
 		InetSocketAddress socketAddress = new InetSocketAddress(InetAddress
 				.getLocalHost().getHostAddress(), 9999);
@@ -41,7 +41,7 @@ public class AsyncStreamClient extends JFrame {
 	}
 
 	private  void sendTest() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		
 

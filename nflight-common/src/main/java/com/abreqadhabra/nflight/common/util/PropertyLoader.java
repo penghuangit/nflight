@@ -32,8 +32,8 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
  */
 public class PropertyLoader {
 
-	private static final Class<PropertyLoader> THIS_CLAZZ = PropertyLoader.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<PropertyLoader> THIS_CLAZZ = PropertyLoader.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	/**
 	 * <p>
@@ -55,8 +55,8 @@ public class PropertyLoader {
 	 * @return boolean 정상적으로 파일을 읽은 경우에는 true를 반환합니다.
 	 * @since STEP1
 	 */
-	public static boolean load(final String className, final String filePath) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public static boolean load(String className, String filePath) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
@@ -81,20 +81,20 @@ public class PropertyLoader {
 			// propertiesInput.close();
 			//
 
-			final Properties properties = PropertyFile.readPropertyFilePath(
+			Properties properties = PropertyFile.readPropertyFilePath(
 					className, filePath);
 
 			printProperties(properties);
 
-			for (final Object object : properties.keySet()) {
-				final String key = (String) object;
+			for (Object object : properties.keySet()) {
+				String key = (String) object;
 				if (System.getProperty(key) == null) {
-					final String value = properties.getProperty(key);
+					String value = properties.getProperty(key);
 					System.setProperty(key, value);
 				}
 			}
-		} catch (final Exception e) {
-			final StackTraceElement[] current = e.getStackTrace();
+		} catch (Exception e) {
+			StackTraceElement[] current = e.getStackTrace();
 			LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 					current[0].getMethodName(), "Reading Configuration Failed");
 			return false;
@@ -125,7 +125,7 @@ public class PropertyLoader {
 
 	/*
 	 * public static boolean load(String propertyName) throws IOException {
-	 * final String METHOD_NAME =
+	 * String METHOD_NAME =
 	 * Thread.currentThread().getStackTrace()[1].getMethodName();
 	 * 
 	 * LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,"load");
@@ -138,39 +138,39 @@ public class PropertyLoader {
 	 * true; }
 	 */
 
-	public static void printProperties(final Properties props) {
+	public static void printProperties(Properties props) {
 
 		Set<Object> keys = props.keySet();
 		keys = props.keySet();
 		// System.out.println("\n----\n" + propertyFile + "\n");
-		for (final Object obj : keys) {
+		for (Object obj : keys) {
 			System.out.println(":: Key = " + obj.toString() + "\tValue = "
 					+ props.getProperty(obj.toString()));
 		}
 		System.out.println("----\n");
 	}
 
-	public static void setSystemProperties(final Properties props) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public static void setSystemProperties(Properties props) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		for (final Object object : props.keySet()) {
-			final String key = (String) object;
+		for (Object object : props.keySet()) {
+			String key = (String) object;
 			if (System.getProperty(key) == null) {
-				final String value = props.getProperty(key);
+				String value = props.getProperty(key);
 				System.setProperty(key, value);
 			}
 		}
 		if (LOGGER.isLoggable(Level.CONFIG)) {
-			final Properties systemProps = System.getProperties();
-			final String[] keys = systemProps.keySet().toArray(new String[0]);
+			Properties systemProps = System.getProperties();
+			String[] keys = systemProps.keySet().toArray(new String[0]);
 			Arrays.sort(keys);
-			final StringBuffer sb = new StringBuffer("\n");
-			for (final String key : keys) {
+			StringBuffer sb = new StringBuffer("\n");
+			for (String key : keys) {
 				if (key.startsWith("nflight.") | key.startsWith("java.")
 						| key.startsWith("sun.")) {
-					final String formatString = ":: key = %-50s value = %s%n";
-					final String str = String.format(formatString, key,
+					String formatString = ":: key = %-50s value = %s%n";
+					String str = String.format(formatString, key,
 							systemProps.get(key));
 					sb.append(str);
 				}

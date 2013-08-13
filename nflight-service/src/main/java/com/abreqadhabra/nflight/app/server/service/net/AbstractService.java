@@ -14,7 +14,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 //Strategy ConcreteStrategy  / Flyweight ConcreteFlyweight
 public abstract class AbstractService implements IService {
 
-	private static final Class<AbstractService> THIS_CLAZZ = AbstractService.class;
+	private static Class<AbstractService> THIS_CLAZZ = AbstractService.class;
 	private static Logger LOGGER = LoggingHelper
 			.getLogger(AbstractService.THIS_CLAZZ);
 
@@ -28,7 +28,7 @@ public abstract class AbstractService implements IService {
 	public AbstractService() {
 	}
 
-	public AbstractService(final ServiceDescriptor _desc) throws Exception {
+	public AbstractService(ServiceDescriptor _desc) throws Exception {
 		this();
 		this.desc = _desc;
 		this.host = this.desc.getHost(); // InetAddress.getLocalHost().getHostAddress();
@@ -39,7 +39,7 @@ public abstract class AbstractService implements IService {
 
 	@Override
 	public void shutdown() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
 
@@ -52,7 +52,7 @@ public abstract class AbstractService implements IService {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"UDP monitoring acceptor has been stopped.");
 
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"Error shutting down the UDP monitor acceptor");
 		}

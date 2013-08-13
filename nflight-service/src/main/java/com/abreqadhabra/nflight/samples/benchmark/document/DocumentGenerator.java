@@ -31,21 +31,21 @@ import java.util.Set;
  */
 public class DocumentGenerator {
 
-    private final int numDocuments;
+    private int numDocuments;
 
-    private final int maxUsersPerDocument;
+    private int maxUsersPerDocument;
 
-    private final int maxTagsPerDocument;
+    private int maxTagsPerDocument;
 
-    private final String[] allUsers;
+    private String[] allUsers;
 
-    private final String[] allTags;
+    private String[] allTags;
 
-    private final long seed;
+    private long seed;
 
-    private final UnbalancedConfig unbalancedConfig;
+    private UnbalancedConfig unbalancedConfig;
 
-    private final Random random;
+    private Random random;
 
     public DocumentGenerator(DocumentGeneratorConfig config) {
 	numDocuments = config.getNumDocuments();

@@ -25,8 +25,8 @@ import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ServiceServerTest {
-	private static final Class<ServiceServerTest> THIS_CLAZZ = ServiceServerTest.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<ServiceServerTest> THIS_CLAZZ = ServiceServerTest.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	static boolean isThreadPoolMonitoring = false;
 	static int delaySeconds = 10;
@@ -38,14 +38,14 @@ public class ServiceServerTest {
 	private static UnicastRMIServantImpl unicastServant;
 	private static ActivatableRMIServantImpl activatableServant;
 
-	public static void main(final String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 
-		final InetAddress DEFAULT_ADDRESS = InetAddress.getLocalHost();
+		InetAddress DEFAULT_ADDRESS = InetAddress.getLocalHost();
 
-		final Configure netConfigure = new ConfigureImpl(
+		Configure netConfigure = new ConfigureImpl(
 				Configure.FILE_NETWORK_SERVICE_PROPERTIES);
 
-		final Configure rmiConfigure = new ConfigureImpl(
+		Configure rmiConfigure = new ConfigureImpl(
 				Configure.FILE_RMI_SERVICE_PROPERTIES);
 
 		rmidProcessStart(rmiConfigure);
@@ -108,7 +108,7 @@ public class ServiceServerTest {
 	}
 
 	private static String getRMIDStartSystemCommand(Configure configure) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		String command = configure
@@ -125,22 +125,8 @@ public class ServiceServerTest {
 		return command;
 	}
 
-	private static String getRMIDStopSystemCommand(Configure configure) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-
-		String command = configure
-				.get(Configure.ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_STOP);
-
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
-				"system command :" + command);
-
-		return command;
-	}
-
 	private static UnicastRMIServantImpl executeUnicastServant(
-			final Configure configure, final InetAddress addr, int port)
-			throws Exception {
+			Configure configure, InetAddress addr, int port) throws Exception {
 		if (port == 0) {
 			port = configure.getInt(Configure.UNICAST_RMI_DEFAULT_PORT);
 		}
@@ -148,7 +134,7 @@ public class ServiceServerTest {
 	}
 
 	private static void executeAll() {
-		final ThreadGroup serviceThreadGroup = new ThreadGroup(
+		ThreadGroup serviceThreadGroup = new ThreadGroup(
 				"NF-Service-ThreadGroup");
 
 		// Executors.n.newSingleThreadExecutor().execute(
@@ -176,8 +162,7 @@ public class ServiceServerTest {
 	}
 
 	private static ActivatableRMIServantImpl executeActivatableServant(
-			final Configure configure, final InetAddress addr, int port)
-			throws Exception {
+			Configure configure, InetAddress addr, int port) throws Exception {
 		if (port == 0) {
 			port = configure.getInt(Configure.ACTIVATABLE_RMI_DEFAULT_PORT);
 		}
@@ -186,38 +171,38 @@ public class ServiceServerTest {
 	}
 
 	private static MulticastNetworkServiceImpl executeMulticastNetworkService(
-			final Configure configure, final InetAddress addr, int port) {
+			Configure configure, InetAddress addr, int port) {
 		if (port == 0) {
 			port = configure.getInt(Configure.MULTICAST_DEFAULT_PORT);
 		}
 
-		final InetSocketAddress endpoint = new InetSocketAddress(addr, port);
+		InetSocketAddress endpoint = new InetSocketAddress(addr, port);
 
 		return new MulticastNetworkServiceImpl(configure, null, endpoint);
 	}
 
 	private static UnicastNetworkServiceImpl executeUnicastNetworkService(
-			final Configure configure, final InetAddress addr, int port) {
+			Configure configure, InetAddress addr, int port) {
 
 		if (port == 0) {
 			port = configure.getInt(Configure.UNICAST_DEFAULT_PORT);
 		}
 
-		final InetSocketAddress endpoint = new InetSocketAddress(addr, port);
+		InetSocketAddress endpoint = new InetSocketAddress(addr, port);
 
 		return new UnicastNetworkServiceImpl(configure, null, endpoint);
 
 	}
 
 	private static AsyncNetworkServiceImpl executeAsyncNetworkService(
-			final Configure configure, final InetAddress addr, int port) {
+			Configure configure, InetAddress addr, int port) {
 
 		if (port == 0) {
 			port = configure.getInt(Configure.ASYNC_DEFAULT_PORT);
 		}
 
-		final InetSocketAddress endpoint = new InetSocketAddress(addr, port);
-		final ThreadPoolExecutor asyncNetworkThreadPool = getThreadPoolExecutor(
+		InetSocketAddress endpoint = new InetSocketAddress(addr, port);
+		ThreadPoolExecutor asyncNetworkThreadPool = getThreadPoolExecutor(
 				"NF-Service-ThreadPool-Async", delaySeconds,
 				isThreadPoolMonitoring);
 
@@ -227,15 +212,15 @@ public class ServiceServerTest {
 	}
 
 	private static BlockingNetworkServiceImpl executeBlockingNetworkService(
-			final Configure configure, final InetAddress addr, int port) {
+			Configure configure, InetAddress addr, int port) {
 
 		if (port == 0) {
 			port = configure.getInt(Configure.BLOCKING_DEFAULT_PORT);
 		}
 
-		final InetSocketAddress endpoint = new InetSocketAddress(addr, port);
+		InetSocketAddress endpoint = new InetSocketAddress(addr, port);
 
-		final ThreadPoolExecutor blockingNetworkThreadPool = getThreadPoolExecutor(
+		ThreadPoolExecutor blockingNetworkThreadPool = getThreadPoolExecutor(
 				"NF-Service-ThreadPool-Blocking", delaySeconds,
 				isThreadPoolMonitoring);
 
@@ -245,36 +230,36 @@ public class ServiceServerTest {
 	}
 
 	private static NonBlockingNetworkServiceImpl executeNonBlockingNetworkService(
-			final Configure configure, final InetAddress addr, int port) {
+			Configure configure, InetAddress addr, int port) {
 
 		if (port == 0) {
 			port = configure.getInt(Configure.NONBLOCKING_DEFAULT_PORT);
 		}
 
-		final InetSocketAddress endpoint = new InetSocketAddress(addr, port);
+		InetSocketAddress endpoint = new InetSocketAddress(addr, port);
 
 		return new NonBlockingNetworkServiceImpl(configure, null, endpoint);
 
 	}
 
-	static ThreadPoolExecutor getThreadPoolExecutor(final String poolName,
-			final int delaySeconds, final boolean isThreadPoolMonitoring) {
-		final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutorServiceImpl()
+	static ThreadPoolExecutor getThreadPoolExecutor(String poolName,
+			int delaySeconds, boolean isThreadPoolMonitoring) {
+		ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutorServiceImpl()
 				.createNewThreadPool();
 		threadPoolExecutor.allowCoreThreadTimeOut(true);
 
 		if (isThreadPoolMonitoring) {
 
-			final Thread t = Thread.currentThread();
-			final ThreadGroup threadGroup = t.getThreadGroup();
+			Thread t = Thread.currentThread();
+			ThreadGroup threadGroup = t.getThreadGroup();
 
 			// Created executor is set to ThreadPoolMonitorService...
-			final ThreadPoolMonitorServiceImpl tpms = new ThreadPoolMonitorServiceImpl(
+			ThreadPoolMonitorServiceImpl tpms = new ThreadPoolMonitorServiceImpl(
 					delaySeconds, threadGroup, poolName);
 			tpms.setExecutor(threadPoolExecutor);
 
 			// ThreadPoolMonitorService is started...
-			final Thread monitor = new Thread(tpms);
+			Thread monitor = new Thread(tpms);
 			monitor.start();
 		}
 		return threadPoolExecutor;

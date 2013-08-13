@@ -36,7 +36,7 @@ import com.abreqadhabra.nflight.samples.benchmark.document.Document;
 public class UserTagsCalculator {
 
     /** Whether to lowercase all tags in order to eliminate duplicates. */
-    private static final boolean LOWERCASE_TAGS = true;
+    private static boolean LOWERCASE_TAGS = true;
 
     public static UserTagsBundle compute(Document[] documents, int lo, int hi) {
 	Map<String, Set<String>> map = new HashMap<>();

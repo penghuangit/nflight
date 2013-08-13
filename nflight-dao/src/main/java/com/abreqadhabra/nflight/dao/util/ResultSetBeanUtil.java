@@ -17,10 +17,10 @@ import java.util.Map;
 
 public class ResultSetBeanUtil {
 
-	private static final Map<String, String> columnToPropertyOverrides = new HashMap<String, String>();
-	private static final int PROPERTY_NOT_FOUND = -1;
+	private static Map<String, String> columnToPropertyOverrides = new HashMap<String, String>();
+	private static int PROPERTY_NOT_FOUND = -1;
 
-	private static final Map<Class<?>, Object> primitiveDefaults = new HashMap<Class<?>, Object>();
+	private static Map<Class<?>, Object> primitiveDefaults = new HashMap<Class<?>, Object>();
 
 	static {
 		primitiveDefaults.put(Integer.TYPE, Integer.valueOf(0));
@@ -186,7 +186,7 @@ public class ResultSetBeanUtil {
 		try {
 			// convert types for some popular ones
 			if (value instanceof java.util.Date) {
-				final String targetType = params[0].getName();
+				String targetType = params[0].getName();
 				if ("java.sql.Date".equals(targetType)) {
 					value = new java.sql.Date(
 							((java.util.Date) value).getTime());

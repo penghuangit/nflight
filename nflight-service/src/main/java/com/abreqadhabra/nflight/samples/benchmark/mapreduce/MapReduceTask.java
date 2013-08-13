@@ -30,9 +30,9 @@ import java.util.concurrent.RecursiveTask;
  */
 public class MapReduceTask<T> extends RecursiveTask<Output<T>> {
 
-    private static final long serialVersionUID = 1L;
+    private static long serialVersionUID = 1L;
 
-    private final Input<T> input;
+    private Input<T> input;
 
     public MapReduceTask(Input<T> input) {
 	this.input = input;

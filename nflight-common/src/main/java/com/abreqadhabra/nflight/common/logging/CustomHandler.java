@@ -21,9 +21,9 @@ public class CustomHandler extends FileHandler {
 	public CustomHandler(String fileName) throws SecurityException, IOException {
 		super();
 
-		final String codeBase = IOStream.getCodebase(CustomHandler.class
+		String codeBase = IOStream.getCodebase(CustomHandler.class
 				.getName());
-		final File loggingPath = new File(codeBase + "log");
+		File loggingPath = new File(codeBase + "log");
 
 		System.out.println(codeBase + "log");
 		if (!loggingPath.exists()) {
@@ -35,7 +35,7 @@ public class CustomHandler extends FileHandler {
 		// initialize the file
 		try {
 			this.fileOutputStream = new FileOutputStream(fileName);
-		} catch (final FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		this.printWriter = new PrintWriter(this.fileOutputStream);
@@ -53,7 +53,7 @@ public class CustomHandler extends FileHandler {
 	}
 
 	@Override
-	public void publish(final LogRecord record) {
+	public void publish(LogRecord record) {
 		// ensure that this LogRecord should be logged by this Handler
 		if (!this.isLoggable(record)) {
 			return;

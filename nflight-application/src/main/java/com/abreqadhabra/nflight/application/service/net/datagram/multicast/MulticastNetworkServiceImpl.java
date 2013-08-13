@@ -17,12 +17,11 @@ import com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class MulticastNetworkServiceImpl extends AbstractNetworkServiceImpl {
-	private static final Class<MulticastNetworkServiceImpl> THIS_CLAZZ = MulticastNetworkServiceImpl.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<MulticastNetworkServiceImpl> THIS_CLAZZ = MulticastNetworkServiceImpl.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public MulticastNetworkServiceImpl(final Configure configure,
-			final ThreadPoolExecutor threadPool,
-			final InetSocketAddress endpoint) {
+	public MulticastNetworkServiceImpl(Configure configure,
+			ThreadPoolExecutor threadPool, InetSocketAddress endpoint) {
 		super(configure, threadPool, endpoint);
 	}
 
@@ -31,8 +30,7 @@ public class MulticastNetworkServiceImpl extends AbstractNetworkServiceImpl {
 		try {
 			this.isRunning = true;
 			// create a new server-socket channel & selector
-			final DatagramChannel serverSocket = this
-					.createServerChannelFactory()
+			DatagramChannel serverSocket = this.createServerChannelFactory()
 					.createMulticastDatagramChannel(
 							StandardProtocolFamily.INET, this.endpoint);
 			// check that both of them were successfully opened
@@ -49,19 +47,18 @@ public class MulticastNetworkServiceImpl extends AbstractNetworkServiceImpl {
 		}
 	}
 
-	private void pendingConnections(final DatagramChannel channel) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	private void pendingConnections(DatagramChannel channel) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
 
-			final int capacity = this.configure
+			int capacity = this.configure
 					.getInt(Configure.MULTICAST_INCOMING_BUFFER_CAPACITY);
-			final ByteBuffer incomingByteBuffer = NetworkServiceHelper
+			ByteBuffer incomingByteBuffer = NetworkServiceHelper
 					.getByteBuffer(capacity);
 
-			final SocketAddress clientEndpoint = channel
-					.receive(incomingByteBuffer);
+			SocketAddress clientEndpoint = channel.receive(incomingByteBuffer);
 
 			incomingByteBuffer.flip();
 			if (incomingByteBuffer.hasRemaining()) {
@@ -75,7 +72,7 @@ public class MulticastNetworkServiceImpl extends AbstractNetworkServiceImpl {
 							+ incomingByteBuffer.limit() + " bytes] from "
 							+ clientEndpoint);
 
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

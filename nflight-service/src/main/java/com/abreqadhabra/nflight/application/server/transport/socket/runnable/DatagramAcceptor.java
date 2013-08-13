@@ -19,7 +19,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class DatagramAcceptor{
 	private static Class<DatagramAcceptor> THIS_CLAZZ = DatagramAcceptor.class;
-	private final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
     static int BUF_SZ = 1024;
 
@@ -39,7 +39,7 @@ public class DatagramAcceptor{
 
 	public DatagramAcceptor()
 			throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		
 		Connector connector = new DatagramConnectorImpl();
@@ -48,9 +48,9 @@ public class DatagramAcceptor{
 
 	}
 	
-	public DatagramAcceptor(final String address, final int port)
+	public DatagramAcceptor(String address, int port)
 			throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		
 

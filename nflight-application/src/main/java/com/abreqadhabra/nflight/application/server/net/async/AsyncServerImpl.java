@@ -23,27 +23,27 @@ import com.abreqadhabra.nflight.application.server.net.socket.NetworkChannelHelp
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class AsyncServerImpl extends AbstractSocketServerImpl {
-	private static final Class<AsyncServerImpl> THIS_CLAZZ = AsyncServerImpl.class;
-	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<AsyncServerImpl> THIS_CLAZZ = AsyncServerImpl.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private final InetSocketAddress socketAddress;
+	private InetSocketAddress socketAddress;
 
 	private AsynchronousChannelGroup threadGroup;
 	private AsynchronousServerSocketChannel asyncServerSocketChannel;
 
 
 	
-	private final ConcurrentHashMap<Long, ISocketAcceptor> sessionMap = new ConcurrentHashMap<Long, ISocketAcceptor>();
+	private ConcurrentHashMap<Long, ISocketAcceptor> sessionMap = new ConcurrentHashMap<Long, ISocketAcceptor>();
 	private boolean isRunning = false;
 	private Future<AsynchronousSocketChannel> future;
-	private final AtomicLong sessionId = new AtomicLong(0);
+	private AtomicLong sessionId = new AtomicLong(0);
 	private IBusinessLogic logic;
 
-	public AsyncServerImpl(final Configure configure,
-			final ThreadPoolExecutor threadPoolExecutor,
-			final InetSocketAddress socketAddress,
-			final IBusinessLogic logic) throws Exception {
+	public AsyncServerImpl(Configure configure,
+			ThreadPoolExecutor threadPoolExecutor,
+			InetSocketAddress socketAddress,
+			IBusinessLogic logic) throws Exception {
 		super(configure, threadPoolExecutor);
 		this.socketAddress = socketAddress;
 		this.logic = logic;
@@ -75,7 +75,7 @@ public class AsyncServerImpl extends AbstractSocketServerImpl {
 
 	@Override
 	public void bind() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		// set Network Channel options
@@ -98,7 +98,7 @@ public class AsyncServerImpl extends AbstractSocketServerImpl {
 
 	@Override
 	public void accept() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		this.asyncServerSocketChannel.accept(null,
 				new AsyncServerAcceptHandler(super.configure,logic,
@@ -116,16 +116,16 @@ public class AsyncServerImpl extends AbstractSocketServerImpl {
 
 	// @Override
 	// public void accept() {
-	// final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	// String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 	// .getMethodName();
 	//
 	// while (this.isRunning = true) {
 	// if (this.isRunning && this.asyncServerSocketChannel.isOpen()) {
 	// this.future = this.asyncServerSocketChannel.accept();
 	// try {
-	// final AsynchronousSocketChannel asyncSocketChannel = this.future
+	// AsynchronousSocketChannel asyncSocketChannel = this.future
 	// .get();
-	// final AsyncSocketServerAcceptor acceptor = new AsyncSocketServerAcceptor(
+	// AsyncSocketServerAcceptor acceptor = new AsyncSocketServerAcceptor(
 	// super.configure, this.sessionId.incrementAndGet(),
 	// asyncSocketChannel, this.messageDTO,
 	// this.logicHandler);
@@ -136,7 +136,7 @@ public class AsyncServerImpl extends AbstractSocketServerImpl {
 	// + "----------> accepting connection: "
 	// + asyncSocketChannel.getRemoteAddress());
 	// acceptor.start();
-	// } catch (final Exception e) {
+	// } catch (Exception e) {
 	// e.printStackTrace();
 	// }
 	// } else {

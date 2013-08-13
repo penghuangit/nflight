@@ -47,7 +47,7 @@ class XorOutputStream extends FilterOutputStream {
     /*
      * The byte used to "encrypt" each byte of data.
      */
-    private final byte pattern;
+    private byte pattern;
   
     /* 
      * Constructs an output stream that uses the specified pattern

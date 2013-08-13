@@ -29,8 +29,8 @@ public class StreamHelper {
 		ByteBuffer totalByteBuffer = null;
 
 		totalByteBuffer = ByteBuffer.allocate(1024 * 1024);
-		final ByteBuffer byteBufferRead = ByteBuffer.allocate(1024 * 2);
-		final int byteCount = sc.read(byteBufferRead);
+		ByteBuffer byteBufferRead = ByteBuffer.allocate(1024 * 2);
+		int byteCount = sc.read(byteBufferRead);
 		// byteCount = -1 it's mean end of stream
 		if (byteCount == -1) {
 			// No more bytes can be read from the channel
@@ -53,7 +53,7 @@ public class StreamHelper {
 			System.out.println(bytes.length + " bytes from "
 					+ sc.getRemoteAddress());
 
-			final Object readObject = deserializeObject(bytes);
+			Object readObject = deserializeObject(bytes);
 			Message messageObject = null;
 			if (readObject instanceof Message) {
 				messageObject = (Message) readObject;
@@ -80,7 +80,7 @@ public class StreamHelper {
 		return ByteBuffer.wrap(bytes);
 	}
 
-	private static Object deserializeObject(final byte[] bytes) {
+	private static Object deserializeObject(byte[] bytes) {
 		Object readObject = null;
 		try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 				ObjectInputStream ois = new ObjectInputStream(bais);) {

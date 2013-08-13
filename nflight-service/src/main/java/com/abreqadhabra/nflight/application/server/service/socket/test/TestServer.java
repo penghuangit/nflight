@@ -12,9 +12,9 @@ import com.abreqadhabra.nflight.application.server.service.socket.tcp.common.Mes
 
 public class TestServer {
 
-	public static void main(final String[] args) throws ClassNotFoundException {
+	public static void main(String[] args) throws ClassNotFoundException {
 
-		final int DEFAULT_PORT = 5555;
+		int DEFAULT_PORT = 5555;
 
 		TestServer server = new TestServer();
 		server.startupTestServer(DEFAULT_PORT);
@@ -53,11 +53,11 @@ public class TestServer {
 	}
 
 	// isAcceptable returned true
-	private void accept(final SelectionKey key, final Selector selector)
+	private void accept(SelectionKey key, Selector selector)
 			throws IOException {
 
-		final ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
-		final SocketChannel sc = ssc.accept();
+		ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
+		SocketChannel sc = ssc.accept();
 		sc.configureBlocking(false);
 
 		System.out
@@ -71,8 +71,8 @@ public class TestServer {
 		sc.register(selector, SelectionKey.OP_READ);
 	}
 
-	public void processSelectionKey(final SelectionKey key,
-			final Selector selector) {
+	public void processSelectionKey(SelectionKey key,
+			Selector selector) {
 		// Since the ready operations are cumulative,
 		// need to check readiness for each operation
 
@@ -80,8 +80,8 @@ public class TestServer {
 			// Get channel with connection request
 			if (key.isConnectable()) {
 				System.out.println("isConnectable");
-				final SocketChannel sc = (SocketChannel) key.channel();
-				final boolean success = sc.finishConnect();
+				SocketChannel sc = (SocketChannel) key.channel();
+				boolean success = sc.finishConnect();
 				if (!success) {
 					// An error occurred; handle it
 					// Unregister the channel with this selector
@@ -103,20 +103,20 @@ public class TestServer {
 				System.out.println("isWritable");
 				this.write(key, new Message("write"));
 			}
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	// isWritable returned true
-	public void write(final SelectionKey key, final Object object) {
+	public void write(SelectionKey key, Object object) {
 		SocketChannel sc = (SocketChannel) key.channel();
 		StreamHelper.write(sc, object);
 		key.interestOps(SelectionKey.OP_WRITE);
 	}
 
 	// isReadable returned true
-	public void read(final SelectionKey key) {
+	public void read(SelectionKey key) {
 		try {
 			SocketChannel sc = (SocketChannel) key.channel();
 			StreamHelper.read(sc);

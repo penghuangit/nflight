@@ -8,7 +8,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 
 public class ConfigureImpl implements Configure {
-	private static final Class<ConfigureImpl> THIS_CLAZZ = ConfigureImpl.class;
+	private static Class<ConfigureImpl> THIS_CLAZZ = ConfigureImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private Properties props = new Properties();

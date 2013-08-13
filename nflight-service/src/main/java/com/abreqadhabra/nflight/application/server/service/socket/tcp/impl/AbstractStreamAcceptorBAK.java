@@ -28,22 +28,22 @@ import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public abstract class AbstractStreamAcceptorBAK implements SocketAcceptor, Runnable {
-    private static final Class<AbstractStreamAcceptorBAK> THIS_CLAZZ = AbstractStreamAcceptorBAK.class;
-    private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+    private static Class<AbstractStreamAcceptorBAK> THIS_CLAZZ = AbstractStreamAcceptorBAK.class;
+    private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
     // The host:port combination to listen on
-    private final InetAddress hostAddress;
-    private final int port;
+    private InetAddress hostAddress;
+    private int port;
 
     // The channel on which we'll accept connections
     private ServerSocketChannel serverChannel;
     // The selector we'll be monitoring
     protected Selector selector;
 
-    private final AcceptorWorker worker;
+    private AcceptorWorker worker;
 
     // The buffer into which we'll read data when it's available
-    private final ByteBuffer readBuffer = ByteBuffer.allocate(8192);
+    private ByteBuffer readBuffer = ByteBuffer.allocate(8192);
 
     // Maps a SocketChannel to a list of ByteBuffer instances
     private Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
@@ -51,7 +51,7 @@ public abstract class AbstractStreamAcceptorBAK implements SocketAcceptor, Runna
     // A list of PendingChange instances
     protected List<ChangeRequest> pendingChanges = new LinkedList<ChangeRequest>();
 
-    public AbstractStreamAcceptorBAK(final InetAddress hostAddress, final int port, final AcceptorWorker worker) throws IOException {
+    public AbstractStreamAcceptorBAK(InetAddress hostAddress, int port, AcceptorWorker worker) throws IOException {
 	this.hostAddress = hostAddress;
 	this.port = port;
 	this.worker = worker;
@@ -60,7 +60,7 @@ public abstract class AbstractStreamAcceptorBAK implements SocketAcceptor, Runna
 
     @Override
     public void bind() throws IOException {
-	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+	String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	// 새로운 서버 소켓 채널 생성
 	this.serverChannel = ServerSocketChannel.open();
@@ -91,7 +91,7 @@ public abstract class AbstractStreamAcceptorBAK implements SocketAcceptor, Runna
 	    this.serverChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 
 	    // 네트워크 주소와 포트 번호를 지정하여 InetSocketAddress 생성
-	    final InetSocketAddress isa = new InetSocketAddress(hostAddress, port);
+	    InetSocketAddress isa = new InetSocketAddress(hostAddress, port);
 
 	    // 지정된 네트워크 주소로 소켓을 바인딩
 	    this.serverChannel.socket().bind(isa);
@@ -107,8 +107,8 @@ public abstract class AbstractStreamAcceptorBAK implements SocketAcceptor, Runna
     }
 
     @Override
-    public void accept(final SelectionKey key) throws IOException {
-	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+    public void accept(SelectionKey key) throws IOException {
+	String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	// For an accept to be pending the channel must be a server socket
 	// channel.
@@ -129,12 +129,12 @@ public abstract class AbstractStreamAcceptorBAK implements SocketAcceptor, Runna
     }
 
     @Override
-    public void read(final SelectionKey key) throws IOException {
-	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+    public void read(SelectionKey key) throws IOException {
+	String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME, "a channel is ready for reading");
 
-	final SocketChannel socketChannel = (SocketChannel) key.channel();
+	SocketChannel socketChannel = (SocketChannel) key.channel();
 
 	// Clear out our read buffer so it's ready for new data
 	this.readBuffer.clear();
@@ -143,7 +143,7 @@ public abstract class AbstractStreamAcceptorBAK implements SocketAcceptor, Runna
 	int numRead = -1;
 	try {
 	    numRead = socketChannel.read(this.readBuffer);
-	} catch (final IOException e) {
+	} catch (IOException e) {
 	    // The remote forcibly closed the connection, cancel
 	    // the selection key and close the channel.
 	    key.cancel();
@@ -166,19 +166,19 @@ public abstract class AbstractStreamAcceptorBAK implements SocketAcceptor, Runna
     }
 
     @Override
-    public void write(final SelectionKey key) throws IOException {
-	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+    public void write(SelectionKey key) throws IOException {
+	String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME, "a channel is ready for writing");
 
-	final SocketChannel socketChannel = (SocketChannel) key.channel();
+	SocketChannel socketChannel = (SocketChannel) key.channel();
 
 	synchronized (this.pendingData) {
-	    final List<?> queue = this.pendingData.get(socketChannel);
+	    List<?> queue = this.pendingData.get(socketChannel);
 
 	    // Write until there's not more data ...
 	    while (!queue.isEmpty()) {
-		final ByteBuffer buf = (ByteBuffer) queue.get(0);
+		ByteBuffer buf = (ByteBuffer) queue.get(0);
 		socketChannel.write(buf);
 		if (buf.remaining() > 0) {
 		    // ... or the socket's buffer fills up
@@ -222,8 +222,8 @@ public abstract class AbstractStreamAcceptorBAK implements SocketAcceptor, Runna
     }
 
     @Override
-    public void execute(final DataEvent dataEvent) {
-	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+    public void execute(DataEvent dataEvent) {
+	String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	Object object = ResponseHandler.deserializeObject(dataEvent.data);
 	if (object == null) {
@@ -232,16 +232,16 @@ public abstract class AbstractStreamAcceptorBAK implements SocketAcceptor, Runna
 
 	LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME, object.toString());
 
-	final String response = "acceptor";
+	String response = "acceptor";
 
-	final ByteBuffer data = ResponseHandler.serializeObject(response);
+	ByteBuffer data = ResponseHandler.serializeObject(response);
 
 	this.send(dataEvent.socket, data);
 
     }
 
     public static void exit() {
-	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+	String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	// 3초간 대기후 어플리케이션을 종료합니다.
 	new Thread(new Runnable() {
@@ -249,7 +249,7 @@ public abstract class AbstractStreamAcceptorBAK implements SocketAcceptor, Runna
 	    public void run() {
 		try {
 		    Thread.sleep(3000);
-		} catch (final InterruptedException ie) {
+		} catch (InterruptedException ie) {
 		    // 이 예외는 발생하지 않습니다.
 		    LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME, "Thread was interrupted\n" + WrapperException.getStackTrace(ie));
 		}

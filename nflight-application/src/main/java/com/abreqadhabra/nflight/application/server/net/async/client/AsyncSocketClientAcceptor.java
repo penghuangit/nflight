@@ -17,7 +17,7 @@ import com.abreqadhabra.nflight.application.server.net.socket.NetworkChannelHelp
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class AsyncSocketClientAcceptor implements Runnable {
-	private static final Class<AsyncSocketClientAcceptor> THIS_CLAZZ = AsyncSocketClientAcceptor.class;
+	private static Class<AsyncSocketClientAcceptor> THIS_CLAZZ = AsyncSocketClientAcceptor.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	ClientController controller;
@@ -32,7 +32,7 @@ public class AsyncSocketClientAcceptor implements Runnable {
 		try {
 			this.socketAddress = new InetSocketAddress(InetAddress
 					.getLocalHost().getHostAddress(), 9999);
-		} catch (final UnknownHostException e) {
+		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 
@@ -42,7 +42,7 @@ public class AsyncSocketClientAcceptor implements Runnable {
 
 	@Override
 	public void run() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
@@ -96,7 +96,7 @@ public class AsyncSocketClientAcceptor implements Runnable {
 	}
 
 	public void send(ByteBuffer outputByteBuffer) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {

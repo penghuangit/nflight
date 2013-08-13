@@ -18,24 +18,24 @@ import com.abreqadhabra.nflight.application.server.net.socket.NetworkChannelHelp
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class AsyncSocketClientAcceptorBAK implements Runnable {
-	private static final Class<AsyncSocketClientAcceptorBAK> THIS_CLAZZ = AsyncSocketClientAcceptorBAK.class;
+	private static Class<AsyncSocketClientAcceptorBAK> THIS_CLAZZ = AsyncSocketClientAcceptorBAK.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private final ClientControllerImpl controller;
+	private ClientControllerImpl controller;
 
 	InetSocketAddress socketAddress;
 
-	private final ByteBuffer buffer;
+	private ByteBuffer buffer;
 
 	AsynchronousSocketChannel asyncSocketChannel;
 
-	public AsyncSocketClientAcceptorBAK(final ClientControllerImpl controller) {
+	public AsyncSocketClientAcceptorBAK(ClientControllerImpl controller) {
 		super();
 		this.controller = controller;
 		try {
 			this.socketAddress = new InetSocketAddress(InetAddress
 					.getLocalHost().getHostAddress(), 9999);
-		} catch (final UnknownHostException e) {
+		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 		this.buffer = ByteBuffer.allocate(1024);
@@ -52,7 +52,7 @@ public class AsyncSocketClientAcceptorBAK implements Runnable {
 	}
 
 	private AsynchronousSocketChannel connect() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		AsynchronousSocketChannel asyncSocketChannel = null;
@@ -63,7 +63,7 @@ public class AsyncSocketClientAcceptorBAK implements Runnable {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					"asyncSocketChannel. isOpen:" + asyncSocketChannel.isOpen());
 
-			final Future<Void> future = asyncSocketChannel
+			Future<Void> future = asyncSocketChannel
 					.connect(this.socketAddress);
 			future.get();
 
@@ -73,7 +73,7 @@ public class AsyncSocketClientAcceptorBAK implements Runnable {
 
 						asyncSocketChannel + "----------> Connect Channel: "
 								+ asyncSocketChannel.getRemoteAddress());
-			} catch (final IOException e1) {
+			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
@@ -95,9 +95,9 @@ public class AsyncSocketClientAcceptorBAK implements Runnable {
 				new CompletionHandler<Integer, ClientControllerImpl>() {
 
 					@Override
-					public void completed(final Integer result,
-							final ClientControllerImpl attachment) {
-						final String METHOD_NAME = Thread.currentThread()
+					public void completed(Integer result,
+							ClientControllerImpl attachment) {
+						String METHOD_NAME = Thread.currentThread()
 								.getStackTrace()[1].getMethodName();
 
 						try {
@@ -110,7 +110,7 @@ public class AsyncSocketClientAcceptorBAK implements Runnable {
 											+ "----------> reading Message: "
 											+ AsyncSocketClientAcceptorBAK.this.asyncSocketChannel
 													.getRemoteAddress());
-						} catch (final IOException e1) {
+						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
@@ -123,11 +123,11 @@ public class AsyncSocketClientAcceptorBAK implements Runnable {
 							LOGGER.info(AsyncSocketClientAcceptorBAK.this.asyncSocketChannel
 									.toString());
 							AsyncSocketClientAcceptorBAK.this.buffer.flip();
-							final byte[] bs = new byte[AsyncSocketClientAcceptorBAK.this.buffer
+							byte[] bs = new byte[AsyncSocketClientAcceptorBAK.this.buffer
 									.limit()];
 							AsyncSocketClientAcceptorBAK.this.buffer.get(bs);
 
-							final String content = new String(bs, Charset
+							String content = new String(bs, Charset
 									.forName("UTF-8"));
 							content.split(":");
 
@@ -148,14 +148,14 @@ public class AsyncSocketClientAcceptorBAK implements Runnable {
 							} else {
 
 								if (msg.getType().equals("fresh")) {
-									final String name = msg.getMessage();
-									final String[] names = name.split("@");
+									String name = msg.getMessage();
+									String[] names = name.split("@");
 									LOGGER.info("name size  --->"
 											+ names.length);
 									// DefaultListModel model =
 									// clientPanel.model;
 									// model.clear();
-									for (final String s : names) {
+									for (String s : names) {
 										LOGGER.info("name   --->" + s);
 									}
 								} else if (msg.getType().equals("chat")) {
@@ -179,23 +179,23 @@ public class AsyncSocketClientAcceptorBAK implements Runnable {
 					}
 
 					@Override
-					public void failed(final Throwable exc,
-							final ClientControllerImpl attachment) {
+					public void failed(Throwable exc,
+							ClientControllerImpl attachment) {
 
 					}
 				});
 	}
 
-	public void send(final ByteBuffer byteBuffer) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public void send(ByteBuffer byteBuffer) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
-		// final AsynchronousSocketChannel asyncSocketChannel = this.connect();
+		// AsynchronousSocketChannel asyncSocketChannel = this.connect();
 		try {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					this.asyncSocketChannel.getLocalAddress()
 							+ "----------> writing Message: "
 							+ this.asyncSocketChannel.getRemoteAddress());
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		this.asyncSocketChannel.write(byteBuffer);
@@ -204,8 +204,8 @@ public class AsyncSocketClientAcceptorBAK implements Runnable {
 		// receive();
 	}
 
-	private void close(final AsynchronousSocketChannel asyncSocketChannel) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	private void close(AsynchronousSocketChannel asyncSocketChannel) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
@@ -213,13 +213,13 @@ public class AsyncSocketClientAcceptorBAK implements Runnable {
 					asyncSocketChannel.getLocalAddress()
 							+ "----------> close channel: "
 							+ asyncSocketChannel.getRemoteAddress());
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		try {
 			asyncSocketChannel.close();
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 

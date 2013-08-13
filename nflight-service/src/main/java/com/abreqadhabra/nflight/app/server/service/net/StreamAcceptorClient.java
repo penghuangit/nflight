@@ -17,8 +17,8 @@ public class StreamAcceptorClient {
 
 	public static void main(String[] args) throws UnknownHostException {
 
-		final int DEFAULT_PORT = 9999;
-		final String IP = InetAddress.getLocalHost().getHostAddress();
+		int DEFAULT_PORT = 9999;
+		String IP = InetAddress.getLocalHost().getHostAddress();
 
 		// create asynchronous socket channel bound to the default group
 		try (AsynchronousSocketChannel asyncSocketChannel = AsynchronousSocketChannel

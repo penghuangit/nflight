@@ -11,7 +11,7 @@ public class AsyncCompletionHandler
 		implements
 			CompletionHandler<AsynchronousSocketChannel, Void> {
 
-	final ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+	ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
 	AsynchronousServerSocketChannel channel;
 
 	public AsyncCompletionHandler(AsynchronousServerSocketChannel channel) {

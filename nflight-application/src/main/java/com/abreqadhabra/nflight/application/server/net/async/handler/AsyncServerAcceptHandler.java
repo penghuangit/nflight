@@ -22,19 +22,19 @@ import com.abreqadhabra.nflight.dao.dto.Airline;
 public class AsyncServerAcceptHandler
 		implements
 			CompletionHandler<AsynchronousSocketChannel, Void> {
-	private static final Class<AsyncServerAcceptHandler> THIS_CLAZZ = AsyncServerAcceptHandler.class;
-	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<AsyncServerAcceptHandler> THIS_CLAZZ = AsyncServerAcceptHandler.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	Configure configure;
 	IBusinessLogic logic;
 	AsynchronousServerSocketChannel asyncServerSocketChannel;
 	AsyncServerImpl asyncServerImpl;
 
-	public AsyncServerAcceptHandler(final Configure configure,
-			final IBusinessLogic logic,
-			final AsynchronousServerSocketChannel asyncServerSocketChannel,
-			final AsyncServerImpl asyncServerImpl) {
+	public AsyncServerAcceptHandler(Configure configure,
+			IBusinessLogic logic,
+			AsynchronousServerSocketChannel asyncServerSocketChannel,
+			AsyncServerImpl asyncServerImpl) {
 		this.configure = configure;
 		this.logic = logic;
 		this.asyncServerSocketChannel = asyncServerSocketChannel;
@@ -42,8 +42,8 @@ public class AsyncServerAcceptHandler
 	}
 
 	@Override
-	public void completed(final AsynchronousSocketChannel result,
-			final Void attachment) {
+	public void completed(AsynchronousSocketChannel result,
+			Void attachment) {
 		Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		this.asyncServerSocketChannel.accept(null, this);
@@ -52,14 +52,14 @@ public class AsyncServerAcceptHandler
 
 	}
 
-	private void receive(final AsynchronousSocketChannel asyncSocketChannel) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	private void receive(AsynchronousSocketChannel asyncSocketChannel) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
 
-			final int capacity = this.configure
+			int capacity = this.configure
 					.getInt(Configure.ASYNC_INCOMING_BUFFER_CAPACITY);
-			final ByteBuffer readByteBuffer = NetworkChannelHelper
+			ByteBuffer readByteBuffer = NetworkChannelHelper
 					.getByteBuffer(capacity);
 
 			while (asyncSocketChannel.read(readByteBuffer).get() != -1) {
@@ -81,7 +81,7 @@ public class AsyncServerAcceptHandler
 							+ asyncSocketChannel.getRemoteAddress() + "["
 							+ readByteBuffer.array().length + " bytes]");
 
-			final Object deserializedObject = NetworkChannelHelper
+			Object deserializedObject = NetworkChannelHelper
 					.deserializeObject(readByteBuffer);
 
 			LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
@@ -98,19 +98,19 @@ public class AsyncServerAcceptHandler
 
 			// 로직데이터 echo 테스트
 			try {
-				final Airline[] airlines = this.logic.getAirlines();
+				Airline[] airlines = this.logic.getAirlines();
 
 				
 				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 						"dataObject: " + Arrays.toString(airlines));
 				
-				final MessageDTO sendMessage = new MessageDTOImpl();
+				MessageDTO sendMessage = new MessageDTOImpl();
 
 				sendMessage.setAirlines(airlines);
 
 				this.send(asyncSocketChannel, sendMessage);
 
-			} catch (final Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
@@ -120,12 +120,12 @@ public class AsyncServerAcceptHandler
 
 	}
 
-	private void send(final AsynchronousSocketChannel asyncSocketChannel,
-			final MessageDTO sendMessage) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	private void send(AsynchronousSocketChannel asyncSocketChannel,
+			MessageDTO sendMessage) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		
-		final ByteBuffer src = NetworkChannelHelper
+		ByteBuffer src = NetworkChannelHelper
 				.serializeObject(sendMessage);
 
 		try {
@@ -141,7 +141,7 @@ public class AsyncServerAcceptHandler
 	}
 
 	@Override
-	public void failed(final Throwable exc, final Void attachment) {
+	public void failed(Throwable exc, Void attachment) {
 		this.asyncServerSocketChannel.accept(null, this);
 
 		throw new UnsupportedOperationException("Cannot accept connections!");

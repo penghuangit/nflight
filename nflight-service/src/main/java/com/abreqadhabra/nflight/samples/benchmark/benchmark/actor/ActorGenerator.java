@@ -34,13 +34,13 @@ import com.abreqadhabra.nflight.samples.benchmark.actor.Message;
  */
 public class ActorGenerator {
 
-    private final int numActors;
+    private int numActors;
 
-    private final int numInitialMessages;
+    private int numInitialMessages;
 
-    private final int messageTtl;
+    private int messageTtl;
 
-    private final long seed;
+    private long seed;
 
     public ActorGenerator(ActorGeneratorConfig config) {
 	numActors = config.getNumActors();

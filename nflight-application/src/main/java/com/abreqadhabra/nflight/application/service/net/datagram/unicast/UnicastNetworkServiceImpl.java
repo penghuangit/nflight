@@ -21,12 +21,12 @@ import com.abreqadhabra.nflight.application.service.net.stream.nonblocking.Serve
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class UnicastNetworkServiceImpl extends AbstractNetworkServiceImpl {
-	private static final Class<UnicastNetworkServiceImpl> THIS_CLAZZ = UnicastNetworkServiceImpl.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<UnicastNetworkServiceImpl> THIS_CLAZZ = UnicastNetworkServiceImpl.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public UnicastNetworkServiceImpl(final Configure configure,
-			final ThreadPoolExecutor threadPool,
-			final InetSocketAddress endpoint) {
+	public UnicastNetworkServiceImpl(Configure configure,
+			ThreadPoolExecutor threadPool,
+			InetSocketAddress endpoint) {
 		super(configure, threadPool, endpoint);
 	}
 
@@ -35,8 +35,8 @@ public class UnicastNetworkServiceImpl extends AbstractNetworkServiceImpl {
 		try {
 			this.isRunning = true;
 			// create a new server-socket channel & selector
-			final Selector selector = Selector.open();
-			final DatagramChannel serverSocket = this
+			Selector selector = Selector.open();
+			DatagramChannel serverSocket = this
 					.createServerChannelFactory().createUnicastDatagramChannel(
 							StandardProtocolFamily.INET, this.endpoint);
 			// check that both of them were successfully opened
@@ -51,27 +51,27 @@ public class UnicastNetworkServiceImpl extends AbstractNetworkServiceImpl {
 			} else {
 				throw new IllegalStateException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
 			}
-		} catch (final IOException | InterruptedException | ExecutionException e) {
+		} catch (IOException | InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
 
 	}
-	private void pendingConnections(final Selector selector) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	private void pendingConnections(Selector selector) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
 			// wait for incoming an event one of the registered channels
 			// 등록된 서버 소켓 채널에 대한 이벤트 발생을 대기
-			final long timeout = 1000;
+			long timeout = 1000;
 			selector.select(timeout);
 
 			// there is something to process on selected keys
-			final Iterator<SelectionKey> iterator = selector.selectedKeys()
+			Iterator<SelectionKey> iterator = selector.selectedKeys()
 					.iterator();
 
 			while (iterator.hasNext()) {
-				final SelectionKey selectionKey = iterator.next();
+				SelectionKey selectionKey = iterator.next();
 				// 취득한 키를 키 집합에서 제거
 				// prevent the same key from coming up again
 				iterator.remove();
@@ -88,7 +88,7 @@ public class UnicastNetworkServiceImpl extends AbstractNetworkServiceImpl {
 					this.receive(selector, selectionKey);
 
 				} else if (selectionKey.isWritable()) {
-					final ServerSession session = (ServerSession) selectionKey
+					ServerSession session = (ServerSession) selectionKey
 							.attachment();
 					session.send(session);
 				} else {
@@ -97,27 +97,27 @@ public class UnicastNetworkServiceImpl extends AbstractNetworkServiceImpl {
 									+ selectionKey.readyOps());
 				}
 			}
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void receive(final Selector selector,
-			final SelectionKey selectionKey) {
+	private void receive(Selector selector,
+			SelectionKey selectionKey) {
 
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
-			final DatagramChannel channel = (DatagramChannel) selectionKey
+			DatagramChannel channel = (DatagramChannel) selectionKey
 					.channel();
 
-			final int capacity = this.configure
+			int capacity = this.configure
 					.getInt(Configure.UNICAST_INCOMING_BUFFER_CAPACITY);
-			final ByteBuffer incomingByteBuffer = NetworkServiceHelper
+			ByteBuffer incomingByteBuffer = NetworkServiceHelper
 					.getByteBuffer(capacity);
 
-			final SocketAddress clientEndpoint = channel
+			SocketAddress clientEndpoint = channel
 					.receive(incomingByteBuffer);
 
 			incomingByteBuffer.flip();
@@ -132,7 +132,7 @@ public class UnicastNetworkServiceImpl extends AbstractNetworkServiceImpl {
 							+ incomingByteBuffer.limit() + " bytes] from "
 							+ clientEndpoint);
 
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

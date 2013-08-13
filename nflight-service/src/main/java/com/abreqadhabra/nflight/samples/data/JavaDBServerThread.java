@@ -9,23 +9,23 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.samples.data.bin.JavaDBServer;
 
 public class JavaDBServerThread extends Thread {
-	private static final Class<JavaDBServer> THIS_CLAZZ = JavaDBServer.class;
+	private static Class<JavaDBServer> THIS_CLAZZ = JavaDBServer.class;
 	// 로그 출력을 위한 선언
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 	
-	public static final String STRING_DB_USER = "freelec";
-	public static final String STRING_DB_PASSWORD = "freelec!@#123";
+	public static String STRING_DB_USER = "freelec";
+	public static String STRING_DB_PASSWORD = "freelec!@#123";
 	
-	public static final String STRING_DATABASE_NAME = "FREELEC";
+	public static String STRING_DATABASE_NAME = "FREELEC";
 
-	public static final String STRING_PROTOOL = "jdbc:derby:";
+	public static String STRING_PROTOOL = "jdbc:derby:";
 
 	JavaDBServerControl serverControl = null;
 
 	Connection dbConnection = null;
 
 	public void run() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		serverControl = new JavaDBServerControl(1527);
 		try {
@@ -56,7 +56,7 @@ public class JavaDBServerThread extends Thread {
 
 	// 네트워크서버 환경 초기화
 	private void initNetworkServerEnviroments() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		if (LOGGER.isLoggable(Level.FINER)) {
 			LOGGER.logp(
@@ -115,7 +115,7 @@ public class JavaDBServerThread extends Thread {
 	}
 
 	private Properties getDBProperties() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		Properties properties = new Properties();
 		// 데이터베이스 FREELEC에서 사용되는 사용자와 패스워드 설정

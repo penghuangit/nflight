@@ -15,8 +15,8 @@ import com.abreqadhabra.nflight.application.server.service.socket.udp.impl.Datag
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class SocketAcceptorTest {
-    private static final Class<SocketAcceptorTest> THIS_CLAZZ = SocketAcceptorTest.class;
-    private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+    private static Class<SocketAcceptorTest> THIS_CLAZZ = SocketAcceptorTest.class;
+    private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
     public static void main(String[] args) throws Exception {
 
@@ -43,7 +43,7 @@ public class SocketAcceptorTest {
     }
 
     private static void startDatagramAcceptorClient(InetAddress DEFAULT_ADDRESS, int DEFAULT_PORT, Object sendObject) throws Exception {
-	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+	String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	// DatagramAcceptorClient client = new
 	// DatagramAcceptorClient(InetAddress.getByName("www.google.com"), 80);
@@ -88,7 +88,7 @@ public class SocketAcceptorTest {
     }
 
     private static void startStreamAcceptorClient(InetAddress DEFAULT_ADDRESS, int DEFAULT_PORT, Object sendObject) throws IOException {
-	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+	String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	// SocketClient client = new
 	// SocketClient(InetAddress.getByName("www.google.com"), 80);

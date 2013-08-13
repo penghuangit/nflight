@@ -14,7 +14,7 @@ public class RMIDCommand implements Runnable {
 
 	@Override
 	public void run() {
-		final SystemCommand cmd = new SystemCommand();
+		SystemCommand cmd = new SystemCommand();
 		try {
 			cmd.execute(command);
 		} catch (Exception e) {
@@ -23,9 +23,9 @@ public class RMIDCommand implements Runnable {
 		}
 	}
 
-	public static void main(final String[] args) {
+	public static void main(String[] args) {
 
-		final Configure configure = new ConfigureImpl(
+		Configure configure = new ConfigureImpl(
 				Configure.FILE_RMI_SERVICE_PROPERTIES);
 
 		String command = configure

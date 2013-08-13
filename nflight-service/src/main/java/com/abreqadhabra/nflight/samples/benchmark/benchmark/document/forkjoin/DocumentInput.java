@@ -46,11 +46,11 @@ import com.abreqadhabra.nflight.samples.benchmark.mapreduce.Output;
  */
 public class DocumentInput implements Input<UserTagsBundle> {
 
-    private final Document[] documents;
+    private Document[] documents;
 
-    private final int lo;
+    private int lo;
 
-    private final int hi;
+    private int hi;
 
     public DocumentInput(Document[] documents, int lo, int hi) {
 	this.documents = documents;

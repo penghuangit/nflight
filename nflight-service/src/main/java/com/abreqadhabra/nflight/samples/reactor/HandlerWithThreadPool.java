@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 public class HandlerWithThreadPool extends Handler {
 	 
     static ExecutorService pool = Executors.newFixedThreadPool(2);
-    static final int PROCESSING = 2;
+    static int PROCESSING = 2;
  
     public HandlerWithThreadPool(Selector sel, SocketChannel c) throws IOException {
         super(sel, c);

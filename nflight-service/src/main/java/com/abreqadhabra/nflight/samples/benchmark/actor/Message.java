@@ -28,9 +28,9 @@ public class Message {
 	return senderId + " -> " + receiverId;
     }
 
-    private final String text;
+    private String text;
 
-    private final int ttl;
+    private int ttl;
 
     public Message(String text, int ttl) {
 	this.text = text;

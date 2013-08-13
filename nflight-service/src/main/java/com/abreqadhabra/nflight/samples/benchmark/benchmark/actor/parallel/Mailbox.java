@@ -32,11 +32,11 @@ import com.abreqadhabra.nflight.samples.benchmark.actor.Message;
  */
 public class Mailbox {
 
-    private final Actor actor;
+    private Actor actor;
 
-    private final Queue<Message> messages = new ConcurrentLinkedQueue<>();
+    private Queue<Message> messages = new ConcurrentLinkedQueue<>();
 
-    private final AtomicBoolean isScheduled = new AtomicBoolean();
+    private AtomicBoolean isScheduled = new AtomicBoolean();
 
     public Mailbox(Actor actor) {
 	this.actor = actor;

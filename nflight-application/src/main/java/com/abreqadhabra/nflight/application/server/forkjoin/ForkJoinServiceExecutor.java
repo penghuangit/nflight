@@ -12,7 +12,7 @@ import com.abreqadhabra.nflight.application.launcher.ProfileImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ForkJoinServiceExecutor {
-	private static final Class<ForkJoinServiceExecutor> THIS_CLAZZ = ForkJoinServiceExecutor.class;
+	private static Class<ForkJoinServiceExecutor> THIS_CLAZZ = ForkJoinServiceExecutor.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	/** Whether the fork/join pool is started in async mode. */
@@ -21,7 +21,7 @@ public class ForkJoinServiceExecutor {
 	ForkJoinPool pool;
 
 	public ForkJoinServiceExecutor() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
@@ -29,7 +29,7 @@ public class ForkJoinServiceExecutor {
 	}
 
 	public void execute()  {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		// Check the number of available processors

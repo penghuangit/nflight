@@ -19,17 +19,17 @@ import java.util.Set;
  */
 public class SocektClient05 {
 
-	public static void main(final String[] args) {
+	public static void main(String[] args) {
 
-		final int DEFAULT_PORT = 5555;
-		final String IP = "127.0.0.1";
+		int DEFAULT_PORT = 5555;
+		String IP = "127.0.0.1";
 
-		final ByteBuffer buffer = ByteBuffer.allocateDirect(2 * 1024);
+		ByteBuffer buffer = ByteBuffer.allocateDirect(2 * 1024);
 		ByteBuffer randomBuffer;
 		CharBuffer charBuffer;
 
-		final Charset charset = Charset.defaultCharset();
-		final CharsetDecoder decoder = charset.newDecoder();
+		Charset charset = Charset.defaultCharset();
+		CharsetDecoder decoder = charset.newDecoder();
 
 		// open Selector and ServerSocketChannel by calling the open() method
 		try (Selector selector = Selector.open();
@@ -63,12 +63,12 @@ public class SocektClient05 {
 				while (selector.select(1000) > 0) {
 
 					// get keys
-					final Set keys = selector.selectedKeys();
-					final Iterator its = keys.iterator();
+					Set keys = selector.selectedKeys();
+					Iterator its = keys.iterator();
 
 					// process each key
 					while (its.hasNext()) {
-						final SelectionKey key = (SelectionKey) its.next();
+						SelectionKey key = (SelectionKey) its.next();
 
 						// remove the current key
 						its.remove();
@@ -102,7 +102,7 @@ public class SocektClient05 {
 										buffer.clear();
 									}
 
-									final int r = new Random().nextInt(100);
+									int r = new Random().nextInt(100);
 									if (r == 50) {
 										System.out
 												.println("50 was generated! Close the socket channel!");
@@ -116,7 +116,7 @@ public class SocektClient05 {
 									}
 								}
 							}
-						} catch (final IOException ex) {
+						} catch (IOException ex) {
 							System.err.println(ex);
 						}
 					}
@@ -125,7 +125,7 @@ public class SocektClient05 {
 				System.out
 						.println("The socket channel or selector cannot be opened!");
 			}
-		} catch (final IOException ex) {
+		} catch (IOException ex) {
 			System.err.println(ex);
 		}
 

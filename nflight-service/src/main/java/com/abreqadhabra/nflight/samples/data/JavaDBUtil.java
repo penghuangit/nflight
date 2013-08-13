@@ -3,7 +3,7 @@ package com.abreqadhabra.nflight.samples.data;
 
 public class JavaDBUtil {
 
-	public static final String STRING_DERBY_EMBEDED_DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
+	public static String STRING_DERBY_EMBEDED_DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
 
 	
 	public static void loadJDBCDriver() {

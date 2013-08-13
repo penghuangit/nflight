@@ -15,13 +15,13 @@ import com.abreqadhabra.nflight.application.service.net.AbstractNetworkServiceIm
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class BlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
-	private static final Class<BlockingNetworkServiceImpl> THIS_CLAZZ = BlockingNetworkServiceImpl.class;
-	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<BlockingNetworkServiceImpl> THIS_CLAZZ = BlockingNetworkServiceImpl.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public BlockingNetworkServiceImpl(final Configure configure,
-			final ThreadPoolExecutor threadPool,
-			final InetSocketAddress endpoint) {
+	public BlockingNetworkServiceImpl(Configure configure,
+			ThreadPoolExecutor threadPool,
+			InetSocketAddress endpoint) {
 		super(configure, threadPool, endpoint);
 		this.backlog = this.configure.getInt(Configure.BLOCKING_BIND_BACKLOG);
 	}
@@ -46,25 +46,25 @@ public class BlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 		}
 	}
 
-	private void pendingConnections(final ServerSocketChannel serverSocket) {
+	private void pendingConnections(ServerSocketChannel serverSocket) {
 
 		try {
-			final SocketChannel socket = serverSocket.accept();
+			SocketChannel socket = serverSocket.accept();
 			System.out.println("Accepted socket connection from "
 					+ socket.getRemoteAddress());
 
 			// write an welcome message
-			final String welcomeMessage = "Welcome to "
+			String welcomeMessage = "Welcome to "
 					+ socket.getLocalAddress().toString();
 			socket.write(ByteBuffer.wrap(welcomeMessage.getBytes("UTF-8")));
 
-			final Future<?> f = this.threadPool
+			Future<?> f = this.threadPool
 					.submit(new BlockingNetworkServiceWorker(this.configure,
 							socket));
 
 			System.out.println("Future<?>: " + f.getClass().getName());
 
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 

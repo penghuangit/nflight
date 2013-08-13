@@ -28,23 +28,23 @@ public class ServiceDescriptor {
 		return this.serviceName;
 	}
 
-	public void setAddress(final String address) {
+	public void setAddress(String address) {
 		this.address = address;
 	}
 
-	public void setCodeBase(final String codeBase) {
+	public void setCodeBase(String codeBase) {
 		this.codeBase = codeBase;
 	}
 
-	public void setHost(final String host) {
+	public void setHost(String host) {
 		this.host = host;
 	}
 
-	public void setPort(final int port) {
+	public void setPort(int port) {
 		this.port = port;
 	}
 
-	public void setServiceName(final String serviceName) {
+	public void setServiceName(String serviceName) {
 		this.serviceName = serviceName;
 	}
 

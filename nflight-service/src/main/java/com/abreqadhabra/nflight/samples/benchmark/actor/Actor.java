@@ -30,16 +30,16 @@ import com.abreqadhabra.nflight.samples.benchmark.benchmark.actor.ActorBenchmark
  */
 public class Actor {
 
-    public static final AtomicInteger COUNT_ALL = ActorBenchmarkConfig.DEBUG ? new AtomicInteger()
+    public static AtomicInteger COUNT_ALL = ActorBenchmarkConfig.DEBUG ? new AtomicInteger()
 	    : null;
 
-    private final AtomicBoolean active = ActorBenchmarkConfig.DEBUG ? new AtomicBoolean() : null;
+    private AtomicBoolean active = ActorBenchmarkConfig.DEBUG ? new AtomicBoolean() : null;
 
-    private final int id;
+    private int id;
 
-    private final int numActors;
+    private int numActors;
 
-    private final Random rng;
+    private Random rng;
 
     private ActorContext context;
 

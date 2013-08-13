@@ -10,8 +10,8 @@ import com.abreqadhabra.nflight.application.service.rmi.activatable.ActivatableR
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public abstract class AbstractRMIServant implements RMIServant, Runnable {
-	private static final Class<ActivatableRMIServantImpl> THIS_CLAZZ = ActivatableRMIServantImpl.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<ActivatableRMIServantImpl> THIS_CLAZZ = ActivatableRMIServantImpl.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	protected Configure configure;
 	public InetAddress addr;

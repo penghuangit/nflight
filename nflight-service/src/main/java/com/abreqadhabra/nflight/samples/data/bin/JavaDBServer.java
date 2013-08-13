@@ -60,16 +60,16 @@ import com.abreqadhabra.nflight.samples.data.JavaDBUtil;
 import com.abreqadhabra.nflight.samples.data.exception.NFDataServerException;
 
 public class JavaDBServer {
-	private static final Class<JavaDBServer> THIS_CLAZZ = JavaDBServer.class;
+	private static Class<JavaDBServer> THIS_CLAZZ = JavaDBServer.class;
 	// 로그 출력을 위한 선언
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	// Derby Connect URL
-	public static final String STRING_PROTOOL = "jdbc:derby:";
-	public static final String STRING_DB_USER = "freelec";
-	public static final String STRING_DB_PASSWORD = "freelec!@#123";
-	public static final String STRING_DATABASE_NAME = "FREELEC";
-	public static final String STRING_DATASOURCE_NAME = "jdbc/datasource";
+	public static String STRING_PROTOOL = "jdbc:derby:";
+	public static String STRING_DB_USER = "freelec";
+	public static String STRING_DB_PASSWORD = "freelec!@#123";
+	public static String STRING_DATABASE_NAME = "FREELEC";
+	public static String STRING_DATASOURCE_NAME = "jdbc/datasource";
 
 	JavaDBServerControl serverControl = null;
 	Connection dbConnection = null;
@@ -82,7 +82,7 @@ public class JavaDBServer {
 
 	// 네트워크서버 환경 초기화
 	private void initNetworkServerEnviroments() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		LOGGER.logp(
 				Level.FINER,
@@ -150,7 +150,7 @@ public class JavaDBServer {
 
 	// 데이터베이스 환경 초기화
 	private void initDatabaseEnviroments() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		// DB프로퍼티설정
 		Properties dbProperties = getDBProperties();
@@ -163,7 +163,7 @@ public class JavaDBServer {
 	}
 
 	private Properties getDBProperties() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		Properties properties = new Properties();
 		// 데이터베이스 FREELEC에서 사용되는 사용자와 패스워드 설정
@@ -194,7 +194,7 @@ public class JavaDBServer {
 	 *             up and running
 	 */
 	private static void waitForConnection() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		NetworkServerControl server = null;
 		try {

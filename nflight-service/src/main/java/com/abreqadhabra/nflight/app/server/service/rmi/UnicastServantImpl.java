@@ -13,19 +13,19 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 //Strategy ConcreteStrategy
 public class UnicastServantImpl extends AbstractServant {
 
-	private static final Class<UnicastServantImpl> THIS_CLAZZ = UnicastServantImpl.class;
+	private static Class<UnicastServantImpl> THIS_CLAZZ = UnicastServantImpl.class;
 
 	private static Logger LOGGER = LoggingHelper
 			.getLogger(THIS_CLAZZ);
 
-	public UnicastServantImpl(final ServiceDescriptor _desc)
+	public UnicastServantImpl(ServiceDescriptor _desc)
 			throws Exception {
 		super(_desc);
 	}
 
 	@Override
 	public void startup() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER,
@@ -39,12 +39,12 @@ public class UnicastServantImpl extends AbstractServant {
 					+ "가 레지스트리에 이미 등록되어 있습니다.");
 		} else {
 			try {
-				final Remote servant = UnicastRemoteObject
+				Remote servant = UnicastRemoteObject
 						.exportObject(this, 0);
 				RMIServiceHelper.rebind(super.registry, RMIServiceHelper
 						.getBoundName(super.host, super.port, "unicast"),
 						servant);
-			} catch (final Exception e) { 
+			} catch (Exception e) { 
 				throw e;
 			}
 		}

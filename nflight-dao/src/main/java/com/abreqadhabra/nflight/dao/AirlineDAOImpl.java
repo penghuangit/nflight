@@ -10,16 +10,16 @@ import com.abreqadhabra.nflight.dao.dto.Airline;
 
 public class AirlineDAOImpl extends CommonDAO implements AirlineDAO {
 
-	private static final Class<AirlineDAOImpl> THIS_CLAZZ = AirlineDAOImpl.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<AirlineDAOImpl> THIS_CLAZZ = AirlineDAOImpl.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 	
-	private static final String AIRLINE_DAO_INSERT = ".sql.AirlineDAOImpl.insert(Airline)";
-	private static final String AIRLINE_DAO_DELETE_ALL = ".sql.AirlineDAOImpl.deleteAll()";
-	private static final String AIRLINE_DAO_DELETE_BY_PRIMARY_KEY = ".sql.AirlineDAOImpl.deleteByPrimaryKey(String)";
-	private static final String AIRLINE_DAO_FIND_ALL = ".sql.AirlineDAOImpl.findAll()";
-	private static final String AIRLINE_DAO_FIND_BY_PRIMARYKEY = ".sql.AirlineDAOImpl.findByPrimaryKey(String)";
-	private static final String AIRLINE_DAO_MATCH_BY_AIRLINE_NAME = ".sql.AirlineDAOImpl.matchByAirlineName(String)";
-	private static final String AIRLINE_DAO_UPDATE_BY_PRIMARY_KEY = ".sql.AirlineDAOImpl.updateByPrimaryKey(Airline)";
+	private static String AIRLINE_DAO_INSERT = ".sql.AirlineDAOImpl.insert(Airline)";
+	private static String AIRLINE_DAO_DELETE_ALL = ".sql.AirlineDAOImpl.deleteAll()";
+	private static String AIRLINE_DAO_DELETE_BY_PRIMARY_KEY = ".sql.AirlineDAOImpl.deleteByPrimaryKey(String)";
+	private static String AIRLINE_DAO_FIND_ALL = ".sql.AirlineDAOImpl.findAll()";
+	private static String AIRLINE_DAO_FIND_BY_PRIMARYKEY = ".sql.AirlineDAOImpl.findByPrimaryKey(String)";
+	private static String AIRLINE_DAO_MATCH_BY_AIRLINE_NAME = ".sql.AirlineDAOImpl.matchByAirlineName(String)";
+	private static String AIRLINE_DAO_UPDATE_BY_PRIMARY_KEY = ".sql.AirlineDAOImpl.updateByPrimaryKey(Airline)";
 
 	public AirlineDAOImpl(String databaseType) throws Exception {
 
@@ -48,7 +48,7 @@ public class AirlineDAOImpl extends CommonDAO implements AirlineDAO {
 
 	@Override
 	public Airline[] findAll() throws Exception {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		String sql = super.getPropertyByDatabaseType(AIRLINE_DAO_FIND_ALL);
 		List<Airline> results = super.findByDynamicQuery(sql, null,

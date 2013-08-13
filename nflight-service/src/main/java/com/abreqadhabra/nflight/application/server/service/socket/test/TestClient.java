@@ -11,17 +11,17 @@ import java.util.Set;
 
 public class TestClient {
 
-	public static void main(final String[] args) throws UnknownHostException {
+	public static void main(String[] args) throws UnknownHostException {
 
-		final String DEFAULT_ADDRESS = InetAddress.getLocalHost()
+		String DEFAULT_ADDRESS = InetAddress.getLocalHost()
 				.getHostAddress();
-		final int DEFAULT_PORT = 5555;
-		final TestClient client = new TestClient();
+		int DEFAULT_PORT = 5555;
+		TestClient client = new TestClient();
 		client.startupTestClient(DEFAULT_ADDRESS, DEFAULT_PORT);
 
 	}
 
-	private void startupTestClient(final String address, final int port) {
+	private void startupTestClient(String address, int port) {
 
 		// open Selector and ServerSocketChannel by calling the open() method
 		try (Selector selector = Selector.open();
@@ -32,11 +32,11 @@ public class TestClient {
 			// waiting for the connection
 			while (selector.select(1000) > 0) {
 				// get keys
-				final Set<SelectionKey> keys = selector.selectedKeys();
-				final Iterator<SelectionKey> its = keys.iterator();
+				Set<SelectionKey> keys = selector.selectedKeys();
+				Iterator<SelectionKey> its = keys.iterator();
 				// process each key
 				while (its.hasNext()) {
-					final SelectionKey key = its.next();
+					SelectionKey key = its.next();
 					// remove the current key
 
 					its.remove();
@@ -58,21 +58,21 @@ public class TestClient {
 				
 			}
 
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void write(final SelectionKey key) {
+	private void write(SelectionKey key) {
 		System.out.println("Write");
 	}
 
-	private void connect(final SelectionKey key) {
+	private void connect(SelectionKey key) {
 		System.out.println("Connect");
 
 	}
 
-	private void read(final SelectionKey key) {
+	private void read(SelectionKey key) {
 		System.out.println("Read");
 	}
 }

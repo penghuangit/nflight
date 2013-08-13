@@ -26,8 +26,8 @@ import com.abreqadhabra.nflight.application.server.service.socket.udp.common.Att
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class DatagramAcceptorClient implements Runnable {
-	private static final Class<DatagramAcceptorClient> THIS_CLAZZ = DatagramAcceptorClient.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<DatagramAcceptorClient> THIS_CLAZZ = DatagramAcceptorClient.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	// The host:port combination to connect to
 	private InetAddress hostAddress;
@@ -58,7 +58,7 @@ public class DatagramAcceptorClient implements Runnable {
 
 	public void sendObject(Object object, ResponseHandler handler)
 			throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		
 		// Start a new connection
@@ -91,10 +91,10 @@ public class DatagramAcceptorClient implements Runnable {
 
 	@Override
 	public void run() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		final String orgName = Thread.currentThread().getName();
+		String orgName = Thread.currentThread().getName();
 		Thread.currentThread().setName(
 				orgName + "-" + THIS_CLAZZ.getSimpleName());
 
@@ -227,7 +227,7 @@ public class DatagramAcceptorClient implements Runnable {
 	}
 
 	private void write(SelectionKey key) throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		DatagramChannel datagram = (DatagramChannel) key.channel();
@@ -259,7 +259,7 @@ public class DatagramAcceptorClient implements Runnable {
 	}
 
 	private DatagramChannel initiateConnection() throws IOException {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		
 		DatagramChannel datagramChannel = DatagramChannel

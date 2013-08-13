@@ -9,13 +9,13 @@ import com.abreqadhabra.nflight.application.server.concurrent.ServiceForkJoinTas
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ServiceExecutorForkJoin {
-	private static final Class<ServiceExecutorForkJoin> THIS_CLAZZ = ServiceExecutorForkJoin.class;
+	private static Class<ServiceExecutorForkJoin> THIS_CLAZZ = ServiceExecutorForkJoin.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	ForkJoinPool pool;
 
 	public ServiceExecutorForkJoin() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
@@ -23,7 +23,7 @@ public class ServiceExecutorForkJoin {
 	}
 
 	public void execute() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		// Check the number of available processors

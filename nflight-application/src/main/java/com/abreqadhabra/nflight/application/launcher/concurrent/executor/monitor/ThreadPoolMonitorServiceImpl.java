@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ThreadPoolMonitorServiceImpl implements ThreadPoolMonitorService {
-	private static final Class<ThreadPoolMonitorServiceImpl> THIS_CLAZZ = ThreadPoolMonitorServiceImpl.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<ThreadPoolMonitorServiceImpl> THIS_CLAZZ = ThreadPoolMonitorServiceImpl.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	ThreadPoolExecutor executor;
 
@@ -28,7 +28,7 @@ public class ThreadPoolMonitorServiceImpl implements ThreadPoolMonitorService {
 
 	@Override
 	public void run() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		if (LOGGER.isLoggable(Level.FINER)) {
@@ -59,7 +59,7 @@ public class ThreadPoolMonitorServiceImpl implements ThreadPoolMonitorService {
 	}
 
 	private void threadPoolInfo() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		String result = String
@@ -77,7 +77,7 @@ public class ThreadPoolMonitorServiceImpl implements ThreadPoolMonitorService {
 	}
 
 	public void threadInfo() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 	//	this.threadGroup = this.threadGroup.getParent();

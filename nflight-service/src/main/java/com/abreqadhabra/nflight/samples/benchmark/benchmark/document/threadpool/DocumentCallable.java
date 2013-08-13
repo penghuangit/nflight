@@ -31,11 +31,11 @@ import com.abreqadhabra.nflight.samples.benchmark.document.usertags.UserTagsCalc
  */
 public class DocumentCallable implements Callable<UserTagsBundle> {
 
-    private final Document[] documents;
+    private Document[] documents;
 
-    private final int lo;
+    private int lo;
 
-    private final int hi;
+    private int hi;
 
     public DocumentCallable(Document[] documents, int lo, int hi) {
 	this.documents = documents;

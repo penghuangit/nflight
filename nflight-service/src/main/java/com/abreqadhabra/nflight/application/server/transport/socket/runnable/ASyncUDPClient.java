@@ -15,7 +15,7 @@ import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.Iterator;
 
-public final class ASyncUDPClient {
+public class ASyncUDPClient {
 	public static void main(String[] args) throws IOException {
 		InetSocketAddress hostAddress = new InetSocketAddress(
 				"255.255.255.255", 12344);
@@ -38,7 +38,7 @@ public final class ASyncUDPClient {
 		channel.register(selector, SelectionKey.OP_READ);
 
 		while (true) {
-			final int select = selector.select();
+			int select = selector.select();
 			System.out.println("select " + select);
 			Iterator selectedKeys = selector.selectedKeys().iterator();
 			while (selectedKeys.hasNext()) {
@@ -65,11 +65,11 @@ public final class ASyncUDPClient {
 	}
 
 	private static InetAddress getAddress() throws SocketException {
-		final Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
+		Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
 				.getNetworkInterfaces();
 		NetworkInterface networkInterfaceToUse = null;
 		while (networkInterfaces.hasMoreElements()) {
-			final NetworkInterface networkInterface = networkInterfaces
+			NetworkInterface networkInterface = networkInterfaces
 					.nextElement();
 			if (networkInterface.getDisplayName().contains("Virtual"))
 				continue;

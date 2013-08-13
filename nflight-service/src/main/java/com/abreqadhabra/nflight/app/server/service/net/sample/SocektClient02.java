@@ -17,19 +17,19 @@ import java.nio.charset.CharsetDecoder;
  */
 public class SocektClient02 {
 
-	public static void main(final String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 
-		final int REMOTE_PORT = 9999;
-		final String REMOTE_IP = "127.0.0.1"; // modify this accordingly if you
+		int REMOTE_PORT = 9999;
+		String REMOTE_IP = "127.0.0.1"; // modify this accordingly if you
 												// want to test remote
-		final int MAX_PACKET_SIZE = 65507;
+		int MAX_PACKET_SIZE = 65507;
 
 		CharBuffer charBuffer = null;
-		final Charset charset = Charset.defaultCharset();
-		final CharsetDecoder decoder = charset.newDecoder();
-		final ByteBuffer textToEcho = ByteBuffer
+		Charset charset = Charset.defaultCharset();
+		CharsetDecoder decoder = charset.newDecoder();
+		ByteBuffer textToEcho = ByteBuffer
 				.wrap("Echo this: I'm a big and ugly acceptor!".getBytes());
-		final ByteBuffer echoedText = ByteBuffer
+		ByteBuffer echoedText = ByteBuffer
 				.allocateDirect(MAX_PACKET_SIZE);
 
 		// create a new datagram channel
@@ -46,7 +46,7 @@ public class SocektClient02 {
 						4 * 1024);
 
 				// transmitting data packets
-				final int sent = datagramChannel.send(textToEcho,
+				int sent = datagramChannel.send(textToEcho,
 						new InetSocketAddress(REMOTE_IP, REMOTE_PORT));
 				System.out.println("I have successfully sent " + sent
 						+ " bytes to the Echo Server!");
@@ -61,7 +61,7 @@ public class SocektClient02 {
 			} else {
 				System.out.println("The channel cannot be opened!");
 			}
-		} catch (final Exception ex) {
+		} catch (Exception ex) {
 			if (ex instanceof ClosedChannelException) {
 				System.err.println("The channel was unexpected closed ...");
 			}

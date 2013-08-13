@@ -7,13 +7,13 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class AsyncServerSendHandler implements CompletionHandler<Integer, Void> {
-	private static final Class<AsyncServerSendHandler> THIS_CLAZZ = AsyncServerSendHandler.class;
-	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<AsyncServerSendHandler> THIS_CLAZZ = AsyncServerSendHandler.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	@Override
 	public void completed(Integer result, Void attachment) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		if (result > 0) {

@@ -10,22 +10,22 @@ public class RMIDCommand {
 	/**
 	 * @param args
 	 */
-	public static void main(final String[] args) {
+	public static void main(String[] args) {
 		try {
 			new RMIDCommand();
-		} catch (final Exception e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	private final String codeBase = IOStream.getCodebase(RMIDCommand.class
+	private String codeBase = IOStream.getCodebase(RMIDCommand.class
 			.getName());
 
 	public RMIDCommand() {
 		try {
 			this.startRMID();
-		} catch (final Exception e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -33,7 +33,7 @@ public class RMIDCommand {
 
 	private void startRMID() throws Exception {
 		// TODO Auto-generated method stub
-		final BootCommand cmd = new BootCommand();
+		BootCommand cmd = new BootCommand();
 		String command = System
 				.getProperty(Profile.PROPERTIES_BOOTCOMMAND.NFLIGHT_BOOTCOMMAND_RMI_ACTIVATABLE_RMID_START_WINDOWS
 						.toString());

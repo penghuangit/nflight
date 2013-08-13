@@ -13,11 +13,11 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.IOStream;
 
 public class LoadPropertiesExample {
-	private static final Class<LoadPropertiesExample> THIS_CLAZZ = LoadPropertiesExample.class;
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<LoadPropertiesExample> THIS_CLAZZ = LoadPropertiesExample.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	public static void main(String[] args) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		String filePath = "com/abreqadhabra/nflight/examples/common/conf";

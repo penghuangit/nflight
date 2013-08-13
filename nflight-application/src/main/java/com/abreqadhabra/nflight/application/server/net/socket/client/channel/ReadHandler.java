@@ -16,12 +16,12 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 public class ReadHandler
 		implements
 			CompletionHandler<Integer, ClientControllerImpl> {
-	private static final Class<ReadHandler> THIS_CLAZZ = ReadHandler.class;
+	private static Class<ReadHandler> THIS_CLAZZ = ReadHandler.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	AsyncSocketClientAcceptorBAK acceptor;
 	AsynchronousSocketChannel receiveAsyncSocketChannel;
-	private final ByteBuffer buffer;
+	private ByteBuffer buffer;
 
 	public ReadHandler(AsyncSocketClientAcceptorBAK acceptor,
 			AsynchronousSocketChannel receiveAsyncSocketChannel) {
@@ -34,7 +34,7 @@ public class ReadHandler
 
 	@Override
 	public void completed(Integer result, ClientControllerImpl attachment) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
@@ -42,7 +42,7 @@ public class ReadHandler
 
 			this.receiveAsyncSocketChannel + "----------> reading Message: "
 					+ this.receiveAsyncSocketChannel.getRemoteAddress());
-		} catch (final IOException e1) {
+		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
@@ -53,12 +53,12 @@ public class ReadHandler
 		if (result > 1) {
 			LOGGER.info(this.receiveAsyncSocketChannel.toString());
 			this.buffer.flip();
-			final byte[] bs = new byte[this.buffer.limit()];
+			byte[] bs = new byte[this.buffer.limit()];
 			this.buffer.get(bs);
 
-			final String content = new String(bs, Charset.forName("UTF-8"));
+			String content = new String(bs, Charset.forName("UTF-8"));
 			// LOGGER.info(content);
-			final String[] strs = content.split(":");
+			String[] strs = content.split(":");
 
 			MessageDTOImpl msg = new MessageDTOImpl();
 		//	msg = (MessageDTOImpl) msg.deserializeObject(bs);
@@ -76,13 +76,13 @@ public class ReadHandler
 			} else {
 
 				if (msg.getType().equals("fresh")) {
-					final String name = msg.getMessage();
-					final String[] names = name.split("@");
+					String name = msg.getMessage();
+					String[] names = name.split("@");
 					LOGGER.info("name size  --->" + names.length);
 					// DefaultListModel model =
 					// clientPanel.model;
 					// model.clear();
-					for (final String s : names) {
+					for (String s : names) {
 						LOGGER.info("name   --->" + s);
 					}
 				} else if (msg.getType().equals("chat")) {

@@ -11,9 +11,9 @@ import java.util.Iterator;
 
 public class UDPEchoServerSelector {
 
-	private static final int TIMEOUT = 3000; // Wait timeout (milliseconds)
+	private static int TIMEOUT = 3000; // Wait timeout (milliseconds)
 
-	private static final int ECHOMAX = 255; // Maximum size of echo datagram
+	private static int ECHOMAX = 255; // Maximum size of echo datagram
 
 	public static void main(String[] args) throws IOException {
 

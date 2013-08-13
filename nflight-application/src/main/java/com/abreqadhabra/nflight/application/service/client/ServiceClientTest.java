@@ -25,9 +25,9 @@ import com.abreqadhabra.nflight.common.exception.WrapperException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ServiceClientTest {
-	private static final Class<ServiceClientTest> THIS_CLAZZ = ServiceClientTest.class;
-	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<ServiceClientTest> THIS_CLAZZ = ServiceClientTest.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	static HashMap<String, Runnable> serviceGroupMap = new HashMap<String, Runnable>();
 	static int cnt = 1;
@@ -37,14 +37,14 @@ public class ServiceClientTest {
 		return new SocketChannelFactory();
 	}
 
-	public static void main(final String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 
-		final InetAddress DEFAULT_ADDRESS = InetAddress.getLocalHost();
+		InetAddress DEFAULT_ADDRESS = InetAddress.getLocalHost();
 
-		final Configure netConfigure = new ConfigureImpl(
+		Configure netConfigure = new ConfigureImpl(
 				Configure.FILE_NETWORK_SERVICE_PROPERTIES);
 
-		final Configure rmiConfigure = new ConfigureImpl(
+		Configure rmiConfigure = new ConfigureImpl(
 				Configure.FILE_RMI_SERVICE_PROPERTIES);
 		for (int i = 0; i < cnt; i++) {
 
@@ -70,7 +70,7 @@ public class ServiceClientTest {
 									netConfigure
 											.getInt(Configure.UNICAST_DEFAULT_PORT)));
 
-			final InetAddress multicastGroup = InetAddress
+			InetAddress multicastGroup = InetAddress
 					.getByName(Configure.MULTICAST_GROUP_ADDRESS);
 
 			serviceGroupMap.put(
@@ -94,8 +94,8 @@ public class ServiceClientTest {
 
 	}
 
-	private static Runnable getActivatableRMIService(final InetAddress addr,
-			final int port) throws Exception {
+	private static Runnable getActivatableRMIService(InetAddress addr, int port)
+			throws Exception {
 
 		String boundName = RMIServiceHelper.getBoundName(addr.getHostAddress(),
 				port, Configure.RMI_SERVICE_TYPE.activatable.toString());
@@ -104,8 +104,8 @@ public class ServiceClientTest {
 
 	}
 
-	private static Runnable getUnicastRMIService(final InetAddress addr,
-			final int port) throws Exception {
+	private static Runnable getUnicastRMIService(InetAddress addr, int port)
+			throws Exception {
 
 		String boundName = RMIServiceHelper.getBoundName(addr.getHostAddress(),
 				port, Configure.RMI_SERVICE_TYPE.unicast.toString());
@@ -113,43 +113,40 @@ public class ServiceClientTest {
 		return rmiClient(addr, port, boundName, millis);
 	}
 
-	private static Runnable getBlockingNetworkService(final InetAddress addr,
-			final int port, final Configure.STREAM_SERVICE_TYPE type)
-			throws IOException, InterruptedException, ExecutionException {
+	private static Runnable getBlockingNetworkService(InetAddress addr,
+			int port, Configure.STREAM_SERVICE_TYPE type) throws IOException,
+			InterruptedException, ExecutionException {
 		// port = NetworkServiceHelper.validatedStreamPort(port);
-		final SocketChannel channel = createSocketChannelFactory()
+		SocketChannel channel = createSocketChannelFactory()
 				.createBlockingSocketChannel(new InetSocketAddress(addr, port),
 						type);
 		return scoketClient(channel, new InetSocketAddress(addr, port), millis);
 	}
 
-	private static Runnable getAsyncNetworkService(final InetAddress addr,
-			final int port) throws IOException, InterruptedException,
-			ExecutionException {
+	private static Runnable getAsyncNetworkService(InetAddress addr, int port)
+			throws IOException, InterruptedException, ExecutionException {
 		// port = NetworkServiceHelper.validatedStreamPort(port);
-		final AsynchronousSocketChannel channel = createSocketChannelFactory()
+		AsynchronousSocketChannel channel = createSocketChannelFactory()
 				.createAsyncSocketChannel(new InetSocketAddress(addr, port));
 		return scoketClient(channel, new InetSocketAddress(addr, port), millis);
 	}
 
-	private static Runnable getUnicastNetworkService(final InetAddress addr,
-			final int port) throws IOException, InterruptedException,
-			ExecutionException {
+	private static Runnable getUnicastNetworkService(InetAddress addr, int port)
+			throws IOException, InterruptedException, ExecutionException {
 		// port = NetworkServiceHelper.validatedStreamPort(port);
-		final DatagramChannel channel = createSocketChannelFactory()
+		DatagramChannel channel = createSocketChannelFactory()
 				.createUnicastSocketChannel(StandardProtocolFamily.INET,
 						new InetSocketAddress(addr, port));
 		return scoketClient(channel, new InetSocketAddress(addr, port), millis);
 	}
 
 	private static Runnable getMulticastNetworkService(
-			final InetAddress multicastGroupAddr, final InetAddress addr,
-			final int port) throws IOException, InterruptedException,
-			ExecutionException {
+			InetAddress multicastGroupAddr, InetAddress addr, int port)
+			throws IOException, InterruptedException, ExecutionException {
 		// port = NetworkServiceHelper.validatedStreamPort(port);
-		final InetSocketAddress groupEndpoint = new InetSocketAddress(
+		InetSocketAddress groupEndpoint = new InetSocketAddress(
 				multicastGroupAddr, port);
-		final DatagramChannel channel = createSocketChannelFactory()
+		DatagramChannel channel = createSocketChannelFactory()
 				.createMulticastSocketChannel(StandardProtocolFamily.INET,
 						groupEndpoint.getAddress(),
 						new InetSocketAddress(addr, port));
@@ -176,8 +173,8 @@ public class ServiceClientTest {
 
 			@Override
 			public void run() {
-				final String METHOD_NAME = Thread.currentThread()
-						.getStackTrace()[1].getMethodName();
+				String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+						.getMethodName();
 
 				LOGGER.logp(
 						Level.FINER,
@@ -187,7 +184,8 @@ public class ServiceClientTest {
 								+ LoggingHelper.getThreadName(Thread
 										.currentThread()));
 				try {
-					RMIServant stub = (RMIServant) registry.lookup(boundName);
+					RMIServant stub = (RMIServant) this.registry
+							.lookup(this.boundName);
 					String response = stub.sayHello();
 					Thread.sleep(this.millis);
 					System.out.println(stub + "\t:\t" + response);
@@ -200,16 +198,16 @@ public class ServiceClientTest {
 		}.init(addr, port, boundName, millis);
 	}
 
-	private static Runnable scoketClient(final NetworkChannel channel,
-			final InetSocketAddress endpoint, final int millis) {
+	private static Runnable scoketClient(NetworkChannel channel,
+			InetSocketAddress endpoint, int millis) {
 		return new Runnable() {
 
 			NetworkChannel channel;
 			private int millis;
 			private InetSocketAddress endpoint;
 
-			public Runnable init(final NetworkChannel channel,
-					final InetSocketAddress multicastGroup, final int millis) {
+			public Runnable init(NetworkChannel channel,
+					InetSocketAddress multicastGroup, int millis) {
 				this.channel = channel;
 				this.endpoint = multicastGroup;
 				this.millis = millis;
@@ -218,8 +216,8 @@ public class ServiceClientTest {
 
 			@Override
 			public void run() {
-				final String METHOD_NAME = Thread.currentThread()
-						.getStackTrace()[1].getMethodName();
+				String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+						.getMethodName();
 
 				LOGGER.logp(
 						Level.FINER,
@@ -231,7 +229,7 @@ public class ServiceClientTest {
 
 				try {
 
-					final String message = "Hello World! "
+					String message = "Hello World! "
 							+ "---------------------> " + this.endpoint;;
 
 					if (this.channel instanceof AsynchronousSocketChannel) {
@@ -241,7 +239,7 @@ public class ServiceClientTest {
 						((SocketChannel) this.channel)
 								.write(getStringToByteBuffer(message));
 					} else if (this.channel instanceof DatagramChannel) {
-						final int sent = ((DatagramChannel) this.channel).send(
+						int sent = ((DatagramChannel) this.channel).send(
 								getStringToByteBuffer(message), this.endpoint);
 						System.out.println(message + ": Sccessfully sent "
 								+ sent + " bytes to the Server!");
@@ -259,16 +257,15 @@ public class ServiceClientTest {
 
 		}.init(channel, endpoint, millis);
 	}
-	protected static ByteBuffer getStringToByteBuffer(final String str) {
+	protected static ByteBuffer getStringToByteBuffer(String str) {
 		return ByteBuffer.wrap((str.getBytes()));
 	}
 	private static void executeAll() {
-		final ThreadGroup clientThreadGroup = new ThreadGroup(
+		ThreadGroup clientThreadGroup = new ThreadGroup(
 				"nflight-client-ThreadGroup");
-		for (final Entry<String, Runnable> serviceSet : serviceGroupMap
-				.entrySet()) {
-			final String key = serviceSet.getKey();
-			final Runnable value = serviceSet.getValue();
+		for (Entry<String, Runnable> serviceSet : serviceGroupMap.entrySet()) {
+			String key = serviceSet.getKey();
+			Runnable value = serviceSet.getValue();
 			new Thread(clientThreadGroup, value, "nflight-client-" + key)
 					.start();
 		}

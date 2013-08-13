@@ -11,29 +11,29 @@ import com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class BlockingNetworkServiceWorker implements Runnable {
-	private static final Class<BlockingNetworkServiceWorker> THIS_CLAZZ = BlockingNetworkServiceWorker.class;
-	private static final String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
-	private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+	private static Class<BlockingNetworkServiceWorker> THIS_CLAZZ = BlockingNetworkServiceWorker.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private final Configure configure;
-	private final SocketChannel socket;
+	private Configure configure;
+	private SocketChannel socket;
 
-	public BlockingNetworkServiceWorker(final Configure configure,
-			final SocketChannel socket) {
+	public BlockingNetworkServiceWorker(Configure configure,
+			SocketChannel socket) {
 		this.configure = configure;
 		this.socket = socket;
 	}
 
 	@Override
 	public void run() {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
-			final long startN = System.nanoTime();
+			long startN = System.nanoTime();
 
 			if (LOGGER.isLoggable(Level.FINER)) {
-				final String currentThreadName = Thread.currentThread()
+				String currentThreadName = Thread.currentThread()
 						.getName();
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
 						METHOD_NAME, "current thread is " + currentThreadName);
@@ -47,11 +47,11 @@ public class BlockingNetworkServiceWorker implements Runnable {
 							+ ", isConnected="
 							+ Boolean.toString(this.socket.isConnected()));
 
-			final int capacity = this.configure
+			int capacity = this.configure
 					.getInt(Configure.NONBLOCKING_INCOMING_BUFFER_CAPACITY);
-			final ByteBuffer incomingByteBuffer = NetworkServiceHelper
+			ByteBuffer incomingByteBuffer = NetworkServiceHelper
 					.getByteBuffer(capacity);
-			final int numRead = this.socket.read(incomingByteBuffer);
+			int numRead = this.socket.read(incomingByteBuffer);
 			incomingByteBuffer.flip();
 			if (incomingByteBuffer.hasRemaining()) {
 				incomingByteBuffer.compact();
@@ -67,15 +67,15 @@ public class BlockingNetworkServiceWorker implements Runnable {
 							+ numRead + " bytes] from "
 							+ this.socket.getRemoteAddress());
 
-			final long endN = System.nanoTime();
-			final long diffN = endN - startN;
+			long endN = System.nanoTime();
+			long diffN = endN - startN;
 
-			final double elapsedTime = diffN / 1.0E09;
+			double elapsedTime = diffN / 1.0E09;
 
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					"elapsed: " + Double.toString(elapsedTime) + " seconds");
 
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -87,7 +87,7 @@ public class BlockingNetworkServiceWorker implements Runnable {
 						"isOpen=" + Boolean.toString(this.socket.isOpen())
 								+ ", isConnected="
 								+ Boolean.toString(this.socket.isConnected()));
-			} catch (final IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

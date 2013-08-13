@@ -10,7 +10,7 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 //Strategy Context
 public class ServerImpl implements IServer {
 
-	private static final Class<ServerImpl> THIS_CLAZZ = ServerImpl.class;
+	private static Class<ServerImpl> THIS_CLAZZ = ServerImpl.class;
 	private static Logger LOGGER = LoggingHelper
 			.getLogger(THIS_CLAZZ);
 
@@ -18,8 +18,8 @@ public class ServerImpl implements IServer {
 	IService service;
 	String serviceName;
 
-	public ServerImpl(final String _serviceName) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public ServerImpl(String _serviceName) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		this.serviceName = _serviceName;
@@ -47,8 +47,8 @@ public class ServerImpl implements IServer {
 	}
 
 	@Override
-	public void setService(final IService _operation) {
-		final String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+	public void setService(IService _operation) {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		this.service = _operation;

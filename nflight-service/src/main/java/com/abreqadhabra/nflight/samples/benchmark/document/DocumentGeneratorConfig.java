@@ -25,19 +25,19 @@ import java.util.List;
  */
 public class DocumentGeneratorConfig {
 
-    private final int numDocuments;
+    private int numDocuments;
 
-    private final List<String> users;
+    private List<String> users;
 
-    private final List<String> tags;
+    private List<String> tags;
 
-    private final int maxUsersPerDocument;
+    private int maxUsersPerDocument;
 
-    private final int maxTagsPerDocument;
+    private int maxTagsPerDocument;
 
-    private final long seed;
+    private long seed;
 
-    private final UnbalancedConfig unbalancedConfig;
+    private UnbalancedConfig unbalancedConfig;
 
     public DocumentGeneratorConfig(int numDocuments, List<String> users, List<String> tags,
 	    int maxUsersPerDocument, int maxTagsPerDocument, long seed,

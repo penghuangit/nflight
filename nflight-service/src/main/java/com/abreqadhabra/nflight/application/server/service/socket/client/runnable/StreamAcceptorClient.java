@@ -22,8 +22,8 @@ import com.abreqadhabra.nflight.application.server.service.socket.tcp.common.Res
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class StreamAcceptorClient implements Runnable {
-    private static final Class<StreamAcceptorClient> THIS_CLAZZ = StreamAcceptorClient.class;
-    private static final Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
+    private static Class<StreamAcceptorClient> THIS_CLAZZ = StreamAcceptorClient.class;
+    private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
     // The host:port combination to connect to
     private InetAddress hostAddress;
@@ -51,7 +51,7 @@ public class StreamAcceptorClient implements Runnable {
     }
 
     public void sendObject(Object object, ResponseHandler handler) throws IOException {
-	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+	String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	// Start a new connection
 	SocketChannel socket = this.initiateConnection();
@@ -80,7 +80,7 @@ public class StreamAcceptorClient implements Runnable {
     @Override
     public void run() {
 
-	final String orgName = Thread.currentThread().getName();
+	String orgName = Thread.currentThread().getName();
 	Thread.currentThread().setName(orgName + "-" + THIS_CLAZZ.getSimpleName());
 
 	while (true) {
@@ -179,7 +179,7 @@ public class StreamAcceptorClient implements Runnable {
     }
 
     private void write(SelectionKey key) throws IOException {
-	final String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
+	String METHOD_NAME = Thread.currentThread().getStackTrace()[1].getMethodName();
 
 	SocketChannel socketChannel = (SocketChannel) key.channel();
 

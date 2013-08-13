@@ -31,7 +31,7 @@ public abstract class DocumentBenchmarkDef extends BenchmarkDef {
 
     protected Document[] documents;
 
-    private final DocumentGenerator documentGenerator;
+    private DocumentGenerator documentGenerator;
 
     public DocumentBenchmarkDef(DocumentGenerator documentGenerator) {
 	this.documentGenerator = documentGenerator;

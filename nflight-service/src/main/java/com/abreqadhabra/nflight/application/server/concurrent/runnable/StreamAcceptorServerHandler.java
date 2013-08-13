@@ -10,17 +10,17 @@ import java.util.concurrent.ExecutionException;
 public class StreamAcceptorServerHandler implements
 		CompletionHandler<AsynchronousSocketChannel, Void> {
 
-    final ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
-	private final AsynchronousServerSocketChannel asyncServerSocketChannel;
+    ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+	private AsynchronousServerSocketChannel asyncServerSocketChannel;
 
 	public StreamAcceptorServerHandler(
-			final AsynchronousServerSocketChannel asyncServerSocketChannel) {
+			AsynchronousServerSocketChannel asyncServerSocketChannel) {
 		this.asyncServerSocketChannel = asyncServerSocketChannel;
 	}
 
 	@Override
-	public void completed(final AsynchronousSocketChannel result,
-			final Void attachment) {
+	public void completed(AsynchronousSocketChannel result,
+			Void attachment) {
 
 		this.asyncServerSocketChannel.accept(null, this);
 
@@ -46,14 +46,14 @@ public class StreamAcceptorServerHandler implements
 		} finally {
 			try {
 				result.close();
-			} catch (final IOException e) {
+			} catch (IOException e) {
 				System.err.println(e);
 			}
 		}
 	}
 
 	@Override
-	public void failed(final Throwable exc, final Void attachment) {
+	public void failed(Throwable exc, Void attachment) {
 		this.asyncServerSocketChannel.accept(null, this);
 		throw new UnsupportedOperationException("Cannot accept cponnections!");
 	}

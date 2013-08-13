@@ -51,7 +51,7 @@ public class ResponseHandler {
 		return ByteBuffer.wrap(bytes);
 	}
 	
-	public static Object deserializeObject(final byte[] bytes) {
+	public static Object deserializeObject(byte[] bytes) {
 		Object readObject = null;
 		try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 				ObjectInputStream ois = new ObjectInputStream(bais);) {

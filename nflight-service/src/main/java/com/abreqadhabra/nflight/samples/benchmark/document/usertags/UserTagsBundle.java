@@ -24,7 +24,7 @@ import java.util.Set;
  */
 public class UserTagsBundle {
 
-    private final Map<String, Set<String>> userToTags;
+    private Map<String, Set<String>> userToTags;
 
     public UserTagsBundle(Map<String, Set<String>> userToTags) {
 	this.userToTags = userToTags;
