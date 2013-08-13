@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.net.stream.asynchronous;
+package com.abreqadhabra.nflight.application.service.net.stream.asynchronous.transport;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

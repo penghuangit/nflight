@@ -103,3 +103,6 @@ http://www.java2s.com/Open-Source/Java-Open-Source-Library/JEE/activemq/org/apac
 https://java.net/projects/http-client/lists/commits/archive/2012-06/message/7
 
 http://www.javaspecialists.eu/archive/Issue107.html
+
+http://jeremyko.blogspot.kr/2012/05/proactor-design-pattern.html
+http://blog.daum.net/aswip/8429554

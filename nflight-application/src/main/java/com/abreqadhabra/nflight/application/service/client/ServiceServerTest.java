@@ -52,16 +52,28 @@ public class ServiceServerTest {
 
 		blockingService = executeBlockingNetworkService(netConfigure,
 				DEFAULT_ADDRESS, 0);
+
+		blockingService.startup();
+
 		nonBlockingService = executeNonBlockingNetworkService(netConfigure,
 				DEFAULT_ADDRESS, 0);
+
+		nonBlockingService.startup();
+
 		asyncService = executeAsyncNetworkService(netConfigure,
 				DEFAULT_ADDRESS, 0);
+
+		asyncService.startup();
 
 		unicastService = executeUnicastNetworkService(netConfigure,
 				DEFAULT_ADDRESS, 0);
 
+		unicastService.startup();
+
 		multicastService = executeMulticastNetworkService(netConfigure,
 				DEFAULT_ADDRESS, 0);
+
+		multicastService.startup();
 
 		unicastServant = executeUnicastServant(rmiConfigure, DEFAULT_ADDRESS, 0);
 
@@ -116,8 +128,8 @@ public class ServiceServerTest {
 
 		command = command + " -J-D"
 				+ Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString() + "="
-				+ Configure.FILE_RMID_POLICY + " -log "
-				+ Configure.CODE_BASE_PATH.resolve("rmid.log");
+				+ Configure.FILE_RMID_POLICY + " -log rmid.log";
+		// + Configure.CODE_BASE_PATH.resolve("rmid.log");
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 				"system command :" + command);
@@ -134,26 +146,27 @@ public class ServiceServerTest {
 	}
 
 	private static void executeAll() {
-		ThreadGroup serviceThreadGroup = new ThreadGroup(
-				"NF-Service-ThreadGroup");
+		ThreadGroup serviceThreadGroup = new ThreadGroup("NF-RMI-ThreadGroup");
 
 		// Executors.n.newSingleThreadExecutor().execute(
 
-		new Thread(serviceThreadGroup, blockingService, "NF-Channel-Blocking")
-				.start();
-
-		new Thread(serviceThreadGroup, nonBlockingService,
-				"NF-Channel-Non-Blocking").start();
-
-		new Thread(serviceThreadGroup, asyncService, "NF-Channel-Async")
-				.start();
-
-		new Thread(serviceThreadGroup, unicastService, "NF-Channel-Unicast")
-				.start();
-
-		new Thread(serviceThreadGroup, multicastService, "NF-Channel-Multicast")
-				.start();
-
+		// new Thread(serviceThreadGroup, blockingService,
+		// "NF-Channel-Blocking")
+		// .start();
+		//
+		// new Thread(serviceThreadGroup, nonBlockingService,
+		// "NF-Channel-Non-Blocking").start();
+		//
+		// new Thread(serviceThreadGroup, asyncService, "NF-Channel-Async")
+		// .start();
+		//
+		// new Thread(serviceThreadGroup, unicastService, "NF-Channel-Unicast")
+		// .start();
+		//
+		// new Thread(serviceThreadGroup, multicastService,
+		// "NF-Channel-Multicast")
+		// .start();
+		//
 		new Thread(serviceThreadGroup, unicastServant, "NF-RMI-Unicast")
 				.start();
 

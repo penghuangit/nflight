@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.net.stream.blocking;
+package com.abreqadhabra.nflight.application.service.net.stream.blocking.transport;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -10,15 +10,15 @@ import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class BlockingNetworkServiceWorker implements Runnable {
-	private static Class<BlockingNetworkServiceWorker> THIS_CLAZZ = BlockingNetworkServiceWorker.class;
+public class BlockingReceiver implements Runnable {
+	private static Class<BlockingReceiver> THIS_CLAZZ = BlockingReceiver.class;
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private Configure configure;
 	private SocketChannel socket;
 
-	public BlockingNetworkServiceWorker(Configure configure,
+	public BlockingReceiver(Configure configure,
 			SocketChannel socket) {
 		this.configure = configure;
 		this.socket = socket;
@@ -39,16 +39,8 @@ public class BlockingNetworkServiceWorker implements Runnable {
 						METHOD_NAME, "current thread is " + currentThreadName);
 			}
 
-			LOGGER.logp(
-					Level.FINER,
-					THIS_CLAZZ.getSimpleName(),
-					METHOD_NAME,
-					"isOpen=" + Boolean.toString(this.socket.isOpen())
-							+ ", isConnected="
-							+ Boolean.toString(this.socket.isConnected()));
-
 			int capacity = this.configure
-					.getInt(Configure.NONBLOCKING_INCOMING_BUFFER_CAPACITY);
+					.getInt(Configure.BLOCKING_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = NetworkServiceHelper
 					.getByteBuffer(capacity);
 			int numRead = this.socket.read(incomingByteBuffer);

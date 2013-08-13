@@ -2,19 +2,13 @@ package com.abreqadhabra.nflight.application.service.net.stream.nonblocking;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.application.service.net.AbstractNetworkServiceImpl;
-import com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper;
+import com.abreqadhabra.nflight.application.service.net.stream.nonblocking.transport.NonBlockingAcceptor;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
@@ -22,119 +16,28 @@ public class NonBlockingNetworkServiceImpl extends AbstractNetworkServiceImpl {
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	public NonBlockingNetworkServiceImpl(Configure configure,
-			ThreadPoolExecutor threadPool,
-			InetSocketAddress endpoint) {
+			ThreadPoolExecutor threadPool, InetSocketAddress endpoint) {
 		super(configure, threadPool, endpoint);
-		this.backlog = this.configure
-				.getInt(Configure.NONBLOCKING_BIND_BACKLOG);
 	}
 
 	@Override
-	public void run() {
+	public void startup() {
 		try {
 			this.isRunning = true;
-			// create a new server-socket channel & selector
-			Selector selector = Selector.open();
-			ServerSocketChannel serverSocket = this
-					.createServerChannelFactory()
-					.createNonBlockingServerSocketChannel(this.endpoint,
-							this.backlog);
-			// check that both of them were successfully opened
-			if (selector.isOpen() && serverSocket.isOpen()) {
-				// Register the server socket channel, indicating an interest in
-				// accepting new connections
-				serverSocket.register(selector, SelectionKey.OP_ACCEPT);
-				// wait for incoming connections
-				while (this.isRunning) {
-					this.pendingConnections(selector);
-				}
-			} else {
-				throw new IllegalStateException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
-			}
+			// wait for incoming connections
+			NonBlockingAcceptor acceptor = new NonBlockingAcceptor(
+					this.isRunning, this.endpoint, /*this.threadPool,*/
+					this.configure);
+			new Thread(acceptor).start();
 		} catch (IOException | InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
-
-	}
-	private void pendingConnections(Selector selector) {
-		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-
-		try {
-			// wait for incoming an event one of the registered channels
-			// 등록된 서버 소켓 채널에 대한 이벤트 발생을 대기
-			long timeout = 1000;
-			selector.select(timeout);
-
-			// there is something to process on selected keys
-			Iterator<SelectionKey> iterator = selector.selectedKeys()
-					.iterator();
-
-			while (iterator.hasNext()) {
-				SelectionKey selectionKey = iterator.next();
-				// 취득한 키를 키 집합에서 제거
-				// prevent the same key from coming up again
-				iterator.remove();
-				if (!selectionKey.isValid()) {
-					continue;
-				}
-
-				LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
-						METHOD_NAME,
-						NetworkServiceHelper.getReadySetString(selectionKey));
-
-				// 이벤트가 사용할 수 있는지 확인하고 처리
-				if (selectionKey.isAcceptable()) {
-					this.accept(selector, selectionKey);
-				} else if (selectionKey.isReadable()) {
-					ServerSession session = (ServerSession) selectionKey
-							.attachment();
-					session.receive(session);
-				} else if (selectionKey.isWritable()) {
-					ServerSession session = (ServerSession) selectionKey
-							.attachment();
-					session.send(session);
-				} else {
-					LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
-							METHOD_NAME, "Unexpected ops in select "
-									+ selectionKey.readyOps());
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
-	private void accept(Selector selector, SelectionKey selectionKey) {
-		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
+	@Override
+	public void shutdown() {
+		// TODO Auto-generated method stub
 
-		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-				NetworkServiceHelper.getReadySetString(selectionKey));
-
-		try {
-			SocketChannel socket = ((ServerSocketChannel) selectionKey
-					.channel()).accept();
-			LOGGER.logp(
-					Level.FINER,
-					THIS_CLAZZ.getSimpleName(),
-					METHOD_NAME,
-					"Accepted socket connection from "
-							+ socket.getRemoteAddress());
-			socket.configureBlocking(false);
-			SelectionKey readyKey = socket.register(selector,
-					SelectionKey.OP_READ);
-			ServerSession session = this.createSession(socket, readyKey);
-			readyKey.attach(session);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private ServerSession createSession(SocketChannel socket,
-			SelectionKey selectionKey) {
-		return new NonBlockingServerSessionImpl(this.configure, socket,
-				selectionKey);
 	}
 
 }
