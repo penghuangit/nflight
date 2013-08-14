@@ -145,7 +145,7 @@ public class NonBlockingAcceptor implements Runnable, Acceptor {
 		}
 	}
 
-	public void send(SocketChannel socket) {
+	private void send(SocketChannel socket) {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
@@ -156,7 +156,7 @@ public class NonBlockingAcceptor implements Runnable, Acceptor {
 				"send");
 	}
 
-	public void receive(SocketChannel socket) {
+	private void receive(SocketChannel socket) {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
