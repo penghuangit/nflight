@@ -16,8 +16,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.exception.NFUnexpectedException;
-import com.abreqadhabra.nflight.common.exception.WrapperException;
+import com.abreqadhabra.nflight.common.exception.UnexpectedException;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.IOStream;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
@@ -91,7 +91,7 @@ public class CommonDAO {
 					.addContextValue("jdbcUser", jdbcUser)
 					.addContextValue("jdbcPassword", jdbcPassword);
 		} catch (Exception e) {
-			throw new NFUnexpectedException(e);
+			throw new UnexpectedException(e);
 		}
 
 		return connection;
@@ -107,7 +107,7 @@ public class CommonDAO {
 	 * 
 	 * @throws SQLException
 	 * @throws Exception
-	 * @throws WrapperException
+	 * @throws NFlightException
 	 */
 
 	protected void executeUpdateByDynamicQuery(String sql, String[] sqlParams)
@@ -125,7 +125,7 @@ public class CommonDAO {
 			throw new NFDAOException(e).addContextValue("sql", sql)
 					.addContextValue("sqlParams", Arrays.toString(sqlParams));
 		} catch (Exception e) {
-			throw new NFUnexpectedException(e);
+			throw new UnexpectedException(e);
 		} finally {
 			closeAll(connection, preparedStatement);
 		}
@@ -160,7 +160,7 @@ public class CommonDAO {
 					.addContextValue("sqlParams", Arrays.toString(sqlParams))
 					.addContextValue("type", type.getCanonicalName());
 		} catch (Exception e) {
-			throw new NFUnexpectedException(e);
+			throw new UnexpectedException(e);
 		} finally {
 			closeAll(connection, preparedStatement);
 		}
@@ -208,7 +208,7 @@ public class CommonDAO {
 					.addContextValue("results", results).addContextValue(
 							"type", type.getCanonicalName());
 		} catch (Exception e) {
-			throw new NFUnexpectedException(e);
+			throw new UnexpectedException(e);
 		}
 		return results;
 	}
@@ -220,7 +220,7 @@ public class CommonDAO {
 			throw new NFDAOException(e).addContextValue("autoCommit",
 					autoCommit);
 		} catch (Exception e) {
-			throw new NFUnexpectedException(e);
+			throw new UnexpectedException(e);
 		}
 	}
 
@@ -230,7 +230,7 @@ public class CommonDAO {
 		} catch (SQLException e) {
 			throw new NFDAOException(e);
 		} catch (Exception e) {
-			throw new NFUnexpectedException(e);
+			throw new UnexpectedException(e);
 		}
 	}
 
@@ -240,7 +240,7 @@ public class CommonDAO {
 		} catch (SQLException e) {
 			throw new NFDAOException(e);
 		} catch (Exception e) {
-			throw new NFUnexpectedException(e);
+			throw new UnexpectedException(e);
 		}
 	}
 
@@ -250,7 +250,7 @@ public class CommonDAO {
 		} catch (SQLException e) {
 			throw new NFDAOException(e);
 		} catch (Exception e) {
-			throw new NFUnexpectedException(e);
+			throw new UnexpectedException(e);
 		}
 	}
 
@@ -260,7 +260,7 @@ public class CommonDAO {
 		} catch (SQLException e) {
 			throw new NFDAOException(e);
 		} catch (Exception e) {
-			throw new NFUnexpectedException(e);
+			throw new UnexpectedException(e);
 		}
 	}
 
@@ -270,7 +270,7 @@ public class CommonDAO {
 		} catch (SQLException e) {
 			throw new NFDAOException(e);
 		} catch (Exception e) {
-			throw new NFUnexpectedException(e);
+			throw new UnexpectedException(e);
 		}
 	}
 
@@ -283,7 +283,7 @@ public class CommonDAO {
 		} catch (SQLException e) {
 			throw new NFDAOException(e);
 		} catch (Exception e) {
-			throw new NFUnexpectedException(e);
+			throw new UnexpectedException(e);
 		}
 	}
 
@@ -295,7 +295,7 @@ public class CommonDAO {
 		} catch (SQLException e) {
 			throw new NFDAOException(e);
 		} catch (Exception e) {
-			throw new NFUnexpectedException(e);
+			throw new UnexpectedException(e);
 		}
 	}
 

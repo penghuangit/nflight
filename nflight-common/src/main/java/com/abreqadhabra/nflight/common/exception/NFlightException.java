@@ -7,7 +7,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class WrapperException extends Exception implements
+public abstract class NFlightException extends Exception implements
 	IWrapperException {
 
     /**
@@ -47,7 +47,7 @@ public abstract class WrapperException extends Exception implements
      *            상세 메시지
      * @since STEP1
      */
-    public WrapperException(String message) {
+    public NFlightException(String message) {
 	// 슈퍼 클래스의 동일 인수를 가진 생성자를 호출합니다.
 	super(message);
     }
@@ -69,7 +69,7 @@ public abstract class WrapperException extends Exception implements
      *            자식 예외
      * @since STEP1
      */
-    public WrapperException(String message, Throwable childException) {
+    public NFlightException(String message, Throwable childException) {
 	// 부모 클래스의 동일 인수를 가진 생성자를 호출합니다.
 	super(message);
 	// 자식 예외
@@ -91,7 +91,7 @@ public abstract class WrapperException extends Exception implements
      *            자식 예외
      * @since STEP1
      */
-    public WrapperException(Throwable childException) {
+    public NFlightException(Throwable childException) {
 	// 자식 예외
 	this.childException = childException;
     }
@@ -127,13 +127,13 @@ public abstract class WrapperException extends Exception implements
     }
 
     @Override
-    public WrapperException addContextValue(String label, Object value) {
+    public NFlightException addContextValue(String label, Object value) {
 	contextEntries.add(new ExceptionContext(label, value));
 	return this;
     }
 
     @Override
-    public WrapperException setContextValue(String label, Object value) {
+    public NFlightException setContextValue(String label, Object value) {
 	contextEntries.add(new ExceptionContext(label, value));
 	return this;
     }

@@ -4,7 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.exception.NFSystemException;
-import com.abreqadhabra.nflight.common.exception.NFUnexpectedException;
+import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class UnexpectedExceptionExample {
@@ -42,8 +42,8 @@ public class UnexpectedExceptionExample {
 	try {
 	    level2();
 	} catch (Exception e) {
-	    if (e instanceof NFUnexpectedException) {
-		throw new NFUnexpectedException("Error at level 1", e)
+	    if (e instanceof UnexpectedException) {
+		throw new UnexpectedException("Error at level 1", e)
 			.addContextValue("Transaction Id", transactionId);
 	    }
 	}
@@ -61,7 +61,7 @@ public class UnexpectedExceptionExample {
 	    if (e instanceof NFSystemException) {
 		throw new NFSystemException("Error at level 2", e);
 	    } else {
-		NFUnexpectedException ure = new NFUnexpectedException(
+		UnexpectedException ure = new UnexpectedException(
 			"Error at level 2", e);
 		ure.setContextValue("empno", empno);
 		ure.setContextValue("empName", empName);

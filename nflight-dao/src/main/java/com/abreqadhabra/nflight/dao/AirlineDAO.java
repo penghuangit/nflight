@@ -2,7 +2,7 @@ package com.abreqadhabra.nflight.dao;
 
 import java.sql.SQLException;
 
-import com.abreqadhabra.nflight.common.exception.WrapperException;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.dao.dto.Airline;
 
 public interface AirlineDAO {
@@ -11,7 +11,7 @@ public interface AirlineDAO {
 	 * Inserts a new row in the AIRLINE table.
 	 * 
 	 * @return
-	 * @throws WrapperException
+	 * @throws NFlightException
 	 * @throws Exception
 	 * @throws SQLException
 	 */
@@ -20,7 +20,7 @@ public interface AirlineDAO {
 	/**
 	 * Updates a single row in the AIRLINE table.
 	 * 
-	 * @throws WrapperException
+	 * @throws NFlightException
 	 * @throws Exception
 	 * 
 	 * @throws SQLException
@@ -30,7 +30,7 @@ public interface AirlineDAO {
 	/**
 	 * Deletes a single row in the AIRLINE table.
 	 * 
-	 * @throws WrapperException
+	 * @throws NFlightException
 	 */
 	public void deleteByPrimaryKey(String airlineCode) throws Exception;
 
@@ -40,7 +40,7 @@ public interface AirlineDAO {
 	 * Returns all rows from the AIRLINE table that match the criteria
 	 * 'AIRLINE_CODE = :airlineCode'.
 	 * 
-	 * @throws WrapperException
+	 * @throws NFlightException
 	 */
 	public Airline findByPrimaryKey(String airlineCode) throws Exception;
 
@@ -48,7 +48,7 @@ public interface AirlineDAO {
 	 * Returns all rows from the AIRLINE table that match the criteria
 	 * 'AIRLINE_NAME = :airlineName'.
 	 * 
-	 * @throws WrapperException
+	 * @throws NFlightException
 	 * @throws Exception
 	 */
 	public Airline[] matchByAirlineName(String airlineName) throws Exception;
@@ -56,7 +56,7 @@ public interface AirlineDAO {
 	/**
 	 * Returns all rows from the AIRLINE table that match the criteria ''.
 	 * 
-	 * @throws WrapperException
+	 * @throws NFlightException
 	 */
 	public Airline[] findAll() throws Exception;
 

@@ -21,7 +21,8 @@ import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.application.service.client.net.SocketChannelFactory;
 import com.abreqadhabra.nflight.application.service.rmi.RMIServant;
 import com.abreqadhabra.nflight.application.service.rmi.RMIServiceHelper;
-import com.abreqadhabra.nflight.common.exception.WrapperException;
+import com.abreqadhabra.nflight.common.concurrency.thread.ThreadHelper;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ServiceClientTest {
@@ -30,76 +31,90 @@ public class ServiceClientTest {
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	static HashMap<String, Runnable> serviceGroupMap = new HashMap<String, Runnable>();
-	static int cnt = 1;
+	static int cnt = 3;
 	static int millis = 1;
 
 	public static SocketChannelFactory createSocketChannelFactory() {
 		return new SocketChannelFactory();
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
+		try {
+			InetAddress DEFAULT_ADDRESS = InetAddress.getLocalHost();
 
-		InetAddress DEFAULT_ADDRESS = InetAddress.getLocalHost();
+			Configure netConfigure = new ConfigureImpl(
+					Configure.FILE_NETWORK_SERVICE_PROPERTIES);
 
-		Configure netConfigure = new ConfigureImpl(
-				Configure.FILE_NETWORK_SERVICE_PROPERTIES);
+			Configure rmiConfigure = new ConfigureImpl(
+					Configure.FILE_RMI_SERVICE_PROPERTIES);
+			for (int i = 0; i < cnt; i++) {
 
-		Configure rmiConfigure = new ConfigureImpl(
-				Configure.FILE_RMI_SERVICE_PROPERTIES);
-		for (int i = 0; i < cnt; i++) {
+				serviceGroupMap.put(
+						Configure.STREAM_SERVICE_TYPE.blocking.toString(),
+						getBlockingNetworkService(DEFAULT_ADDRESS, netConfigure
+								.getInt(Configure.BLOCKING_DEFAULT_PORT),
+								Configure.STREAM_SERVICE_TYPE.blocking));
+				serviceGroupMap.put(
+						Configure.STREAM_SERVICE_TYPE.nonblocking.toString(),
+						getBlockingNetworkService(DEFAULT_ADDRESS, netConfigure
+								.getInt(Configure.NONBLOCKING_DEFAULT_PORT),
+								Configure.STREAM_SERVICE_TYPE.nonblocking));
 
-			serviceGroupMap.put(
-					Configure.STREAM_SERVICE_TYPE.blocking.toString(),
-					getBlockingNetworkService(DEFAULT_ADDRESS, netConfigure
-							.getInt(Configure.BLOCKING_DEFAULT_PORT),
-							Configure.STREAM_SERVICE_TYPE.blocking));
-			serviceGroupMap.put(
-					Configure.STREAM_SERVICE_TYPE.nonblocking.toString(),
-					getBlockingNetworkService(DEFAULT_ADDRESS, netConfigure
-							.getInt(Configure.NONBLOCKING_DEFAULT_PORT),
-							Configure.STREAM_SERVICE_TYPE.nonblocking));
+				serviceGroupMap.put(
+						Configure.STREAM_SERVICE_TYPE.async.toString(),
+						getAsyncNetworkService(DEFAULT_ADDRESS, netConfigure
+								.getInt(Configure.ASYNC_DEFAULT_PORT)));
 
-			serviceGroupMap.put(
-					Configure.STREAM_SERVICE_TYPE.async.toString(),
-					getAsyncNetworkService(DEFAULT_ADDRESS,
-							netConfigure.getInt(Configure.ASYNC_DEFAULT_PORT)));
+				serviceGroupMap.put(
+						Configure.STREAM_SERVICE_TYPE.unicast.toString()
+								+ "--------->socket",
+						getUnicastNetworkService(DEFAULT_ADDRESS, netConfigure
+								.getInt(Configure.UNICAST_DEFAULT_PORT)));
 
-			serviceGroupMap
-					.put(Configure.STREAM_SERVICE_TYPE.unicast.toString()
-							+ "--------->socket",
-							getUnicastNetworkService(
-									DEFAULT_ADDRESS,
-									netConfigure
-											.getInt(Configure.UNICAST_DEFAULT_PORT)));
+				InetAddress multicastGroup = InetAddress
+						.getByName(Configure.MULTICAST_GROUP_ADDRESS);
 
-			InetAddress multicastGroup = InetAddress
-					.getByName(Configure.MULTICAST_GROUP_ADDRESS);
+				serviceGroupMap
+						.put(Configure.STREAM_SERVICE_TYPE.multicast.toString(),
+								getMulticastNetworkService(
+										multicastGroup,
+										DEFAULT_ADDRESS,
+										netConfigure
+												.getInt(Configure.MULTICAST_DEFAULT_PORT)));
 
-			serviceGroupMap.put(
-					Configure.STREAM_SERVICE_TYPE.multicast.toString(),
-					getMulticastNetworkService(multicastGroup, DEFAULT_ADDRESS,
-							netConfigure
-									.getInt(Configure.MULTICAST_DEFAULT_PORT)));
+				serviceGroupMap.put(
+						Configure.RMI_SERVICE_TYPE.unicast.toString(),
+						getUnicastRMIService(DEFAULT_ADDRESS, rmiConfigure
+								.getInt(Configure.UNICAST_RMI_DEFAULT_PORT)));
 
-			serviceGroupMap.put(
-					Configure.RMI_SERVICE_TYPE.unicast.toString(),
-					getUnicastRMIService(DEFAULT_ADDRESS, rmiConfigure
-							.getInt(Configure.UNICAST_RMI_DEFAULT_PORT)));
+				serviceGroupMap
+						.put(Configure.RMI_SERVICE_TYPE.activatable.toString(),
+								getActivatableRMIService(
+										DEFAULT_ADDRESS,
+										rmiConfigure
+												.getInt(Configure.ACTIVATABLE_RMI_DEFAULT_PORT)));
 
-			serviceGroupMap.put(
-					Configure.RMI_SERVICE_TYPE.activatable.toString(),
-					getActivatableRMIService(DEFAULT_ADDRESS, rmiConfigure
-							.getInt(Configure.ACTIVATABLE_RMI_DEFAULT_PORT)));
+				System.out
+						.println("serviceGroupMap------------------------------------>:"
+								+ serviceGroupMap);
 
-			System.out
-					.println("serviceGroupMap------------------------------------>:"
-							+ serviceGroupMap);
-
-			executeAll();
+				executeAll();
+			}
+		} catch (Exception e) {
+			StackTraceElement[] current = e.getStackTrace();
+			if (e instanceof NFlightException) {
+				NFlightException ne = (NFlightException) e;
+				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
+						current[0].getMethodName(),
+						"\n" + NFlightException.getStackTrace(ne));
+				ThreadHelper.interrupt(Thread.currentThread());
+			} else {
+				e.printStackTrace();
+				ThreadHelper.shutdown();
+			}
 		}
 
 	}
-
 	private static Runnable getActivatableRMIService(InetAddress addr, int port)
 			throws Exception {
 
@@ -188,7 +203,7 @@ public class ServiceClientTest {
 						THIS_CLAZZ.getSimpleName(),
 						METHOD_NAME,
 						"current thread is "
-								+ LoggingHelper.getThreadName(Thread
+								+ ThreadHelper.getThreadName(Thread
 										.currentThread()));
 				try {
 					RMIServant stub = (RMIServant) this.registry
@@ -197,7 +212,7 @@ public class ServiceClientTest {
 					Thread.sleep(this.millis);
 					System.out.println(stub + "\t:\t" + response);
 				} catch (Exception e) {
-					System.out.println(WrapperException.getStackTrace(e));
+					System.out.println(NFlightException.getStackTrace(e));
 				}
 
 			}
@@ -232,7 +247,7 @@ public class ServiceClientTest {
 						THIS_CLAZZ.getSimpleName(),
 						METHOD_NAME,
 						"current thread is "
-								+ LoggingHelper.getThreadName(Thread
+								+ ThreadHelper.getThreadName(Thread
 										.currentThread()));
 
 				try {
@@ -241,8 +256,8 @@ public class ServiceClientTest {
 							+ "---------------------> "
 							+ this.endpoint
 							+ "\t"
-							+ LoggingHelper.getThreadName(Thread
-									.currentThread());
+							+ ThreadHelper
+									.getThreadName(Thread.currentThread());
 
 					if (this.channel instanceof AsynchronousSocketChannel) {
 						((AsynchronousSocketChannel) this.channel).write(

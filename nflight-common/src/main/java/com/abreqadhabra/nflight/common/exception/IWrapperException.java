@@ -86,9 +86,9 @@ public interface IWrapperException {
      */
     public String getMessageId();
 
-    public WrapperException addContextValue(String label, Object value);
+    public NFlightException addContextValue(String label, Object value);
 
-    public WrapperException setContextValue(String label, Object value);
+    public NFlightException setContextValue(String label, Object value);
 
     public List<ExceptionContext> getContextEntries();
     

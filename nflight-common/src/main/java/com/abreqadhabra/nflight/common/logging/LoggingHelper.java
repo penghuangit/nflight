@@ -148,9 +148,6 @@ public class LoggingHelper {
 	}
 
 
-	public static String getThreadName(Thread currentThread) {
-		return currentThread.getName();
-	}
 
 
 }

@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.server.examples;
+package com.abreqadhabra.nflight.application.examples;
 
 public class NanomilTest {  // illustrates clock "drift"
 

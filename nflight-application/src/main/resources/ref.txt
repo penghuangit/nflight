@@ -106,3 +106,5 @@ http://www.javaspecialists.eu/archive/Issue107.html
 
 http://jeremyko.blogspot.kr/2012/05/proactor-design-pattern.html
 http://blog.daum.net/aswip/8429554
+
+http://javacan.tistory.com/tag/Runtime.addShutdownHook()

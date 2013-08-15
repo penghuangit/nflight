@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
-import com.abreqadhabra.nflight.common.exception.WrapperException;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.IOStream;
 
@@ -23,10 +23,10 @@ public class SystemCommand {
 					Configure.FILE_SYSTEM_COMMAND_PROPERTIES);
 		} catch (Exception e) {
 			StackTraceElement[] current = e.getStackTrace();
-			if (e instanceof WrapperException) {
+			if (e instanceof NFlightException) {
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(),
-						"\n" + WrapperException.getStackTrace(e));
+						"\n" + NFlightException.getStackTrace(e));
 			} else {
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(), e.getMessage());
@@ -63,14 +63,14 @@ public class SystemCommand {
 			systemCommand.execute(command);
 		} catch (Exception e) {
 			StackTraceElement[] current = e.getStackTrace();
-			if (e instanceof WrapperException) {
+			if (e instanceof NFlightException) {
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(),
-						"\n" + WrapperException.getStackTrace(e));
+						"\n" + NFlightException.getStackTrace(e));
 			} else {
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(),
-						"\n" + WrapperException.getStackTrace(e));
+						"\n" + NFlightException.getStackTrace(e));
 			}
 		}
 	}

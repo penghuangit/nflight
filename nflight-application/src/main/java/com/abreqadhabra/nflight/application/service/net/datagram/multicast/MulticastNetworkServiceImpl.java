@@ -1,21 +1,15 @@
 package com.abreqadhabra.nflight.application.service.net.datagram.multicast;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.net.StandardProtocolFamily;
-import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
+import com.abreqadhabra.nflight.application.service.exception.ServiceException;
 import com.abreqadhabra.nflight.application.service.net.AbstractNetworkServiceImpl;
-import com.abreqadhabra.nflight.application.service.net.NetworkServiceHelper;
 import com.abreqadhabra.nflight.application.service.net.datagram.multicast.tranport.MulticastAcceptor;
-import com.abreqadhabra.nflight.application.service.net.stream.asynchronous.transport.AsyncAcceptor;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
+import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class MulticastNetworkServiceImpl extends AbstractNetworkServiceImpl {
@@ -28,23 +22,25 @@ public class MulticastNetworkServiceImpl extends AbstractNetworkServiceImpl {
 	}
 
 	@Override
-	public void startup() {
+	public void startup() throws NFlightException {
 		try {
 			this.isRunning = true;
 			// wait for incoming connections
-			MulticastAcceptor acceptor = new MulticastAcceptor(isRunning, this.endpoint,
-					/*this.threadPool,*/ this.configure);
+			MulticastAcceptor acceptor = new MulticastAcceptor(isRunning,
+					this.endpoint,
+					/* this.threadPool, */this.configure);
 			new Thread(acceptor).start();
-		} catch (IOException | InterruptedException | ExecutionException e) {
-			e.printStackTrace();
+		} catch (NFlightException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new UnexpectedException(e);
 		}
 	}
 
 	@Override
 	public void shutdown() {
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
 
 }

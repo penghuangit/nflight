@@ -1,6 +1,6 @@
 package com.abreqadhabra.nflight.application.service.rmi.activatable;
 
-import com.abreqadhabra.nflight.common.exception.WrapperException;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 
 /**
  * <p>
@@ -21,9 +21,9 @@ import com.abreqadhabra.nflight.common.exception.WrapperException;
  * 
  * @author dongsup.kim@gmail.com
  * @since STEP1
- * @see WrapperException
+ * @see NFlightException
  */
-public class SystemCommandException extends WrapperException {
+public class SystemCommandException extends NFlightException {
 
 	/**
 	 * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정

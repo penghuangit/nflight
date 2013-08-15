@@ -21,5 +21,7 @@ public class Env {
 		}
 	}
 
+	public static final long THREADHELPER_MILLIS = 3000;
+
 	public static String Charset = "UTF-8";
 }

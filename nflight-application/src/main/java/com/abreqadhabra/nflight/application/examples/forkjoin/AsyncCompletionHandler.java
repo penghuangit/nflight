@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.server.forkjoin;
+package com.abreqadhabra.nflight.application.examples.forkjoin;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

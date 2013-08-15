@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.dao.exception;
+package com.abreqadhabra.nflight.application.service.exception;
 
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 
@@ -7,7 +7,7 @@ import com.abreqadhabra.nflight.common.exception.NFlightException;
  * [개 요] DAO 공통 기본 예외클래스
  * </p>
  * <p>
- * [상 세] WrapperException을 상속받은 DAO 공통  예외클래스
+ * [상 세] CommonException을 상속받은 DAO 공통  예외클래스
  * </p>
  * <p>
  * [비 고]
@@ -23,7 +23,7 @@ import com.abreqadhabra.nflight.common.exception.NFlightException;
  * @since STEP1
  * @see NFlightException
  */
-public class NFDAOException extends NFlightException {
+public class ServiceException extends NFlightException {
 
     /**
      * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정
@@ -66,7 +66,7 @@ public class NFDAOException extends NFlightException {
      *            상세 메시지
      * @since STEP1
      */
-    public NFDAOException(String message) {
+    public ServiceException(String message) {
 	super(message);
 
 	// NFlightException의 에러ID를 설정합니다.
@@ -94,7 +94,7 @@ public class NFDAOException extends NFlightException {
      *            자식 예외
      * @since STEP1
      */
-    public NFDAOException(String message, Throwable cause) {
+    public ServiceException(String message, Throwable cause) {
 	super(message, cause);
 
 	// NFlightException의 에러ID를 설정합니다.
@@ -119,7 +119,7 @@ public class NFDAOException extends NFlightException {
      *            자식 예외
      * @since STEP1
      */
-    public NFDAOException(Throwable cause) {
+    public ServiceException(Throwable cause) {
 	super(MESSAGE, cause);
 
 	// NFlightException의 에러ID를 설정합니다.

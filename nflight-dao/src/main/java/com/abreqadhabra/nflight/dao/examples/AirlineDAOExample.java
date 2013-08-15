@@ -3,7 +3,7 @@ package com.abreqadhabra.nflight.dao.examples;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.exception.WrapperException;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.dao.AirlineDAO;
 import com.abreqadhabra.nflight.dao.DAOFactory;
@@ -44,8 +44,8 @@ public class AirlineDAOExample {
 			airlineDAOExample.excute();
 		} catch (Exception e) {
 			// StackTraceElement[] current = e.getStackTrace();
-			// if (e instanceof WrapperException) {
-			// WrapperException ce = (WrapperException) e;
+			// if (e instanceof NFlightException) {
+			// NFlightException ce = (NFlightException) e;
 			// LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 			// current[0].getMethodName(), "\n" + ce.getStackTrace(e));
 			// } else {

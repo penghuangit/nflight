@@ -22,6 +22,8 @@ import com.abreqadhabra.nflight.application.service.rmi.activatable.ActivatableR
 import com.abreqadhabra.nflight.application.service.rmi.activatable.RMIDCommand;
 import com.abreqadhabra.nflight.application.service.rmi.unicast.UnicastRMIServantImpl;
 import com.abreqadhabra.nflight.common.Env;
+import com.abreqadhabra.nflight.common.concurrency.thread.ThreadHelper;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ServiceServerTest {
@@ -38,56 +40,70 @@ public class ServiceServerTest {
 	private static UnicastRMIServantImpl unicastServant;
 	private static ActivatableRMIServantImpl activatableServant;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 
-		InetAddress DEFAULT_ADDRESS = InetAddress.getLocalHost();
+		try {
+			InetAddress DEFAULT_ADDRESS = InetAddress.getLocalHost();
 
-		Configure netConfigure = new ConfigureImpl(
-				Configure.FILE_NETWORK_SERVICE_PROPERTIES);
+			Configure netConfigure = new ConfigureImpl(
+					Configure.FILE_NETWORK_SERVICE_PROPERTIES);
 
-		Configure rmiConfigure = new ConfigureImpl(
-				Configure.FILE_RMI_SERVICE_PROPERTIES);
+			Configure rmiConfigure = new ConfigureImpl(
+					Configure.FILE_RMI_SERVICE_PROPERTIES);
 
-		rmidProcessStart(rmiConfigure);
+			rmidProcessStart(rmiConfigure);
 
-		blockingService = executeBlockingNetworkService(netConfigure,
-				DEFAULT_ADDRESS, 0);
+			blockingService = executeBlockingNetworkService(netConfigure,
+					DEFAULT_ADDRESS, 0);
 
-		blockingService.startup();
+			blockingService.startup();
 
-		nonBlockingService = executeNonBlockingNetworkService(netConfigure,
-				DEFAULT_ADDRESS, 0);
+			nonBlockingService = executeNonBlockingNetworkService(netConfigure,
+					DEFAULT_ADDRESS, 0);
 
-		nonBlockingService.startup();
+			nonBlockingService.startup();
 
-		asyncService = executeAsyncNetworkService(netConfigure,
-				DEFAULT_ADDRESS, 0);
+			asyncService = executeAsyncNetworkService(netConfigure,
+					DEFAULT_ADDRESS, 0);
 
-		asyncService.startup();
+			asyncService.startup();
 
-		unicastService = executeUnicastNetworkService(netConfigure,
-				DEFAULT_ADDRESS, 0);
+			unicastService = executeUnicastNetworkService(netConfigure,
+					DEFAULT_ADDRESS, 0);
 
-		unicastService.startup();
+			unicastService.startup();
 
-		multicastService = executeMulticastNetworkService(netConfigure,
-				DEFAULT_ADDRESS, 0);
+			multicastService = executeMulticastNetworkService(netConfigure,
+					DEFAULT_ADDRESS, 0);
 
-		multicastService.startup();
+			multicastService.startup();
 
-		unicastServant = executeUnicastServant(rmiConfigure, DEFAULT_ADDRESS, 0);
+			unicastServant = executeUnicastServant(rmiConfigure,
+					DEFAULT_ADDRESS, 0);
 
-		activatableServant = executeActivatableServant(rmiConfigure,
-				DEFAULT_ADDRESS, 0);
+			activatableServant = executeActivatableServant(rmiConfigure,
+					DEFAULT_ADDRESS, 0);
 
-		executeAll();
+			executeAll();
 
-		// nonBlockingServer.start();
+			// nonBlockingServer.start();
 
-		// testDatagramAcceptor(DEFAULT_ADDRESS, DEFAULT_PORT);
+			// testDatagramAcceptor(DEFAULT_ADDRESS, DEFAULT_PORT);
 
-		// System.exit(0);
-
+			// System.exit(0);
+		} catch (Exception e) {
+			StackTraceElement[] current = e.getStackTrace();
+			if (e instanceof NFlightException) {
+				NFlightException ne = (NFlightException) e;
+				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
+						current[0].getMethodName(),
+						"\n" + NFlightException.getStackTrace(ne));
+				ThreadHelper.interrupt(Thread.currentThread());
+			} else {
+				e.printStackTrace();
+				ThreadHelper.shutdown();
+			}
+		}
 	}
 
 	private static void rmidProcessStart(Configure configure)

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.exception.NFUnexpectedException;
+import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class RMIServiceHelper {
@@ -168,7 +168,7 @@ public class RMIServiceHelper {
 					"Remote communication with the registry failed", re)
 					.addContextValue("boundName", boundName);
 		} catch (NotBoundException nbe) {
-			throw new NFUnexpectedException(boundName
+			throw new UnexpectedException(boundName
 					+ " is not currently bound", nbe);
 		}
 	}

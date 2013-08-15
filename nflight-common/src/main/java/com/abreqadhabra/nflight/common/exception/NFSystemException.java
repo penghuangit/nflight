@@ -19,9 +19,9 @@ package com.abreqadhabra.nflight.common.exception;
  * 
  * @author dongsup.kim@gmail.com
  * @since STEP1
- * @see WrapperException
+ * @see NFlightException
  */
-public class NFSystemException extends WrapperException {
+public class NFSystemException extends NFlightException {
 
     /**
      * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정

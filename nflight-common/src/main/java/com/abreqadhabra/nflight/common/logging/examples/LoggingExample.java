@@ -4,7 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.exception.NFSystemException;
-import com.abreqadhabra.nflight.common.exception.NFUnexpectedException;
+import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class LoggingExample {
@@ -12,7 +12,7 @@ public class LoggingExample {
 	private static Class<LoggingExample> THIS_CLAZZ = LoggingExample.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public static void main(String[] args) throws NFUnexpectedException {
+	public static void main(String[] args) throws UnexpectedException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
@@ -50,7 +50,7 @@ public class LoggingExample {
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(), "\n" + ce.getStackTrace(e));
 			} else {
-				throw new NFUnexpectedException(e);
+				throw new UnexpectedException(e);
 			}
 		}
 
