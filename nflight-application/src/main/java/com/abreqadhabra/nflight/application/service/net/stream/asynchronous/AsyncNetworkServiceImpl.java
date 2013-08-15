@@ -4,7 +4,6 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
-import com.abreqadhabra.nflight.application.service.exception.ServiceException;
 import com.abreqadhabra.nflight.application.service.net.AbstractNetworkServiceImpl;
 import com.abreqadhabra.nflight.application.service.net.stream.asynchronous.transport.AsyncAcceptor;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
@@ -20,9 +19,10 @@ public class AsyncNetworkServiceImpl extends AbstractNetworkServiceImpl {
 	@Override
 	public void startup() throws NFlightException {
 		try {
+			this.isRunning = true;
 			// wait for incoming connections
-			AsyncAcceptor acceptor = new AsyncAcceptor(this.endpoint,
-					this.threadPool, this.configure);
+			AsyncAcceptor acceptor = new AsyncAcceptor(this.isRunning,
+					this.endpoint, this.threadPool, this.configure);
 			new Thread(acceptor).start();
 		} catch (NFlightException e) {
 			throw e;

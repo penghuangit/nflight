@@ -31,7 +31,7 @@ public class ServiceClientTest {
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	static HashMap<String, Runnable> serviceGroupMap = new HashMap<String, Runnable>();
-	static int cnt = 3;
+	static int cnt = 1;
 	static int millis = 1;
 
 	public static SocketChannelFactory createSocketChannelFactory() {

@@ -2,14 +2,19 @@ package com.abreqadhabra.nflight.application.service.net.stream.asynchronous.tra
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
+import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.NetworkChannel;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
+import com.abreqadhabra.nflight.application.server.net.socket.NetworkChannelHelper;
 import com.abreqadhabra.nflight.application.service.exception.ServiceException;
 import com.abreqadhabra.nflight.application.service.net.Acceptor;
 import com.abreqadhabra.nflight.application.service.net.AcceptorShutdownHook;
@@ -24,14 +29,16 @@ public class AsyncAcceptor extends AbstractRunnable implements Acceptor {
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
+	private boolean isRunning;
 	private ThreadPoolExecutor threadPool;
 	private Configure configure;
 	private AsynchronousServerSocketChannel channel;
 
-	public AsyncAcceptor(InetSocketAddress endpoint,
+	public AsyncAcceptor(boolean isRunning, InetSocketAddress endpoint,
 			ThreadPoolExecutor threadPool, Configure configure)
 			throws NFlightException {
 		super.setShutdownHookThread(new AcceptorShutdownHook(this).getThread());
+		this.isRunning = isRunning;
 		this.threadPool = threadPool;
 		this.configure = configure;
 		this.init(endpoint);
@@ -59,12 +66,16 @@ public class AsyncAcceptor extends AbstractRunnable implements Acceptor {
 		final Thread CURRENT_THREAD = Thread.currentThread();
 		CURRENT_THREAD.getStackTrace()[1].getMethodName();
 		try {
-			this.accept(null);
-			System.in.read();
-		} catch (IOException e) {
-			throw new ServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
+			while (this.isRunning) {
+				Future<AsynchronousSocketChannel> future = channel.accept();
+
+				AsynchronousSocketChannel socket = future.get();
+
+				this.accept(socket);
+			}
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -87,9 +98,24 @@ public class AsyncAcceptor extends AbstractRunnable implements Acceptor {
 	}
 
 	@Override
-	public void accept(SocketChannel socket) throws NFlightException {
-		this.channel.accept(null, new AsyncReceiveCompletionHandler(
-				this.configure, this.channel));
+	public void accept(NetworkChannel socketChannel) throws NFlightException {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+
+		AsynchronousSocketChannel socket = (AsynchronousSocketChannel) socketChannel;
+		try {
+			LOGGER.logp(
+					Level.FINER,
+					CLAZZ_NAME,
+					METHOD_NAME,
+					"Accepted socket connection from "
+							+ socket.getRemoteAddress());
+			receive(socket);
+		} catch (IOException e) {
+			throw new ServiceException(e);
+		} catch (Exception e) {
+			throw new UnexpectedException(e);
+		}
 	}
 
 	@Override
@@ -106,9 +132,36 @@ public class AsyncAcceptor extends AbstractRunnable implements Acceptor {
 	}
 
 	@Override
-	public void receive(SocketChannel socket) throws NFlightException {
-		// TODO Auto-generated method stub
+	public void receive(NetworkChannel socketChannel) throws NFlightException {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
 
+		AsynchronousSocketChannel socket = (AsynchronousSocketChannel) socketChannel;
+		try {
+			int capacity = this.configure
+					.getInt(Configure.ASYNC_INCOMING_BUFFER_CAPACITY);
+			ByteBuffer incomingByteBuffer = NetworkChannelHelper
+					.getByteBuffer(capacity);
+			Integer numRead = socket.read(incomingByteBuffer).get();
+			incomingByteBuffer.flip();
+			if (incomingByteBuffer.hasRemaining()) {
+				incomingByteBuffer.compact();
+			} else {
+				incomingByteBuffer.clear();
+			}
+			LOGGER.logp(
+					Level.FINER,
+					THIS_CLAZZ.getSimpleName(),
+					METHOD_NAME,
+					new String(incomingByteBuffer.array(), "UTF-8") + " ["
+							+ numRead + " bytes] from "
+							+ socket.getRemoteAddress());
+
+		} catch (InterruptedException | ExecutionException | IOException e) {
+			throw new ServiceException(e);
+		} catch (Exception e) {
+			throw new UnexpectedException(e);
+		}
 	}
 
 	@Override

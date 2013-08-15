@@ -6,6 +6,7 @@ import java.net.SocketAddress;
 import java.net.StandardProtocolFamily;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+import java.nio.channels.NetworkChannel;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -92,7 +93,7 @@ public class MulticastAcceptor extends AbstractRunnable implements Acceptor {
 	}
 
 	@Override
-	public void accept(SocketChannel socket) throws NFlightException {
+	public void accept(NetworkChannel socketChannel) throws NFlightException {
 		this.receive(null);
 
 	}
@@ -109,7 +110,7 @@ public class MulticastAcceptor extends AbstractRunnable implements Acceptor {
 	}
 
 	@Override
-	public void receive(SocketChannel socket) throws NFlightException {
+	public void receive(NetworkChannel socketChannel) throws NFlightException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
@@ -117,7 +118,6 @@ public class MulticastAcceptor extends AbstractRunnable implements Acceptor {
 					.getInt(Configure.MULTICAST_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = NetworkServiceHelper
 					.getByteBuffer(capacity);
-
 			SocketAddress clientEndpoint = this.channel
 					.receive(incomingByteBuffer);
 

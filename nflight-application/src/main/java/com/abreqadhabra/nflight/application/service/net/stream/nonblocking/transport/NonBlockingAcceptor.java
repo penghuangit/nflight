@@ -3,6 +3,7 @@ package com.abreqadhabra.nflight.application.service.net.stream.nonblocking.tran
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.NetworkChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -143,10 +144,11 @@ public class NonBlockingAcceptor extends AbstractRunnable implements Acceptor {
 	}
 
 	@Override
-	public void accept(SocketChannel socket) throws NFlightException {
+	public void accept(NetworkChannel socketChannel) throws NFlightException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
+			SocketChannel socket = (SocketChannel) socketChannel;
 			LOGGER.logp(
 					Level.FINER,
 					CLAZZ_NAME,
@@ -179,9 +181,10 @@ public class NonBlockingAcceptor extends AbstractRunnable implements Acceptor {
 	}
 
 	@Override
-	public void receive(SocketChannel socket) throws NFlightException {
+	public void receive(NetworkChannel socketChannel) throws NFlightException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
+		SocketChannel socket = (SocketChannel) socketChannel;
 		try {
 			int capacity = this.configure
 					.getInt(Configure.NONBLOCKING_INCOMING_BUFFER_CAPACITY);

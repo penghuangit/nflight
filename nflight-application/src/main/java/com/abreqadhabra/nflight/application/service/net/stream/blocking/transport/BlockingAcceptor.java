@@ -3,6 +3,7 @@ package com.abreqadhabra.nflight.application.service.net.stream.blocking.transpo
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.NetworkChannel;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutionException;
@@ -90,9 +91,11 @@ public class BlockingAcceptor extends AbstractRunnable implements Acceptor {
 	}
 
 	@Override
-	public void accept(SocketChannel socket) throws NFlightException {
+	public void accept(NetworkChannel socketChannel) throws NFlightException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
+		
+		SocketChannel socket = (SocketChannel) socketChannel;
 		try {
 			LOGGER.logp(
 					Level.INFO,
@@ -133,7 +136,8 @@ public class BlockingAcceptor extends AbstractRunnable implements Acceptor {
 	}
 
 	@Override
-	public void receive(SocketChannel socket) {
+	public void receive(NetworkChannel socketChannel) {
+		SocketChannel socket = (SocketChannel) socketChannel;
 		@SuppressWarnings("unused")
 		Future<?> future = this.threadPool.submit(new BlockingReceiver(
 				this.configure, socket));

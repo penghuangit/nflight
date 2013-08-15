@@ -25,7 +25,7 @@ public class ThreadHelper {
 				.getMethodName();
 
 		LOGGER.logp(Level.SEVERE, THIS_CLAZZ.getName(), METHOD_NAME,
-				thread.getName() + "Thread was interrupted");
+				thread.getName() + ": Thread was interrupted");
 		thread.interrupt();
 	}
 

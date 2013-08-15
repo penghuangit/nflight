@@ -2,12 +2,13 @@ package com.abreqadhabra.nflight.application.service.net.datagram.unicast.transp
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.StandardProtocolFamily;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+import java.nio.channels.NetworkChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
@@ -38,7 +39,8 @@ public class UnicastBlockingAcceptor extends AbstractRunnable
 	private Selector selector;
 
 	public UnicastBlockingAcceptor(boolean isRunning,
-			InetSocketAddress endpoint, Configure configure)
+			InetSocketAddress endpoint,
+			/* ThreadPoolExecutor threadPool, */Configure configure)
 			throws NFlightException {
 		super.setShutdownHookThread(new AcceptorShutdownHook(this).getThread());
 		this.isRunning = isRunning;
@@ -49,6 +51,7 @@ public class UnicastBlockingAcceptor extends AbstractRunnable
 	@Override
 	public void init(InetSocketAddress endpoint) throws NFlightException {
 		try {
+
 			// create a new server-socket channel & selector
 			this.selector = Selector.open();
 			this.channel = this.createServerChannelFactory()
@@ -59,6 +62,7 @@ public class UnicastBlockingAcceptor extends AbstractRunnable
 				// Register the server socket channel, indicating an interest in
 				// accepting new connections
 				this.channel.register(this.selector, SelectionKey.OP_READ);
+
 			} else {
 				throw new ServiceException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
 			}
@@ -67,6 +71,12 @@ public class UnicastBlockingAcceptor extends AbstractRunnable
 		} catch (Exception e) {
 			throw new UnexpectedException(e);
 		}
+
+	}
+
+	@Override
+	public ServerChannelFactory createServerChannelFactory() {
+		return new ServerChannelFactory();
 	}
 
 	@Override
@@ -96,18 +106,14 @@ public class UnicastBlockingAcceptor extends AbstractRunnable
 							METHOD_NAME, NetworkServiceHelper
 									.getReadySetString(selectionKey));
 					// 이벤트가 사용할 수 있는지 확인하고 처리
-					if (selectionKey.isAcceptable()) {
-						SocketChannel socket = ((ServerSocketChannel) selectionKey
-								.channel()).accept();
-						this.accept(socket);
-					} else if (selectionKey.isReadable()) {
-						SocketChannel socket = (SocketChannel) selectionKey
-								.attachment();
-						this.receive(socket);
+					if (selectionKey.isReadable()) {
+						DatagramChannel channel = (DatagramChannel) selectionKey
+								.channel();
+						this.receive(channel);
 					} else if (selectionKey.isWritable()) {
-						SocketChannel socket = (SocketChannel) selectionKey
-								.attachment();
-						this.send(socket);
+						DatagramChannel channel = (DatagramChannel) selectionKey
+								.channel();
+						//this.send(channel);
 					} else {
 						LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
 								METHOD_NAME, "Unexpected ops in select "
@@ -142,25 +148,7 @@ public class UnicastBlockingAcceptor extends AbstractRunnable
 	}
 
 	@Override
-	public void accept(SocketChannel socket) throws NFlightException {
-		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
-				.getMethodName();
-		try {
-			LOGGER.logp(
-					Level.FINER,
-					CLAZZ_NAME,
-					METHOD_NAME,
-					"Accepted socket connection from "
-							+ socket.getRemoteAddress());
-			socket.configureBlocking(false);
-			SelectionKey readyKey = socket.register(this.selector,
-					SelectionKey.OP_READ);
-			readyKey.attach(socket);
-		} catch (IOException e) {
-			throw new ServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
-		}
+	public void accept(NetworkChannel socketChannel) throws NFlightException {
 	}
 
 	@Override
@@ -173,22 +161,22 @@ public class UnicastBlockingAcceptor extends AbstractRunnable
 	public void send(SocketChannel socket, Object message)
 			throws NFlightException {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
-	public void receive(SocketChannel socket) throws NFlightException {
+	public void receive(NetworkChannel socketChannel) throws NFlightException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
+
 		try {
-			// DatagramChannel channel = (DatagramChannel)
-			// selectionKey.channel();
-			System.out.println(socket.getClass().getName());
 			int capacity = this.configure
 					.getInt(Configure.UNICAST_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = NetworkServiceHelper
 					.getByteBuffer(capacity);
-			int numRead = socket.read(incomingByteBuffer);
+
+			SocketAddress clientEndpoint = this.channel
+					.receive(incomingByteBuffer);
+
 			incomingByteBuffer.flip();
 			if (incomingByteBuffer.hasRemaining()) {
 				incomingByteBuffer.compact();
@@ -197,17 +185,12 @@ public class UnicastBlockingAcceptor extends AbstractRunnable
 			}
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					new String(incomingByteBuffer.array(), "UTF-8") + " ["
-							+ numRead + " bytes] from ");
+							+ incomingByteBuffer.limit() + " bytes] from "
+							+ clientEndpoint);
 		} catch (IOException e) {
 			throw new ServiceException(e);
 		} catch (Exception e) {
 			throw new UnexpectedException(e);
 		}
 	}
-
-	@Override
-	public ServerChannelFactory createServerChannelFactory() {
-		return new ServerChannelFactory();
-	}
-
 }
