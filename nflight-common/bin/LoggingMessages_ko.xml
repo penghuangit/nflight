@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-<comment>LoggingMessages_ko.xml</comment>
-<entry key="MSG_KEY_01_01">가</entry>
-<entry key="MSG_KEY_01">가나다라?: {0} </entry>
-</properties>

@@ -1,6 +1,7 @@
 package com.abreqadhabra.nflight.application.transport.exception;
 
 import com.abreqadhabra.nflight.common.exception.NFlightException;
+import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 
 /**
  * <p>
@@ -23,12 +24,12 @@ import com.abreqadhabra.nflight.common.exception.NFlightException;
  * @since STEP1
  * @see NFlightException
  */
-public class RMIServiceException extends NFlightException {
+public class RMIServiceException extends NFlightRemoteException {
 
-    /**
+	/**
      * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정
      */
-    private static long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
     /**
      * 에러ID

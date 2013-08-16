@@ -45,9 +45,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="com.abreqadhabra.nflight.application.transport.rmi.rmid.RMIDCommand" 
+  <class id="5" language="java" name="com.abreqadhabra.nflight.application.transport.rmi.rmid.RMIDProcess" 
     project="nflight-application" 
-    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/rmi/rmid/RMIDCommand.java" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/rmi/rmid/RMIDProcess.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="171" width="240" x="606" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 

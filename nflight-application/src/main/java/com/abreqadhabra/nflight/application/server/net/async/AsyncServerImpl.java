@@ -19,7 +19,7 @@ import com.abreqadhabra.nflight.application.server.net.async.logic.IBusinessLogi
 import com.abreqadhabra.nflight.application.server.net.socket.AbstractSocketServerImpl;
 import com.abreqadhabra.nflight.application.server.net.socket.ISocketAcceptor;
 import com.abreqadhabra.nflight.application.server.net.socket.NetworkChannelHelper;
-import com.abreqadhabra.nflight.common.launcher.Configure;
+import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class AsyncServerImpl extends AbstractSocketServerImpl {

@@ -24,9 +24,9 @@ import java.util.logging.Logger;
 
 import javax.net.ServerSocketFactory;
 
-import com.abreqadhabra.nflight.common.launcher.Configure;
-import com.abreqadhabra.nflight.common.launcher.Configure.SERVICE_TYPE;
-import com.abreqadhabra.nflight.common.launcher.ConfigureImpl;
+import com.abreqadhabra.nflight.application.launcher.Configure;
+import com.abreqadhabra.nflight.application.launcher.Configure.SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class NetworkServiceHelper {

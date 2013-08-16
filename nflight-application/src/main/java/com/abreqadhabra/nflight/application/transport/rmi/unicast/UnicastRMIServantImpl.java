@@ -10,15 +10,14 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.transport.exception.NetworkServiceException;
+import com.abreqadhabra.nflight.application.concurrency.AbstractRunnable;
+import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.application.transport.exception.RMIServiceException;
 import com.abreqadhabra.nflight.application.transport.rmi.RMIServiceHelper;
 import com.abreqadhabra.nflight.application.transport.rmi.Servant;
 import com.abreqadhabra.nflight.application.transport.rmi.ServantShutdownHook;
-import com.abreqadhabra.nflight.common.concurrency.AbstractRunnable;
-import com.abreqadhabra.nflight.common.exception.NFlightException;
-import com.abreqadhabra.nflight.common.exception.UnexpectedException;
-import com.abreqadhabra.nflight.common.launcher.Configure;
+import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
+import com.abreqadhabra.nflight.common.exception.UnexpectedRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class UnicastRMIServantImpl extends AbstractRunnable implements Servant {
@@ -34,7 +33,7 @@ public class UnicastRMIServantImpl extends AbstractRunnable implements Servant {
 	private String serviceName;
 
 	public UnicastRMIServantImpl(InetAddress addr, int port)
-			throws NFlightException {
+			throws NFlightRemoteException {
 		super.setShutdownHookThread(new ServantShutdownHook(this).getThread());
 		this.addr = addr;
 		this.port = port;
@@ -46,7 +45,7 @@ public class UnicastRMIServantImpl extends AbstractRunnable implements Servant {
 	}
 
 	@Override
-	public void start() throws NFlightException  {
+	public void start() throws NFlightRemoteException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
@@ -65,16 +64,14 @@ public class UnicastRMIServantImpl extends AbstractRunnable implements Servant {
 								+ Arrays.toString(this.registry.list()));
 			}
 		} catch (RemoteException e) {
-			throw new NetworkServiceException(e);
-		} catch (NFlightException ne) {
-			throw ne;
+			throw new RMIServiceException(e);
 		} catch (Exception e) {
-			throw new UnexpectedException(e);
+			throw new UnexpectedRemoteException(e);
 		}
 	}
 
 	@Override
-	public void stop() throws NFlightException {
+	public void stop() throws NFlightRemoteException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
@@ -82,16 +79,16 @@ public class UnicastRMIServantImpl extends AbstractRunnable implements Servant {
 			this.registry.unbind(this.boundName);
 			LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME, "Stopped");
 		} catch (IOException e) {
-			throw new NetworkServiceException(e);
+			throw new RMIServiceException(e);
 		} catch (Exception e) {
-			throw new UnexpectedException(e);
+			throw new UnexpectedRemoteException(e);
 		} finally {
 			super.interrupt();
 		}
 	}
 
 	@Override
-	public String sayHello() throws RemoteException {
+	public String sayHello() throws NFlightRemoteException {
 		return "Hello, world!";
 	}
 }

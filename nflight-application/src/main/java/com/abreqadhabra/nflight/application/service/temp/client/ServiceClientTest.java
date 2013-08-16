@@ -18,10 +18,10 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.transport.rmi.RMIServiceHelper;
 import com.abreqadhabra.nflight.application.transport.rmi.Servant;
-import com.abreqadhabra.nflight.common.concurrency.thread.ThreadHelper;
+import com.abreqadhabra.nflight.application.concurrency.thread.ThreadHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
-import com.abreqadhabra.nflight.common.launcher.Configure;
-import com.abreqadhabra.nflight.common.launcher.ConfigureImpl;
+import com.abreqadhabra.nflight.application.launcher.Configure;
+import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ServiceClientTest {

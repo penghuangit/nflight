@@ -16,8 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.transport.network.NetworkServiceHelper;
-import com.abreqadhabra.nflight.common.launcher.Configure;
-import com.abreqadhabra.nflight.common.launcher.Configure.SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.launcher.Configure;
+import com.abreqadhabra.nflight.application.launcher.Configure.SERVICE_TYPE;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ClientChannelFactory {

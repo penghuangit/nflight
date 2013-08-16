@@ -11,8 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.transport.exception.RMIServiceException;
-import com.abreqadhabra.nflight.common.exception.NFlightException;
-import com.abreqadhabra.nflight.common.exception.UnexpectedException;
+import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
+import com.abreqadhabra.nflight.common.exception.UnexpectedRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class RMIServiceHelper {
@@ -29,10 +29,10 @@ public class RMIServiceHelper {
 	 *            host for the remote registry, if null the local host is used
 	 * @param port
 	 *            is the port on which the registry accepts requests
-	 * @throws NFlightException 
+	 * @throws NFlightRemoteException 
 	 * @throws Exception
 	 **/
-	public static Registry getRegistry(String host, int port) throws NFlightException
+	public static Registry getRegistry(String host, int port) throws NFlightRemoteException
 			 {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
@@ -71,7 +71,7 @@ public class RMIServiceHelper {
 		return "rmi://" + host + ":" + port + "/" + objName;
 	}
 
-	public static List<String> getBoundNameList(Registry registry) throws NFlightException
+	public static List<String> getBoundNameList(Registry registry) throws NFlightRemoteException
 			{
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
@@ -102,7 +102,7 @@ public class RMIServiceHelper {
 	 * return obj; }
 	 */
 	public static boolean isActivatedRegistry(Registry registry,
-			String name) throws NFlightException  {
+			String name) throws NFlightRemoteException  {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		if (getBoundNameList(registry).contains(name)) {
@@ -139,7 +139,7 @@ public class RMIServiceHelper {
 	 * rebind stub in registry.
 	 */
 	public static void rebind(Registry registry, String name,
-			Remote obj) throws NFlightException  {
+			Remote obj) throws NFlightRemoteException  {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
@@ -157,7 +157,7 @@ public class RMIServiceHelper {
 	 * Remove the RMI remote object from the RMI registry
 	 */
 	public static void unbind(Registry registry, String boundName)
-			throws Exception {
+			throws NFlightRemoteException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
@@ -171,7 +171,7 @@ public class RMIServiceHelper {
 					"Remote communication with the registry failed", re)
 					.addContextValue("boundName", boundName);
 		} catch (NotBoundException nbe) {
-			throw new UnexpectedException(boundName
+			throw new UnexpectedRemoteException(boundName
 					+ " is not currently bound", nbe);
 		}
 	}

@@ -3,7 +3,7 @@ package com.abreqadhabra.nflight.application.transport.network;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.common.concurrency.thread.ThreadHelper;
+import com.abreqadhabra.nflight.application.concurrency.thread.ThreadHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 

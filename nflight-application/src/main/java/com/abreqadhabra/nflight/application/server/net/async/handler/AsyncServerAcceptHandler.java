@@ -15,7 +15,7 @@ import com.abreqadhabra.nflight.application.server.net.async.logic.IBusinessLogi
 import com.abreqadhabra.nflight.application.server.net.socket.MessageDTO;
 import com.abreqadhabra.nflight.application.server.net.socket.MessageDTOImpl;
 import com.abreqadhabra.nflight.application.server.net.socket.NetworkChannelHelper;
-import com.abreqadhabra.nflight.common.launcher.Configure;
+import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.dao.dto.Airline;
 

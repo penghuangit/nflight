@@ -1,7 +1,7 @@
 package com.abreqadhabra.nflight.application.server.command;
 
 import com.abreqadhabra.nflight.application.server.IServer;
-import com.abreqadhabra.nflight.common.launcher.command.Command;
+import com.abreqadhabra.nflight.application.launcher.command.Command;
 
 public class StatusServerCommand implements Command {
 	private IServer server;

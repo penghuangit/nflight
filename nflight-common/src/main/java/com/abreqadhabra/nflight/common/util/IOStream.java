@@ -51,16 +51,12 @@ public class IOStream {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(className);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		ProtectionDomain pd = cls.getProtectionDomain();
 		CodeSource cs = pd.getCodeSource();
 		URL url = cs.getLocation();
-		try {
+		
 			return Paths.get(url.toURI());
-		} catch (URISyntaxException e) {
+		} catch (ClassNotFoundException  |URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}//.replace(":", "/");

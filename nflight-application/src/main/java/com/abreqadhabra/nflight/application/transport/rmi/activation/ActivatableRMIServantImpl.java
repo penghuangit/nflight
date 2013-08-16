@@ -23,11 +23,12 @@ import com.abreqadhabra.nflight.application.transport.exception.RMIServiceExcept
 import com.abreqadhabra.nflight.application.transport.rmi.RMIServiceHelper;
 import com.abreqadhabra.nflight.application.transport.rmi.Servant;
 import com.abreqadhabra.nflight.application.transport.rmi.ServantShutdownHook;
-import com.abreqadhabra.nflight.common.Env;
-import com.abreqadhabra.nflight.common.concurrency.AbstractRunnable;
+import com.abreqadhabra.nflight.application.concurrency.AbstractRunnable;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
+import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
-import com.abreqadhabra.nflight.common.launcher.Configure;
+import com.abreqadhabra.nflight.common.exception.UnexpectedRemoteException;
+import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ActivatableRMIServantImpl extends AbstractRunnable
@@ -61,7 +62,7 @@ public class ActivatableRMIServantImpl extends AbstractRunnable
 	}
 
 	public ActivatableRMIServantImpl(InetAddress addr, int port)
-			throws NFlightException {
+			throws NFlightRemoteException {
 		super.setShutdownHookThread(new ServantShutdownHook(this).getThread());
 		this.addr = addr;
 		this.port = port;
@@ -73,7 +74,7 @@ public class ActivatableRMIServantImpl extends AbstractRunnable
 	}
 
 	@Override
-	public void start() throws NFlightException {
+	public void start() throws NFlightRemoteException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
@@ -83,16 +84,6 @@ public class ActivatableRMIServantImpl extends AbstractRunnable
 			String policyfile = Configure.FILE_ACTIVATABLE_POLICY.toString();
 			MarshalledObject<Object> data = new MarshalledObject<Object>(
 					Configure.FILE_ACTIVATION.toString());
-
-			// 삭제예정 start 실행 초기에 보안관리자 설정 필요
-			System.setProperty(
-					Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(),
-					policyfile);
-
-			if (System.getSecurityManager() == null) {
-				System.setSecurityManager(new SecurityManager());
-			}
-			// 삭제예정 end
 
 			Remote stub = this.install(className, codebase, policyfile, data);
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
@@ -109,12 +100,12 @@ public class ActivatableRMIServantImpl extends AbstractRunnable
 		} catch (IOException e) {
 			throw new RMIServiceException(e);
 		} catch (Exception e) {
-			throw new UnexpectedException(e);
+			throw new UnexpectedRemoteException(e);
 		}
 	}
 
 	@Override
-	public void stop() throws NFlightException {
+	public void stop() throws NFlightRemoteException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
@@ -122,9 +113,9 @@ public class ActivatableRMIServantImpl extends AbstractRunnable
 			this.registry.unbind(this.boundName);
 			LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME, "Stopped");
 		} catch (IOException e) {
-			throw new NetworkServiceException(e);
+			throw new RMIServiceException(e);
 		} catch (Exception e) {
-			throw new UnexpectedException(e);
+			throw new UnexpectedRemoteException(e);
 		} finally {
 			super.interrupt();
 		}
@@ -151,7 +142,7 @@ public class ActivatableRMIServantImpl extends AbstractRunnable
 	}
 
 	public Remote install(String className, String codebase, String policyFile,
-			MarshalledObject<Object> data) throws NFlightException {
+			MarshalledObject<Object> data) throws NFlightRemoteException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
@@ -191,12 +182,12 @@ public class ActivatableRMIServantImpl extends AbstractRunnable
 		} catch (ActivationException | RemoteException e) {
 			throw new RMIServiceException(e);
 		} catch (Exception e) {
-			throw new UnexpectedException(e);
+			throw new UnexpectedRemoteException(e);
 		}
 	}
 
 	@Override
-	public String sayHello() throws RemoteException {
+	public String sayHello() throws NFlightRemoteException {
 		return "Hello, world!";
 	}
 }

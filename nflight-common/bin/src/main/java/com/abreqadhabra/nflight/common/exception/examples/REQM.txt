@@ -1,4 +1,0 @@
-1. 발생된 예외 정보를 전달하는 경우에 발생 단계마다 중첩가능(Nestable)한 예외 처리를 지원할 것
-NestedRuntimeExceptionExample.java
-
-2. 발생된 예외 정보에 대한 

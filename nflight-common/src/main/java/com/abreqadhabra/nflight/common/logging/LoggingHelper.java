@@ -55,6 +55,7 @@ public class LoggingHelper {
 
 	public static Logger getLogger(Class<?> clazz,
 			String resourceBundleName) {
+		
 		if (resourceBundleName == null) {
 			resourceBundleName = DEFAULT_RESOURCE_BUNDLE_NAME;
 		}
