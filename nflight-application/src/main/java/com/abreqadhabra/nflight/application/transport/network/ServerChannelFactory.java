@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.launcher.Configure.STREAM_SERVICE_TYPE;
+import com.abreqadhabra.nflight.common.launcher.Configure.SERVICE_TYPE;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ServerChannelFactory {
@@ -30,7 +30,7 @@ public class ServerChannelFactory {
 			throws IOException, InterruptedException, ExecutionException {
 
 		return (AsynchronousServerSocketChannel) this.getNetworkChannel(
-				STREAM_SERVICE_TYPE.async, endpoint, backlog, null, threadPool,
+				SERVICE_TYPE.network_async, endpoint, backlog, null, threadPool,
 				initialSize);
 	}
 
@@ -39,7 +39,7 @@ public class ServerChannelFactory {
 			throws IOException, InterruptedException, ExecutionException {
 
 		return (ServerSocketChannel) this.getNetworkChannel(
-				STREAM_SERVICE_TYPE.blocking, endpoint, backlog, null, null, 0);
+				SERVICE_TYPE.network_blocking, endpoint, backlog, null, null, 0);
 	}
 
 	public ServerSocketChannel createNonBlockingServerSocketChannel(
@@ -47,7 +47,7 @@ public class ServerChannelFactory {
 			throws IOException, InterruptedException, ExecutionException {
 
 		return (ServerSocketChannel) this.getNetworkChannel(
-				STREAM_SERVICE_TYPE.nonblocking, endpoint, backlog, null, null,
+				SERVICE_TYPE.network_nonblocking, endpoint, backlog, null, null,
 				0);
 	}
 
@@ -56,7 +56,7 @@ public class ServerChannelFactory {
 			throws IOException, InterruptedException, ExecutionException {
 
 		return (DatagramChannel) this.getNetworkChannel(
-				STREAM_SERVICE_TYPE.unicast, endpoint, 0,
+				SERVICE_TYPE.network_unicast, endpoint, 0,
 				StandardProtocolFamily.INET, null, 0);
 	}
 
@@ -66,12 +66,12 @@ public class ServerChannelFactory {
 			InterruptedException, ExecutionException {
 
 		return (DatagramChannel) this.getNetworkChannel(
-				STREAM_SERVICE_TYPE.multicast, endpoint, 0,
+				SERVICE_TYPE.network_multicast, endpoint, 0,
 				StandardProtocolFamily.INET, null, 0);
 	}
 
 	private NetworkChannel getNetworkChannel(
-			STREAM_SERVICE_TYPE serviceType,
+			SERVICE_TYPE serviceType,
 			SocketAddress endpoint, int backlog,
 			StandardProtocolFamily protocolFamily,
 			ThreadPoolExecutor threadPool, int initialSize)
@@ -81,21 +81,21 @@ public class ServerChannelFactory {
 		String networkInterfaceName = null;
 
 		switch (serviceType) {
-			case blocking :
-			case nonblocking :
+			case network_blocking :
+			case network_nonblocking :
 				channel = ServerSocketChannel.open();
 				break;
-			case async :
+			case network_async :
 				// create asynchronous server-socket channel bound to the thread
 				// Group
 				AsynchronousChannelGroup threadGroup = AsynchronousChannelGroup
 						.withCachedThreadPool(threadPool, initialSize);
 				channel = AsynchronousServerSocketChannel.open(threadGroup);
 				break;
-			case unicast :
+			case network_unicast :
 				channel = DatagramChannel.open(protocolFamily);
 				break;
-			case multicast :
+			case network_multicast :
 				networkInterfaceName = NetworkServiceHelper
 						.getNetworkInterfaceName(InetAddress.getLocalHost()
 								.getHostAddress());
@@ -109,7 +109,7 @@ public class ServerChannelFactory {
 				networkInterfaceName);
 	}
 
-	private NetworkChannel bind(STREAM_SERVICE_TYPE serviceType,
+	private NetworkChannel bind(SERVICE_TYPE serviceType,
 			NetworkChannel channel, SocketAddress endpoint,
 			int backlog, String networkInterfaceName)
 			throws IOException, InterruptedException, ExecutionException {
@@ -119,7 +119,7 @@ public class ServerChannelFactory {
 		if (channel.isOpen()) {
 			// set some options
 			if ((channel instanceof DatagramChannel)
-					&& serviceType.equals(STREAM_SERVICE_TYPE.multicast)) {
+					&& serviceType.equals(SERVICE_TYPE.network_multicast)) {
 				NetworkServiceHelper.setMulticastChannelOption(
 						(DatagramChannel) channel, networkInterfaceName,
 						serviceType);
@@ -131,18 +131,18 @@ public class ServerChannelFactory {
 				((AsynchronousServerSocketChannel) channel).bind(endpoint,
 						backlog);
 			} else if (channel instanceof ServerSocketChannel) {
-				if (serviceType.equals(STREAM_SERVICE_TYPE.nonblocking)) {
+				if (serviceType.equals(SERVICE_TYPE.network_nonblocking)) {
 					// configure blocking mode
 					((ServerSocketChannel) channel).configureBlocking(false);
 				}
 				((ServerSocketChannel) channel).bind(endpoint, backlog);
 			} else if ((channel instanceof DatagramChannel)
-					&& serviceType.equals(STREAM_SERVICE_TYPE.unicast)) {
+					&& serviceType.equals(SERVICE_TYPE.network_unicast)) {
 				// configure non-blocking mode
 				((DatagramChannel) channel).configureBlocking(false);
 				((DatagramChannel) channel).bind(endpoint);
 			} else if ((channel instanceof DatagramChannel)
-					&& serviceType.equals(STREAM_SERVICE_TYPE.multicast)) {
+					&& serviceType.equals(SERVICE_TYPE.network_multicast)) {
 				((DatagramChannel) channel).bind(endpoint);
 
 			}

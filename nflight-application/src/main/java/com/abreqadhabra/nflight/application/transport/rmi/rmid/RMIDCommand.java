@@ -1,11 +1,17 @@
 package com.abreqadhabra.nflight.application.transport.rmi.rmid;
 
-import com.abreqadhabra.nflight.application.launcher.Configure;
-import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
-import com.abreqadhabra.nflight.application.launcher.runtime.process.SystemCommand;
+import java.util.logging.Logger;
+
+import com.abreqadhabra.nflight.application.transport.rmi.activation.ActivatableRMIServantImpl;
 import com.abreqadhabra.nflight.common.Env;
+import com.abreqadhabra.nflight.common.launcher.Configure;
+import com.abreqadhabra.nflight.common.launcher.ConfigureImpl;
+import com.abreqadhabra.nflight.common.launcher.runtime.process.SystemCommand;
+import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class RMIDCommand implements Runnable {
+	private static Class<RMIDCommand> THIS_CLAZZ = RMIDCommand.class;
+	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	String command;
 
@@ -26,8 +32,8 @@ public class RMIDCommand implements Runnable {
 
 	public static void main(String[] args) {
 
-		Configure configure = new ConfigureImpl(
-				Configure.FILE_RMI_SERVICE_PROPERTIES);
+		Configure configure = new ConfigureImpl(THIS_CLAZZ,
+				Configure.FILE_SERVICE_PROPERTIES);
 
 		String command = configure
 				.get(Configure.ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_START);

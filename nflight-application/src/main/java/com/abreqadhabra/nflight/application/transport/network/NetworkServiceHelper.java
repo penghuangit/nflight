@@ -24,9 +24,9 @@ import java.util.logging.Logger;
 
 import javax.net.ServerSocketFactory;
 
-import com.abreqadhabra.nflight.application.launcher.Configure;
-import com.abreqadhabra.nflight.application.launcher.Configure.STREAM_SERVICE_TYPE;
-import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
+import com.abreqadhabra.nflight.common.launcher.Configure;
+import com.abreqadhabra.nflight.common.launcher.Configure.SERVICE_TYPE;
+import com.abreqadhabra.nflight.common.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class NetworkServiceHelper {
@@ -34,12 +34,11 @@ public class NetworkServiceHelper {
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private static Configure configure = new ConfigureImpl(
+	private static Configure configure = new ConfigureImpl(THIS_CLAZZ,
 			Configure.FILE_CHANNEL_OPTION_PROPERTIES);
 
-	public static void setMulticastChannelOption(
-			DatagramChannel socketChannel,
-			String networkInterfaceName, STREAM_SERVICE_TYPE type) {
+	public static void setMulticastChannelOption(DatagramChannel socketChannel,
+			String networkInterfaceName, SERVICE_TYPE type) {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
@@ -60,13 +59,12 @@ public class NetworkServiceHelper {
 	}
 
 	public static void setChannelOption(NetworkChannel socketChannel,
-			STREAM_SERVICE_TYPE type) {
+			SERVICE_TYPE type) {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
-			Set<SocketOption<?>> options = socketChannel
-					.supportedOptions();
+			Set<SocketOption<?>> options = socketChannel.supportedOptions();
 
 			LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME, "소켓 채널의 지원 옵션:  "
 					+ options);
@@ -202,14 +200,12 @@ public class NetworkServiceHelper {
 		Enumeration<NetworkInterface> nets = NetworkInterface
 				.getNetworkInterfaces();
 		for (NetworkInterface netint : Collections.list(nets)) {
-			Enumeration<InetAddress> inetAddresses = netint
-					.getInetAddresses();
+			Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
 			if (LOGGER.isLoggable(Level.FINER)) {
 				sb.append("\n" + netint.getName() + ": "
 						+ netint.getDisplayName());
 			}
-			for (InetAddress inetAddress : Collections
-					.list(inetAddresses)) {
+			for (InetAddress inetAddress : Collections.list(inetAddresses)) {
 				if (LOGGER.isLoggable(Level.FINER)) {
 					sb.append("\n\tInetAddress=" + inetAddress.toString());
 				}

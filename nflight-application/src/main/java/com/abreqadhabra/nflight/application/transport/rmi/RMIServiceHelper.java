@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.transport.exception.RMIServiceException;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -28,10 +29,11 @@ public class RMIServiceHelper {
 	 *            host for the remote registry, if null the local host is used
 	 * @param port
 	 *            is the port on which the registry accepts requests
+	 * @throws NFlightException 
 	 * @throws Exception
 	 **/
-	public static Registry getRegistry(String host, int port)
-			throws Exception {
+	public static Registry getRegistry(String host, int port) throws NFlightException
+			 {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
@@ -69,8 +71,8 @@ public class RMIServiceHelper {
 		return "rmi://" + host + ":" + port + "/" + objName;
 	}
 
-	public static List<String> getBoundNameList(Registry registry)
-			throws Exception {
+	public static List<String> getBoundNameList(Registry registry) throws NFlightException
+			{
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
@@ -100,7 +102,7 @@ public class RMIServiceHelper {
 	 * return obj; }
 	 */
 	public static boolean isActivatedRegistry(Registry registry,
-			String name) throws Exception {
+			String name) throws NFlightException  {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		if (getBoundNameList(registry).contains(name)) {
@@ -137,7 +139,7 @@ public class RMIServiceHelper {
 	 * rebind stub in registry.
 	 */
 	public static void rebind(Registry registry, String name,
-			Remote obj) throws Exception {
+			Remote obj) throws NFlightException  {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 

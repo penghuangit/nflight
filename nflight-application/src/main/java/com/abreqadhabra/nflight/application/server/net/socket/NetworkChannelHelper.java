@@ -13,8 +13,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.launcher.Configure;
-import com.abreqadhabra.nflight.application.launcher.ConfigureImpl;
+import com.abreqadhabra.nflight.common.launcher.Configure;
+import com.abreqadhabra.nflight.common.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class NetworkChannelHelper {
@@ -22,7 +22,7 @@ public class NetworkChannelHelper {
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private static Configure configure = new ConfigureImpl(
+	private static Configure configure = new ConfigureImpl(THIS_CLAZZ,
 			Configure.FILE_CHANNEL_OPTION_PROPERTIES);
 
 	public static void setChannelOption(NetworkChannel socketChannel) {

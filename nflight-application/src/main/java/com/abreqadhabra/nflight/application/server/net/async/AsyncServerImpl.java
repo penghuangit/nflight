@@ -14,12 +14,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.service.NetworkChannelDescriptor;
-import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.application.server.net.async.handler.AsyncServerAcceptHandler;
 import com.abreqadhabra.nflight.application.server.net.async.logic.IBusinessLogic;
 import com.abreqadhabra.nflight.application.server.net.socket.AbstractSocketServerImpl;
 import com.abreqadhabra.nflight.application.server.net.socket.ISocketAcceptor;
 import com.abreqadhabra.nflight.application.server.net.socket.NetworkChannelHelper;
+import com.abreqadhabra.nflight.common.launcher.Configure;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class AsyncServerImpl extends AbstractSocketServerImpl {

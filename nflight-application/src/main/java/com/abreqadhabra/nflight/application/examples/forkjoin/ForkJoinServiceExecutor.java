@@ -8,7 +8,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.launcher.ProfileImpl;
+import com.abreqadhabra.nflight.common.launcher.ProfileImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ForkJoinServiceExecutor {

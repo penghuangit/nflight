@@ -1,37 +1,57 @@
 package com.abreqadhabra.nflight.application.transport.rmi.unicast;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.launcher.Configure;
+import com.abreqadhabra.nflight.application.transport.exception.NetworkServiceException;
 import com.abreqadhabra.nflight.application.transport.exception.RMIServiceException;
-import com.abreqadhabra.nflight.application.transport.rmi.AbstractRMIServant;
 import com.abreqadhabra.nflight.application.transport.rmi.RMIServiceHelper;
+import com.abreqadhabra.nflight.application.transport.rmi.Servant;
+import com.abreqadhabra.nflight.application.transport.rmi.ServantShutdownHook;
+import com.abreqadhabra.nflight.common.concurrency.AbstractRunnable;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
+import com.abreqadhabra.nflight.common.exception.UnexpectedException;
+import com.abreqadhabra.nflight.common.launcher.Configure;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class UnicastRMIServantImpl extends AbstractRMIServant {
+public class UnicastRMIServantImpl extends AbstractRunnable implements Servant {
 	private static Class<UnicastRMIServantImpl> THIS_CLAZZ = UnicastRMIServantImpl.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public UnicastRMIServantImpl(Configure configure,
-			InetAddress addr, int port) throws Exception {
-		super(configure, addr, port);
-		this.serviceName = Configure.RMI_SERVICE_TYPE.unicast.toString();
-		this.boundName = RMIServiceHelper.getBoundName(
-				super.addr.getHostAddress(), super.port, this.serviceName);
+	private InetAddress addr;
+	private int port;
+
+	private Registry registry;
+	private String boundName;
+	private String serviceName;
+
+	public UnicastRMIServantImpl(InetAddress addr, int port)
+			throws NFlightException {
+		super.setShutdownHookThread(new ServantShutdownHook(this).getThread());
+		this.addr = addr;
+		this.port = port;
+		this.registry = RMIServiceHelper.getRegistry(
+				this.addr.getHostAddress(), this.port);
+		this.serviceName = Configure.SERVICE_TYPE.rmi_unicast.toString();
+		this.boundName = RMIServiceHelper.getBoundName(addr.getHostAddress(),
+				port, this.serviceName);
 	}
 
 	@Override
-	public void run() {
+	public void start() throws NFlightException  {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
 			if (RMIServiceHelper.isActivatedRegistry(this.registry,
-					super.boundName)) {
+					this.boundName)) {
 				throw new RMIServiceException(this.boundName
 						+ "가 레지스트리에 이미 등록되어 있습니다.");
 			} else {
@@ -42,10 +62,36 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 						THIS_CLAZZ.getName(),
 						METHOD_NAME,
 						stub + " Stub bound in registry."
-								+ Arrays.toString(registry.list()));
+								+ Arrays.toString(this.registry.list()));
 			}
-		} catch (Exception e1) {
-			e1.printStackTrace();
+		} catch (RemoteException e) {
+			throw new NetworkServiceException(e);
+		} catch (NFlightException ne) {
+			throw ne;
+		} catch (Exception e) {
+			throw new UnexpectedException(e);
 		}
+	}
+
+	@Override
+	public void stop() throws NFlightException {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+		try {
+			LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME, "Stopping...");
+			this.registry.unbind(this.boundName);
+			LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME, "Stopped");
+		} catch (IOException e) {
+			throw new NetworkServiceException(e);
+		} catch (Exception e) {
+			throw new UnexpectedException(e);
+		} finally {
+			super.interrupt();
+		}
+	}
+
+	@Override
+	public String sayHello() throws RemoteException {
+		return "Hello, world!";
 	}
 }
