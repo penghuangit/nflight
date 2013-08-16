@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="com.abreqadhabra.nflight.application.transport.rmi.SecureSocketFactory" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/rmi/SecureSocketFactory.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="257" x="4662" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="com.abreqadhabra.nflight.application.transport.rmi.RMIServiceHelper" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/rmi/RMIServiceHelper.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="243" width="239" x="41" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="3" language="java" name="com.abreqadhabra.nflight.application.transport.rmi.RMIServant" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/rmi/RMIServant.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="219" x="5616" y="518"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="4" language="java" name="com.abreqadhabra.nflight.application.transport.rmi.AbstractRMIServant" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/rmi/AbstractRMIServant.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="261" width="261" x="5875" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="com.abreqadhabra.nflight.application.transport.rmi.unicast.UnicastRMIServantImpl" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/rmi/unicast/UnicastRMIServantImpl.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="135" width="266" x="5875" y="518"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="com.abreqadhabra.nflight.application.transport.rmi.rmid.RMIDCommand" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/rmi/rmid/RMIDCommand.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="135" width="240" x="320" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" 
+    name="com.abreqadhabra.nflight.application.transport.rmi.activation.ActivatableRMIServantImpl" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/rmi/activation/ActivatableRMIServantImpl.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="322" x="5254" y="518"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="com.abreqadhabra.nflight.application.transport.network.SocketChannelFactory" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/network/SocketChannelFactory.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="225" width="590" x="5245" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="com.abreqadhabra.nflight.application.transport.network.ServerChannelFactory" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/network/ServerChannelFactory.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="261" width="655" x="3501" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="com.abreqadhabra.nflight.application.transport.network.NetworkServiceHelper" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/network/NetworkServiceHelper.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="441" width="426" x="4196" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="com.abreqadhabra.nflight.application.transport.network.AcceptorShutdownHook" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/network/AcceptorShutdownHook.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="253" x="2830" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="12" language="java" name="com.abreqadhabra.nflight.application.transport.network.Acceptor" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/network/Acceptor.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="207" width="286" x="2225" y="518"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="13" language="java" 
+    name="com.abreqadhabra.nflight.application.transport.network.stream.nonblocking.NonBlockingAcceptor" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/network/stream/nonblocking/NonBlockingAcceptor.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="351" width="322" x="2468" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" 
+    name="com.abreqadhabra.nflight.application.transport.network.stream.blocking.BlockingAcceptor" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/network/stream/blocking/BlockingAcceptor.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="351" width="401" x="2027" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" 
+    name="com.abreqadhabra.nflight.application.transport.network.stream.blocking.BlockingReceiver" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/network/stream/blocking/BlockingReceiver.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="307" x="886" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" 
+    name="com.abreqadhabra.nflight.application.transport.network.stream.asynchronous.AsyncAcceptor" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/network/stream/asynchronous/AsyncAcceptor.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="351" width="393" x="1233" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" 
+    name="com.abreqadhabra.nflight.application.transport.network.datagram.unicast.UnicastBlockingAcceptor" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/network/datagram/unicast/UnicastBlockingAcceptor.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="351" width="338" x="3123" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" 
+    name="com.abreqadhabra.nflight.application.transport.network.datagram.multicast.MulticastAcceptor" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/network/datagram/multicast/MulticastAcceptor.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="333" width="321" x="1666" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="com.abreqadhabra.nflight.application.transport.exception.ServiceException" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/exception/ServiceException.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="246" x="600" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="com.abreqadhabra.nflight.application.transport.exception.RMIServiceException" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/transport/exception/RMIServiceException.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="246" x="4959" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <generalization id="21">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <association id="22">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="23" name="acceptor"/>      
+      <multiplicity id="24" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="25">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="3"/>  
+  </realization>  
+  <realization id="26">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="12"/>  
+  </realization>  
+  <realization id="27">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="12"/>  
+  </realization>  
+  <realization id="28">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="12"/>  
+  </realization>  
+  <generalization id="29">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <realization id="30">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="12"/>  
+  </realization>  
+  <realization id="31">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="12"/>  
+  </realization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

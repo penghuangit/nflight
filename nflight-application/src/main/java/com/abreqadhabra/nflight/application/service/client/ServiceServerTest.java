@@ -18,9 +18,9 @@ import com.abreqadhabra.nflight.application.service.net.datagram.unicast.Unicast
 import com.abreqadhabra.nflight.application.service.net.stream.asynchronous.AsyncNetworkServiceImpl;
 import com.abreqadhabra.nflight.application.service.net.stream.blocking.BlockingNetworkServiceImpl;
 import com.abreqadhabra.nflight.application.service.net.stream.nonblocking.NonBlockingNetworkServiceImpl;
-import com.abreqadhabra.nflight.application.service.rmi.activatable.ActivatableRMIServantImpl;
-import com.abreqadhabra.nflight.application.service.rmi.activatable.RMIDCommand;
-import com.abreqadhabra.nflight.application.service.rmi.unicast.UnicastRMIServantImpl;
+import com.abreqadhabra.nflight.application.transport.rmi.activation.ActivatableRMIServantImpl;
+import com.abreqadhabra.nflight.application.transport.rmi.rmid.RMIDCommand;
+import com.abreqadhabra.nflight.application.transport.rmi.unicast.UnicastRMIServantImpl;
 import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.concurrency.thread.ThreadHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;

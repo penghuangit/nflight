@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
 import com.abreqadhabra.nflight.application.service.net.AbstractNetworkServiceImpl;
-import com.abreqadhabra.nflight.application.service.net.stream.asynchronous.transport.AsyncAcceptor;
+import com.abreqadhabra.nflight.application.transport.network.stream.asynchronous.AsyncAcceptor;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 

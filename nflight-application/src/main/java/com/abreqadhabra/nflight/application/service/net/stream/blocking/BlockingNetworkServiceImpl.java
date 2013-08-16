@@ -5,9 +5,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.launcher.Configure;
-import com.abreqadhabra.nflight.application.service.exception.ServiceException;
 import com.abreqadhabra.nflight.application.service.net.AbstractNetworkServiceImpl;
-import com.abreqadhabra.nflight.application.service.net.stream.blocking.transport.BlockingAcceptor;
+import com.abreqadhabra.nflight.application.transport.network.stream.blocking.BlockingAcceptor;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
