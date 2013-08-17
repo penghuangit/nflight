@@ -2,7 +2,7 @@ package com.abreqadhabra.nflight;
 
 import java.nio.file.Path;
 
-import com.abreqadhabra.nflight.application.launcher.Configure;
+import com.abreqadhabra.nflight.application.common.launcher.Configure;
 
 public class Configuration {
 	public static String LAUNCHER_CLASS = "com.abreqadhabra.nflight.application.launcher.ServiceLauncher";

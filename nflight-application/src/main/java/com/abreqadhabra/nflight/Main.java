@@ -10,8 +10,8 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.launcher.Configure;
-import com.abreqadhabra.nflight.application.launcher.Launcher;
+import com.abreqadhabra.nflight.application.common.launcher.Configure;
+import com.abreqadhabra.nflight.application.common.launcher.Launcher;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class Main {
