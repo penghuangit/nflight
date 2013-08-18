@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.rmi;
+package com.abreqadhabra.nflight.application.service.network.rmi;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

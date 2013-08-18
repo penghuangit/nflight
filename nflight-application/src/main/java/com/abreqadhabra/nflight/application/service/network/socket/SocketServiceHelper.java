@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.socket;
+package com.abreqadhabra.nflight.application.service.network.socket;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

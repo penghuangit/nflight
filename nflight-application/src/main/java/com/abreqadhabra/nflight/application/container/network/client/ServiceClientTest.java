@@ -19,8 +19,8 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.application.common.concurrent.thread.ThreadHelper;
 import com.abreqadhabra.nflight.application.common.launcher.Configure;
 import com.abreqadhabra.nflight.application.common.launcher.ConfigureImpl;
-import com.abreqadhabra.nflight.application.service.rmi.RMIServant;
-import com.abreqadhabra.nflight.application.service.rmi.RMIServantHelper;
+import com.abreqadhabra.nflight.application.service.network.rmi.RMIServant;
+import com.abreqadhabra.nflight.application.service.network.rmi.RMIServantHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -82,17 +82,20 @@ public class ServiceClientTest {
 										configure
 												.getInt(Configure.MULTICAST_DEFAULT_PORT)));
 
-				serviceGroupMap.put(
-						Configure.SERVICE_TYPE.rmi_unicast.toString(),
-						getUnicastRMIService(DEFAULT_ADDRESS, configure
-								.getInt(Configure.RMI_DEFAULT_PORT)));
-
 				serviceGroupMap
-						.put(Configure.SERVICE_TYPE.rmi_activation.toString(),
-								getActivatableRMIService(
+						.put(configure.get(Configure.UNICAST_RMI_BOUND_NAME),
+								getRMIService(
 										DEFAULT_ADDRESS,
 										configure
-												.getInt(Configure.ACTIVATABLE_RMI_DEFAULT_PORT)));
+												.getInt(Configure.RMI_DEFAULT_PORT),
+										configure
+												.get(Configure.UNICAST_RMI_BOUND_NAME)));
+
+				serviceGroupMap.put(
+						configure.get(Configure.ACTIVATABLE_RMI_BOUND_NAME),
+						getRMIService(DEFAULT_ADDRESS, configure
+								.getInt(Configure.RMI_DEFAULT_PORT), configure
+								.get(Configure.ACTIVATABLE_RMI_BOUND_NAME)));
 
 				System.out
 						.println("serviceGroupMap------------------------------------>:"
@@ -115,21 +118,12 @@ public class ServiceClientTest {
 		}
 
 	}
-	private static Runnable getActivatableRMIService(InetAddress addr, int port)
-			throws Exception {
+
+	private static Runnable getRMIService(InetAddress addr, int port,
+			String serviceName) throws Exception {
 
 		String boundName = RMIServantHelper.getBoundName(addr.getHostAddress(),
-				port, Configure.SERVICE_TYPE.rmi_activation.toString());
-
-		return rmiClient(addr, port, boundName, millis);
-
-	}
-
-	private static Runnable getUnicastRMIService(InetAddress addr, int port)
-			throws Exception {
-
-		String boundName = RMIServantHelper.getBoundName(addr.getHostAddress(),
-				port, Configure.SERVICE_TYPE.rmi_unicast.toString());
+				port, serviceName);
 
 		return rmiClient(addr, port, boundName, millis);
 	}

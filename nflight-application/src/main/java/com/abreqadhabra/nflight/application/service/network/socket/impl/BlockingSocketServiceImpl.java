@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.socket.impl;
+package com.abreqadhabra.nflight.application.service.network.socket.impl;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -13,9 +13,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Configure;
-import com.abreqadhabra.nflight.application.service.socket.AbstractSocketService;
-import com.abreqadhabra.nflight.application.service.socket.ServerSocketChannelFactory;
-import com.abreqadhabra.nflight.application.service.socket.SocketServiceException;
+import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketService;
+import com.abreqadhabra.nflight.application.service.network.socket.ServerSocketChannelFactory;
+import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceException;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -28,9 +28,9 @@ public class BlockingSocketServiceImpl extends AbstractSocketService {
 	private ThreadPoolExecutor threadPool;
 	private ServerSocketChannel channel;
 
-	public BlockingSocketServiceImpl(boolean isRunning, Configure configure,
+	public BlockingSocketServiceImpl(Configure configure,
 			InetSocketAddress endpoint) throws NFlightException {
-		super(isRunning, configure);
+		super(configure.getBoolean(Configure.BLOCKING_RUNNING), configure);
 		this.threadPool = this
 				.getThreadPoolExecutor(
 						Configure.BLOCKING_SERVICE_THREAD_POOL_NAME,

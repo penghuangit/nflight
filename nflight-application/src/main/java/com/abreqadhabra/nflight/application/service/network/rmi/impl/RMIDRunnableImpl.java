@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.rmi.impl;
+package com.abreqadhabra.nflight.application.service.network.rmi.impl;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

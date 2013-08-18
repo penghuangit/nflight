@@ -52,6 +52,7 @@ public interface Configure {
 	static String PREFIX_KEY_PROPERTIES_CHANNEL_OPTION = "nflight.socket.option.";
 
 	// STREAM SERVICE - BLOCKING
+	static String BLOCKING_RUNNING = "nflight.service.stream.blocking.running";
 	static String BLOCKING_DEFAULT_PORT = "nflight.service.stream.blocking.bind.port.default";
 	static String BLOCKING_BIND_BACKLOG = "nflight.service.stream.blocking.bind.backlog";
 	static String BLOCKING_INCOMING_BUFFER_CAPACITY = "nflight.service.stream.blocking.buffer.incoming.capacity";
@@ -60,11 +61,13 @@ public interface Configure {
 	static String BLOCKING_SERVICE_THREAD_POOL_MONITORING = "nflight.service.stream.blocking.thread.pool.monitoring";
 
 	// STREAM SERVICE - NON-BLOCKING
+	static String NONBLOCKING_RUNNING = "nflight.service.stream.nonblocking.running";
 	static String NONBLOCKING_DEFAULT_PORT = "nflight.service.stream.nonblocking.bind.port.default";
 	static String NONBLOCKING_BIND_BACKLOG = "nflight.service.stream.nonblocking.bind.backlog";
 	static String NONBLOCKING_INCOMING_BUFFER_CAPACITY = "nflight.service.stream.nonblocking.buffer.incoming.capacity";
 
 	// STREAM SERVICE - ASYNC
+	static String ASYNC_RUNNING = "nflight.service.stream.async.running";
 	static String ASYNC_DEFAULT_PORT = "nflight.service.stream.async.bind.port.default";
 	static String ASYNC_BIND_BACKLOG = "nflight.service.stream.async.bind.backlog";
 	static String ASYNC_INCOMING_BUFFER_CAPACITY = "nflight.service.stream.async.buffer.incoming.capacity";
@@ -74,21 +77,27 @@ public interface Configure {
 	static String ASYNC_THREADPOOL_INITIALSIZE = "nflight.service.stream.async.init.threadpool.initialsize";
 	
 	// DATAGRAM SERVICE - UNICAST
+	static String UNICAST_RUNNING = "nflight.service.datagram.unicast.running";
 	static String UNICAST_DEFAULT_PORT = "nflight.service.datagram.unicast.bind.port.default";
 	static String UNICAST_INCOMING_BUFFER_CAPACITY = "nflight.service.datagram.unicast.buffer.incoming.capacity";
 
 	static String CHANNEL_OPTION_IP_MULTICAST_IF = PREFIX_KEY_PROPERTIES_CHANNEL_OPTION + "network.multicast.ip_multicast_if";
 
 	// DATAGRAM SERVICE - MULTICAST
+	static String MULTICAST_RUNNING = "nflight.service.datagram.multicast.running";
 	static String MULTICAST_DEFAULT_PORT = "nflight.service.datagram.multicast.bind.port.default";
 	static String MULTICAST_INCOMING_BUFFER_CAPACITY = "nflight.service.datagram.multicast.buffer.incoming.capacity";
 
 	static String MULTICAST_GROUP_ADDRESS = "225.4.5.6";
 
+	
+	static String RMI_DEFAULT_PORT = "nflight.service.rmi.bind.port.default";
 	// RMI SERVICE - UNICAST
-	static String RMI_DEFAULT_PORT = "nflight.service.rmi.unicast.bind.port.default";
+	static String UNICAST_RMI_RUNNING = "nflight.service.rmi.unicast.running";
+	static String UNICAST_RMI_BOUND_NAME = "nflight.service.rmi.unicast.bound.name";
 
 	// RMI SERVICE - ACTIVATABLE
+	static String ACTIVATABLE_RMI_BOUND_NAME = "nflight.service.rmi.activatable.bound.name";
 	static String ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_START = "nflight.service.rmi.activatable.rmi.system.command.rmid.start";
 	static String ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_STOP = "nflight.service.rmi.activatable.rmi.system.command.rmid.stop";
 	static String ACTIVATABLE_RMI_RMID_DELAY_SECONDS="nflight.service.rmi.activatable.rmid.delay.seconds";

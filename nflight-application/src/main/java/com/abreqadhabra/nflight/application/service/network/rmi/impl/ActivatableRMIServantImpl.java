@@ -1,7 +1,7 @@
-package com.abreqadhabra.nflight.application.service.rmi.impl;
+package com.abreqadhabra.nflight.application.service.network.rmi.impl;
 
 import java.io.IOException;
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.rmi.MarshalledObject;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -13,14 +13,15 @@ import java.rmi.activation.ActivationGroup;
 import java.rmi.activation.ActivationGroupDesc;
 import java.rmi.activation.ActivationGroupID;
 import java.rmi.activation.ActivationID;
+import java.rmi.activation.ActivationSystem;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Configure;
-import com.abreqadhabra.nflight.application.service.rmi.AbstractRMIServant;
-import com.abreqadhabra.nflight.application.service.rmi.RMIServantException;
+import com.abreqadhabra.nflight.application.service.network.rmi.AbstractRMIServant;
+import com.abreqadhabra.nflight.application.service.network.rmi.RMIServantException;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedRemoteException;
@@ -32,11 +33,6 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private ActivationID activationID;
-
-	public ActivatableRMIServantImpl(InetAddress addr, int port,
-			String serviceName) throws NFlightRemoteException {
-		super(addr, port, serviceName);
-	}
 
 	public ActivatableRMIServantImpl() {
 	}
@@ -52,12 +48,22 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 				"stub for the activatable remote object: " + stub.toString());
 	}
-	
+
+	public ActivatableRMIServantImpl(Configure configure,
+			InetSocketAddress endpoint) throws NFlightRemoteException {
+		super(configure.getBoolean(Configure.UNICAST_RMI_RUNNING), configure,
+				endpoint.getAddress(), endpoint.getPort(), configure
+						.get(Configure.ACTIVATABLE_RMI_BOUND_NAME));
+	}
+
 	@Override
 	protected void start() throws NFlightRemoteException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
+			if (isRunning) {
+				this.executeRMID(configure);
+			}
 			String className = THIS_CLAZZ.getName();
 			String codebase = Configure.PREFIX_FILE_ACTIVATABLE
 					+ Configure.CODE_BASE_PATH.toString();
@@ -140,6 +146,29 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 		}
 	}
 
+	private void executeRMID(Configure configure) throws NFlightRemoteException {
+		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
+				.getMethodName();
+		try {
+			// 액티베이션 시스템이 기동되어 있을 경우 RMID를 기동을 스킵
+			ActivationSystem activationSystem = ActivationGroup.getSystem();
+			LOGGER.logp(Level.CONFIG, THIS_CLAZZ.getName(), METHOD_NAME,
+					"액티베이션 시스템이 기동되어 있을 경우 RMID를 기동을 스킵 " + activationSystem);
+		} catch (ActivationException ae) {
+			try {
+				// Port already in use: 1098 Address already in use: JVM_Bind
+				// 액티베이션 시스템이 기동되어 있지 않을 경우 RMID 시작
+				new Thread(new RMIDRunnableImpl(configure)).start();
+				// 콜러블로 기동결과에 대한 값이 있을때까지 대기
+				Thread.sleep(configure
+						.getInt(Configure.ACTIVATABLE_RMI_RMID_DELAY_SECONDS));
+			} catch (InterruptedException e) {
+				throw new RMIServantException(e);
+			}
+			LOGGER.logp(Level.CONFIG, THIS_CLAZZ.getName(), METHOD_NAME,
+					"액티베이션 시스템이 기동되어 있지 않을 경우 RMID 시작 ");
+		}
+	}
 	// The ActivatableShutdown interface implementation
 	private boolean uninstall() throws NFlightRemoteException {
 		return this.deactivate(true);

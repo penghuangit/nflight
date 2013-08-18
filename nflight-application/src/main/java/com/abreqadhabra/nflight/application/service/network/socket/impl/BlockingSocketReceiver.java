@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.socket.impl;
+package com.abreqadhabra.nflight.application.service.network.socket.impl;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Configure;
-import com.abreqadhabra.nflight.application.service.socket.SocketServiceHelper;
+import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class BlockingSocketReceiver implements Runnable {

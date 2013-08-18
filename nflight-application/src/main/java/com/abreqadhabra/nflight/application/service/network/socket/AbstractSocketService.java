@@ -1,57 +1,56 @@
-package com.abreqadhabra.nflight.application.service.rmi;
+package com.abreqadhabra.nflight.application.service.network.socket;
 
-import java.net.InetAddress;
-import java.rmi.registry.Registry;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.concurrent.AbstractRunnable;
 import com.abreqadhabra.nflight.application.common.concurrent.thread.ThreadHelper;
+import com.abreqadhabra.nflight.application.common.launcher.Configure;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
-import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public abstract class AbstractRMIServant extends AbstractRunnable
+public abstract class AbstractSocketService extends AbstractRunnable
 		implements
-			RMIServant {
-	private static Class<AbstractRMIServant> THIS_CLAZZ = AbstractRMIServant.class;
+			SocketService {
+	private static Class<AbstractSocketService> THIS_CLAZZ = AbstractSocketService.class;
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private InetAddress addr;
-	private int port;
-	protected Registry registry;
-	protected String boundName;
-
-	public AbstractRMIServant() {
-	}
-
-	public AbstractRMIServant(InetAddress addr, int port, String serviceName)
-			throws NFlightRemoteException {
-		this.addr = addr;
-		this.port = port;
-		this.registry = RMIServantHelper.getRegistry(
-				this.addr.getHostAddress(), this.port);
-		this.boundName = RMIServantHelper.getBoundName(addr.getHostAddress(),
-				port, serviceName);
+	protected boolean isRunning;
+	protected Configure configure;
+	
+	public AbstractSocketService(boolean isRunning, Configure configure) {
+		this.isRunning = isRunning;
+		this.configure = configure;
 		this.setShutdownHook();
 	}
 
 	@Override
-	public String sayHello() throws NFlightRemoteException {
-		return this.boundName + ": Hello, world!";
-	}
-
-	@Override
 	protected void setShutdownHook() {
-		super.setShutdownHookThread(new Thread(this.getShutdownHook()));
+		super.setShutdownHookThread(new Thread(this
+				.getShutdownHook(this.isRunning)));
 	}
 
-	private Runnable getShutdownHook() {
+	protected ThreadPoolExecutor getThreadPoolExecutor(
+			String threadPoolNameKey,
+			String threadPoolMonitoringDelaySecondsKey,
+			String isThreadPoolMonitoringKey) {
+		String threadPoolName = this.configure.get(threadPoolNameKey);
+		int threadPoolMonitoringDelaySeconds = this.configure
+				.getInt(threadPoolMonitoringDelaySecondsKey);
+		boolean isThreadPoolMonitoring = this.configure
+				.getBoolean(threadPoolMonitoringDelaySecondsKey);
+		return ThreadHelper.getThreadPoolExecutor(threadPoolName,
+				isThreadPoolMonitoring, threadPoolMonitoringDelaySeconds);
+	}
+
+	private Runnable getShutdownHook(boolean isRunning) {
 		return new Runnable() {
-			public Runnable init() {
+			public Runnable init(boolean isRunning) {
 				return (this);
 			}
+
 			@Override
 			public void run() {
 				final Thread CURRENT_THREAD = Thread.currentThread();
@@ -66,7 +65,7 @@ public abstract class AbstractRMIServant extends AbstractRunnable
 				try {
 					LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME,
 							"Stopping...");
-					AbstractRMIServant.this.stop();
+					AbstractSocketService.this.stop();
 					LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME,
 							"Stopped");
 				} catch (Exception e) {
@@ -83,6 +82,6 @@ public abstract class AbstractRMIServant extends AbstractRunnable
 					}
 				}
 			}
-		}.init();
+		}.init(isRunning);
 	}
 }

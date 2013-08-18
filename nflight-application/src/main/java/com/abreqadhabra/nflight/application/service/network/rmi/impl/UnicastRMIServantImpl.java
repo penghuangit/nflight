@@ -1,6 +1,6 @@
-package com.abreqadhabra.nflight.application.service.rmi.impl;
+package com.abreqadhabra.nflight.application.service.network.rmi.impl;
 
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -9,23 +9,25 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.service.rmi.AbstractRMIServant;
-import com.abreqadhabra.nflight.application.service.rmi.RMIServantException;
-import com.abreqadhabra.nflight.application.service.rmi.RMIServantHelper;
+import com.abreqadhabra.nflight.application.common.launcher.Configure;
+import com.abreqadhabra.nflight.application.service.network.rmi.AbstractRMIServant;
+import com.abreqadhabra.nflight.application.service.network.rmi.RMIServantException;
+import com.abreqadhabra.nflight.application.service.network.rmi.RMIServantHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class UnicastRMIServantImpl extends AbstractRMIServant
-{
+public class UnicastRMIServantImpl extends AbstractRMIServant {
 	private static Class<UnicastRMIServantImpl> THIS_CLAZZ = UnicastRMIServantImpl.class;
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public UnicastRMIServantImpl(InetAddress addr, int port, String serviceName)
+	public UnicastRMIServantImpl(Configure configure, InetSocketAddress endpoint)
 			throws NFlightRemoteException {
-		super(addr, port, serviceName);
+		super(configure.getBoolean(Configure.UNICAST_RMI_RUNNING), configure,
+				endpoint.getAddress(), endpoint.getPort(), configure
+						.get(Configure.UNICAST_RMI_BOUND_NAME));
 	}
 
 	@Override

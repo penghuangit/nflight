@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.rmi;
+package com.abreqadhabra.nflight.application.service.network.rmi;
 
 import java.rmi.NotBoundException;
 import java.rmi.Remote;

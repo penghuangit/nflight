@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.socket.impl;
+package com.abreqadhabra.nflight.application.service.network.socket.impl;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -14,9 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Configure;
-import com.abreqadhabra.nflight.application.service.socket.AbstractSocketService;
-import com.abreqadhabra.nflight.application.service.socket.ServerSocketChannelFactory;
-import com.abreqadhabra.nflight.application.service.socket.SocketServiceException;
+import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketService;
+import com.abreqadhabra.nflight.application.service.network.socket.ServerSocketChannelFactory;
+import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceException;
 import com.abreqadhabra.nflight.application.trash_server.net.socket.NetworkChannelHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
@@ -30,9 +30,9 @@ public class AsynchronousSocketServiceImpl extends AbstractSocketService {
 	private ThreadPoolExecutor threadPool;
 	private AsynchronousServerSocketChannel channel;
 
-	public AsynchronousSocketServiceImpl(boolean isRunning, Configure configure,
+	public AsynchronousSocketServiceImpl(Configure configure,
 			InetSocketAddress endpoint) throws NFlightException {
-		super(isRunning, configure);
+		super(configure.getBoolean(Configure.ASYNC_RUNNING), configure);
 		this.threadPool = this.getThreadPoolExecutor(
 				Configure.ASYNC_SERVICE_THREAD_POOL_NAME,
 				Configure.ASYNC_SERVICE_THREAD_POOL_MONITORING_DELAY_SECONDS,

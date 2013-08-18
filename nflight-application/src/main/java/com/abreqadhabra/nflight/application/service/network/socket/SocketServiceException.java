@@ -1,7 +1,6 @@
-package com.abreqadhabra.nflight.application.service.rmi;
+package com.abreqadhabra.nflight.application.service.network.socket;
 
 import com.abreqadhabra.nflight.common.exception.NFlightException;
-import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 
 /**
  * <p>
@@ -24,12 +23,12 @@ import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
  * @since STEP1
  * @see NFlightException
  */
-public class RMIServantException extends NFlightRemoteException {
+public class SocketServiceException extends NFlightException {
 
-	/**
+    /**
      * JVM에서 자동으로 serialVersionUID를 생성시키기 위한 기본값 설정
      */
-	private static final long serialVersionUID = 1L;
+    private static long serialVersionUID = 1L;
 
     /**
      * 에러ID
@@ -67,7 +66,7 @@ public class RMIServantException extends NFlightRemoteException {
      *            상세 메시지
      * @since STEP1
      */
-    public RMIServantException(String message) {
+    public SocketServiceException(String message) {
 	super(message);
 
 	// NFlightException의 에러ID를 설정합니다.
@@ -95,7 +94,7 @@ public class RMIServantException extends NFlightRemoteException {
      *            자식 예외
      * @since STEP1
      */
-    public RMIServantException(String message, Throwable cause) {
+    public SocketServiceException(String message, Throwable cause) {
 	super(message, cause);
 
 	// NFlightException의 에러ID를 설정합니다.
@@ -120,7 +119,7 @@ public class RMIServantException extends NFlightRemoteException {
      *            자식 예외
      * @since STEP1
      */
-    public RMIServantException(Throwable cause) {
+    public SocketServiceException(Throwable cause) {
 	super(MESSAGE, cause);
 
 	// NFlightException의 에러ID를 설정합니다.

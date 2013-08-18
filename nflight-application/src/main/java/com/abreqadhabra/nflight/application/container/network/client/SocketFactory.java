@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Configure;
 import com.abreqadhabra.nflight.application.common.launcher.Configure.SERVICE_TYPE;
-import com.abreqadhabra.nflight.application.service.socket.SocketServiceHelper;
+import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class SocketFactory {

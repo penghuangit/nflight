@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.socket;
+package com.abreqadhabra.nflight.application.service.network.socket;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.NetworkChannel;

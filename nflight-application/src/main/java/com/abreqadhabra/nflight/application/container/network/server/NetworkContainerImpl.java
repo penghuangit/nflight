@@ -9,10 +9,12 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.concurrent.thread.ThreadHelper;
 import com.abreqadhabra.nflight.application.common.launcher.Configure;
+import com.abreqadhabra.nflight.application.common.launcher.Configure.SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.common.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.application.common.launcher.LauncherHelper;
-import com.abreqadhabra.nflight.application.common.launcher.Configure.SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.container.Container;
+import com.abreqadhabra.nflight.application.service.ServiceFactory;
+import com.abreqadhabra.nflight.application.service.NetworkServiceFactory;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -21,7 +23,6 @@ public class NetworkContainerImpl implements Container {
 	private static Class<NetworkContainerImpl> THIS_CLAZZ = NetworkContainerImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private ServiceRunnableFactory serviceFactory = new ServiceRunnableFactory();
 	private HashMap<String, Runnable> services = new HashMap<String, Runnable>();
 	boolean isRunning;
 	private Configure configure;
@@ -35,6 +36,7 @@ public class NetworkContainerImpl implements Container {
 		LauncherHelper.setSecurityManager();// 추후 삭제
 	}
 
+	
 	@Override
 	public void startup() {
 		ThreadGroup serviceThreadGroup = new ThreadGroup(
@@ -62,48 +64,39 @@ public class NetworkContainerImpl implements Container {
 		int port = 0;
 		switch (serviceType) {
 			case network_blocking :
-				port = this.configure.getInt(Configure.BLOCKING_DEFAULT_PORT);
-				service = this.getAcceptorFactory().createBlockingService(
-						this.isRunning, this.configure, this.getEndpoint(port));
+				service = NetworkServiceFactory.getServiceFactory(serviceType,
+						configure).createService();
 				break;
 			case network_nonblocking :
-				port = this.configure
-						.getInt(Configure.NONBLOCKING_DEFAULT_PORT);
-				service = this.getAcceptorFactory().createNonBlockingService(
-						this.isRunning, this.configure, this.getEndpoint(port));
+				service = NetworkServiceFactory.getServiceFactory(serviceType,
+						configure).createService();
 				break;
 			case network_async :
-				port = this.configure.getInt(Configure.ASYNC_DEFAULT_PORT);
-				service = this.getAcceptorFactory().createAsyncService(
-						this.isRunning, this.configure, this.getEndpoint(port));
+				service = NetworkServiceFactory.getServiceFactory(serviceType,
+						configure).createService();
 				break;
 			case network_unicast :
-				port = this.configure.getInt(Configure.UNICAST_DEFAULT_PORT);
-				service = this.getAcceptorFactory().createUnicastService(
-						this.isRunning, this.configure, this.getEndpoint(port));
+				service = NetworkServiceFactory.getServiceFactory(serviceType,
+						configure).createService();
 				break;
 			case network_multicast :
-				port = this.configure.getInt(Configure.MULTICAST_DEFAULT_PORT);
-				service = this.getAcceptorFactory().createMulticastService(
-						this.isRunning, this.configure, this.getEndpoint(port));
+				service = NetworkServiceFactory.getServiceFactory(serviceType,
+						configure).createService();
 				break;
 			case rmi_unicast :
-				port = this.configure.getInt(Configure.RMI_DEFAULT_PORT);
-				service = this.getAcceptorFactory().createRMIUnicastService(
-						this.configure, this.getEndpoint(port));
+				service = NetworkServiceFactory.getServiceFactory(serviceType,
+						configure).createService();
 				break;
 			case rmi_activation :
-				port = this.configure.getInt(Configure.RMI_DEFAULT_PORT);
-				service = this.getAcceptorFactory()
-						.createRMIActivatableService(this.configure,
-								this.getEndpoint(port));
+				service = NetworkServiceFactory.getServiceFactory(serviceType,
+						configure).createService();
 				break;
 			default :
 				break;
 		}
 		this.services.put(serviceType.toString(), service);
 	}
-
+	
 	private InetSocketAddress getEndpoint(int port) {
 		return this.getEndpoint(null, port);
 	}
@@ -117,14 +110,6 @@ public class NetworkContainerImpl implements Container {
 			e.printStackTrace();
 		}
 		return new InetSocketAddress(addr, port);
-	}
-
-	public ServiceRunnableFactory getAcceptorFactory() {
-		return this.serviceFactory;
-	}
-
-	public void setAcceptorFactory(ServiceRunnableFactory acceptorFactory) {
-		this.serviceFactory = acceptorFactory;
 	}
 
 	public static void main(String[] args) {
