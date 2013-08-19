@@ -13,6 +13,7 @@ public interface ApplicationConfiguration {
 			.resolve("com/abreqadhabra/nflight/application/conf/boot.policy");
 
 	static String STR_APPLICATION_BOOT_LAUNCHER_CLASS_MAIN = "com.abreqadhabra.nflight.application.common.launcher.ServiceLauncher";
+	
 	static final String STR_PREFIX_APPLICATION_BOOT_OPTION = "--";
 	static final String STR_APPLICATION_BOOT_OPTION_CONF = STR_PREFIX_APPLICATION_BOOT_OPTION
 			+ "conf";

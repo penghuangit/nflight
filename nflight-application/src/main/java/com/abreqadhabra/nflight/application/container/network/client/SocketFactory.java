@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.ENUM_SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
 import com.abreqadhabra.nflight.application.service.network.socket.helper.SocketServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -29,16 +29,16 @@ public class SocketFactory {
 			ExecutionException {
 
 		return (AsynchronousSocketChannel) this.getNetworkChannel(
-				SERVICE_TYPE.network_async, endpoint, null, null);
+				ENUM_SERVICE_TYPE.network_async, endpoint, null, null);
 	}
 
 	public SocketChannel createBlockingSocketChannel(
 			InetSocketAddress endpoint,
-			SocketServiceConfiguration.SERVICE_TYPE type) throws IOException,
+			SocketServiceConfiguration.ENUM_SERVICE_TYPE type) throws IOException,
 			InterruptedException, ExecutionException {
 
 		return (SocketChannel) this.getNetworkChannel(
-				SERVICE_TYPE.network_blocking, endpoint, null, null);
+				ENUM_SERVICE_TYPE.network_blocking, endpoint, null, null);
 	}
 
 	public DatagramChannel createUnicastSocketChannel(
@@ -46,7 +46,7 @@ public class SocketFactory {
 			throws IOException, InterruptedException, ExecutionException {
 
 		return (DatagramChannel) this.getNetworkChannel(
-				SERVICE_TYPE.network_unicast, endpoint,
+				ENUM_SERVICE_TYPE.network_unicast, endpoint,
 				StandardProtocolFamily.INET, null);
 	}
 
@@ -56,11 +56,11 @@ public class SocketFactory {
 			InterruptedException, ExecutionException {
 
 		return (DatagramChannel) this.getNetworkChannel(
-				SERVICE_TYPE.network_multicast, endpoint,
+				ENUM_SERVICE_TYPE.network_multicast, endpoint,
 				StandardProtocolFamily.INET, multicastGroup);
 	}
 
-	private NetworkChannel getNetworkChannel(SERVICE_TYPE serviceType,
+	private NetworkChannel getNetworkChannel(ENUM_SERVICE_TYPE serviceType,
 			SocketAddress endpoint, StandardProtocolFamily protocolFamily,
 			InetAddress multicastGroup) throws IOException,
 			InterruptedException, ExecutionException {
@@ -105,7 +105,7 @@ public class SocketFactory {
 				networkInterface);
 	}
 
-	private NetworkChannel connect(SERVICE_TYPE serviceType,
+	private NetworkChannel connect(ENUM_SERVICE_TYPE serviceType,
 			NetworkChannel channel, SocketAddress endpoint,
 			InetAddress multicastGroup, NetworkInterface networkInterface)
 			throws IOException, InterruptedException, ExecutionException {
@@ -119,7 +119,7 @@ public class SocketFactory {
 		if (channel.isOpen()) {
 			// set some options
 			if ((channel instanceof DatagramChannel)
-					&& serviceType.equals(SERVICE_TYPE.network_multicast)) {
+					&& serviceType.equals(ENUM_SERVICE_TYPE.network_multicast)) {
 				SocketServiceHelper.setMulticastChannelOption(
 						(DatagramChannel) channel, networkInterface.getName(),
 						serviceType);
@@ -132,10 +132,10 @@ public class SocketFactory {
 			} else if (channel instanceof SocketChannel) {
 				((SocketChannel) channel).connect(endpoint);
 			} else if ((channel instanceof DatagramChannel)
-					&& serviceType.equals(SERVICE_TYPE.network_unicast)) {
+					&& serviceType.equals(ENUM_SERVICE_TYPE.network_unicast)) {
 				((DatagramChannel) channel).connect(endpoint);
 			} else if ((channel instanceof DatagramChannel)
-					&& serviceType.equals(SERVICE_TYPE.network_multicast)) {
+					&& serviceType.equals(ENUM_SERVICE_TYPE.network_multicast)) {
 				((DatagramChannel) channel).connect(endpoint);
 				((MulticastChannel) channel).join(multicastGroup,
 						networkInterface);

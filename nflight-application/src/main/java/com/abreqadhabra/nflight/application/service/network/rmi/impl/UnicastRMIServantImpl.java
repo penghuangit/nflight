@@ -24,9 +24,9 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 
 	public UnicastRMIServantImpl(InetSocketAddress endpoint)
 			throws NFlightRemoteException {
-		super(Config.getBoolean(RMIServantConfiguration.STR_UNICAST_RMI_RUNNING), endpoint
+		super(Config.getBoolean(RMIServantConfiguration.KEY_STR_RMI_UNICAST_RUNNING), endpoint
 				.getAddress(), endpoint.getPort(), Config
-				.get(RMIServantConfiguration.STR_UNICAST_RMI_BOUND_NAME));
+				.get(RMIServantConfiguration.KEY_STR_RMI_UNICAST_BOUND_NAME));
 	}
 
 	@Override

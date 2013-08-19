@@ -10,7 +10,7 @@ import com.abreqadhabra.nflight.application.common.launcher.concurrent.thread.Th
 import com.abreqadhabra.nflight.application.container.Container;
 import com.abreqadhabra.nflight.application.service.ServiceFactory;
 import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration;
-import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.ENUM_SERVICE_TYPE;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -26,7 +26,7 @@ public class NetworkContainerImpl implements Container {
 			NFlightRemoteException {
 
 		// 시스템프로터피 등록
-		Config.load(THIS_CLAZZ, ServiceConfiguration.FILE_SERVICE_PROPERTIES);
+		Config.load(THIS_CLAZZ, ServiceConfiguration.PATH_SERVICE_PROPERTIES);
 
 		this.isRunning = true;
 		this.init();
@@ -47,7 +47,7 @@ public class NetworkContainerImpl implements Container {
 	private void init() throws NFlightException,
 			NFlightRemoteException {
 		Runnable service = null;
-		for (SERVICE_TYPE serviceType : SERVICE_TYPE.values()) {
+		for (ENUM_SERVICE_TYPE serviceType : ENUM_SERVICE_TYPE.values()) {
 			service = ServiceFactory.getServiceFactory(serviceType)
 					.createService();
 			this.services.put(serviceType.toString(), service);

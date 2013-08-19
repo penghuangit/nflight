@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.ENUM_SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.service.network.socket.helper.SocketServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -27,56 +27,55 @@ public class ServerSocketChannelFactory {
 
 	public AsynchronousServerSocketChannel createAsyncServerSocketChannel(
 			ThreadPoolExecutor threadPool, int initialSize,
-			SocketAddress endpoint, int backlog)
-			throws IOException, InterruptedException, ExecutionException {
+			SocketAddress endpoint, int backlog) throws IOException,
+			InterruptedException, ExecutionException {
 
 		return (AsynchronousServerSocketChannel) this.getNetworkChannel(
-				SERVICE_TYPE.network_async, endpoint, backlog, null, threadPool,
-				initialSize);
+				ENUM_SERVICE_TYPE.network_async, endpoint, backlog, null,
+				threadPool, initialSize);
 	}
 
 	public ServerSocketChannel createBlockingServerSocketChannel(
-			InetSocketAddress endpoint, int backlog)
-			throws IOException, InterruptedException, ExecutionException {
+			InetSocketAddress endpoint, int backlog) throws IOException,
+			InterruptedException, ExecutionException {
 
 		return (ServerSocketChannel) this.getNetworkChannel(
-				SERVICE_TYPE.network_blocking, endpoint, backlog, null, null, 0);
+				ENUM_SERVICE_TYPE.network_blocking, endpoint, backlog, null,
+				null, 0);
 	}
 
 	public ServerSocketChannel createNonBlockingServerSocketChannel(
-			InetSocketAddress endpoint, int backlog)
-			throws IOException, InterruptedException, ExecutionException {
+			InetSocketAddress endpoint, int backlog) throws IOException,
+			InterruptedException, ExecutionException {
 
 		return (ServerSocketChannel) this.getNetworkChannel(
-				SERVICE_TYPE.network_nonblocking, endpoint, backlog, null, null,
-				0);
+				ENUM_SERVICE_TYPE.network_nonblocking, endpoint, backlog, null,
+				null, 0);
 	}
 
-	public DatagramChannel createUnicastDatagramChannel(
-			ProtocolFamily family, InetSocketAddress endpoint)
-			throws IOException, InterruptedException, ExecutionException {
-
-		return (DatagramChannel) this.getNetworkChannel(
-				SERVICE_TYPE.network_unicast, endpoint, 0,
-				StandardProtocolFamily.INET, null, 0);
-	}
-
-	public DatagramChannel createMulticastDatagramChannel(
-			StandardProtocolFamily family,
+	public DatagramChannel createUnicastDatagramChannel(ProtocolFamily family,
 			InetSocketAddress endpoint) throws IOException,
 			InterruptedException, ExecutionException {
 
 		return (DatagramChannel) this.getNetworkChannel(
-				SERVICE_TYPE.network_multicast, endpoint, 0,
+				ENUM_SERVICE_TYPE.network_unicast, endpoint, 0,
 				StandardProtocolFamily.INET, null, 0);
 	}
 
-	private NetworkChannel getNetworkChannel(
-			SERVICE_TYPE serviceType,
+	public DatagramChannel createMulticastDatagramChannel(
+			StandardProtocolFamily family, InetSocketAddress endpoint)
+			throws IOException, InterruptedException, ExecutionException {
+
+		return (DatagramChannel) this.getNetworkChannel(
+				ENUM_SERVICE_TYPE.network_multicast, endpoint, 0,
+				StandardProtocolFamily.INET, null, 0);
+	}
+
+	private NetworkChannel getNetworkChannel(ENUM_SERVICE_TYPE serviceType,
 			SocketAddress endpoint, int backlog,
 			StandardProtocolFamily protocolFamily,
-			ThreadPoolExecutor threadPool, int initialSize)
-			throws IOException, InterruptedException, ExecutionException {
+			ThreadPoolExecutor threadPool, int initialSize) throws IOException,
+			InterruptedException, ExecutionException {
 
 		NetworkChannel channel = null;
 		String networkInterfaceName = null;
@@ -110,17 +109,17 @@ public class ServerSocketChannelFactory {
 				networkInterfaceName);
 	}
 
-	private NetworkChannel bind(SERVICE_TYPE serviceType,
-			NetworkChannel channel, SocketAddress endpoint,
-			int backlog, String networkInterfaceName)
-			throws IOException, InterruptedException, ExecutionException {
+	private NetworkChannel bind(ENUM_SERVICE_TYPE serviceType,
+			NetworkChannel channel, SocketAddress endpoint, int backlog,
+			String networkInterfaceName) throws IOException,
+			InterruptedException, ExecutionException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		if (channel.isOpen()) {
 			// set some options
 			if ((channel instanceof DatagramChannel)
-					&& serviceType.equals(SERVICE_TYPE.network_multicast)) {
+					&& serviceType.equals(ENUM_SERVICE_TYPE.network_multicast)) {
 				SocketServiceHelper.setMulticastChannelOption(
 						(DatagramChannel) channel, networkInterfaceName,
 						serviceType);
@@ -132,18 +131,18 @@ public class ServerSocketChannelFactory {
 				((AsynchronousServerSocketChannel) channel).bind(endpoint,
 						backlog);
 			} else if (channel instanceof ServerSocketChannel) {
-				if (serviceType.equals(SERVICE_TYPE.network_nonblocking)) {
+				if (serviceType.equals(ENUM_SERVICE_TYPE.network_nonblocking)) {
 					// configure blocking mode
 					((ServerSocketChannel) channel).configureBlocking(false);
 				}
 				((ServerSocketChannel) channel).bind(endpoint, backlog);
 			} else if ((channel instanceof DatagramChannel)
-					&& serviceType.equals(SERVICE_TYPE.network_unicast)) {
+					&& serviceType.equals(ENUM_SERVICE_TYPE.network_unicast)) {
 				// configure non-blocking mode
 				((DatagramChannel) channel).configureBlocking(false);
 				((DatagramChannel) channel).bind(endpoint);
 			} else if ((channel instanceof DatagramChannel)
-					&& serviceType.equals(SERVICE_TYPE.network_multicast)) {
+					&& serviceType.equals(ENUM_SERVICE_TYPE.network_multicast)) {
 				((DatagramChannel) channel).bind(endpoint);
 
 			}

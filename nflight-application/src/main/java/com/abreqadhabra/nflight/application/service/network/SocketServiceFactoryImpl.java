@@ -3,7 +3,7 @@ package com.abreqadhabra.nflight.application.service.network;
 import java.net.InetSocketAddress;
 
 import com.abreqadhabra.nflight.application.service.ServiceFactory;
-import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.ENUM_SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
 import com.abreqadhabra.nflight.application.service.network.socket.impl.AsynchronousSocketServiceImpl;
 import com.abreqadhabra.nflight.application.service.network.socket.impl.BlockingSocketServiceImpl;
@@ -14,25 +14,25 @@ import com.abreqadhabra.nflight.common.exception.NFlightException;
 
 public class SocketServiceFactoryImpl extends ServiceFactory {
 
-	private SERVICE_TYPE serviceType;
+	private ENUM_SERVICE_TYPE serviceType;
 	private InetSocketAddress endpoint;
 
-	public SocketServiceFactoryImpl(SERVICE_TYPE serviceType,
+	public SocketServiceFactoryImpl(ENUM_SERVICE_TYPE serviceType,
 			InetSocketAddress endpoint) {
 		this.serviceType = serviceType;
 		this.endpoint = endpoint;
 	}
 	@Override
 	public Runnable createService() throws NFlightException {
-		if (this.serviceType.equals(SERVICE_TYPE.network_blocking)) {
+		if (this.serviceType.equals(ENUM_SERVICE_TYPE.network_blocking)) {
 			return getBlockingSocketServiceImpl();
-		} else if (this.serviceType.equals(SERVICE_TYPE.network_nonblocking)) {
+		} else if (this.serviceType.equals(ENUM_SERVICE_TYPE.network_nonblocking)) {
 			return getNonblockingSocketServiceImpl();
-		} else if (this.serviceType.equals(SERVICE_TYPE.network_async)) {
+		} else if (this.serviceType.equals(ENUM_SERVICE_TYPE.network_async)) {
 			return getAsynchronousSocketServiceImpl();
-		} else if (this.serviceType.equals(SERVICE_TYPE.network_unicast)) {
+		} else if (this.serviceType.equals(ENUM_SERVICE_TYPE.network_unicast)) {
 			return getUnicastSocketServiceImpl();
-		} else if (this.serviceType.equals(SERVICE_TYPE.network_multicast)) {
+		} else if (this.serviceType.equals(ENUM_SERVICE_TYPE.network_multicast)) {
 			return getMulticastDatagramServiceImpl();
 		} else {
 			throw new SocketServiceException("서비스 객체 생성에 실패하였습니다.");

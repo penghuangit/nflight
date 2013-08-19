@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.common.launcher.concurrent.thread.ThreadHelper;
 import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration;
-import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.ENUM_SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.service.network.rmi.RMIServant;
 import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfiguration;
 import com.abreqadhabra.nflight.application.service.network.rmi.helper.RMIServantHelper;
@@ -45,61 +45,61 @@ public class ServiceClientTest {
 		try {
 			// 시스템프로터피 등록 -> 서버에서 등록된 프로퍼티는 사용 불가? 프로그램 실행시점에만 남아있는?
 			Config.load(THIS_CLAZZ,
-					ServiceConfiguration.FILE_SERVICE_PROPERTIES);
+					ServiceConfiguration.PATH_SERVICE_PROPERTIES);
 
 			InetAddress DEFAULT_ADDRESS = InetAddress.getLocalHost();
 			for (int i = 0; i < cnt; i++) {
 				serviceGroupMap
-						.put(SERVICE_TYPE.network_blocking.toString(),
+						.put(ENUM_SERVICE_TYPE.network_blocking.toString(),
 								getBlockingNetworkService(
 										DEFAULT_ADDRESS,
-										Config.getInt(SocketServiceConfiguration.BLOCKING_DEFAULT_PORT),
-										SERVICE_TYPE.network_blocking));
+										Config.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_BLOCKING_DEFAULT_PORT),
+										ENUM_SERVICE_TYPE.network_blocking));
 				serviceGroupMap
-						.put(SERVICE_TYPE.network_nonblocking.toString(),
+						.put(ENUM_SERVICE_TYPE.network_nonblocking.toString(),
 								getBlockingNetworkService(
 										DEFAULT_ADDRESS,
-										Config.getInt(SocketServiceConfiguration.NONBLOCKING_DEFAULT_PORT),
-										SERVICE_TYPE.network_nonblocking));
+										Config.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_NONBLOCKING_DEFAULT_PORT),
+										ENUM_SERVICE_TYPE.network_nonblocking));
 
 				serviceGroupMap
-						.put(SERVICE_TYPE.network_async.toString(),
+						.put(ENUM_SERVICE_TYPE.network_async.toString(),
 								getAsyncNetworkService(
 										DEFAULT_ADDRESS,
-										Config.getInt(SocketServiceConfiguration.ASYNC_DEFAULT_PORT)));
+										Config.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_ASYNC_DEFAULT_PORT)));
 
 				serviceGroupMap
-						.put(SERVICE_TYPE.network_unicast.toString()
+						.put(ENUM_SERVICE_TYPE.network_unicast.toString()
 								+ "--------->socket",
 								getUnicastNetworkService(
 										DEFAULT_ADDRESS,
-										Config.getInt(SocketServiceConfiguration.UNICAST_DEFAULT_PORT)));
+										Config.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_UNICAST_DEFAULT_PORT)));
 
 				InetAddress multicastGroup = InetAddress
-						.getByName(SocketServiceConfiguration.MULTICAST_GROUP_ADDRESS);
+						.getByName(SocketServiceConfiguration.KEY_STR_SOCKET_MULTICAST_GROUP_ADDRESS);
 
 				serviceGroupMap
-						.put(SERVICE_TYPE.network_multicast.toString(),
+						.put(ENUM_SERVICE_TYPE.network_multicast.toString(),
 								getMulticastNetworkService(
 										multicastGroup,
 										DEFAULT_ADDRESS,
-										Config.getInt(SocketServiceConfiguration.MULTICAST_DEFAULT_PORT)));
+										Config.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_MULTICAST_DEFAULT_PORT)));
 
 				serviceGroupMap
 						.put(Config
-								.get(RMIServantConfiguration.STR_UNICAST_RMI_BOUND_NAME),
+								.get(RMIServantConfiguration.KEY_STR_RMI_UNICAST_BOUND_NAME),
 								getRMIService(
 										DEFAULT_ADDRESS,
-										Config.getInt(RMIServantConfiguration.STR_RMI_DEFAULT_PORT),
-										Config.get(RMIServantConfiguration.STR_UNICAST_RMI_BOUND_NAME)));
+										Config.getInt(RMIServantConfiguration.KEY_INT_RMI_DEFAULT_PORT),
+										Config.get(RMIServantConfiguration.KEY_STR_RMI_UNICAST_BOUND_NAME)));
 
 				serviceGroupMap
 						.put(Config
-								.get(RMIServantConfiguration.STR_ACTIVATABLE_RMI_BOUND_NAME),
+								.get(RMIServantConfiguration.KEY_STR_RMI_ACTIVATABLE_BOUND_NAME),
 								getRMIService(
 										DEFAULT_ADDRESS,
-										Config.getInt(RMIServantConfiguration.STR_RMI_DEFAULT_PORT),
-										Config.get(RMIServantConfiguration.STR_ACTIVATABLE_RMI_BOUND_NAME)));
+										Config.getInt(RMIServantConfiguration.KEY_INT_RMI_DEFAULT_PORT),
+										Config.get(RMIServantConfiguration.KEY_STR_RMI_ACTIVATABLE_BOUND_NAME)));
 
 				System.out
 						.println("serviceGroupMap------------------------------------>:"
@@ -133,7 +133,7 @@ public class ServiceClientTest {
 	}
 
 	private static Runnable getBlockingNetworkService(InetAddress addr,
-			int port, SERVICE_TYPE serviceType) throws InterruptedException,
+			int port, ENUM_SERVICE_TYPE serviceType) throws InterruptedException,
 			ExecutionException, IOException {
 		// port = NetworkServiceHelper.validatedStreamPort(port);
 		SocketChannel channel = createSocketChannelFactory()

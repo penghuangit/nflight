@@ -6,25 +6,23 @@ import java.nio.file.Paths;
 import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration;
 
 public interface RMIServantConfiguration extends ServiceConfiguration {
+	static String KEY_STR_RMI_ACTIVATABLE_BOUND_NAME = "nflight.network.rmi.activatable.bound.name";
+	static String KEY_INT_RMI_ACTIVATABLE_RMID_DELAY_SECONDS = "nflight.network.rmi.activatable.rmid.delay.seconds";
+	static String KEY_STR_RMI_ACTIVATABLE_RMID_START = "nflight.network.rmi.activatable.rmid.start";
+	static String KEY_STR_RMI_ACTIVATABLE_RMID_STOP = "nflight.network.rmi.activatable.rmid.stop";
+	static String KEY_BOO_RMI_ACTIVATABLE_RUNNING = "nflight.network.rmi.activatable.running";
 
-	static Path FILE_ACTIVATABLE_MARSHALLED_OBJECT = Paths
+	static String KEY_INT_RMI_DEFAULT_PORT = "nflight.network.rmi.default.port";
+	
+	static String KEY_STR_RMI_UNICAST_BOUND_NAME = "nflight.network.rmi.unicast.bound.name";
+	static String KEY_STR_RMI_UNICAST_RUNNING = "nflight.network.rmi.unicast.running";
+	
+	static Path PATH_RMI_ACTIVATABLE_MARSHALLED_OBJECT = Paths
 			.get("com/abreqadhabra/nflight/application/service/rmi/ActivatableRMIServantImpl.ser");
-	static Path FILE_ACTIVATABLE_POLICY = Paths
+	static Path PATH_RMI_ACTIVATABLE_POLICY = Paths
 			.get("com/abreqadhabra/nflight/application/service/rmi/conf/activatable.policy");
-	static Path FILE_ACTIVATABLE_RMID_POLICY = Paths
+	static Path PATH_RMI_ACTIVATABLE_RMID_POLICY = Paths
 			.get("com/abreqadhabra/nflight/application/service/rmi/conf/rmid.policy");
-	
-	static String PREFIX_ACTIVATABLE_CODEBASE = "file://";
-	
-	static String STR_RMI_DEFAULT_PORT = "nflight.service.rmi.bind.port.default";
-	
-	static String STR_ACTIVATABLE_RMI_BOUND_NAME = "nflight.service.rmi.activatable.bound.name";
-	static String STR_ACTIVATABLE_RMI_RMID_DELAY_SECONDS = "nflight.service.rmi.activatable.rmid.delay.seconds";
-	static String STR_ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_START = "nflight.service.rmi.activatable.rmi.system.command.rmid.start";
-	
-	static String STR_ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_STOP = "nflight.service.rmi.activatable.rmi.system.command.rmid.stop";
-	static String STR_UNICAST_RMI_BOUND_NAME = "nflight.service.rmi.unicast.bound.name";
-	static String STR_UNICAST_RMI_RUNNING = "nflight.service.rmi.unicast.running";
 
-	
+	static String STR_PREFIX_RMI_ACTIVATABLE_CODEBASE = "file://";
 }

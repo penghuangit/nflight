@@ -33,11 +33,11 @@ public class AsynchronousSocketServiceImpl extends AbstractSocketService {
 
 	public AsynchronousSocketServiceImpl(InetSocketAddress endpoint)
 			throws NFlightException {
-		super(Config.getBoolean(SocketServiceConfiguration.ASYNC_RUNNING));
+		super(Config.getBoolean(SocketServiceConfiguration.KEY_BOO_SOCKET_ASYNC_RUNNING));
 		this.threadPool = this.getThreadPoolExecutor(
-				SocketServiceConfiguration.ASYNC_SERVICE_THREAD_POOL_NAME,
-				SocketServiceConfiguration.ASYNC_SERVICE_THREAD_POOL_MONITORING_DELAY_SECONDS,
-				SocketServiceConfiguration.ASYNC_SERVICE_THREAD_POOL_MONITORING);
+				SocketServiceConfiguration.KEY_STR_SOCKET_ASYNC_SERVICE_THREAD_POOL_NAME,
+				SocketServiceConfiguration.KEY_INT_SOCKET_ASYNC_SERVICE_THREAD_POOL_MONITORING_DELAY_SECONDS,
+				SocketServiceConfiguration.KEY_BOO_SOCKET_ASYNC_SERVICE_THREAD_POOL_MONITORING);
 		this.init(endpoint);
 	}
 
@@ -45,9 +45,9 @@ public class AsynchronousSocketServiceImpl extends AbstractSocketService {
 	public void init(InetSocketAddress endpoint) throws NFlightException {
 		try {
 			int initialSize = Config
-					.getInt(SocketServiceConfiguration.ASYNC_THREADPOOL_INITIALSIZE);
+					.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_ASYNC_THREADPOOL_INITIALSIZE);
 			// maximum number of pending connections
-			int backlog = Config.getInt(SocketServiceConfiguration.ASYNC_BIND_BACKLOG);
+			int backlog = Config.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_ASYNC_BIND_BACKLOG);
 			this.channel = this.createServerChannelFactory()
 					.createAsyncServerSocketChannel(this.threadPool,
 							initialSize, endpoint, backlog);
@@ -130,7 +130,7 @@ public class AsynchronousSocketServiceImpl extends AbstractSocketService {
 		AsynchronousSocketChannel socket = (AsynchronousSocketChannel) socketChannel;
 		try {
 			int capacity = Config
-					.getInt(SocketServiceConfiguration.ASYNC_INCOMING_BUFFER_CAPACITY);
+					.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_ASYNC_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = NetworkChannelHelper
 					.getByteBuffer(capacity);
 			Integer numRead = socket.read(incomingByteBuffer).get();

@@ -30,18 +30,18 @@ public class BlockingSocketServiceImpl extends AbstractSocketService {
 	private ServerSocketChannel channel;
 
 	public BlockingSocketServiceImpl(InetSocketAddress endpoint) throws NFlightException {
-		super(Config.getBoolean(SocketServiceConfiguration.BLOCKING_RUNNING));
+		super(Config.getBoolean(SocketServiceConfiguration.KEY_BOO_SOCKET_BLOCKING_RUNNING));
 		this.threadPool = this
 				.getThreadPoolExecutor(
-						SocketServiceConfiguration.BLOCKING_SERVICE_THREAD_POOL_NAME,
-						SocketServiceConfiguration.BLOCKING_SERVICE_THREAD_POOL_MONITORING_DELAY_SECONDS,
-						SocketServiceConfiguration.BLOCKING_SERVICE_THREAD_POOL_MONITORING);
+						SocketServiceConfiguration.KEY_INT_SOCKET_BLOCKING_SERVICE_THREAD_POOL_NAME,
+						SocketServiceConfiguration.KEY_INT_SOCKET_BLOCKING_SERVICE_THREAD_POOL_MONITORING_DELAY_SECONDS,
+						SocketServiceConfiguration.KEY_INT_SOCKET_BLOCKING_SERVICE_THREAD_POOL_MONITORING);
 		this.init(endpoint);
 	}
 
 	@Override
 	public void init(InetSocketAddress endpoint) throws NFlightException {
-		int backlog = Config.getInt(SocketServiceConfiguration.BLOCKING_BIND_BACKLOG);
+		int backlog = Config.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_BLOCKING_BIND_BACKLOG);
 		try {
 			// create a new server-socket channel
 			this.channel = this.createServerChannelFactory()

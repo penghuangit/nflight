@@ -32,7 +32,7 @@ public class NonblockingSocketServiceImpl extends AbstractSocketService {
 	private Selector selector;
 
 	public NonblockingSocketServiceImpl(InetSocketAddress endpoint) throws NFlightException {
-		super(Config.getBoolean(SocketServiceConfiguration.NONBLOCKING_RUNNING));
+		super(Config.getBoolean(SocketServiceConfiguration.KEY_BOO_SOCKET_NONBLOCKING_RUNNING));
 		this.init(endpoint);
 	}
 
@@ -42,7 +42,7 @@ public class NonblockingSocketServiceImpl extends AbstractSocketService {
 			// create a new server-socket channel & selector
 			this.selector = Selector.open();
 			int backlog = Config
-					.getInt(SocketServiceConfiguration.NONBLOCKING_BIND_BACKLOG);
+					.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_NONBLOCKING_BIND_BACKLOG);
 			// create a new server-socket channel
 			this.channel = this.createServerChannelFactory()
 					.createNonBlockingServerSocketChannel(endpoint, backlog);
@@ -175,7 +175,7 @@ public class NonblockingSocketServiceImpl extends AbstractSocketService {
 		SocketChannel socket = (SocketChannel) socketChannel;
 		try {
 			int capacity = Config
-					.getInt(SocketServiceConfiguration.NONBLOCKING_INCOMING_BUFFER_CAPACITY);
+					.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_NONBLOCKING_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = SocketServiceHelper
 					.getByteBuffer(capacity);
 			int numRead = socket.read(incomingByteBuffer);

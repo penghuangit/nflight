@@ -34,7 +34,7 @@ public class UnicastSocketServiceImpl extends AbstractSocketService {
 	private Selector selector;
 
 	public UnicastSocketServiceImpl(InetSocketAddress endpoint) throws NFlightException {
-		super(Config.getBoolean(SocketServiceConfiguration.UNICAST_RUNNING));
+		super(Config.getBoolean(SocketServiceConfiguration.KEY_BOO_SOCKET_UNICAST_RUNNING));
 		this.init(endpoint);
 	}
 
@@ -147,7 +147,7 @@ public class UnicastSocketServiceImpl extends AbstractSocketService {
 
 		try {
 			int capacity = Config
-					.getInt(SocketServiceConfiguration.UNICAST_INCOMING_BUFFER_CAPACITY);
+					.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_UNICAST_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = SocketServiceHelper
 					.getByteBuffer(capacity);
 

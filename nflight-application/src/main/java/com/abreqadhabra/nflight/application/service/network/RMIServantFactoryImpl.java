@@ -4,7 +4,7 @@ import java.net.InetSocketAddress;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.service.ServiceFactory;
-import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.ENUM_SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.service.network.rmi.exception.RMIServantException;
 import com.abreqadhabra.nflight.application.service.network.rmi.impl.ActivatableRMIServantImpl;
 import com.abreqadhabra.nflight.application.service.network.rmi.impl.UnicastRMIServantImpl;
@@ -15,10 +15,10 @@ public class RMIServantFactoryImpl extends ServiceFactory {
 	private static Class<RMIServantFactoryImpl> THIS_CLAZZ = RMIServantFactoryImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private SERVICE_TYPE serviceType;
+	private ENUM_SERVICE_TYPE serviceType;
 	private InetSocketAddress endpoint;
 
-	public RMIServantFactoryImpl(SERVICE_TYPE serviceType,
+	public RMIServantFactoryImpl(ENUM_SERVICE_TYPE serviceType,
 			InetSocketAddress endpoint) {
 		this.serviceType = serviceType;
 		this.endpoint = endpoint;
@@ -26,9 +26,9 @@ public class RMIServantFactoryImpl extends ServiceFactory {
 
 	@Override
 	public Runnable createService() throws NFlightRemoteException {
-		if (this.serviceType.equals(SERVICE_TYPE.rmi_unicast)) {
+		if (this.serviceType.equals(ENUM_SERVICE_TYPE.rmi_unicast)) {
 			return getUnicastRMIServant();
-		} else if (this.serviceType.equals(SERVICE_TYPE.rmi_activation)) {
+		} else if (this.serviceType.equals(ENUM_SERVICE_TYPE.rmi_activation)) {
 			return getActivatableRMIServant();
 		} else {
 			throw new RMIServantException("서비스 객체 생성에 실패하였습니다.");

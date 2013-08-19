@@ -37,7 +37,7 @@ public class BlockingSocketReceiver implements Runnable {
 			}
 
 			int capacity = Config
-					.getInt(SocketServiceConfiguration.BLOCKING_INCOMING_BUFFER_CAPACITY);
+					.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_BLOCKING_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = SocketServiceHelper
 					.getByteBuffer(capacity);
 			int numRead = this.socket.read(incomingByteBuffer);

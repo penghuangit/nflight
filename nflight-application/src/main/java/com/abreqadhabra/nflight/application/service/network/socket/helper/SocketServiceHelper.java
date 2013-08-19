@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import javax.net.ServerSocketFactory;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
-import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.ENUM_SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -36,32 +36,32 @@ public class SocketServiceHelper {
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	public static void setMulticastChannelOption(DatagramChannel socketChannel,
-			String networkInterfaceName, SERVICE_TYPE type) {
+			String networkInterfaceName, ENUM_SERVICE_TYPE type) {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		Config.set(SocketServiceConfiguration.CHANNEL_OPTION_IP_MULTICAST_IF,
+		Config.set(SocketServiceConfiguration.KEY_INT_SOCKET_CHANNEL_OPTION_IP_MULTICAST_IF,
 				networkInterfaceName);
 
 		LOGGER.logp(
 				Level.FINER,
 				CLAZZ_NAME,
 				METHOD_NAME,
-				SocketServiceConfiguration.CHANNEL_OPTION_IP_MULTICAST_IF + ": "
-						+ Config.get(SocketServiceConfiguration.CHANNEL_OPTION_IP_MULTICAST_IF));
+				SocketServiceConfiguration.KEY_INT_SOCKET_CHANNEL_OPTION_IP_MULTICAST_IF + ": "
+						+ Config.get(SocketServiceConfiguration.KEY_INT_SOCKET_CHANNEL_OPTION_IP_MULTICAST_IF));
 
 		setChannelOption(socketChannel, type);
 
 	}
 
 	public static void setChannelOption(NetworkChannel socketChannel,
-			SERVICE_TYPE type) {
+			ENUM_SERVICE_TYPE type) {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		try {
 
-			Config.load(THIS_CLAZZ, SocketServiceConfiguration.FILE_CHANNEL_OPTION_PROPERTIES);
+			Config.load(THIS_CLAZZ, SocketServiceConfiguration.PATH_CHANNEL_OPTION_PROPERTIES);
 
 			Set<SocketOption<?>> options = socketChannel.supportedOptions();
 
@@ -73,7 +73,7 @@ public class SocketServiceHelper {
 			for (SocketOption<?> option : options) {
 				String optionName = option.name();
 
-				String optionKey = SocketServiceConfiguration.PREFIX_KEY_PROPERTIES_CHANNEL_OPTION
+				String optionKey = SocketServiceConfiguration.KEY_STR_PREFIX_CHANNEL_OPTION
 						+ type.toString() + "." + optionName.toLowerCase();
 
 				LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME,

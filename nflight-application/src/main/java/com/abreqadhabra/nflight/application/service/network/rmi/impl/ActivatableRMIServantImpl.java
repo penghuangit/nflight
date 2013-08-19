@@ -46,9 +46,9 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 
 	public ActivatableRMIServantImpl(InetSocketAddress endpoint)
 			throws NFlightRemoteException {
-		super(Config.getBoolean(RMIServantConfiguration.STR_UNICAST_RMI_RUNNING), endpoint
+		super(Config.getBoolean(RMIServantConfiguration.KEY_BOO_RMI_ACTIVATABLE_RUNNING), endpoint
 				.getAddress(), endpoint.getPort(), Config
-				.get(RMIServantConfiguration.STR_ACTIVATABLE_RMI_BOUND_NAME));
+				.get(RMIServantConfiguration.KEY_STR_RMI_ACTIVATABLE_BOUND_NAME));
 	}
 
 	@Override
@@ -61,11 +61,11 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 						.checkActivationSystem();
 			}
 			String className = THIS_CLAZZ.getName();
-			String codebase = RMIServantConfiguration.PREFIX_ACTIVATABLE_CODEBASE
+			String codebase = RMIServantConfiguration.STR_PREFIX_RMI_ACTIVATABLE_CODEBASE
 					+ RMIServantConfiguration.PATH_APPLICATION_CODEBASE.toString();
-			String policyfile = RMIServantConfiguration.FILE_ACTIVATABLE_POLICY.toString();
+			String policyfile = RMIServantConfiguration.PATH_RMI_ACTIVATABLE_POLICY.toString();
 			MarshalledObject<Object> data = new MarshalledObject<Object>(
-					RMIServantConfiguration.FILE_ACTIVATABLE_MARSHALLED_OBJECT.toString());
+					RMIServantConfiguration.PATH_RMI_ACTIVATABLE_MARSHALLED_OBJECT.toString());
 			Remote stub = ActivatableRMIServantHelper.install(className,
 					codebase, policyfile, data);
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,

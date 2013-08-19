@@ -95,7 +95,7 @@ public class ActivatableRMIServantHelper extends RMIServantHelper {
 				startActivationSystem();
 				// 콜러블로 기동결과에 대한 값이 있을때까지 대기
 				Thread.sleep(Config
-						.getInt(RMIServantConfiguration.STR_ACTIVATABLE_RMI_RMID_DELAY_SECONDS));
+						.getInt(RMIServantConfiguration.KEY_INT_RMI_ACTIVATABLE_RMID_DELAY_SECONDS));
 			} catch (InterruptedException e) {
 				throw new RMIServantException(e);
 			}
@@ -109,15 +109,16 @@ public class ActivatableRMIServantHelper extends RMIServantHelper {
 		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
 				.getMethodName();
 
-//		// 생성방식 정리 필요 Singleton
-//		Configure configure = new ConfigureImpl(THIS_CLAZZ,
-//				RMIServantConfiguration.FILE_SERVICE_PROPERTIES);
+		// // 생성방식 정리 필요 Singleton
+		// Configure configure = new ConfigureImpl(THIS_CLAZZ,
+		// RMIServantConfiguration.FILE_SERVICE_PROPERTIES);
 
 		Path codebasePath = IOStream.getCodebasePath(CLAZZ_NAME);
-		Path path = codebasePath.resolve(RMIServantConfiguration.FILE_ACTIVATABLE_RMID_POLICY);
+		Path path = codebasePath
+				.resolve(RMIServantConfiguration.PATH_RMI_ACTIVATABLE_RMID_POLICY);
 
 		String command = Config
-				.get(RMIServantConfiguration.STR_ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_START)
+				.get(RMIServantConfiguration.KEY_STR_RMI_ACTIVATABLE_RMID_START)
 				+ " -J-D"
 				+ Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString()
 				+ "="
@@ -136,17 +137,17 @@ public class ActivatableRMIServantHelper extends RMIServantHelper {
 		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
 				.getMethodName();
 
-		 String command = Config
-		 .get(RMIServantConfiguration.STR_ACTIVATABLE_RMI_SYSTEM_COMMAND_RMID_STOP);
-		 LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME, "command is "
-		 + command);
-		 new Thread(getActivationRunnable(command)).start();
+		String command = Config
+				.get(RMIServantConfiguration.KEY_STR_RMI_ACTIVATABLE_RMID_STOP);
+		LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME, "command is "
+				+ command);
+		new Thread(getActivationRunnable(command)).start();
 
-//		try {
-//			ActivationGroup.getSystem().shutdown();
-//		} catch (RemoteException | ActivationException e) {
-//			throw new RMIServantException(e);
-//		}
+		// try {
+		// ActivationGroup.getSystem().shutdown();
+		// } catch (RemoteException | ActivationException e) {
+		// throw new RMIServantException(e);
+		// }
 
 	}
 

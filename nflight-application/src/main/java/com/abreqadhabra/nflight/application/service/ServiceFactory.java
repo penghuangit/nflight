@@ -5,7 +5,7 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
-import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.ENUM_SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.service.network.RMIServantFactoryImpl;
 import com.abreqadhabra.nflight.application.service.network.SocketServiceFactoryImpl;
 import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfiguration;
@@ -15,35 +15,35 @@ import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 
 public abstract class ServiceFactory {
 
-	public static ServiceFactory getServiceFactory(SERVICE_TYPE serviceType) {
+	public static ServiceFactory getServiceFactory(ENUM_SERVICE_TYPE serviceType) {
 		switch (serviceType) {
 			case network_blocking :
 				return new SocketServiceFactoryImpl(serviceType,
 						getEndpoint(Config
-								.getInt(SocketServiceConfiguration.BLOCKING_DEFAULT_PORT)));
+								.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_BLOCKING_DEFAULT_PORT)));
 			case network_nonblocking :
 				return new SocketServiceFactoryImpl(serviceType,
 						getEndpoint(Config
-								.getInt(SocketServiceConfiguration.NONBLOCKING_DEFAULT_PORT)));
+								.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_NONBLOCKING_DEFAULT_PORT)));
 			case network_async :
 				return new SocketServiceFactoryImpl(serviceType,
 						getEndpoint(Config
-								.getInt(SocketServiceConfiguration.ASYNC_DEFAULT_PORT)));
+								.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_ASYNC_DEFAULT_PORT)));
 			case network_unicast :
 				return new SocketServiceFactoryImpl(serviceType,
 						getEndpoint(Config
-								.getInt(SocketServiceConfiguration.UNICAST_DEFAULT_PORT)));
+								.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_UNICAST_DEFAULT_PORT)));
 			case network_multicast :
 				return new SocketServiceFactoryImpl(serviceType,
 						getEndpoint(Config
-								.getInt(SocketServiceConfiguration.BLOCKING_DEFAULT_PORT)));
+								.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_BLOCKING_DEFAULT_PORT)));
 			case rmi_unicast :
 				return new RMIServantFactoryImpl(serviceType,
-						getEndpoint(Config.getInt(RMIServantConfiguration.STR_RMI_DEFAULT_PORT)));
+						getEndpoint(Config.getInt(RMIServantConfiguration.KEY_INT_RMI_DEFAULT_PORT)));
 			case rmi_activation :
 				return new RMIServantFactoryImpl(serviceType,
 						getEndpoint(Config
-								.getInt(RMIServantConfiguration.STR_RMI_DEFAULT_PORT)));
+								.getInt(RMIServantConfiguration.KEY_INT_RMI_DEFAULT_PORT)));
 			default :
 				break;
 		}
