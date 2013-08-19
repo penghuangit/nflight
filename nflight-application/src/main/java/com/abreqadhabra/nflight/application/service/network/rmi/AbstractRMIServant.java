@@ -5,9 +5,9 @@ import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.concurrent.AbstractRunnable;
-import com.abreqadhabra.nflight.application.common.concurrent.thread.ThreadHelper;
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
+import com.abreqadhabra.nflight.application.common.launcher.concurrent.AbstractRunnable;
+import com.abreqadhabra.nflight.application.common.launcher.concurrent.thread.ThreadHelper;
+import com.abreqadhabra.nflight.application.service.network.rmi.helper.RMIServantHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -24,15 +24,13 @@ public abstract class AbstractRMIServant extends AbstractRunnable
 	private int port;
 	protected Registry registry;
 	protected String boundName;
-	protected Configure configure;
 
 	public AbstractRMIServant() {
 	}
 
-	public AbstractRMIServant(boolean isRunning, Configure configure, InetAddress addr, int port,
+	public AbstractRMIServant(boolean isRunning, InetAddress addr, int port,
 			String serviceName) throws NFlightRemoteException {
 		this.isRunning = isRunning;
-		this.configure=configure;
 		this.addr = addr;
 		this.port = port;
 		this.registry = RMIServantHelper.getRegistry(

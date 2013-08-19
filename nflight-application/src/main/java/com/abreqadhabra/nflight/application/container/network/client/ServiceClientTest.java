@@ -16,11 +16,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.concurrent.thread.ThreadHelper;
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
-import com.abreqadhabra.nflight.application.common.launcher.ConfigureImpl;
+import com.abreqadhabra.nflight.application.common.launcher.Config;
+import com.abreqadhabra.nflight.application.common.launcher.concurrent.thread.ThreadHelper;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.service.network.rmi.RMIServant;
-import com.abreqadhabra.nflight.application.service.network.rmi.RMIServantHelper;
+import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfiguration;
+import com.abreqadhabra.nflight.application.service.network.rmi.helper.RMIServantHelper;
+import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -38,64 +41,65 @@ public class ServiceClientTest {
 	}
 
 	public static void main(String[] args) {
+
 		try {
+			// 시스템프로터피 등록 -> 서버에서 등록된 프로퍼티는 사용 불가? 프로그램 실행시점에만 남아있는?
+			Config.load(THIS_CLAZZ,
+					ServiceConfiguration.FILE_SERVICE_PROPERTIES);
+
 			InetAddress DEFAULT_ADDRESS = InetAddress.getLocalHost();
-
-			Configure configure = new ConfigureImpl(THIS_CLAZZ,
-					Configure.FILE_SERVICE_PROPERTIES);
-
 			for (int i = 0; i < cnt; i++) {
-
-				serviceGroupMap.put(
-						Configure.SERVICE_TYPE.network_blocking.toString(),
-						getBlockingNetworkService(DEFAULT_ADDRESS, configure
-								.getInt(Configure.BLOCKING_DEFAULT_PORT),
-								Configure.SERVICE_TYPE.network_blocking));
-				serviceGroupMap.put(
-						Configure.SERVICE_TYPE.network_nonblocking.toString(),
-						getBlockingNetworkService(DEFAULT_ADDRESS, configure
-								.getInt(Configure.NONBLOCKING_DEFAULT_PORT),
-								Configure.SERVICE_TYPE.network_nonblocking));
+				serviceGroupMap
+						.put(SERVICE_TYPE.network_blocking.toString(),
+								getBlockingNetworkService(
+										DEFAULT_ADDRESS,
+										Config.getInt(SocketServiceConfiguration.BLOCKING_DEFAULT_PORT),
+										SERVICE_TYPE.network_blocking));
+				serviceGroupMap
+						.put(SERVICE_TYPE.network_nonblocking.toString(),
+								getBlockingNetworkService(
+										DEFAULT_ADDRESS,
+										Config.getInt(SocketServiceConfiguration.NONBLOCKING_DEFAULT_PORT),
+										SERVICE_TYPE.network_nonblocking));
 
 				serviceGroupMap
-						.put(Configure.SERVICE_TYPE.network_async.toString(),
+						.put(SERVICE_TYPE.network_async.toString(),
 								getAsyncNetworkService(
 										DEFAULT_ADDRESS,
-										configure
-												.getInt(Configure.ASYNC_DEFAULT_PORT)));
-
-				serviceGroupMap.put(
-						Configure.SERVICE_TYPE.network_unicast.toString()
-								+ "--------->socket",
-						getUnicastNetworkService(DEFAULT_ADDRESS, configure
-								.getInt(Configure.UNICAST_DEFAULT_PORT)));
-
-				InetAddress multicastGroup = InetAddress
-						.getByName(Configure.MULTICAST_GROUP_ADDRESS);
+										Config.getInt(SocketServiceConfiguration.ASYNC_DEFAULT_PORT)));
 
 				serviceGroupMap
-						.put(Configure.SERVICE_TYPE.network_multicast
-								.toString(),
+						.put(SERVICE_TYPE.network_unicast.toString()
+								+ "--------->socket",
+								getUnicastNetworkService(
+										DEFAULT_ADDRESS,
+										Config.getInt(SocketServiceConfiguration.UNICAST_DEFAULT_PORT)));
+
+				InetAddress multicastGroup = InetAddress
+						.getByName(SocketServiceConfiguration.MULTICAST_GROUP_ADDRESS);
+
+				serviceGroupMap
+						.put(SERVICE_TYPE.network_multicast.toString(),
 								getMulticastNetworkService(
 										multicastGroup,
 										DEFAULT_ADDRESS,
-										configure
-												.getInt(Configure.MULTICAST_DEFAULT_PORT)));
+										Config.getInt(SocketServiceConfiguration.MULTICAST_DEFAULT_PORT)));
 
 				serviceGroupMap
-						.put(configure.get(Configure.UNICAST_RMI_BOUND_NAME),
+						.put(Config
+								.get(RMIServantConfiguration.STR_UNICAST_RMI_BOUND_NAME),
 								getRMIService(
 										DEFAULT_ADDRESS,
-										configure
-												.getInt(Configure.RMI_DEFAULT_PORT),
-										configure
-												.get(Configure.UNICAST_RMI_BOUND_NAME)));
+										Config.getInt(RMIServantConfiguration.STR_RMI_DEFAULT_PORT),
+										Config.get(RMIServantConfiguration.STR_UNICAST_RMI_BOUND_NAME)));
 
-				serviceGroupMap.put(
-						configure.get(Configure.ACTIVATABLE_RMI_BOUND_NAME),
-						getRMIService(DEFAULT_ADDRESS, configure
-								.getInt(Configure.RMI_DEFAULT_PORT), configure
-								.get(Configure.ACTIVATABLE_RMI_BOUND_NAME)));
+				serviceGroupMap
+						.put(Config
+								.get(RMIServantConfiguration.STR_ACTIVATABLE_RMI_BOUND_NAME),
+								getRMIService(
+										DEFAULT_ADDRESS,
+										Config.getInt(RMIServantConfiguration.STR_RMI_DEFAULT_PORT),
+										Config.get(RMIServantConfiguration.STR_ACTIVATABLE_RMI_BOUND_NAME)));
 
 				System.out
 						.println("serviceGroupMap------------------------------------>:"
@@ -129,12 +133,12 @@ public class ServiceClientTest {
 	}
 
 	private static Runnable getBlockingNetworkService(InetAddress addr,
-			int port, Configure.SERVICE_TYPE type) throws IOException,
-			InterruptedException, ExecutionException {
+			int port, SERVICE_TYPE serviceType) throws InterruptedException,
+			ExecutionException, IOException {
 		// port = NetworkServiceHelper.validatedStreamPort(port);
 		SocketChannel channel = createSocketChannelFactory()
 				.createBlockingSocketChannel(new InetSocketAddress(addr, port),
-						type);
+						serviceType);
 		return socketClient(channel, new InetSocketAddress(addr, port), millis);
 	}
 

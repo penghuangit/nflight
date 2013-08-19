@@ -4,9 +4,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.concurrent.AbstractRunnable;
-import com.abreqadhabra.nflight.application.common.concurrent.thread.ThreadHelper;
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
+import com.abreqadhabra.nflight.application.common.launcher.Config;
+import com.abreqadhabra.nflight.application.common.launcher.concurrent.AbstractRunnable;
+import com.abreqadhabra.nflight.application.common.launcher.concurrent.thread.ThreadHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -18,11 +18,9 @@ public abstract class AbstractSocketService extends AbstractRunnable
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	protected boolean isRunning;
-	protected Configure configure;
-	
-	public AbstractSocketService(boolean isRunning, Configure configure) {
+
+	public AbstractSocketService(boolean isRunning) {
 		this.isRunning = isRunning;
-		this.configure = configure;
 		this.setShutdownHook();
 	}
 
@@ -35,11 +33,11 @@ public abstract class AbstractSocketService extends AbstractRunnable
 	protected ThreadPoolExecutor getThreadPoolExecutor(
 			String threadPoolNameKey,
 			String threadPoolMonitoringDelaySecondsKey,
-			String isThreadPoolMonitoringKey) {
-		String threadPoolName = this.configure.get(threadPoolNameKey);
-		int threadPoolMonitoringDelaySeconds = this.configure
+			String isThreadPoolMonitoringKey) throws NFlightException {
+		String threadPoolName = Config.get(threadPoolNameKey);
+		int threadPoolMonitoringDelaySeconds = Config
 				.getInt(threadPoolMonitoringDelaySecondsKey);
-		boolean isThreadPoolMonitoring = this.configure
+		boolean isThreadPoolMonitoring = Config
 				.getBoolean(threadPoolMonitoringDelaySecondsKey);
 		return ThreadHelper.getThreadPoolExecutor(threadPoolName,
 				isThreadPoolMonitoring, threadPoolMonitoringDelaySeconds);

@@ -6,8 +6,9 @@ import java.nio.channels.SocketChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
-import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceHelper;
+import com.abreqadhabra.nflight.application.common.launcher.Config;
+import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.network.socket.helper.SocketServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class BlockingSocketReceiver implements Runnable {
@@ -15,12 +16,9 @@ public class BlockingSocketReceiver implements Runnable {
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private Configure configure;
 	private SocketChannel socket;
 
-	public BlockingSocketReceiver(Configure configure,
-			SocketChannel socket) {
-		this.configure = configure;
+	public BlockingSocketReceiver(SocketChannel socket) {
 		this.socket = socket;
 	}
 
@@ -33,14 +31,13 @@ public class BlockingSocketReceiver implements Runnable {
 			long startN = System.nanoTime();
 
 			if (LOGGER.isLoggable(Level.FINER)) {
-				String currentThreadName = Thread.currentThread()
-						.getName();
+				String currentThreadName = Thread.currentThread().getName();
 				LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(),
 						METHOD_NAME, "current thread is " + currentThreadName);
 			}
 
-			int capacity = this.configure
-					.getInt(Configure.BLOCKING_INCOMING_BUFFER_CAPACITY);
+			int capacity = Config
+					.getInt(SocketServiceConfiguration.BLOCKING_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = SocketServiceHelper
 					.getByteBuffer(capacity);
 			int numRead = this.socket.read(incomingByteBuffer);

@@ -13,8 +13,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
-import com.abreqadhabra.nflight.application.common.launcher.ConfigureImpl;
+import com.abreqadhabra.nflight.application.common.launcher.Config;
+import com.abreqadhabra.nflight.application.trash_server.Configure;
+import com.abreqadhabra.nflight.application.trash_server.ConfigureImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class NetworkChannelHelper {
@@ -30,8 +31,7 @@ public class NetworkChannelHelper {
 				.getMethodName();
 
 		try {
-			Set<SocketOption<?>> options = socketChannel
-					.supportedOptions();
+			Set<SocketOption<?>> options = socketChannel.supportedOptions();
 
 			LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME, "소켓 채널의 지원 옵션:  "
 					+ options);
@@ -40,7 +40,7 @@ public class NetworkChannelHelper {
 
 			for (SocketOption<?> option : options) {
 				String optionName = option.name();
-				String optionValue = configure
+				String optionValue = Config
 						.get(Configure.PREFIX_KEY_PROPERTIES_CHANNEL_OPTION
 								+ optionName.toLowerCase().trim());
 				if (optionValue == null) {
@@ -116,8 +116,9 @@ public class NetworkChannelHelper {
 			readObject = ois.readObject();
 
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-					"deserializeObject: " + readObject.getClass().getName() + " " + readObject);
-			
+					"deserializeObject: " + readObject.getClass().getName()
+							+ " " + readObject);
+
 		} catch (ClassNotFoundException | IOException e) {
 			if (e instanceof StreamCorruptedException) {
 				return null;

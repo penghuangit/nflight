@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.application.common.launcher.Config;
+import com.abreqadhabra.nflight.application.common.launcher.conf.LauncherConfiguration;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
-import com.abreqadhabra.nflight.application.common.launcher.ConfigureImpl;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.IOStream;
 
@@ -15,12 +15,9 @@ public class ProcessExecutor {
 	private static Class<ProcessExecutor> THIS_CLAZZ = ProcessExecutor.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	Configure configure;
-
 	public ProcessExecutor() {
 		try {
-			configure = new ConfigureImpl(THIS_CLAZZ,
-					Configure.FILE_SYSTEM_COMMAND_PROPERTIES);
+			Config.load(THIS_CLAZZ, LauncherConfiguration.FILE_SYSTEM_COMMAND_PROPERTIES);
 		} catch (Exception e) {
 			StackTraceElement[] current = e.getStackTrace();
 			if (e instanceof NFlightException) {
@@ -88,11 +85,11 @@ public class ProcessExecutor {
 	 * 
 	 * @param String
 	 *            command
-	 * @throws NFlightException 
+	 * @throws NFlightException
 	 * @throws Exception
 	 * @since STEP1
 	 */
-	public void execute(String command) throws NFlightException  {
+	public void execute(String command) throws NFlightException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		LOGGER.logp(Level.INFO, THIS_CLAZZ.getName(), METHOD_NAME, "command: "
@@ -102,8 +99,8 @@ public class ProcessExecutor {
 			try {
 				Runtime rt = Runtime.getRuntime();
 				Process proc = rt.exec(command);
-				Thread.sleep(configure
-						.getInt(Configure.LAUNCHER_SYSTEM_COMMAND_SLEEPTIME_1));
+				Thread.sleep(Config
+						.getInt(LauncherConfiguration.LAUNCHER_SYSTEM_COMMAND_SLEEPTIME_1));
 				String errorString = IOStream.convertStreamToString(proc
 						.getErrorStream());
 				String outputString = IOStream.convertStreamToString(proc

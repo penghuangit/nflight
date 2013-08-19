@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
+import com.abreqadhabra.nflight.application.trash_server.Configure;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public abstract class AbstractSocketServerImpl implements ISocketServer {

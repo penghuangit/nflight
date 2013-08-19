@@ -13,11 +13,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
+import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketService;
 import com.abreqadhabra.nflight.application.service.network.socket.ServerSocketChannelFactory;
-import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceException;
-import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceHelper;
+import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
+import com.abreqadhabra.nflight.application.service.network.socket.helper.SocketServiceHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -30,9 +31,8 @@ public class NonblockingSocketServiceImpl extends AbstractSocketService {
 	private ServerSocketChannel channel;
 	private Selector selector;
 
-	public NonblockingSocketServiceImpl(Configure configure,
-			InetSocketAddress endpoint) throws NFlightException {
-		super(configure.getBoolean(Configure.NONBLOCKING_RUNNING), configure);
+	public NonblockingSocketServiceImpl(InetSocketAddress endpoint) throws NFlightException {
+		super(Config.getBoolean(SocketServiceConfiguration.NONBLOCKING_RUNNING));
 		this.init(endpoint);
 	}
 
@@ -41,8 +41,8 @@ public class NonblockingSocketServiceImpl extends AbstractSocketService {
 		try {
 			// create a new server-socket channel & selector
 			this.selector = Selector.open();
-			int backlog = this.configure
-					.getInt(Configure.NONBLOCKING_BIND_BACKLOG);
+			int backlog = Config
+					.getInt(SocketServiceConfiguration.NONBLOCKING_BIND_BACKLOG);
 			// create a new server-socket channel
 			this.channel = this.createServerChannelFactory()
 					.createNonBlockingServerSocketChannel(endpoint, backlog);
@@ -174,8 +174,8 @@ public class NonblockingSocketServiceImpl extends AbstractSocketService {
 				.getMethodName();
 		SocketChannel socket = (SocketChannel) socketChannel;
 		try {
-			int capacity = this.configure
-					.getInt(Configure.NONBLOCKING_INCOMING_BUFFER_CAPACITY);
+			int capacity = Config
+					.getInt(SocketServiceConfiguration.NONBLOCKING_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = SocketServiceHelper
 					.getByteBuffer(capacity);
 			int numRead = socket.read(incomingByteBuffer);

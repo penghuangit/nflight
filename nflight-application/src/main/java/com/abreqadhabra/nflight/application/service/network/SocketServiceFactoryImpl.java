@@ -2,10 +2,9 @@ package com.abreqadhabra.nflight.application.service.network;
 
 import java.net.InetSocketAddress;
 
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
-import com.abreqadhabra.nflight.application.common.launcher.Configure.SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.service.ServiceFactory;
-import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceException;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
 import com.abreqadhabra.nflight.application.service.network.socket.impl.AsynchronousSocketServiceImpl;
 import com.abreqadhabra.nflight.application.service.network.socket.impl.BlockingSocketServiceImpl;
 import com.abreqadhabra.nflight.application.service.network.socket.impl.MulticastDatagramServiceImpl;
@@ -13,16 +12,14 @@ import com.abreqadhabra.nflight.application.service.network.socket.impl.Nonblock
 import com.abreqadhabra.nflight.application.service.network.socket.impl.UnicastSocketServiceImpl;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 
-public class SocketServiceFactoryImpl implements ServiceFactory {
+public class SocketServiceFactoryImpl extends ServiceFactory {
 
 	private SERVICE_TYPE serviceType;
-	private Configure configure;
 	private InetSocketAddress endpoint;
 
 	public SocketServiceFactoryImpl(SERVICE_TYPE serviceType,
-			Configure configure, InetSocketAddress endpoint) {
+			InetSocketAddress endpoint) {
 		this.serviceType = serviceType;
-		this.configure = configure;
 		this.endpoint = endpoint;
 	}
 	@Override
@@ -43,23 +40,23 @@ public class SocketServiceFactoryImpl implements ServiceFactory {
 	}
 
 	private Runnable getMulticastDatagramServiceImpl() throws NFlightException {
-		return new MulticastDatagramServiceImpl(configure, endpoint);
+		return new MulticastDatagramServiceImpl(endpoint);
 	}
 
 	private Runnable getUnicastSocketServiceImpl() throws NFlightException {
-		return new UnicastSocketServiceImpl(configure, endpoint);
+		return new UnicastSocketServiceImpl(endpoint);
 	}
 
 	private Runnable getAsynchronousSocketServiceImpl() throws NFlightException {
-		return new AsynchronousSocketServiceImpl(configure, endpoint);
+		return new AsynchronousSocketServiceImpl(endpoint);
 	}
 
 	private Runnable getNonblockingSocketServiceImpl() throws NFlightException {
-		return new NonblockingSocketServiceImpl(configure, endpoint);
+		return new NonblockingSocketServiceImpl(endpoint);
 	}
 
 	private Runnable getBlockingSocketServiceImpl() throws NFlightException {
-		return new BlockingSocketServiceImpl(configure, endpoint);
+		return new BlockingSocketServiceImpl(endpoint);
 	}
 
 }

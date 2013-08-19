@@ -10,12 +10,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.application.common.launcher.Config;
+import com.abreqadhabra.nflight.application.trash_server.Configure;
 import com.abreqadhabra.nflight.application.trash_server.net.async.AsyncServerImpl;
 import com.abreqadhabra.nflight.application.trash_server.net.async.logic.IBusinessLogic;
 import com.abreqadhabra.nflight.application.trash_server.net.socket.MessageDTO;
 import com.abreqadhabra.nflight.application.trash_server.net.socket.MessageDTOImpl;
 import com.abreqadhabra.nflight.application.trash_server.net.socket.NetworkChannelHelper;
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.dao.dto.Airline;
 
@@ -31,8 +32,7 @@ public class AsyncServerAcceptHandler
 	AsynchronousServerSocketChannel asyncServerSocketChannel;
 	AsyncServerImpl asyncServerImpl;
 
-	public AsyncServerAcceptHandler(Configure configure,
-			IBusinessLogic logic,
+	public AsyncServerAcceptHandler(Configure configure, IBusinessLogic logic,
 			AsynchronousServerSocketChannel asyncServerSocketChannel,
 			AsyncServerImpl asyncServerImpl) {
 		this.configure = configure;
@@ -42,8 +42,7 @@ public class AsyncServerAcceptHandler
 	}
 
 	@Override
-	public void completed(AsynchronousSocketChannel result,
-			Void attachment) {
+	public void completed(AsynchronousSocketChannel result, Void attachment) {
 		Thread.currentThread().getStackTrace()[1].getMethodName();
 
 		this.asyncServerSocketChannel.accept(null, this);
@@ -57,7 +56,7 @@ public class AsyncServerAcceptHandler
 				.getMethodName();
 		try {
 
-			int capacity = this.configure
+			int capacity = Config
 					.getInt(Configure.ASYNC_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer readByteBuffer = NetworkChannelHelper
 					.getByteBuffer(capacity);
@@ -100,10 +99,9 @@ public class AsyncServerAcceptHandler
 			try {
 				Airline[] airlines = this.logic.getAirlines();
 
-				
-				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-						"dataObject: " + Arrays.toString(airlines));
-				
+				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
+						METHOD_NAME, "dataObject: " + Arrays.toString(airlines));
+
 				MessageDTO sendMessage = new MessageDTOImpl();
 
 				sendMessage.setAirlines(airlines);
@@ -124,18 +122,18 @@ public class AsyncServerAcceptHandler
 			MessageDTO sendMessage) {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
-		
-		ByteBuffer src = NetworkChannelHelper
-				.serializeObject(sendMessage);
+
+		ByteBuffer src = NetworkChannelHelper.serializeObject(sendMessage);
 
 		try {
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-					"Complete sending the data to the remote: " + asyncSocketChannel.getRemoteAddress());
+					"Complete sending the data to the remote: "
+							+ asyncSocketChannel.getRemoteAddress());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		asyncSocketChannel.write(src, null, new AsyncServerSendHandler());
 
 	}

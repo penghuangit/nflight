@@ -13,10 +13,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
+import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketService;
 import com.abreqadhabra.nflight.application.service.network.socket.ServerSocketChannelFactory;
-import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceException;
+import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
 import com.abreqadhabra.nflight.application.trash_server.net.socket.NetworkChannelHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
@@ -30,23 +31,23 @@ public class AsynchronousSocketServiceImpl extends AbstractSocketService {
 	private ThreadPoolExecutor threadPool;
 	private AsynchronousServerSocketChannel channel;
 
-	public AsynchronousSocketServiceImpl(Configure configure,
-			InetSocketAddress endpoint) throws NFlightException {
-		super(configure.getBoolean(Configure.ASYNC_RUNNING), configure);
+	public AsynchronousSocketServiceImpl(InetSocketAddress endpoint)
+			throws NFlightException {
+		super(Config.getBoolean(SocketServiceConfiguration.ASYNC_RUNNING));
 		this.threadPool = this.getThreadPoolExecutor(
-				Configure.ASYNC_SERVICE_THREAD_POOL_NAME,
-				Configure.ASYNC_SERVICE_THREAD_POOL_MONITORING_DELAY_SECONDS,
-				Configure.ASYNC_SERVICE_THREAD_POOL_MONITORING);
+				SocketServiceConfiguration.ASYNC_SERVICE_THREAD_POOL_NAME,
+				SocketServiceConfiguration.ASYNC_SERVICE_THREAD_POOL_MONITORING_DELAY_SECONDS,
+				SocketServiceConfiguration.ASYNC_SERVICE_THREAD_POOL_MONITORING);
 		this.init(endpoint);
 	}
 
 	@Override
 	public void init(InetSocketAddress endpoint) throws NFlightException {
 		try {
-			int initialSize = this.configure
-					.getInt(Configure.ASYNC_THREADPOOL_INITIALSIZE);
+			int initialSize = Config
+					.getInt(SocketServiceConfiguration.ASYNC_THREADPOOL_INITIALSIZE);
 			// maximum number of pending connections
-			int backlog = this.configure.getInt(Configure.ASYNC_BIND_BACKLOG);
+			int backlog = Config.getInt(SocketServiceConfiguration.ASYNC_BIND_BACKLOG);
 			this.channel = this.createServerChannelFactory()
 					.createAsyncServerSocketChannel(this.threadPool,
 							initialSize, endpoint, backlog);
@@ -128,8 +129,8 @@ public class AsynchronousSocketServiceImpl extends AbstractSocketService {
 
 		AsynchronousSocketChannel socket = (AsynchronousSocketChannel) socketChannel;
 		try {
-			int capacity = this.configure
-					.getInt(Configure.ASYNC_INCOMING_BUFFER_CAPACITY);
+			int capacity = Config
+					.getInt(SocketServiceConfiguration.ASYNC_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = NetworkChannelHelper
 					.getByteBuffer(capacity);
 			Integer numRead = socket.read(incomingByteBuffer).get();

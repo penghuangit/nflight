@@ -1,20 +1,16 @@
 package com.abreqadhabra.nflight.application.container.network.server;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.concurrent.thread.ThreadHelper;
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
-import com.abreqadhabra.nflight.application.common.launcher.Configure.SERVICE_TYPE;
-import com.abreqadhabra.nflight.application.common.launcher.ConfigureImpl;
+import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.common.launcher.LauncherHelper;
+import com.abreqadhabra.nflight.application.common.launcher.concurrent.thread.ThreadHelper;
 import com.abreqadhabra.nflight.application.container.Container;
 import com.abreqadhabra.nflight.application.service.ServiceFactory;
-import com.abreqadhabra.nflight.application.service.NetworkServiceFactory;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.SERVICE_TYPE;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -25,18 +21,19 @@ public class NetworkContainerImpl implements Container {
 
 	private HashMap<String, Runnable> services = new HashMap<String, Runnable>();
 	boolean isRunning;
-	private Configure configure;
 
-	public NetworkContainerImpl(Configure configure) throws NFlightException,
+	public NetworkContainerImpl() throws NFlightException,
 			NFlightRemoteException {
+
+		// 시스템프로터피 등록
+		Config.load(THIS_CLAZZ, ServiceConfiguration.FILE_SERVICE_PROPERTIES);
+
 		this.isRunning = true;
-		this.configure = configure;
-		this.init(this.isRunning, configure);
+		this.init();
 
 		LauncherHelper.setSecurityManager();// 추후 삭제
 	}
 
-	
 	@Override
 	public void startup() {
 		ThreadGroup serviceThreadGroup = new ThreadGroup(
@@ -47,76 +44,19 @@ public class NetworkContainerImpl implements Container {
 		}
 	}
 
-	private void init(boolean isRunning, Configure configure)
-			throws NFlightException, NFlightRemoteException {
-		this.addServices(Configure.SERVICE_TYPE.network_blocking);
-		this.addServices(Configure.SERVICE_TYPE.network_nonblocking);
-		this.addServices(Configure.SERVICE_TYPE.network_async);
-		this.addServices(Configure.SERVICE_TYPE.network_unicast);
-		this.addServices(Configure.SERVICE_TYPE.network_multicast);
-		this.addServices(Configure.SERVICE_TYPE.rmi_unicast);
-		this.addServices(Configure.SERVICE_TYPE.rmi_activation);
-	}
-
-	private void addServices(SERVICE_TYPE serviceType) throws NFlightException,
+	private void init() throws NFlightException,
 			NFlightRemoteException {
 		Runnable service = null;
-		int port = 0;
-		switch (serviceType) {
-			case network_blocking :
-				service = NetworkServiceFactory.getServiceFactory(serviceType,
-						configure).createService();
-				break;
-			case network_nonblocking :
-				service = NetworkServiceFactory.getServiceFactory(serviceType,
-						configure).createService();
-				break;
-			case network_async :
-				service = NetworkServiceFactory.getServiceFactory(serviceType,
-						configure).createService();
-				break;
-			case network_unicast :
-				service = NetworkServiceFactory.getServiceFactory(serviceType,
-						configure).createService();
-				break;
-			case network_multicast :
-				service = NetworkServiceFactory.getServiceFactory(serviceType,
-						configure).createService();
-				break;
-			case rmi_unicast :
-				service = NetworkServiceFactory.getServiceFactory(serviceType,
-						configure).createService();
-				break;
-			case rmi_activation :
-				service = NetworkServiceFactory.getServiceFactory(serviceType,
-						configure).createService();
-				break;
-			default :
-				break;
+		for (SERVICE_TYPE serviceType : SERVICE_TYPE.values()) {
+			service = ServiceFactory.getServiceFactory(serviceType)
+					.createService();
+			this.services.put(serviceType.toString(), service);
 		}
-		this.services.put(serviceType.toString(), service);
-	}
-	
-	private InetSocketAddress getEndpoint(int port) {
-		return this.getEndpoint(null, port);
-	}
-
-	private InetSocketAddress getEndpoint(InetAddress addr, int port) {
-		try {
-			if (addr == null) {
-				addr = InetAddress.getLocalHost();
-			}
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		return new InetSocketAddress(addr, port);
 	}
 
 	public static void main(String[] args) {
 		try {
-			Configure configure = new ConfigureImpl(THIS_CLAZZ,
-					Configure.FILE_SERVICE_PROPERTIES);
-			NetworkContainerImpl container = new NetworkContainerImpl(configure);
+			NetworkContainerImpl container = new NetworkContainerImpl();
 			container.startup();
 		} catch (Exception e) {
 			StackTraceElement[] current = e.getStackTrace();

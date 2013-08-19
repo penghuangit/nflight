@@ -9,8 +9,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.abreqadhabra.nflight.application.common.launcher.Config;
+import com.abreqadhabra.nflight.application.trash_server.Configure;
 import com.abreqadhabra.nflight.application.trash_server.net.socket.logic.IBusinessLogicHandler;
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class AsyncSocketServerAcceptor implements ISocketAcceptor {
@@ -31,11 +32,9 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 	private LinkedBlockingQueue<MessageDTO> outputQueue = new LinkedBlockingQueue<MessageDTO>();
 	private ConcurrentHashMap<String, Object> attrs = new ConcurrentHashMap<String, Object>();
 
-	public AsyncSocketServerAcceptor(Configure configure,
-			long sessionId,
+	public AsyncSocketServerAcceptor(Configure configure, long sessionId,
 			AsynchronousSocketChannel asyncSocketChannel,
-			MessageDTO messageDTO,
-			IBusinessLogicHandler logicHandler) {
+			MessageDTO messageDTO, IBusinessLogicHandler logicHandler) {
 		this.configure = configure;
 		this.sessionId = sessionId;
 		this.asyncSocketChannel = asyncSocketChannel;
@@ -51,7 +50,7 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 
 		NetworkChannelHelper.setChannelOption(this.getAsyncSocketChannel());
 
-		this.setReadByteBuffer(NetworkChannelHelper.getByteBuffer(this.configure
+		this.setReadByteBuffer(NetworkChannelHelper.getByteBuffer(Config
 				.getInt("nflight.socketserver.socket.async.bytebuffer.capacity")));
 	}
 
@@ -121,8 +120,9 @@ public class AsyncSocketServerAcceptor implements ISocketAcceptor {
 
 							// ?? 직렬화???
 							MessageDTO dto = null;
-//									MessageDTO dto = AsyncSocketServerAcceptor.this.messageDTO
-//									.transfer(AsyncSocketServerAcceptor.this.readByteBuffer);
+							// MessageDTO dto =
+							// AsyncSocketServerAcceptor.this.messageDTO
+							// .transfer(AsyncSocketServerAcceptor.this.readByteBuffer);
 
 							LOGGER.logp(
 									Level.FINER,

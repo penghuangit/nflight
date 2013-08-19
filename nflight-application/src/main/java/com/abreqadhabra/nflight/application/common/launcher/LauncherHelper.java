@@ -7,8 +7,11 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.Configuration;
 import com.abreqadhabra.nflight.application.common.launcher.exception.LauncherException;
+import com.abreqadhabra.nflight.application.conf.ApplicationConfiguration;
+import com.abreqadhabra.nflight.application.conf.ApplicationConfiguration.ENUM_APPLICATION_BOOT_OPTION;
+import com.abreqadhabra.nflight.application.conf.ApplicationConfiguration.ENUM_APPLICATION_BOOT_PROPERTIES;
+import com.abreqadhabra.nflight.application.conf.ApplicationConfiguration.ENUM_APPLICATION_SYSTEM_PROPERTIES;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 
@@ -22,26 +25,27 @@ public class LauncherHelper {
 
 		LOGGER.logp(Level.FINEST, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 				"Settings specified in the default security policy file : "
-						+ Configuration.FILE_BOOT_POLICY);
+						+ ApplicationConfiguration.PATH_APPLICATION_BOOT_POLICY);
 
 		System.setProperty(
-				Configuration.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString(),
-				Configuration.FILE_BOOT_POLICY.toString());
+				ENUM_APPLICATION_SYSTEM_PROPERTIES.JAVA_SECURITY_POLICY
+						.toString(),
+				ApplicationConfiguration.PATH_APPLICATION_BOOT_POLICY.toString());
 
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());
 		}
 	}
 
-	protected static Properties parseCMDLineArgs(String[] cmdLineArgs) throws Exception {
+	protected static Properties parseCMDLineArgs(String[] cmdLineArgs)
+			throws Exception {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		Properties argsProps = new Properties();
 		try {
 			// an iterator for the command line tokens
-			Iterator<String> options = Arrays.asList(cmdLineArgs)
-					.iterator();
+			Iterator<String> options = Arrays.asList(cmdLineArgs).iterator();
 
 			// process each command line token
 			while (options.hasNext()) {
@@ -51,43 +55,49 @@ public class LauncherHelper {
 				// handle long option --foo or --foo bar
 				if (key.startsWith("--")) {
 					key = stripLeadingHyphens(key);
-					if (key.equalsIgnoreCase(Configuration.BOOT_OPTION.gui.toString())) {
+					if (key.equalsIgnoreCase(ENUM_APPLICATION_BOOT_OPTION.gui
+							.toString())) {
 						argsProps.setProperty(
-								Configuration.BOOT_OPTION.gui.toString(), value);
+								ENUM_APPLICATION_BOOT_OPTION.gui
+										.toString(), value);
 					} else {
 						argsProps.setProperty(
-								Configuration.BOOT_OPTION.gui.toString(), "false");
+								ENUM_APPLICATION_BOOT_OPTION.gui
+										.toString(), "false");
 					}
 
-					if (key.equalsIgnoreCase(Configuration.BOOT_OPTION.service
+					if (key.equalsIgnoreCase(ENUM_APPLICATION_BOOT_OPTION.service
 							.toString())) {
 						value = options.next();
 						if (checkNotLeadingHyphens(key, value)) {
 							argsProps
 									.setProperty(
-											Configuration.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE
+											ApplicationConfiguration.ENUM_APPLICATION_BOOT_PROPERTIES.NFLIGHT_BOOT_OPTION_SERVICE
 													.toString(), value);
 						}
-					} else if (key.equalsIgnoreCase(Configuration.BOOT_OPTION.host
-							.toString())) {
+					} else if (key
+							.equalsIgnoreCase(ENUM_APPLICATION_BOOT_OPTION.host
+									.toString())) {
 						value = options.next();
 						if (checkNotLeadingHyphens(key, value)) {
 							argsProps
 									.setProperty(
-											Configuration.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_HOST
+											ApplicationConfiguration.ENUM_APPLICATION_BOOT_PROPERTIES.NFLIGHT_BOOT_OPTION_SERVICE_HOST
 													.toString(), value);
 						}
-					} else if (key.equalsIgnoreCase(Configuration.BOOT_OPTION.port
-							.toString())) {
+					} else if (key
+							.equalsIgnoreCase(ENUM_APPLICATION_BOOT_OPTION.port
+									.toString())) {
 						value = options.next();
 						if (checkNotLeadingHyphens(key, value)) {
 							argsProps
 									.setProperty(
-											Configuration.PROPERTIES_BOOT.NFLIGHT_BOOT_OPTION_SERVICE_PORT
+											ENUM_APPLICATION_BOOT_PROPERTIES.NFLIGHT_BOOT_OPTION_SERVICE_PORT
 													.toString(), value);
 						}
-					} else if (key.equalsIgnoreCase(Configuration.BOOT_OPTION.conf
-							.toString())) {
+					} else if (key
+							.equalsIgnoreCase(ENUM_APPLICATION_BOOT_OPTION.conf
+									.toString())) {
 
 						try {
 							value = options.next();
@@ -118,8 +128,8 @@ public class LauncherHelper {
 				}
 			}
 		} catch (Exception e) {
-	    throw new LauncherException("Command line arguments format error. ",
-					e);
+			throw new LauncherException(
+					"Command line arguments format error. ", e);
 		}
 
 		return argsProps;
@@ -146,9 +156,8 @@ public class LauncherHelper {
 
 		return str;
 	}
-	
-	private static boolean checkNotLeadingHyphens(String key,
-			String value) {
+
+	private static boolean checkNotLeadingHyphens(String key, String value) {
 		if (value.startsWith("--")) {
 			throw new IllegalArgumentException("No " + key
 					+ "name specified after \"--" + key + "\" option");

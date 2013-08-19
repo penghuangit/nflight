@@ -12,10 +12,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
+import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketService;
 import com.abreqadhabra.nflight.application.service.network.socket.ServerSocketChannelFactory;
-import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceException;
+import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -28,20 +29,19 @@ public class BlockingSocketServiceImpl extends AbstractSocketService {
 	private ThreadPoolExecutor threadPool;
 	private ServerSocketChannel channel;
 
-	public BlockingSocketServiceImpl(Configure configure,
-			InetSocketAddress endpoint) throws NFlightException {
-		super(configure.getBoolean(Configure.BLOCKING_RUNNING), configure);
+	public BlockingSocketServiceImpl(InetSocketAddress endpoint) throws NFlightException {
+		super(Config.getBoolean(SocketServiceConfiguration.BLOCKING_RUNNING));
 		this.threadPool = this
 				.getThreadPoolExecutor(
-						Configure.BLOCKING_SERVICE_THREAD_POOL_NAME,
-						Configure.BLOCKING_SERVICE_THREAD_POOL_MONITORING_DELAY_SECONDS,
-						Configure.BLOCKING_SERVICE_THREAD_POOL_MONITORING);
+						SocketServiceConfiguration.BLOCKING_SERVICE_THREAD_POOL_NAME,
+						SocketServiceConfiguration.BLOCKING_SERVICE_THREAD_POOL_MONITORING_DELAY_SECONDS,
+						SocketServiceConfiguration.BLOCKING_SERVICE_THREAD_POOL_MONITORING);
 		this.init(endpoint);
 	}
 
 	@Override
 	public void init(InetSocketAddress endpoint) throws NFlightException {
-		int backlog = this.configure.getInt(Configure.BLOCKING_BIND_BACKLOG);
+		int backlog = Config.getInt(SocketServiceConfiguration.BLOCKING_BIND_BACKLOG);
 		try {
 			// create a new server-socket channel
 			this.channel = this.createServerChannelFactory()
@@ -130,8 +130,7 @@ public class BlockingSocketServiceImpl extends AbstractSocketService {
 	public void receive(NetworkChannel socketChannel) {
 		SocketChannel socket = (SocketChannel) socketChannel;
 		@SuppressWarnings("unused")
-		Future<?> future = this.threadPool.submit(new BlockingSocketReceiver(
-				this.configure, socket));
+		Future<?> future = this.threadPool.submit(new BlockingSocketReceiver(socket));
 	}
 
 	@Override

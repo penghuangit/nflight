@@ -13,13 +13,13 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.trash_common.NetworkChannelDescriptor;
+import com.abreqadhabra.nflight.application.common.launcher.Config;
+import com.abreqadhabra.nflight.application.trash_server.Configure;
 import com.abreqadhabra.nflight.application.trash_server.net.async.handler.AsyncServerAcceptHandler;
 import com.abreqadhabra.nflight.application.trash_server.net.async.logic.IBusinessLogic;
 import com.abreqadhabra.nflight.application.trash_server.net.socket.AbstractSocketServerImpl;
 import com.abreqadhabra.nflight.application.trash_server.net.socket.ISocketAcceptor;
 import com.abreqadhabra.nflight.application.trash_server.net.socket.NetworkChannelHelper;
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class AsyncServerImpl extends AbstractSocketServerImpl {
@@ -32,8 +32,6 @@ public class AsyncServerImpl extends AbstractSocketServerImpl {
 	private AsynchronousChannelGroup threadGroup;
 	private AsynchronousServerSocketChannel asyncServerSocketChannel;
 
-
-	
 	private ConcurrentHashMap<Long, ISocketAcceptor> sessionMap = new ConcurrentHashMap<Long, ISocketAcceptor>();
 	private boolean isRunning = false;
 	private Future<AsynchronousSocketChannel> future;
@@ -42,8 +40,8 @@ public class AsyncServerImpl extends AbstractSocketServerImpl {
 
 	public AsyncServerImpl(Configure configure,
 			ThreadPoolExecutor threadPoolExecutor,
-			InetSocketAddress socketAddress,
-			IBusinessLogic logic) throws Exception {
+			InetSocketAddress socketAddress, IBusinessLogic logic)
+			throws Exception {
 		super(configure, threadPoolExecutor);
 		this.socketAddress = socketAddress;
 		this.logic = logic;
@@ -53,8 +51,8 @@ public class AsyncServerImpl extends AbstractSocketServerImpl {
 	@Override
 	public void init() {
 		try {
-			int initialSize = super.configure.getInt(
-					Configure.ASYNC_THREADPOOL_INITIALSIZE);
+			int initialSize = Config
+					.getInt(Configure.ASYNC_THREADPOOL_INITIALSIZE);
 			this.threadGroup = AsynchronousChannelGroup.withCachedThreadPool(
 					super.threadPoolExecutor, initialSize);
 		} catch (NumberFormatException | IOException e) {
@@ -68,8 +66,6 @@ public class AsyncServerImpl extends AbstractSocketServerImpl {
 		this.asyncServerSocketChannel = AsynchronousServerSocketChannel
 				.open(this.threadGroup);
 
-		
-		
 		return this.asyncServerSocketChannel.isOpen();
 	}
 
@@ -83,8 +79,7 @@ public class AsyncServerImpl extends AbstractSocketServerImpl {
 		try {
 			SocketAddress local = this.socketAddress;
 			// maximum number of pending connections
-			int backlog = super.configure.getInt(
-					Configure.ASYNC_BIND_BACKLOG);
+			int backlog = Config.getInt(Configure.ASYNC_BIND_BACKLOG);
 			// bind the server-socket channel to local address
 			this.asyncServerSocketChannel.bind(local, backlog);
 			// display a waiting message while ... waiting clients
@@ -101,9 +96,8 @@ public class AsyncServerImpl extends AbstractSocketServerImpl {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		this.asyncServerSocketChannel.accept(null,
-				new AsyncServerAcceptHandler(super.configure,logic,
+				new AsyncServerAcceptHandler(super.configure, logic,
 						asyncServerSocketChannel, this));
-		
 
 		try {
 			System.in.read();

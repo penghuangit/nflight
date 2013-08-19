@@ -15,11 +15,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
+import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketService;
 import com.abreqadhabra.nflight.application.service.network.socket.ServerSocketChannelFactory;
-import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceException;
-import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceHelper;
+import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
+import com.abreqadhabra.nflight.application.service.network.socket.helper.SocketServiceHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -32,9 +33,8 @@ public class UnicastSocketServiceImpl extends AbstractSocketService {
 	private DatagramChannel channel;
 	private Selector selector;
 
-	public UnicastSocketServiceImpl(Configure configure,
-			InetSocketAddress endpoint) throws NFlightException {
-		super(configure.getBoolean(Configure.UNICAST_RUNNING), configure);
+	public UnicastSocketServiceImpl(InetSocketAddress endpoint) throws NFlightException {
+		super(Config.getBoolean(SocketServiceConfiguration.UNICAST_RUNNING));
 		this.init(endpoint);
 	}
 
@@ -146,8 +146,8 @@ public class UnicastSocketServiceImpl extends AbstractSocketService {
 				.getMethodName();
 
 		try {
-			int capacity = this.configure
-					.getInt(Configure.UNICAST_INCOMING_BUFFER_CAPACITY);
+			int capacity = Config
+					.getInt(SocketServiceConfiguration.UNICAST_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = SocketServiceHelper
 					.getByteBuffer(capacity);
 

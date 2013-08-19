@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="com.abreqadhabra.nflight.application.service.network.rmi.AbstractRMIServant" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/network/rmi/AbstractRMIServant.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="297" width="276" x="1039" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="2" language="java" name="com.abreqadhabra.nflight.application.service.network.rmi.RMIServant" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/network/rmi/RMIServant.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="248" x="1039" y="374"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="3" language="java" 
+    name="com.abreqadhabra.nflight.application.service.network.rmi.impl.UnicastRMIServantImpl" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/network/rmi/impl/UnicastRMIServantImpl.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="268" x="731" y="374"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" 
+    name="com.abreqadhabra.nflight.application.service.network.rmi.impl.ActivatableRMIServantImpl" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/network/rmi/impl/ActivatableRMIServantImpl.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="225" width="322" x="1327" y="374"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" 
+    name="com.abreqadhabra.nflight.application.service.network.rmi.helper.UnicastRMIServantHelper" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/network/rmi/helper/UnicastRMIServantHelper.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="207" width="276" x="56" y="374"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="com.abreqadhabra.nflight.application.service.network.rmi.helper.RMIServantHelper" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/network/rmi/helper/RMIServantHelper.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="276" x="372" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" 
+    name="com.abreqadhabra.nflight.application.service.network.rmi.helper.ActivatableRMIServantHelper" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/network/rmi/helper/ActivatableRMIServantHelper.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="261" width="319" x="372" y="374"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" 
+    name="com.abreqadhabra.nflight.application.service.network.rmi.exception.RMIServantException" 
+    project="nflight-application" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/network/rmi/exception/RMIServantException.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="291" x="41" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <realization id="9">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <generalization id="10">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="11">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <generalization id="12">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="13">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

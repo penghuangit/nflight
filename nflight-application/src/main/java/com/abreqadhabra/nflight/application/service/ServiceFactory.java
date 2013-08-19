@@ -1,10 +1,71 @@
 package com.abreqadhabra.nflight.application.service;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+
+import com.abreqadhabra.nflight.application.common.launcher.Config;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.network.RMIServantFactoryImpl;
+import com.abreqadhabra.nflight.application.service.network.SocketServiceFactoryImpl;
+import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfiguration;
+import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 
-public interface ServiceFactory {
+public abstract class ServiceFactory {
 
-	public Runnable createService() throws NFlightException,
+	public static ServiceFactory getServiceFactory(SERVICE_TYPE serviceType) {
+		switch (serviceType) {
+			case network_blocking :
+				return new SocketServiceFactoryImpl(serviceType,
+						getEndpoint(Config
+								.getInt(SocketServiceConfiguration.BLOCKING_DEFAULT_PORT)));
+			case network_nonblocking :
+				return new SocketServiceFactoryImpl(serviceType,
+						getEndpoint(Config
+								.getInt(SocketServiceConfiguration.NONBLOCKING_DEFAULT_PORT)));
+			case network_async :
+				return new SocketServiceFactoryImpl(serviceType,
+						getEndpoint(Config
+								.getInt(SocketServiceConfiguration.ASYNC_DEFAULT_PORT)));
+			case network_unicast :
+				return new SocketServiceFactoryImpl(serviceType,
+						getEndpoint(Config
+								.getInt(SocketServiceConfiguration.UNICAST_DEFAULT_PORT)));
+			case network_multicast :
+				return new SocketServiceFactoryImpl(serviceType,
+						getEndpoint(Config
+								.getInt(SocketServiceConfiguration.BLOCKING_DEFAULT_PORT)));
+			case rmi_unicast :
+				return new RMIServantFactoryImpl(serviceType,
+						getEndpoint(Config.getInt(RMIServantConfiguration.STR_RMI_DEFAULT_PORT)));
+			case rmi_activation :
+				return new RMIServantFactoryImpl(serviceType,
+						getEndpoint(Config
+								.getInt(RMIServantConfiguration.STR_RMI_DEFAULT_PORT)));
+			default :
+				break;
+		}
+		return null;
+	}
+
+	public abstract Runnable createService() throws NFlightException,
 			NFlightRemoteException;
+
+	private static InetSocketAddress getEndpoint(int port) {
+		return getEndpoint(null, port);
+	}
+
+	private static InetSocketAddress getEndpoint(InetAddress addr, int port) {
+		try {
+			if (addr == null) {
+				addr = InetAddress.getLocalHost();
+			}
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		return new InetSocketAddress(addr, port);
+	}
+
 }

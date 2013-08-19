@@ -6,9 +6,10 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.Configuration;
 import com.abreqadhabra.nflight.application.common.launcher.command.Command;
 import com.abreqadhabra.nflight.application.common.launcher.command.Invoker;
+import com.abreqadhabra.nflight.application.common.launcher.conf.LauncherConfiguration;
+import com.abreqadhabra.nflight.application.conf.ApplicationConfiguration;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 
@@ -41,25 +42,25 @@ public class ServiceLauncher implements Launcher {
 		if (cmdLineArgs.length == 0) {
 			LOGGER.logp(Level.FINEST, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					"Settings specified in the default property file : "
-							+ Configure.FILE_BOOT_PROPERTIES);
+							+ LauncherConfiguration.FILE_BOOT_PROPERTIES);
 
 			// Settings specified in the default property file
 			props = PropertyFile
-					.readPropertyFilePath(Configure.FILE_BOOT_PROPERTIES);
+					.readPropertyFilePath(LauncherConfiguration.FILE_BOOT_PROPERTIES);
 
 		} else if (cmdLineArgs.length > 1
-				&& cmdLineArgs[0].equals(Configuration.BOOT_OPTION_CONF)) {
+				&& cmdLineArgs[0].equals(ApplicationConfiguration.STR_APPLICATION_BOOT_OPTION_CONF)) {
 
 			LOGGER.logp(Level.FINEST, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					"Settings specified in a property file : "
-							+ Configure.FILE_BOOT_PROPERTIES);
+							+ LauncherConfiguration.FILE_BOOT_PROPERTIES);
 
 			String propsPath = cmdLineArgs[0];
-			Path path = Configure.CODE_BASE_PATH.resolve(propsPath);
+			Path path = LauncherConfiguration.PATH_APPLICATION_CODEBASE.resolve(propsPath);
 			// Settings specified in a property file
 			props = PropertyFile.readPropertyFilePath(path);
 		} else if (cmdLineArgs.length > 0
-				&& cmdLineArgs[0].startsWith(Configuration.BOOT_OPTION_PREFIX)) {
+				&& cmdLineArgs[0].startsWith(ApplicationConfiguration.STR_PREFIX_APPLICATION_BOOT_OPTION)) {
 
 			LOGGER.logp(
 					Level.FINEST,

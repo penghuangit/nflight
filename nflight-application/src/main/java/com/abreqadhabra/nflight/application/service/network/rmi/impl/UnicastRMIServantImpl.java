@@ -1,7 +1,6 @@
 package com.abreqadhabra.nflight.application.service.network.rmi.impl;
 
 import java.net.InetSocketAddress;
-import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -9,11 +8,11 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.launcher.Configure;
+import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.service.network.rmi.AbstractRMIServant;
-import com.abreqadhabra.nflight.application.service.network.rmi.RMIServantException;
-import com.abreqadhabra.nflight.application.service.network.rmi.RMIServantHelper;
-import com.abreqadhabra.nflight.common.exception.NFlightException;
+import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfiguration;
+import com.abreqadhabra.nflight.application.service.network.rmi.exception.RMIServantException;
+import com.abreqadhabra.nflight.application.service.network.rmi.helper.UnicastRMIServantHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -23,11 +22,11 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public UnicastRMIServantImpl(Configure configure, InetSocketAddress endpoint)
+	public UnicastRMIServantImpl(InetSocketAddress endpoint)
 			throws NFlightRemoteException {
-		super(configure.getBoolean(Configure.UNICAST_RMI_RUNNING), configure,
-				endpoint.getAddress(), endpoint.getPort(), configure
-						.get(Configure.UNICAST_RMI_BOUND_NAME));
+		super(Config.getBoolean(RMIServantConfiguration.STR_UNICAST_RMI_RUNNING), endpoint
+				.getAddress(), endpoint.getPort(), Config
+				.get(RMIServantConfiguration.STR_UNICAST_RMI_BOUND_NAME));
 	}
 
 	@Override
@@ -35,13 +34,14 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
-			if (RMIServantHelper.isActivatedRegistry(this.registry,
+			if (UnicastRMIServantHelper.isActivatedRegistry(this.registry,
 					this.boundName)) {
 				throw new RMIServantException(this.boundName
 						+ "가 레지스트리에 이미 등록되어 있습니다.");
 			} else {
 				Remote stub = UnicastRemoteObject.exportObject(this, 0);
-				RMIServantHelper.rebind(this.registry, this.boundName, stub);
+				UnicastRMIServantHelper.rebind(this.registry, this.boundName,
+						stub);
 				LOGGER.logp(
 						Level.FINER,
 						THIS_CLAZZ.getName(),
@@ -57,15 +57,9 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 	}
 
 	@Override
-	protected void stop() throws NFlightException, NFlightRemoteException {
-		try {
-			this.registry.unbind(this.boundName);
-			this.interrupt();
-		} catch (RemoteException | NotBoundException e) {
-			throw new RMIServantException(e);
-		} catch (Exception e) {
-			throw new UnexpectedRemoteException(e);
-		}
+	protected void stop() throws NFlightRemoteException {
+		UnicastRMIServantHelper.unbind(this.registry, this.boundName);
+		this.interrupt();
 	}
 
 }
