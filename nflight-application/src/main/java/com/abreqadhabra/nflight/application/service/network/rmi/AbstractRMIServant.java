@@ -28,6 +28,20 @@ public abstract class AbstractRMIServant extends AbstractRunnable
 	public AbstractRMIServant() {
 	}
 
+	/**
+	 * Instantiates a new abstract rmi servant.
+	 * 
+	 * @param isRunning
+	 *            the is running
+	 * @param addr
+	 *            the addr
+	 * @param port
+	 *            the port
+	 * @param serviceName
+	 *            the service name
+	 * @throws NFlightRemoteException
+	 *             the n flight remote exception
+	 */
 	public AbstractRMIServant(boolean isRunning, InetAddress addr, int port,
 			String serviceName) throws NFlightRemoteException {
 		this.isRunning = isRunning;

@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.network.socket.impl;
+package com.abreqadhabra.nflight.application.service.network.socket.impl.stream;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
-import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfig;
 import com.abreqadhabra.nflight.application.service.network.socket.helper.SocketServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -37,7 +37,7 @@ public class BlockingSocketReceiver implements Runnable {
 			}
 
 			int capacity = Config
-					.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_BLOCKING_INCOMING_BUFFER_CAPACITY);
+					.getInt(SocketServiceConfig.KEY_INT_SOCKET_BLOCKING_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = SocketServiceHelper
 					.getByteBuffer(capacity);
 			int numRead = this.socket.read(incomingByteBuffer);

@@ -15,8 +15,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.ENUM_SERVICE_TYPE;
-import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfig.ENUM_SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfig;
 import com.abreqadhabra.nflight.application.service.network.socket.helper.SocketServiceHelper;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -34,7 +34,7 @@ public class SocketFactory {
 
 	public SocketChannel createBlockingSocketChannel(
 			InetSocketAddress endpoint,
-			SocketServiceConfiguration.ENUM_SERVICE_TYPE type) throws IOException,
+			SocketServiceConfig.ENUM_SERVICE_TYPE type) throws IOException,
 			InterruptedException, ExecutionException {
 
 		return (SocketChannel) this.getNetworkChannel(

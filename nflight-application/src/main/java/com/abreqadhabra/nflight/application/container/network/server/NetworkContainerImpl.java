@@ -8,9 +8,9 @@ import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.common.launcher.LauncherHelper;
 import com.abreqadhabra.nflight.application.common.launcher.concurrent.thread.ThreadHelper;
 import com.abreqadhabra.nflight.application.container.Container;
-import com.abreqadhabra.nflight.application.service.ServiceFactory;
-import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration;
-import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.ENUM_SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfig;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfig.ENUM_SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.network.NetworkServiceFactory;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -25,8 +25,8 @@ public class NetworkContainerImpl implements Container {
 	public NetworkContainerImpl() throws NFlightException,
 			NFlightRemoteException {
 
-		// 시스템프로터피 등록
-		Config.load(THIS_CLAZZ, ServiceConfiguration.PATH_SERVICE_PROPERTIES);
+		// 시스템프로퍼티 등록
+		Config.load(THIS_CLAZZ, ServiceConfig.PATH_SERVICE_PROPERTIES);
 
 		this.isRunning = true;
 		this.init();
@@ -44,12 +44,11 @@ public class NetworkContainerImpl implements Container {
 		}
 	}
 
-	private void init() throws NFlightException,
-			NFlightRemoteException {
+	private void init() throws NFlightException, NFlightRemoteException {
 		Runnable service = null;
 		for (ENUM_SERVICE_TYPE serviceType : ENUM_SERVICE_TYPE.values()) {
-			service = ServiceFactory.getServiceFactory(serviceType)
-					.createService();
+			service = NetworkServiceFactory.getNetworkServiceServiceFactory(
+					serviceType).createService();
 			this.services.put(serviceType.toString(), service);
 		}
 	}

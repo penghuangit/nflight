@@ -25,8 +25,8 @@ import java.util.logging.Logger;
 import javax.net.ServerSocketFactory;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
-import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration.ENUM_SERVICE_TYPE;
-import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfig.ENUM_SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfig;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -40,15 +40,17 @@ public class SocketServiceHelper {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
-		Config.set(SocketServiceConfiguration.KEY_INT_SOCKET_CHANNEL_OPTION_IP_MULTICAST_IF,
+		Config.set(
+				SocketServiceConfig.KEY_INT_SOCKET_CHANNEL_OPTION_IP_MULTICAST_IF,
 				networkInterfaceName);
 
 		LOGGER.logp(
 				Level.FINER,
 				CLAZZ_NAME,
 				METHOD_NAME,
-				SocketServiceConfiguration.KEY_INT_SOCKET_CHANNEL_OPTION_IP_MULTICAST_IF + ": "
-						+ Config.get(SocketServiceConfiguration.KEY_INT_SOCKET_CHANNEL_OPTION_IP_MULTICAST_IF));
+				SocketServiceConfig.KEY_INT_SOCKET_CHANNEL_OPTION_IP_MULTICAST_IF
+						+ ": "
+						+ Config.get(SocketServiceConfig.KEY_INT_SOCKET_CHANNEL_OPTION_IP_MULTICAST_IF));
 
 		setChannelOption(socketChannel, type);
 
@@ -61,7 +63,8 @@ public class SocketServiceHelper {
 
 		try {
 
-			Config.load(THIS_CLAZZ, SocketServiceConfiguration.PATH_CHANNEL_OPTION_PROPERTIES);
+			Config.load(THIS_CLAZZ,
+					SocketServiceConfig.PATH_CHANNEL_OPTION_PROPERTIES);
 
 			Set<SocketOption<?>> options = socketChannel.supportedOptions();
 
@@ -73,7 +76,7 @@ public class SocketServiceHelper {
 			for (SocketOption<?> option : options) {
 				String optionName = option.name();
 
-				String optionKey = SocketServiceConfiguration.KEY_STR_PREFIX_CHANNEL_OPTION
+				String optionKey = SocketServiceConfig.KEY_STR_PREFIX_CHANNEL_OPTION
 						+ type.toString() + "." + optionName.toLowerCase();
 
 				LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME,

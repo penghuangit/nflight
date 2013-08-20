@@ -4,8 +4,8 @@ import java.nio.file.Path;
 
 import com.abreqadhabra.nflight.common.util.IOStream;
 
-public interface ApplicationConfiguration {
-	static final Class<ApplicationConfiguration> THIS_CLAZZ = ApplicationConfiguration.class;
+public interface ApplicationConfig {
+	static final Class<ApplicationConfig> THIS_CLAZZ = ApplicationConfig.class;
 	static final Path PATH_APPLICATION_CODEBASE = IOStream
 			.getCodebasePath(THIS_CLAZZ.getName());
 

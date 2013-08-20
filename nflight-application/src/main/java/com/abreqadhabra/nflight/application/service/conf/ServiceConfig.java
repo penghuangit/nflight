@@ -3,9 +3,9 @@ package com.abreqadhabra.nflight.application.service.conf;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.abreqadhabra.nflight.application.conf.ApplicationConfiguration;
+import com.abreqadhabra.nflight.application.conf.ApplicationConfig;
 
-public interface ServiceConfiguration extends ApplicationConfiguration {
+public interface ServiceConfig extends ApplicationConfig {
 
 	static Path PATH_SERVICE_PROPERTIES = Paths
 			.get("com/abreqadhabra/nflight/application/service/conf/service.properties");

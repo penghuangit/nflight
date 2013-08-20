@@ -5,8 +5,14 @@ import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public interface ThreadPoolExecutorService {
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 
+public interface ThreadPool {
+
+	public ThreadPoolExecutor getThreadPoolExecutor(String poolName,
+			boolean isThreadPoolMonitoring, int MonitoringDelaySeconds)
+			throws NFlightException;
+			
 	public ThreadPoolExecutor createNewThreadPool();
 
 	public int getCorePoolSize();

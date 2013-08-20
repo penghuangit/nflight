@@ -3,9 +3,9 @@ package com.abreqadhabra.nflight.application.service.network.socket.conf;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfig;
 
-public interface SocketServiceConfiguration extends ServiceConfiguration {
+public interface SocketServiceConfig extends ServiceConfig {
 
 	
 //	static enum KEY_ENUM_SOCKET_BLOCKING {

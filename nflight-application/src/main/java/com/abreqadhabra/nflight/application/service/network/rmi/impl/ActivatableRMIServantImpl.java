@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.service.network.rmi.AbstractRMIServant;
-import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfiguration;
+import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfig;
 import com.abreqadhabra.nflight.application.service.network.rmi.exception.RMIServantException;
 import com.abreqadhabra.nflight.application.service.network.rmi.helper.ActivatableRMIServantHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
@@ -46,28 +46,27 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 
 	public ActivatableRMIServantImpl(InetSocketAddress endpoint)
 			throws NFlightRemoteException {
-		super(Config.getBoolean(RMIServantConfiguration.KEY_BOO_RMI_ACTIVATABLE_RUNNING), endpoint
-				.getAddress(), endpoint.getPort(), Config
-				.get(RMIServantConfiguration.KEY_STR_RMI_ACTIVATABLE_BOUND_NAME));
+		super(Config
+				.getBoolean(RMIServantConfig.KEY_BOO_RMI_ACTIVATABLE_RUNNING),
+				endpoint.getAddress(), endpoint.getPort(),
+				Config.get(RMIServantConfig.KEY_STR_RMI_ACTIVATABLE_BOUND_NAME));
 	}
 
 	@Override
 	protected void start() throws NFlightRemoteException {
+		if (this.isRunning) {
+			ActivatableRMIServantHelper.checkActivationSystem();
+			bind();
+		}
+	}
+
+	private void bind() throws NFlightRemoteException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
-			if (this.isRunning) {
-				ActivatableRMIServantHelper
-						.checkActivationSystem();
-			}
-			String className = THIS_CLAZZ.getName();
-			String codebase = RMIServantConfiguration.STR_PREFIX_RMI_ACTIVATABLE_CODEBASE
-					+ RMIServantConfiguration.PATH_APPLICATION_CODEBASE.toString();
-			String policyfile = RMIServantConfiguration.PATH_RMI_ACTIVATABLE_POLICY.toString();
-			MarshalledObject<Object> data = new MarshalledObject<Object>(
-					RMIServantConfiguration.PATH_RMI_ACTIVATABLE_MARSHALLED_OBJECT.toString());
-			Remote stub = ActivatableRMIServantHelper.install(className,
-					codebase, policyfile, data);
+
+			Remote stub = exportObjectRemoteObject();
+
 			LOGGER.logp(Level.FINER, THIS_CLAZZ.getName(), METHOD_NAME,
 					"Activation descriptor registered : " + stub);
 			this.registry.rebind(this.boundName, stub);
@@ -77,11 +76,29 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 					METHOD_NAME,
 					stub + " Stub bound in registry."
 							+ Arrays.toString(this.registry.list()));
+			// display a waiting message while ... waiting clients
+			LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
+					METHOD_NAME, "Waiting for connections ..."
+							+ this.boundName);
 		} catch (IOException e) {
 			throw new RMIServantException(e);
 		} catch (Exception e) {
 			throw new UnexpectedRemoteException(e);
 		}
+
+	}
+
+	private Remote exportObjectRemoteObject() throws IOException {
+		String className = THIS_CLAZZ.getName();
+		String codebase = RMIServantConfig.STR_PREFIX_RMI_ACTIVATABLE_CODEBASE
+				+ RMIServantConfig.PATH_APPLICATION_CODEBASE.toString();
+		String policyfile = RMIServantConfig.PATH_RMI_ACTIVATABLE_POLICY
+				.toString();
+		MarshalledObject<Object> data = new MarshalledObject<Object>(
+				RMIServantConfig.PATH_RMI_ACTIVATABLE_MARSHALLED_OBJECT
+						.toString());
+		return ActivatableRMIServantHelper.install(className, codebase,
+				policyfile, data);
 	}
 
 	@Override

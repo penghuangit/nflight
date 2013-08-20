@@ -1,25 +1,21 @@
 package com.abreqadhabra.nflight.application.service.network.socket;
 
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.common.launcher.concurrent.AbstractRunnable;
 import com.abreqadhabra.nflight.application.common.launcher.concurrent.thread.ThreadHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public abstract class AbstractSocketService extends AbstractRunnable
-		implements
-			SocketService {
-	private static Class<AbstractSocketService> THIS_CLAZZ = AbstractSocketService.class;
+public abstract class AbstractSocketServiceRunnable extends AbstractRunnable {
+	private static Class<AbstractSocketServiceRunnable> THIS_CLAZZ = AbstractSocketServiceRunnable.class;
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	protected boolean isRunning;
 
-	public AbstractSocketService(boolean isRunning) {
+	public AbstractSocketServiceRunnable(boolean isRunning) {
 		this.isRunning = isRunning;
 		this.setShutdownHook();
 	}
@@ -28,19 +24,6 @@ public abstract class AbstractSocketService extends AbstractRunnable
 	protected void setShutdownHook() {
 		super.setShutdownHookThread(new Thread(this
 				.getShutdownHook(this.isRunning)));
-	}
-
-	protected ThreadPoolExecutor getThreadPoolExecutor(
-			String threadPoolNameKey,
-			String threadPoolMonitoringDelaySecondsKey,
-			String isThreadPoolMonitoringKey) throws NFlightException {
-		String threadPoolName = Config.get(threadPoolNameKey);
-		int threadPoolMonitoringDelaySeconds = Config
-				.getInt(threadPoolMonitoringDelaySecondsKey);
-		boolean isThreadPoolMonitoring = Config
-				.getBoolean(threadPoolMonitoringDelaySecondsKey);
-		return ThreadHelper.getThreadPoolExecutor(threadPoolName,
-				isThreadPoolMonitoring, threadPoolMonitoringDelaySeconds);
 	}
 
 	private Runnable getShutdownHook(boolean isRunning) {
@@ -63,7 +46,7 @@ public abstract class AbstractSocketService extends AbstractRunnable
 				try {
 					LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME,
 							"Stopping...");
-					AbstractSocketService.this.stop();
+					AbstractSocketServiceRunnable.this.stop();
 					LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME,
 							"Stopped");
 				} catch (Exception e) {

@@ -10,12 +10,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
+import com.abreqadhabra.nflight.application.common.launcher.concurrent.executor.monitor.ThreadPoolMonitorServiceImpl;
 import com.abreqadhabra.nflight.application.common.launcher.conf.LauncherConfiguration;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class ThreadPoolExecutorServiceImpl implements ThreadPoolExecutorService {
-	private static Class<ThreadPoolExecutorServiceImpl> THIS_CLAZZ = ThreadPoolExecutorServiceImpl.class;
+public class ThreadPoolImpl implements ThreadPool {
+	private static Class<ThreadPoolImpl> THIS_CLAZZ = ThreadPoolImpl.class;
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private int corePoolSize;
@@ -24,21 +25,24 @@ public class ThreadPoolExecutorServiceImpl implements ThreadPoolExecutorService 
 	private TimeUnit timeUnit;
 	private int queueCapacity;
 	private ArrayBlockingQueue<Runnable> arrayBlockingQueue;
-	private ThreadFactory threadFactory ;
+	private ThreadFactory threadFactory;
 	private RejectedExecutionHandler rejectedExecutionHandler;
-	
-	public ThreadPoolExecutorServiceImpl() throws NFlightException {
-		
+
+	public ThreadPoolImpl() throws NFlightException {
 		Config.load(THIS_CLAZZ,
 				LauncherConfiguration.FILE_THREAD_POOL_PROPERTIES);
-		this.corePoolSize = Integer.parseInt(Config
-				.get(LauncherConfiguration.LAUNCHER_THREAD_POOL_CORE_POOL_SIZE));
-		this.maximumPoolSize = Integer.parseInt(Config
-				.get(LauncherConfiguration.LAUNCHER_THREAD_POOL_MAXIMUM_POOL_SIZE));
-		this.keepAliveTime = Integer.parseInt(Config
-				.get(LauncherConfiguration.LAUNCHER_THREAD_POOL_KEEP_ALIVE_TIME));
-		this.queueCapacity = Integer.parseInt(Config
-				.get(LauncherConfiguration.LAUNCHER_THREAD_POOL_QUEUE_CAPACITY));
+		this.corePoolSize = Integer
+				.parseInt(Config
+						.get(LauncherConfiguration.LAUNCHER_THREAD_POOL_CORE_POOL_SIZE));
+		this.maximumPoolSize = Integer
+				.parseInt(Config
+						.get(LauncherConfiguration.LAUNCHER_THREAD_POOL_MAXIMUM_POOL_SIZE));
+		this.keepAliveTime = Integer
+				.parseInt(Config
+						.get(LauncherConfiguration.LAUNCHER_THREAD_POOL_KEEP_ALIVE_TIME));
+		this.queueCapacity = Integer
+				.parseInt(Config
+						.get(LauncherConfiguration.LAUNCHER_THREAD_POOL_QUEUE_CAPACITY));
 		this.timeUnit = TimeUnit.SECONDS;
 		this.arrayBlockingQueue = new ArrayBlockingQueue<Runnable>(
 				this.getQueueCapacity());
@@ -47,15 +51,35 @@ public class ThreadPoolExecutorServiceImpl implements ThreadPoolExecutorService 
 	}
 
 	@Override
+	public ThreadPoolExecutor getThreadPoolExecutor(String poolName,
+			boolean isThreadPoolMonitoring, int MonitoringDelaySeconds)
+			throws NFlightException {
+		ThreadPoolExecutor threadPoolExecutor = this.createNewThreadPool();
+		threadPoolExecutor.allowCoreThreadTimeOut(true);
+
+		if (isThreadPoolMonitoring) {
+			Thread t = Thread.currentThread();
+			ThreadGroup threadGroup = t.getThreadGroup();
+			// Created executor is set to ThreadPoolMonitorService...
+			ThreadPoolMonitorServiceImpl tpms = new ThreadPoolMonitorServiceImpl(
+					MonitoringDelaySeconds, threadGroup, poolName);
+			tpms.setExecutor(threadPoolExecutor);
+			// ThreadPoolMonitorService is started...
+			Thread monitor = new Thread(tpms);
+			monitor.start();
+		}
+		return threadPoolExecutor;
+	}
+
+	@Override
 	public ThreadPoolExecutor createNewThreadPool() {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
-	        
+
 		ThreadPoolExecutor executor = new ThreadPoolExecutor(
 				this.getCorePoolSize(), this.getMaximumPoolSize(),
-				this.getKeepAliveTime(), getTimeUnit(),
-				this.getArrayBlockingQueue(),
-				this.threadFactory,
+				this.getKeepAliveTime(), this.getTimeUnit(),
+				this.getArrayBlockingQueue(), this.threadFactory,
 				this.getRejectedExecutionHandler());
 
 		LOGGER.logp(Level.FINER, THIS_CLAZZ.getSimpleName(), METHOD_NAME,

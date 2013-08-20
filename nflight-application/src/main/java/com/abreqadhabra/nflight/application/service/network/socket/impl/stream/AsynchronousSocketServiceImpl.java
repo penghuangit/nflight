@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.network.socket.impl;
+package com.abreqadhabra.nflight.application.service.network.socket.impl.stream;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -14,44 +14,51 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
-import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketService;
-import com.abreqadhabra.nflight.application.service.network.socket.ServerSocketChannelFactory;
-import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketServiceRunnable;
+import com.abreqadhabra.nflight.application.service.network.socket.SocketService;
+import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfig;
 import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
 import com.abreqadhabra.nflight.application.trash_server.net.socket.NetworkChannelHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class AsynchronousSocketServiceImpl extends AbstractSocketService {
+public class AsynchronousSocketServiceImpl
+		extends
+			AbstractSocketServiceRunnable implements SocketService {
 	private static Class<AsynchronousSocketServiceImpl> THIS_CLAZZ = AsynchronousSocketServiceImpl.class;
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private ThreadPoolExecutor threadPool;
 	private AsynchronousServerSocketChannel channel;
+	private InetSocketAddress endpoint;
+	private ThreadPoolExecutor threadPool;
 
-	public AsynchronousSocketServiceImpl(InetSocketAddress endpoint)
+	public AsynchronousSocketServiceImpl(
+			AsynchronousServerSocketChannel channel,
+			InetSocketAddress endpoint, ThreadPoolExecutor threadPool)
 			throws NFlightException {
-		super(Config.getBoolean(SocketServiceConfiguration.KEY_BOO_SOCKET_ASYNC_RUNNING));
-		this.threadPool = this.getThreadPoolExecutor(
-				SocketServiceConfiguration.KEY_STR_SOCKET_ASYNC_SERVICE_THREAD_POOL_NAME,
-				SocketServiceConfiguration.KEY_INT_SOCKET_ASYNC_SERVICE_THREAD_POOL_MONITORING_DELAY_SECONDS,
-				SocketServiceConfiguration.KEY_BOO_SOCKET_ASYNC_SERVICE_THREAD_POOL_MONITORING);
-		this.init(endpoint);
+		super(
+				Config.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_ASYNC_RUNNING));
+		this.channel = channel;
+		this.endpoint = endpoint;
+		this.threadPool = threadPool;
 	}
 
 	@Override
-	public void init(InetSocketAddress endpoint) throws NFlightException {
+	public void bind() throws NFlightException {
+		final Thread CURRENT_THREAD = Thread.currentThread();
+		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
+				.getMethodName();
 		try {
-			int initialSize = Config
-					.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_ASYNC_THREADPOOL_INITIALSIZE);
 			// maximum number of pending connections
-			int backlog = Config.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_ASYNC_BIND_BACKLOG);
-			this.channel = this.createServerChannelFactory()
-					.createAsyncServerSocketChannel(this.threadPool,
-							initialSize, endpoint, backlog);
-		} catch (IOException | InterruptedException | ExecutionException e) {
+			int backlog = Config
+					.getInt(SocketServiceConfig.KEY_INT_SOCKET_ASYNC_BIND_BACKLOG);
+			this.channel.bind(this.endpoint, backlog);
+			// display a waiting message while ... waiting clients
+			LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+					"Waiting for connections ..." + this.endpoint);
+		} catch (IOException e) {
 			throw new SocketServiceException(e);
 		} catch (Exception e) {
 			throw new UnexpectedException(e);
@@ -60,9 +67,8 @@ public class AsynchronousSocketServiceImpl extends AbstractSocketService {
 
 	@Override
 	public void start() throws NFlightException {
-		final Thread CURRENT_THREAD = Thread.currentThread();
-		CURRENT_THREAD.getStackTrace()[1].getMethodName();
 		try {
+			this.bind();
 			while (this.isRunning) {
 				Future<AsynchronousSocketChannel> future = this.channel
 						.accept();
@@ -70,8 +76,9 @@ public class AsynchronousSocketServiceImpl extends AbstractSocketService {
 				this.accept(socket);
 			}
 		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SocketServiceException(e);
+		} catch (Exception e) {
+			throw new UnexpectedException(e);
 		}
 	}
 
@@ -130,7 +137,7 @@ public class AsynchronousSocketServiceImpl extends AbstractSocketService {
 		AsynchronousSocketChannel socket = (AsynchronousSocketChannel) socketChannel;
 		try {
 			int capacity = Config
-					.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_ASYNC_INCOMING_BUFFER_CAPACITY);
+					.getInt(SocketServiceConfig.KEY_INT_SOCKET_ASYNC_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = NetworkChannelHelper
 					.getByteBuffer(capacity);
 			Integer numRead = socket.read(incomingByteBuffer).get();
@@ -153,10 +160,5 @@ public class AsynchronousSocketServiceImpl extends AbstractSocketService {
 		} catch (Exception e) {
 			throw new UnexpectedException(e);
 		}
-	}
-
-	@Override
-	public ServerSocketChannelFactory createServerChannelFactory() {
-		return new ServerSocketChannelFactory();
 	}
 }

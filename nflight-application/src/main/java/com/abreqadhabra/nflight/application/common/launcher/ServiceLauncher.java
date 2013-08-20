@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.application.common.launcher.command.Command;
 import com.abreqadhabra.nflight.application.common.launcher.command.Invoker;
 import com.abreqadhabra.nflight.application.common.launcher.conf.LauncherConfiguration;
-import com.abreqadhabra.nflight.application.conf.ApplicationConfiguration;
+import com.abreqadhabra.nflight.application.conf.ApplicationConfig;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 
@@ -49,7 +49,7 @@ public class ServiceLauncher implements Launcher {
 					.readPropertyFilePath(LauncherConfiguration.FILE_BOOT_PROPERTIES);
 
 		} else if (cmdLineArgs.length > 1
-				&& cmdLineArgs[0].equals(ApplicationConfiguration.STR_APPLICATION_BOOT_OPTION_CONF)) {
+				&& cmdLineArgs[0].equals(ApplicationConfig.STR_APPLICATION_BOOT_OPTION_CONF)) {
 
 			LOGGER.logp(Level.FINEST, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 					"Settings specified in a property file : "
@@ -60,7 +60,7 @@ public class ServiceLauncher implements Launcher {
 			// Settings specified in a property file
 			props = PropertyFile.readPropertyFilePath(path);
 		} else if (cmdLineArgs.length > 0
-				&& cmdLineArgs[0].startsWith(ApplicationConfiguration.STR_PREFIX_APPLICATION_BOOT_OPTION)) {
+				&& cmdLineArgs[0].startsWith(ApplicationConfig.STR_PREFIX_APPLICATION_BOOT_OPTION)) {
 
 			LOGGER.logp(
 					Level.FINEST,

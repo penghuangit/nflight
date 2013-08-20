@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.Env;
-import com.abreqadhabra.nflight.application.common.launcher.concurrent.executor.ThreadPoolExecutorServiceImpl;
+import com.abreqadhabra.nflight.application.common.launcher.concurrent.executor.ThreadPoolImpl;
 import com.abreqadhabra.nflight.application.common.launcher.concurrent.executor.monitor.ThreadPoolMonitorServiceImpl;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -57,27 +57,5 @@ public class ThreadHelper {
 		return;
 	}
 
-	public static ThreadPoolExecutor getThreadPoolExecutor(String poolName,
-			boolean isThreadPoolMonitoring, int MonitoringDelaySeconds)
-			throws NFlightException {
-		ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutorServiceImpl()
-				.createNewThreadPool();
-		threadPoolExecutor.allowCoreThreadTimeOut(true);
 
-		if (isThreadPoolMonitoring) {
-
-			Thread t = Thread.currentThread();
-			ThreadGroup threadGroup = t.getThreadGroup();
-
-			// Created executor is set to ThreadPoolMonitorService...
-			ThreadPoolMonitorServiceImpl tpms = new ThreadPoolMonitorServiceImpl(
-					MonitoringDelaySeconds, threadGroup, poolName);
-			tpms.setExecutor(threadPoolExecutor);
-
-			// ThreadPoolMonitorService is started...
-			Thread monitor = new Thread(tpms);
-			monitor.start();
-		}
-		return threadPoolExecutor;
-	}
 }

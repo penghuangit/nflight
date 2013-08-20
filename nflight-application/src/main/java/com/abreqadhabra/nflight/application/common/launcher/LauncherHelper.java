@@ -8,10 +8,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.exception.LauncherException;
-import com.abreqadhabra.nflight.application.conf.ApplicationConfiguration;
-import com.abreqadhabra.nflight.application.conf.ApplicationConfiguration.ENUM_APPLICATION_BOOT_OPTION;
-import com.abreqadhabra.nflight.application.conf.ApplicationConfiguration.ENUM_APPLICATION_BOOT_PROPERTIES;
-import com.abreqadhabra.nflight.application.conf.ApplicationConfiguration.ENUM_APPLICATION_SYSTEM_PROPERTIES;
+import com.abreqadhabra.nflight.application.conf.ApplicationConfig;
+import com.abreqadhabra.nflight.application.conf.ApplicationConfig.ENUM_APPLICATION_BOOT_OPTION;
+import com.abreqadhabra.nflight.application.conf.ApplicationConfig.ENUM_APPLICATION_BOOT_PROPERTIES;
+import com.abreqadhabra.nflight.application.conf.ApplicationConfig.ENUM_APPLICATION_SYSTEM_PROPERTIES;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 import com.abreqadhabra.nflight.common.util.PropertyFile;
 
@@ -25,12 +25,12 @@ public class LauncherHelper {
 
 		LOGGER.logp(Level.FINEST, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 				"Settings specified in the default security policy file : "
-						+ ApplicationConfiguration.PATH_APPLICATION_BOOT_POLICY);
+						+ ApplicationConfig.PATH_APPLICATION_BOOT_POLICY);
 
 		System.setProperty(
 				ENUM_APPLICATION_SYSTEM_PROPERTIES.JAVA_SECURITY_POLICY
 						.toString(),
-				ApplicationConfiguration.PATH_APPLICATION_BOOT_POLICY.toString());
+				ApplicationConfig.PATH_APPLICATION_BOOT_POLICY.toString());
 
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());
@@ -72,7 +72,7 @@ public class LauncherHelper {
 						if (checkNotLeadingHyphens(key, value)) {
 							argsProps
 									.setProperty(
-											ApplicationConfiguration.ENUM_APPLICATION_BOOT_PROPERTIES.NFLIGHT_BOOT_OPTION_SERVICE
+											ApplicationConfig.ENUM_APPLICATION_BOOT_PROPERTIES.NFLIGHT_BOOT_OPTION_SERVICE
 													.toString(), value);
 						}
 					} else if (key
@@ -82,7 +82,7 @@ public class LauncherHelper {
 						if (checkNotLeadingHyphens(key, value)) {
 							argsProps
 									.setProperty(
-											ApplicationConfiguration.ENUM_APPLICATION_BOOT_PROPERTIES.NFLIGHT_BOOT_OPTION_SERVICE_HOST
+											ApplicationConfig.ENUM_APPLICATION_BOOT_PROPERTIES.NFLIGHT_BOOT_OPTION_SERVICE_HOST
 													.toString(), value);
 						}
 					} else if (key

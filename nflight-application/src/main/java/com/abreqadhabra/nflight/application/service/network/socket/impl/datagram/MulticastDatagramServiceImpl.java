@@ -1,48 +1,54 @@
-package com.abreqadhabra.nflight.application.service.network.socket.impl;
+package com.abreqadhabra.nflight.application.service.network.socket.impl.datagram;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.net.StandardProtocolFamily;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.NetworkChannel;
 import java.nio.channels.SocketChannel;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
-import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketService;
-import com.abreqadhabra.nflight.application.service.network.socket.ServerSocketChannelFactory;
-import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketServiceRunnable;
+import com.abreqadhabra.nflight.application.service.network.socket.SocketService;
+import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfig;
 import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
 import com.abreqadhabra.nflight.application.service.network.socket.helper.SocketServiceHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class MulticastDatagramServiceImpl extends AbstractSocketService {
+public class MulticastDatagramServiceImpl extends AbstractSocketServiceRunnable
+		implements
+			SocketService {
 	private static Class<MulticastDatagramServiceImpl> THIS_CLAZZ = MulticastDatagramServiceImpl.class;
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	DatagramChannel channel;
+	private InetSocketAddress endpoint;
 
-	public MulticastDatagramServiceImpl(InetSocketAddress endpoint)
-			throws NFlightException {
-		super(Config.getBoolean(SocketServiceConfiguration.KEY_BOO_SOCKET_MULTICAST_RUNNING));
-
-		this.init(endpoint);
+	public MulticastDatagramServiceImpl(DatagramChannel channel,
+			InetSocketAddress endpoint) throws NFlightException {
+		super(
+				Config.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_MULTICAST_RUNNING));
+		this.channel = channel;
+		this.endpoint = endpoint;
 	}
 	@Override
-	public void init(InetSocketAddress endpoint) throws NFlightException {
+	public void bind() throws NFlightException {
+		final Thread CURRENT_THREAD = Thread.currentThread();
+		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
+				.getMethodName();
 		try {
 			// create a new server-socket channel & selector
-			this.channel = this.createServerChannelFactory()
-					.createMulticastDatagramChannel(
-							StandardProtocolFamily.INET, endpoint);
-		} catch (IOException | InterruptedException | ExecutionException e) {
+			this.channel.bind(this.endpoint);
+			// display a waiting message while ... waiting clients
+			LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+					"Waiting for connections ..." + this.endpoint);
+		} catch (IOException e) {
 			throw new SocketServiceException(e);
 		} catch (Exception e) {
 			throw new UnexpectedException(e);
@@ -51,9 +57,9 @@ public class MulticastDatagramServiceImpl extends AbstractSocketService {
 
 	@Override
 	public void start() throws NFlightException {
-		final Thread CURRENT_THREAD = Thread.currentThread();
-		CURRENT_THREAD.getStackTrace()[1].getMethodName();
+
 		try {
+			this.bind();
 			// check that both of them were successfully opened
 			if (this.channel.isOpen()) {
 				// wait for incoming connections
@@ -106,7 +112,7 @@ public class MulticastDatagramServiceImpl extends AbstractSocketService {
 				.getMethodName();
 		try {
 			int capacity = Config
-					.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_MULTICAST_INCOMING_BUFFER_CAPACITY);
+					.getInt(SocketServiceConfig.KEY_INT_SOCKET_MULTICAST_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = SocketServiceHelper
 					.getByteBuffer(capacity);
 			SocketAddress clientEndpoint = this.channel
@@ -128,10 +134,5 @@ public class MulticastDatagramServiceImpl extends AbstractSocketService {
 		} catch (Exception e) {
 			throw new UnexpectedException(e);
 		}
-	}
-
-	@Override
-	public ServerSocketChannelFactory createServerChannelFactory() {
-		return new ServerSocketChannelFactory();
 	}
 }

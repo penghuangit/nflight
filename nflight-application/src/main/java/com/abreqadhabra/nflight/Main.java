@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Launcher;
-import com.abreqadhabra.nflight.application.conf.ApplicationConfiguration;
+import com.abreqadhabra.nflight.application.conf.ApplicationConfig;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class Main {
@@ -22,7 +22,7 @@ public class Main {
 
 	static {
 		try {
-			cl = getClassLoaderFromPath(ApplicationConfiguration.PATH_APPLICATION_CODEBASE, Thread
+			cl = getClassLoaderFromPath(ApplicationConfig.PATH_APPLICATION_CODEBASE, Thread
 					.currentThread().getContextClassLoader());
 			Thread.currentThread().setContextClassLoader(cl);
 		} catch (Exception e) {
@@ -71,7 +71,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		Launcher launcher = Launcher.class.cast(Class.forName(
-				ApplicationConfiguration.STR_APPLICATION_BOOT_LAUNCHER_CLASS_MAIN, true, cl).newInstance());
+				ApplicationConfig.STR_APPLICATION_BOOT_LAUNCHER_CLASS_MAIN, true, cl).newInstance());
 
 		launcher.launch(args);
 	}

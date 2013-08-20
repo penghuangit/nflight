@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.common.launcher.concurrent.thread.ThreadHelper;
 import com.abreqadhabra.nflight.application.common.launcher.runtime.process.ProcessExecutor;
-import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfiguration;
+import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfig;
 import com.abreqadhabra.nflight.application.service.network.rmi.exception.RMIServantException;
 import com.abreqadhabra.nflight.common.Env;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
@@ -79,8 +79,7 @@ public class ActivatableRMIServantHelper extends RMIServantHelper {
 		}
 	}
 
-	public static void checkActivationSystem() throws NFlightRemoteException,
-			NFlightException {
+	public static void checkActivationSystem() throws NFlightRemoteException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
@@ -95,7 +94,7 @@ public class ActivatableRMIServantHelper extends RMIServantHelper {
 				startActivationSystem();
 				// 콜러블로 기동결과에 대한 값이 있을때까지 대기
 				Thread.sleep(Config
-						.getInt(RMIServantConfiguration.KEY_INT_RMI_ACTIVATABLE_RMID_DELAY_SECONDS));
+						.getInt(RMIServantConfig.KEY_INT_RMI_ACTIVATABLE_RMID_DELAY_SECONDS));
 			} catch (InterruptedException e) {
 				throw new RMIServantException(e);
 			}
@@ -104,7 +103,7 @@ public class ActivatableRMIServantHelper extends RMIServantHelper {
 		}
 	}
 
-	public static void startActivationSystem() throws NFlightException {
+	public static void startActivationSystem() throws NFlightRemoteException {
 		final Thread CURRENT_THREAD = Thread.currentThread();
 		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
 				.getMethodName();
@@ -115,10 +114,10 @@ public class ActivatableRMIServantHelper extends RMIServantHelper {
 
 		Path codebasePath = IOStream.getCodebasePath(CLAZZ_NAME);
 		Path path = codebasePath
-				.resolve(RMIServantConfiguration.PATH_RMI_ACTIVATABLE_RMID_POLICY);
+				.resolve(RMIServantConfig.PATH_RMI_ACTIVATABLE_RMID_POLICY);
 
 		String command = Config
-				.get(RMIServantConfiguration.KEY_STR_RMI_ACTIVATABLE_RMID_START)
+				.get(RMIServantConfig.KEY_STR_RMI_ACTIVATABLE_RMID_START)
 				+ " -J-D"
 				+ Env.PROPERTIES_SYSTEM.JAVA_SECURITY_POLICY.toString()
 				+ "="
@@ -138,7 +137,7 @@ public class ActivatableRMIServantHelper extends RMIServantHelper {
 				.getMethodName();
 
 		String command = Config
-				.get(RMIServantConfiguration.KEY_STR_RMI_ACTIVATABLE_RMID_STOP);
+				.get(RMIServantConfig.KEY_STR_RMI_ACTIVATABLE_RMID_STOP);
 		LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME, "command is "
 				+ command);
 		new Thread(getActivationRunnable(command)).start();

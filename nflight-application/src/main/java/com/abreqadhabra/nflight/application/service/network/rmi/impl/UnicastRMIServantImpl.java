@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.service.network.rmi.AbstractRMIServant;
-import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfiguration;
+import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfig;
 import com.abreqadhabra.nflight.application.service.network.rmi.exception.RMIServantException;
 import com.abreqadhabra.nflight.application.service.network.rmi.helper.UnicastRMIServantHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
@@ -24,13 +24,17 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 
 	public UnicastRMIServantImpl(InetSocketAddress endpoint)
 			throws NFlightRemoteException {
-		super(Config.getBoolean(RMIServantConfiguration.KEY_STR_RMI_UNICAST_RUNNING), endpoint
-				.getAddress(), endpoint.getPort(), Config
-				.get(RMIServantConfiguration.KEY_STR_RMI_UNICAST_BOUND_NAME));
+		super(Config.getBoolean(RMIServantConfig.KEY_STR_RMI_UNICAST_RUNNING),
+				endpoint.getAddress(), endpoint.getPort(), Config
+						.get(RMIServantConfig.KEY_STR_RMI_UNICAST_BOUND_NAME));
 	}
 
 	@Override
 	protected void start() throws NFlightRemoteException {
+		bind();
+	}
+
+	private void bind() throws NFlightRemoteException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 		try {
@@ -39,7 +43,7 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 				throw new RMIServantException(this.boundName
 						+ "가 레지스트리에 이미 등록되어 있습니다.");
 			} else {
-				Remote stub = UnicastRemoteObject.exportObject(this, 0);
+				Remote stub = exportObjectRemoteObject();
 				UnicastRMIServantHelper.rebind(this.registry, this.boundName,
 						stub);
 				LOGGER.logp(
@@ -48,6 +52,10 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 						METHOD_NAME,
 						stub + " Stub bound in registry."
 								+ Arrays.toString(this.registry.list()));
+				// display a waiting message while ... waiting clients
+				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
+						METHOD_NAME, "Waiting for connections ..."
+								+ this.boundName);
 			}
 		} catch (RemoteException e) {
 			throw new RMIServantException(e);
@@ -56,10 +64,13 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 		}
 	}
 
+	private Remote exportObjectRemoteObject() throws RemoteException {
+		return UnicastRemoteObject.exportObject(this, 0);
+	}
+
 	@Override
 	protected void stop() throws NFlightRemoteException {
 		UnicastRMIServantHelper.unbind(this.registry, this.boundName);
 		this.interrupt();
 	}
-
 }

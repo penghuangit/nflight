@@ -3,9 +3,9 @@ package com.abreqadhabra.nflight.application.service.network.rmi.conf;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.abreqadhabra.nflight.application.service.conf.ServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfig;
 
-public interface RMIServantConfiguration extends ServiceConfiguration {
+public interface RMIServantConfig extends ServiceConfig {
 	static String KEY_STR_RMI_ACTIVATABLE_BOUND_NAME = "nflight.network.rmi.activatable.bound.name";
 	static String KEY_INT_RMI_ACTIVATABLE_RMID_DELAY_SECONDS = "nflight.network.rmi.activatable.rmid.delay.seconds";
 	static String KEY_STR_RMI_ACTIVATABLE_RMID_START = "nflight.network.rmi.activatable.rmid.start";

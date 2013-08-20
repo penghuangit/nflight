@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Profile;
-import com.abreqadhabra.nflight.application.common.launcher.concurrent.executor.ThreadPoolExecutorServiceImpl;
+import com.abreqadhabra.nflight.application.common.launcher.concurrent.executor.ThreadPoolImpl;
 import com.abreqadhabra.nflight.application.trash_server.net.async.AsyncServerImpl;
 import com.abreqadhabra.nflight.application.trash_server.net.async.logic.BusinessLogicImpl;
 import com.abreqadhabra.nflight.application.trash_server.net.async.logic.IBusinessLogic;
@@ -28,7 +28,7 @@ public class ServerImpl implements IServer {
 
 		try {
 
-			ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutorServiceImpl()
+			ThreadPoolExecutor threadPoolExecutor = new ThreadPoolImpl()
 					.createNewThreadPool();
 			threadPoolExecutor.allowCoreThreadTimeOut(true);
 

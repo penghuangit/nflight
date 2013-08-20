@@ -3,9 +3,9 @@ package com.abreqadhabra.nflight.application.common.launcher.conf;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.abreqadhabra.nflight.application.conf.ApplicationConfiguration;
+import com.abreqadhabra.nflight.application.conf.ApplicationConfig;
 
-public interface LauncherConfiguration extends ApplicationConfiguration {
+public interface LauncherConfiguration extends ApplicationConfig {
 
 	static Path FILE_BOOT_PROPERTIES = Paths
 			.get("com/abreqadhabra/nflight/application/launcher/conf/boot.properties");

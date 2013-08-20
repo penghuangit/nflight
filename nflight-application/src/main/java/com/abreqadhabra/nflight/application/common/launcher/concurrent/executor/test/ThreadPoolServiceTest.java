@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.launcher.concurrent.executor.ThreadPoolExecutorService;
+import com.abreqadhabra.nflight.application.common.launcher.concurrent.executor.ThreadPool;
 import com.abreqadhabra.nflight.application.common.launcher.concurrent.executor.monitor.ThreadPoolMonitorService;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -15,7 +15,7 @@ public class ThreadPoolServiceTest {
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	ThreadPoolMonitorService threadPoolMonitorService;
-	ThreadPoolExecutorService threadPoolExecutorService;
+	ThreadPool threadPoolExecutorService;
 
 	public ThreadPoolServiceTest() {
 	//	threadPoolMonitorService = new ThreadPoolMonitorServiceImpl(3);
@@ -72,12 +72,12 @@ public class ThreadPoolServiceTest {
 		this.threadPoolMonitorService = threadPoolMonitorService;
 	}
 
-	public ThreadPoolExecutorService getThreadPoolExecutorService() {
+	public ThreadPool getThreadPoolExecutorService() {
 		return threadPoolExecutorService;
 	}
 
 	public void setThreadPoolExecutorService(
-			ThreadPoolExecutorService threadPoolExecutorService) {
+			ThreadPool threadPoolExecutorService) {
 		this.threadPoolExecutorService = threadPoolExecutorService;
 	}
 

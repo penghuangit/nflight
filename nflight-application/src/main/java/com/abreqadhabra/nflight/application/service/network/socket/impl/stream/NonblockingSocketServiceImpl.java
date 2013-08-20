@@ -1,4 +1,4 @@
-package com.abreqadhabra.nflight.application.service.network.socket.impl;
+package com.abreqadhabra.nflight.application.service.network.socket.impl.stream;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,53 +9,64 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
-import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketService;
-import com.abreqadhabra.nflight.application.service.network.socket.ServerSocketChannelFactory;
-import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfiguration;
+import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketServiceRunnable;
+import com.abreqadhabra.nflight.application.service.network.socket.SocketService;
+import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfig;
 import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
 import com.abreqadhabra.nflight.application.service.network.socket.helper.SocketServiceHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class NonblockingSocketServiceImpl extends AbstractSocketService {
+public class NonblockingSocketServiceImpl extends AbstractSocketServiceRunnable
+		implements
+			SocketService {
 	private static Class<NonblockingSocketServiceImpl> THIS_CLAZZ = NonblockingSocketServiceImpl.class;
 	private static String CLAZZ_NAME = THIS_CLAZZ.getName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private ServerSocketChannel channel;
+	private InetSocketAddress endpoint;
 	private Selector selector;
 
-	public NonblockingSocketServiceImpl(InetSocketAddress endpoint) throws NFlightException {
-		super(Config.getBoolean(SocketServiceConfiguration.KEY_BOO_SOCKET_NONBLOCKING_RUNNING));
-		this.init(endpoint);
+	public NonblockingSocketServiceImpl(ServerSocketChannel channel,
+			InetSocketAddress endpoint) throws NFlightException {
+		super(
+				Config.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_NONBLOCKING_RUNNING));
+		this.channel = channel;
+		this.endpoint = endpoint;
 	}
 
 	@Override
-	public void init(InetSocketAddress endpoint) throws NFlightException {
+	public void bind() throws NFlightException {
+		final Thread CURRENT_THREAD = Thread.currentThread();
+		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
+				.getMethodName();
 		try {
 			// create a new server-socket channel & selector
 			this.selector = Selector.open();
-			int backlog = Config
-					.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_NONBLOCKING_BIND_BACKLOG);
-			// create a new server-socket channel
-			this.channel = this.createServerChannelFactory()
-					.createNonBlockingServerSocketChannel(endpoint, backlog);
 			// check that both of them were successfully opened
 			if (this.selector.isOpen() && this.channel.isOpen()) {
+				int backlog = Config
+						.getInt(SocketServiceConfig.KEY_INT_SOCKET_NONBLOCKING_BIND_BACKLOG);
+				// create a new server-socket channel
+				this.channel.bind(this.endpoint, backlog);
 				// Register the server socket channel, indicating an interest in
 				// accepting new connections
 				this.channel.register(this.selector, SelectionKey.OP_ACCEPT);
+				// display a waiting message while ... waiting clients
+				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
+						METHOD_NAME, "Waiting for connections ..."
+								+ this.endpoint);
 
 			} else {
 				throw new SocketServiceException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
 			}
-		} catch (IOException | InterruptedException | ExecutionException e) {
+		} catch (IOException e) {
 			throw new SocketServiceException(e);
 		} catch (Exception e) {
 			throw new UnexpectedException(e);
@@ -68,6 +79,7 @@ public class NonblockingSocketServiceImpl extends AbstractSocketService {
 		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
 				.getMethodName();
 		try {
+			this.bind();
 			while (this.isRunning) {
 				// wait for incoming an event one of the registered channels
 				// 등록된 서버 소켓 채널에 대한 이벤트 발생을 대기
@@ -175,7 +187,7 @@ public class NonblockingSocketServiceImpl extends AbstractSocketService {
 		SocketChannel socket = (SocketChannel) socketChannel;
 		try {
 			int capacity = Config
-					.getInt(SocketServiceConfiguration.KEY_INT_SOCKET_NONBLOCKING_INCOMING_BUFFER_CAPACITY);
+					.getInt(SocketServiceConfig.KEY_INT_SOCKET_NONBLOCKING_INCOMING_BUFFER_CAPACITY);
 			ByteBuffer incomingByteBuffer = SocketServiceHelper
 					.getByteBuffer(capacity);
 			int numRead = socket.read(incomingByteBuffer);
@@ -206,10 +218,5 @@ public class NonblockingSocketServiceImpl extends AbstractSocketService {
 				throw new UnexpectedException(e);
 			}
 		}
-	}
-
-	@Override
-	public ServerSocketChannelFactory createServerChannelFactory() {
-		return new ServerSocketChannelFactory();
 	}
 }
