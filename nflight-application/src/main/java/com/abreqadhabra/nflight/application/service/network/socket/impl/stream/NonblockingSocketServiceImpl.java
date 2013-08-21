@@ -13,8 +13,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
-import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketServiceRunnable;
+import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketServiceTask;
 import com.abreqadhabra.nflight.application.service.network.socket.SocketService;
+import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceDescriptor;
 import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfig;
 import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
 import com.abreqadhabra.nflight.application.service.network.socket.helper.SocketServiceHelper;
@@ -22,25 +23,53 @@ import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class NonblockingSocketServiceImpl extends AbstractSocketServiceRunnable
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NonblockingSocketServiceImpl.
+ */
+public class NonblockingSocketServiceImpl extends AbstractSocketServiceTask
 		implements
 			SocketService {
+	
+	/** The this clazz. */
 	private static Class<NonblockingSocketServiceImpl> THIS_CLAZZ = NonblockingSocketServiceImpl.class;
+	
+	/** The clazz name. */
 	private static String CLAZZ_NAME = THIS_CLAZZ.getName();
+	
+	/** The logger. */
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
+	/** The channel. */
 	private ServerSocketChannel channel;
+	
+	/** The endpoint. */
 	private InetSocketAddress endpoint;
+	
+	/** The selector. */
 	private Selector selector;
 
-	public NonblockingSocketServiceImpl(ServerSocketChannel channel,
-			InetSocketAddress endpoint) throws NFlightException {
+
+	/**
+	 * Instantiates a new nonblocking socket service impl.
+	 * 
+	 * @param serviceDescriptor
+	 *            the service descriptor
+	 * @throws NFlightException
+	 *             the n flight exception
+	 */
+	public NonblockingSocketServiceImpl(
+			SocketServiceDescriptor serviceDescriptor)
+			throws NFlightException {
 		super(
 				Config.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_NONBLOCKING_RUNNING));
-		this.channel = channel;
-		this.endpoint = endpoint;
+		this.channel = serviceDescriptor.getServerSocketChannel();
+		this.endpoint = serviceDescriptor.getEndpoint();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.abreqadhabra.nflight.application.service.network.socket.SocketService#bind()
+	 */
 	@Override
 	public void bind() throws NFlightException {
 		final Thread CURRENT_THREAD = Thread.currentThread();
@@ -73,6 +102,9 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceRunnable
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.abreqadhabra.nflight.application.common.launcher.concurrent.AbstractRunnable#start()
+	 */
 	@Override
 	public void start() throws NFlightException {
 		final Thread CURRENT_THREAD = Thread.currentThread();
@@ -129,6 +161,9 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceRunnable
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.abreqadhabra.nflight.application.common.launcher.concurrent.AbstractRunnable#stop()
+	 */
 	@Override
 	public void stop() throws NFlightException {
 		try {
@@ -143,6 +178,9 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceRunnable
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.abreqadhabra.nflight.application.service.network.socket.SocketService#accept(java.nio.channels.NetworkChannel)
+	 */
 	@Override
 	public void accept(NetworkChannel socketChannel) throws NFlightException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
@@ -166,11 +204,17 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceRunnable
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.abreqadhabra.nflight.application.service.network.socket.SocketService#send(java.nio.channels.SocketChannel)
+	 */
 	@Override
 	public void send(SocketChannel socket) {
 		// 큐에 있는 스트림을 전송
 	}
 
+	/* (non-Javadoc)
+	 * @see com.abreqadhabra.nflight.application.service.network.socket.SocketService#send(java.nio.channels.SocketChannel, java.lang.Object)
+	 */
 	@Override
 	public void send(SocketChannel socket, Object message)
 			throws NFlightException {
@@ -180,6 +224,9 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceRunnable
 		LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME, "send");
 	}
 
+	/* (non-Javadoc)
+	 * @see com.abreqadhabra.nflight.application.service.network.socket.SocketService#receive(java.nio.channels.NetworkChannel)
+	 */
 	@Override
 	public void receive(NetworkChannel socketChannel) throws NFlightException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]

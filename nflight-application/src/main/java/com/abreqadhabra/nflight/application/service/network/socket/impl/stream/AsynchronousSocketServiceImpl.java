@@ -9,13 +9,13 @@ import java.nio.channels.NetworkChannel;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
-import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketServiceRunnable;
+import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketServiceTask;
 import com.abreqadhabra.nflight.application.service.network.socket.SocketService;
+import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceDescriptor;
 import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfig;
 import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
 import com.abreqadhabra.nflight.application.trash_server.net.socket.NetworkChannelHelper;
@@ -25,24 +25,20 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class AsynchronousSocketServiceImpl
 		extends
-			AbstractSocketServiceRunnable implements SocketService {
+			AbstractSocketServiceTask implements SocketService {
 	private static Class<AsynchronousSocketServiceImpl> THIS_CLAZZ = AsynchronousSocketServiceImpl.class;
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private AsynchronousServerSocketChannel channel;
 	private InetSocketAddress endpoint;
-	private ThreadPoolExecutor threadPool;
 
-	public AsynchronousSocketServiceImpl(
-			AsynchronousServerSocketChannel channel,
-			InetSocketAddress endpoint, ThreadPoolExecutor threadPool)
+	public AsynchronousSocketServiceImpl(SocketServiceDescriptor serviceDescriptor)
 			throws NFlightException {
 		super(
 				Config.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_ASYNC_RUNNING));
-		this.channel = channel;
-		this.endpoint = endpoint;
-		this.threadPool = threadPool;
+		this.channel = serviceDescriptor.getAsynchronousChannel();
+		this.endpoint = serviceDescriptor.getEndpoint();
 	}
 
 	@Override
@@ -86,7 +82,6 @@ public class AsynchronousSocketServiceImpl
 	public void stop() throws NFlightException {
 		try {
 			this.channel.close();
-			this.threadPool.shutdown();
 			this.interrupt();
 		} catch (IOException e) {
 			throw new SocketServiceException(e);

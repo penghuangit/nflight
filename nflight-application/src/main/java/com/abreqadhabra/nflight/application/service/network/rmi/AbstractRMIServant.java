@@ -1,18 +1,17 @@
 package com.abreqadhabra.nflight.application.service.network.rmi;
 
-import java.net.InetAddress;
 import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.launcher.concurrent.AbstractRunnable;
+import com.abreqadhabra.nflight.application.common.launcher.concurrent.AbstractServiceCallable;
 import com.abreqadhabra.nflight.application.common.launcher.concurrent.thread.ThreadHelper;
 import com.abreqadhabra.nflight.application.service.network.rmi.helper.RMIServantHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public abstract class AbstractRMIServant extends AbstractRunnable
+public abstract class AbstractRMIServant extends AbstractServiceCallable
 		implements
 			RMIServant {
 	private static Class<AbstractRMIServant> THIS_CLAZZ = AbstractRMIServant.class;
@@ -20,7 +19,7 @@ public abstract class AbstractRMIServant extends AbstractRunnable
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	protected boolean isRunning;
-	private InetAddress addr;
+	private String hostString;
 	private int port;
 	protected Registry registry;
 	protected String boundName;
@@ -33,7 +32,7 @@ public abstract class AbstractRMIServant extends AbstractRunnable
 	 * 
 	 * @param isRunning
 	 *            the is running
-	 * @param addr
+	 * @param hostString
 	 *            the addr
 	 * @param port
 	 *            the port
@@ -42,15 +41,15 @@ public abstract class AbstractRMIServant extends AbstractRunnable
 	 * @throws NFlightRemoteException
 	 *             the n flight remote exception
 	 */
-	public AbstractRMIServant(boolean isRunning, InetAddress addr, int port,
+	public AbstractRMIServant(boolean isRunning, String hostString, int port,
 			String serviceName) throws NFlightRemoteException {
 		this.isRunning = isRunning;
-		this.addr = addr;
+		this.hostString = hostString;
 		this.port = port;
-		this.registry = RMIServantHelper.getRegistry(
-				this.addr.getHostAddress(), this.port);
-		this.boundName = RMIServantHelper.getBoundName(addr.getHostAddress(),
-				port, serviceName);
+		this.registry = RMIServantHelper
+				.getRegistry(this.hostString, this.port);
+		this.boundName = RMIServantHelper.getBoundName(hostString, port,
+				serviceName);
 		this.setShutdownHook();
 	}
 

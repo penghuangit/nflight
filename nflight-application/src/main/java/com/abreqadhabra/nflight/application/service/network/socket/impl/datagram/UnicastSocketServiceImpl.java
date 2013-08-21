@@ -14,8 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
-import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketServiceRunnable;
+import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketServiceTask;
 import com.abreqadhabra.nflight.application.service.network.socket.SocketService;
+import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceDescriptor;
 import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfig;
 import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
 import com.abreqadhabra.nflight.application.service.network.socket.helper.SocketServiceHelper;
@@ -23,7 +24,7 @@ import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class UnicastSocketServiceImpl extends AbstractSocketServiceRunnable
+public class UnicastSocketServiceImpl extends AbstractSocketServiceTask
 		implements
 			SocketService {
 	private static Class<UnicastSocketServiceImpl> THIS_CLAZZ = UnicastSocketServiceImpl.class;
@@ -34,14 +35,15 @@ public class UnicastSocketServiceImpl extends AbstractSocketServiceRunnable
 	private InetSocketAddress endpoint;
 	private Selector selector;
 
-	public UnicastSocketServiceImpl(DatagramChannel channel,
-			InetSocketAddress endpoint) throws NFlightException {
+	public UnicastSocketServiceImpl(
+			SocketServiceDescriptor serviceDescriptor)
+			throws NFlightException {
 		super(
 				Config.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_UNICAST_RUNNING));
-		this.channel = channel;
-		this.endpoint = endpoint;
+		this.channel = serviceDescriptor.getDatagramChannel();
+		this.endpoint = serviceDescriptor.getEndpoint();
 	}
-
+	
 	@Override
 	public void bind() throws NFlightException {
 		final Thread CURRENT_THREAD = Thread.currentThread();

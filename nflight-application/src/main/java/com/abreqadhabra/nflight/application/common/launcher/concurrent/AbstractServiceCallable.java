@@ -1,5 +1,6 @@
 package com.abreqadhabra.nflight.application.common.launcher.concurrent;
 
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -8,19 +9,19 @@ import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public abstract class AbstractRunnable implements Runnable {
+public abstract class AbstractServiceCallable implements Callable<Object> {
 
-	private static Class<AbstractRunnable> THIS_CLAZZ = AbstractRunnable.class;
+	private static Class<AbstractServiceCallable> THIS_CLAZZ = AbstractServiceCallable.class;
 	private static String CLAZZ_NAME = THIS_CLAZZ.getName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private Thread shutdownHookThread;
 
-	public AbstractRunnable() {
+	public AbstractServiceCallable() {
 	}
 
 	@Override
-	public void run() {
+	public Object call() {
 		final Thread CURRENT_THREAD = Thread.currentThread();
 		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
 				.getMethodName();
@@ -39,12 +40,13 @@ public abstract class AbstractRunnable implements Runnable {
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(),
 						"\n" + NFlightException.getStackTrace(ne));
-				interrupt();
+				interrupt(CURRENT_THREAD);
 			} else {
 				e.printStackTrace();
 				ThreadHelper.shutdown();
 			}
 		}
+		return this;
 	}
 
 	protected abstract void start() throws NFlightException,
@@ -63,10 +65,16 @@ public abstract class AbstractRunnable implements Runnable {
 
 	/**
 	 * stop execution of the task
+	 * @param currentThread 
 	 * 
 	 * @param thread
 	 */
+	protected void interrupt(Thread currentThread) {
+		ThreadHelper.interrupt(currentThread);
+	}
+	
 	protected void interrupt() {
+		
 		ThreadHelper.interrupt(Thread.currentThread());
 	}
 }

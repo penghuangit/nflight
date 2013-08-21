@@ -11,8 +11,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
-import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketServiceRunnable;
+import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketServiceTask;
 import com.abreqadhabra.nflight.application.service.network.socket.SocketService;
+import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceDescriptor;
 import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfig;
 import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
 import com.abreqadhabra.nflight.application.service.network.socket.helper.SocketServiceHelper;
@@ -20,7 +21,7 @@ import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class MulticastDatagramServiceImpl extends AbstractSocketServiceRunnable
+public class MulticastDatagramServiceImpl extends AbstractSocketServiceTask
 		implements
 			SocketService {
 	private static Class<MulticastDatagramServiceImpl> THIS_CLAZZ = MulticastDatagramServiceImpl.class;
@@ -30,13 +31,15 @@ public class MulticastDatagramServiceImpl extends AbstractSocketServiceRunnable
 	DatagramChannel channel;
 	private InetSocketAddress endpoint;
 
-	public MulticastDatagramServiceImpl(DatagramChannel channel,
-			InetSocketAddress endpoint) throws NFlightException {
+	public MulticastDatagramServiceImpl(
+			SocketServiceDescriptor serviceDescriptor)
+			throws NFlightException {
 		super(
 				Config.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_MULTICAST_RUNNING));
-		this.channel = channel;
-		this.endpoint = endpoint;
+		this.channel = serviceDescriptor.getDatagramChannel();
+		this.endpoint = serviceDescriptor.getEndpoint();
 	}
+
 	@Override
 	public void bind() throws NFlightException {
 		final Thread CURRENT_THREAD = Thread.currentThread();
@@ -78,10 +81,13 @@ public class MulticastDatagramServiceImpl extends AbstractSocketServiceRunnable
 
 	@Override
 	public void stop() throws NFlightException {
+		final Thread CURRENT_THREAD = Thread.currentThread();
 		try {
 			this.isRunning = false;
 			this.channel.close();
-			this.interrupt();
+			System.out.println(">>>>>>>>>>>>>>"+CURRENT_THREAD.getName());
+
+			this.interrupt(CURRENT_THREAD);
 		} catch (IOException e) {
 			throw new SocketServiceException(e);
 		} catch (Exception e) {

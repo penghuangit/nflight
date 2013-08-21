@@ -1,7 +1,6 @@
 package com.abreqadhabra.nflight.application.service.network.rmi.impl;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.rmi.MarshalledObject;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -14,6 +13,7 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.service.network.rmi.AbstractRMIServant;
+import com.abreqadhabra.nflight.application.service.network.rmi.RMIServiceDescriptor;
 import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfig;
 import com.abreqadhabra.nflight.application.service.network.rmi.exception.RMIServantException;
 import com.abreqadhabra.nflight.application.service.network.rmi.helper.ActivatableRMIServantHelper;
@@ -44,11 +44,11 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 				"stub for the activatable remote object: " + stub.toString());
 	}
 
-	public ActivatableRMIServantImpl(InetSocketAddress endpoint)
+	public ActivatableRMIServantImpl(RMIServiceDescriptor serviceDescriptor)
 			throws NFlightRemoteException {
 		super(Config
 				.getBoolean(RMIServantConfig.KEY_BOO_RMI_ACTIVATABLE_RUNNING),
-				endpoint.getAddress(), endpoint.getPort(),
+				serviceDescriptor.getHostAddress(), serviceDescriptor.getPort(),
 				Config.get(RMIServantConfig.KEY_STR_RMI_ACTIVATABLE_BOUND_NAME));
 	}
 

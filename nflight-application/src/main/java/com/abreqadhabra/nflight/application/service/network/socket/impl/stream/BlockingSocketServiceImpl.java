@@ -14,18 +14,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
-import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketServiceRunnable;
+import com.abreqadhabra.nflight.application.common.launcher.concurrent.executor.ThreadPoolImpl;
+import com.abreqadhabra.nflight.application.service.network.socket.AbstractSocketServiceTask;
 import com.abreqadhabra.nflight.application.service.network.socket.SocketService;
+import com.abreqadhabra.nflight.application.service.network.socket.SocketServiceDescriptor;
 import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfig;
 import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class BlockingSocketServiceImpl.
  */
-public class BlockingSocketServiceImpl extends AbstractSocketServiceRunnable
+public class BlockingSocketServiceImpl extends AbstractSocketServiceTask
 		implements
 			SocketService {
 
@@ -47,26 +50,28 @@ public class BlockingSocketServiceImpl extends AbstractSocketServiceRunnable
 	/** The thread pool. */
 	private ThreadPoolExecutor threadPool;
 
+
 	/**
 	 * Instantiates a new blocking socket service impl.
 	 * 
-	 * @param channel
-	 *            the channel
-	 * @param endpoint
-	 *            the endpoint
-	 * @param threadPool
-	 *            the thread pool
+	 * @param serviceDescriptor
+	 *            the service descriptor
 	 * @throws NFlightException
 	 *             the n flight exception
 	 */
-	public BlockingSocketServiceImpl(ServerSocketChannel channel,
-			InetSocketAddress endpoint, ThreadPoolExecutor threadPool)
+	public BlockingSocketServiceImpl(
+			SocketServiceDescriptor serviceDescriptor)
 			throws NFlightException {
 		super(
 				Config.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_BLOCKING_RUNNING));
-		this.channel = channel;
-		this.endpoint = endpoint;
-		this.threadPool = threadPool;
+		this.channel = serviceDescriptor.getServerSocketChannel();
+		this.endpoint = serviceDescriptor.getEndpoint();
+		// 서비스에서 사용할 쓰레드풀 객체 생성
+		this.threadPool = new ThreadPoolImpl()
+				.getThreadPoolExecutor(
+						Config.get(SocketServiceConfig.KEY_INT_SOCKET_BLOCKING_SERVICE_THREAD_POOL_NAME),
+						Config.getBoolean(SocketServiceConfig.KEY_INT_SOCKET_BLOCKING_SERVICE_THREAD_POOL_MONITORING),
+						Config.getInt(SocketServiceConfig.KEY_INT_SOCKET_BLOCKING_SERVICE_THREAD_POOL_MONITORING_DELAY_SECONDS));
 	}
 
 	/*

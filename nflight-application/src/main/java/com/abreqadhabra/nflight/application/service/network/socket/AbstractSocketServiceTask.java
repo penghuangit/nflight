@@ -3,19 +3,19 @@ package com.abreqadhabra.nflight.application.service.network.socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.abreqadhabra.nflight.application.common.launcher.concurrent.AbstractRunnable;
+import com.abreqadhabra.nflight.application.common.launcher.concurrent.AbstractServiceCallable;
 import com.abreqadhabra.nflight.application.common.launcher.concurrent.thread.ThreadHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public abstract class AbstractSocketServiceRunnable extends AbstractRunnable {
-	private static Class<AbstractSocketServiceRunnable> THIS_CLAZZ = AbstractSocketServiceRunnable.class;
+public abstract class AbstractSocketServiceTask extends AbstractServiceCallable {
+	private static Class<AbstractSocketServiceTask> THIS_CLAZZ = AbstractSocketServiceTask.class;
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	protected boolean isRunning;
 
-	public AbstractSocketServiceRunnable(boolean isRunning) {
+	public AbstractSocketServiceTask(boolean isRunning) {
 		this.isRunning = isRunning;
 		this.setShutdownHook();
 	}
@@ -46,7 +46,7 @@ public abstract class AbstractSocketServiceRunnable extends AbstractRunnable {
 				try {
 					LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME,
 							"Stopping...");
-					AbstractSocketServiceRunnable.this.stop();
+					AbstractSocketServiceTask.this.stop();
 					LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME,
 							"Stopped");
 				} catch (Exception e) {

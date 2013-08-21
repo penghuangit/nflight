@@ -1,0 +1,74 @@
+package com.abreqadhabra.nflight.application.service;
+
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+
+import com.abreqadhabra.nflight.application.common.launcher.Config;
+import com.abreqadhabra.nflight.application.service.conf.ServiceConfig.ENUM_SERVICE_TYPE;
+import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfig;
+import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfig;
+
+public class ServiceDescriptor {
+
+	private ENUM_SERVICE_TYPE serviceType;
+	protected InetSocketAddress endpoint;
+
+	public ServiceDescriptor(ENUM_SERVICE_TYPE serviceType) {
+		this.serviceType = serviceType;
+		// 서비스에서 사용할 주소 객체를 생성 (IP 주소는 로컬 주소를 자동 할당)
+		this.endpoint = getEndpoint(serviceType);
+	}
+
+	public InetSocketAddress getEndpoint() {
+		return this.endpoint;
+	}
+
+	private InetSocketAddress getEndpoint(ENUM_SERVICE_TYPE serviceType) {
+		String key = null;
+		int port = 0;
+		switch (serviceType) {
+			case network_blocking :
+				key = SocketServiceConfig.KEY_INT_SOCKET_BLOCKING_DEFAULT_PORT;
+				break;
+			case network_nonblocking :
+				key = SocketServiceConfig.KEY_INT_SOCKET_NONBLOCKING_DEFAULT_PORT;
+				break;
+			case network_async :
+				key = SocketServiceConfig.KEY_INT_SOCKET_ASYNC_DEFAULT_PORT;
+				break;
+			case network_unicast :
+				key = SocketServiceConfig.KEY_INT_SOCKET_UNICAST_DEFAULT_PORT;
+				break;
+			case network_multicast :
+				key = SocketServiceConfig.KEY_INT_SOCKET_MULTICAST_DEFAULT_PORT;
+				break;
+			case rmi_unicast :
+			case rmi_activation :
+				key = RMIServantConfig.KEY_INT_RMI_DEFAULT_PORT;
+				break;
+			default :
+				break;
+		}
+		if (key != null) {
+			port = Config.getInt(key);
+		}
+		
+		return getEndpoint(port);
+	}
+
+	private InetSocketAddress getEndpoint(int port) {
+		return getEndpoint(null, port);
+	}
+
+	private InetSocketAddress getEndpoint(InetAddress addr, int port) {
+		try {
+			if (addr == null) {
+				addr = InetAddress.getLocalHost();
+			}
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		return new InetSocketAddress(addr, port);
+	}
+}

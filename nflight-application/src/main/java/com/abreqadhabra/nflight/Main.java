@@ -22,8 +22,9 @@ public class Main {
 
 	static {
 		try {
-			cl = getClassLoaderFromPath(ApplicationConfig.PATH_APPLICATION_CODEBASE, Thread
-					.currentThread().getContextClassLoader());
+			cl = getClassLoaderFromPath(
+					ApplicationConfig.PATH_APPLICATION_CODEBASE, Thread
+							.currentThread().getContextClassLoader());
 			Thread.currentThread().setContextClassLoader(cl);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -71,7 +72,8 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		Launcher launcher = Launcher.class.cast(Class.forName(
-				ApplicationConfig.STR_APPLICATION_BOOT_LAUNCHER_CLASS_MAIN, true, cl).newInstance());
+				ApplicationConfig.STR_APPLICATION_BOOT_LAUNCHER_CLASS_MAIN,
+				true, cl).newInstance());
 
 		launcher.launch(args);
 	}

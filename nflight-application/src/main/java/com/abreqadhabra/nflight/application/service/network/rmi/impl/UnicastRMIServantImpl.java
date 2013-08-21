@@ -1,6 +1,5 @@
 package com.abreqadhabra.nflight.application.service.network.rmi.impl;
 
-import java.net.InetSocketAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -10,6 +9,7 @@ import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.service.network.rmi.AbstractRMIServant;
+import com.abreqadhabra.nflight.application.service.network.rmi.RMIServiceDescriptor;
 import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfig;
 import com.abreqadhabra.nflight.application.service.network.rmi.exception.RMIServantException;
 import com.abreqadhabra.nflight.application.service.network.rmi.helper.UnicastRMIServantHelper;
@@ -22,10 +22,10 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	public UnicastRMIServantImpl(InetSocketAddress endpoint)
+	public UnicastRMIServantImpl(RMIServiceDescriptor serviceDescriptor)
 			throws NFlightRemoteException {
 		super(Config.getBoolean(RMIServantConfig.KEY_STR_RMI_UNICAST_RUNNING),
-				endpoint.getAddress(), endpoint.getPort(), Config
+				serviceDescriptor.getHostAddress(), serviceDescriptor.getPort(), Config
 						.get(RMIServantConfig.KEY_STR_RMI_UNICAST_BOUND_NAME));
 	}
 
