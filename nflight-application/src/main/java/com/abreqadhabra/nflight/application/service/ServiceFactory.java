@@ -18,7 +18,7 @@ import com.abreqadhabra.nflight.common.exception.NFlightException;
 
 public class ServiceFactory {
 
-	public static Callable<?> createtServiceTask(ENUM_SERVICE_TYPE serviceType)
+	public static Callable<Object> createtServiceTask(ENUM_SERVICE_TYPE serviceType)
 			throws NFlightException, IOException {
 		SocketServiceDescriptor ssd = new SocketServiceDescriptor(
 				serviceType);

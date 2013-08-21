@@ -19,9 +19,6 @@ import com.abreqadhabra.nflight.application.common.launcher.concurrent.thread.Th
 import com.abreqadhabra.nflight.application.service.ServiceFactory;
 import com.abreqadhabra.nflight.application.service.conf.ServiceConfig;
 import com.abreqadhabra.nflight.application.service.conf.ServiceConfig.ENUM_SERVICE_TYPE;
-import com.abreqadhabra.nflight.application.service.network.rmi.AbstractRMIServant;
-import com.abreqadhabra.nflight.application.service.network.rmi.impl.UnicastRMIServantImpl;
-import com.abreqadhabra.nflight.application.service.network.socket.impl.datagram.MulticastDatagramServiceImpl;
 import com.abreqadhabra.nflight.application.service.thread.ServiceThreadFactory;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
@@ -29,9 +26,10 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class TestContainerImpl {
 	private static Class<TestContainerImpl> THIS_CLAZZ = TestContainerImpl.class;
+	private static String CLAZZ_NAME = THIS_CLAZZ.getName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
-	private HashMap<String, Callable<String>> services = new HashMap<String, Callable<String>>();
+	private HashMap<String, CompletionService<Object>> services = new HashMap<String, CompletionService<Object>>();
 	boolean isRunning;
 
 	public TestContainerImpl() throws NFlightException, IOException {
@@ -45,78 +43,62 @@ public class TestContainerImpl {
 		LauncherHelper.setSecurityManager();// 추후 삭제
 	}
 
-	
 	public void startupService(ENUM_SERVICE_TYPE serviceType) {
 
 	}
-	
-	public void startupAllService() throws InterruptedException, ExecutionException, NFlightException, NFlightRemoteException {
 
-//		ThreadGroup serviceThreadGroup = new ThreadGroup(
-//				"NF-Service-ThreadGroup");
-//		for (String serviceType : this.services.keySet()) {
-//			new Thread(serviceThreadGroup, this.services.get(serviceType),
-//					serviceType).start();
-//		}
-//		
+	public void startupAllService() throws ExecutionException,
+			NFlightException, NFlightRemoteException, InterruptedException {
+		final Thread CURRENT_THREAD = Thread.currentThread();
+		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
+				.getMethodName();
 		
-		ExecutorService completionService = null;
 		for (String serviceType : this.services.keySet()) {
-			 completionService = getCompletionService();
-			 Callable<String> task =this.services.get(serviceType);
-
-			 Future<String> future = completionService.submit(task);
+			Future<Object> future = this.services.get(serviceType).take();
 			
-				
-				Object aa = future.get();
-				if(aa instanceof MulticastDatagramServiceImpl) {
-					MulticastDatagramServiceImpl ss= (MulticastDatagramServiceImpl) aa;
-					System.out.println("---------------------->1---------------------->"+ss.getClass().getName());
-				//	ss.stop();
-				}else if(aa instanceof AbstractRMIServant){
-					AbstractRMIServant rs=( AbstractRMIServant)aa;
-					
-					System.out.println("---------------------->2---------------------->"+rs.sayHello());
-				}
-					
-				
-	}
-		
-		
-		
-		
+//			Service service = (Service) future.get();
+//			LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME, serviceType + " status :"
+//					+ service.status());
+		}
 
 	}
 
-	public ExecutorService getCompletionService() throws InterruptedException {
-		ThreadFactory threadFactory = new ServiceThreadFactory();
+	public CompletionService<Object> getCompletionService(String serviceType)
+			throws InterruptedException {
+		ThreadFactory threadFactory = new ServiceThreadFactory(serviceType);
 		ExecutorService executor = Executors
 				.newSingleThreadExecutor(threadFactory);
-/*		CompletionService<String> completionService = new ExecutorCompletionService<String>(
-				executor);*/
-		
-		return executor;
+
+		return new ExecutorCompletionService<Object>(executor);
 	}
 
-	
 	public void shutdown(ENUM_SERVICE_TYPE serviceType) {
 		// TODO Auto-generated method stub
 
 	}
 
-	
 	public void shutdownAllService() {
 		for (String serviceType : this.services.keySet()) {
-	//		new Thread(this.services.get(serviceType), serviceType).start();
+			// new Thread(this.services.get(serviceType), serviceType).start();
 		}
 	}
 
-	private void init() throws NFlightException, IOException {
-		Callable serviceRunnable = null;
-		for (ENUM_SERVICE_TYPE serviceType : ENUM_SERVICE_TYPE.values()) {
-			serviceRunnable = ServiceFactory
-					.createtServiceTask(serviceType);
-			this.services.put(serviceType.toString(), serviceRunnable);
+	private void init() throws NFlightException {
+		String serviceName = null;
+		Callable<Object> serviceTask = null;
+		CompletionService<Object> completionService = null;
+		try {
+			for (ENUM_SERVICE_TYPE serviceType : ENUM_SERVICE_TYPE.values()) {
+				serviceName = serviceType.name();
+				serviceTask = ServiceFactory.createtServiceTask(serviceType);
+				completionService = getCompletionService(serviceName);
+				completionService.submit(serviceTask);
+				this.services.put(serviceName, completionService);
+			}
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		} catch (NFlightException e) {
+			throw e;
 		}
 	}
 

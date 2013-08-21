@@ -42,6 +42,40 @@ public class AsynchronousSocketServiceImpl
 	}
 
 	@Override
+	public void startup() throws NFlightException {
+		try {
+			this.bind();
+			while (this.isRunning) {
+				Future<AsynchronousSocketChannel> future = this.channel
+						.accept();
+				AsynchronousSocketChannel socket = future.get();
+				this.accept(socket);
+			}
+		} catch (InterruptedException | ExecutionException e) {
+			throw new SocketServiceException(e);
+		} catch (Exception e) {
+			throw new UnexpectedException(e);
+		}
+	}
+
+	@Override
+	public boolean status() {
+		return this.isRunning;
+	}
+	
+	@Override
+	public void shutdown() throws NFlightException {
+		try {
+			this.channel.close();
+			this.interrupt();
+		} catch (IOException e) {
+			throw new SocketServiceException(e);
+		} catch (Exception e) {
+			throw new UnexpectedException(e);
+		}
+	}
+	
+	@Override
 	public void bind() throws NFlightException {
 		final Thread CURRENT_THREAD = Thread.currentThread();
 		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
@@ -61,34 +95,7 @@ public class AsynchronousSocketServiceImpl
 		}
 	}
 
-	@Override
-	public void start() throws NFlightException {
-		try {
-			this.bind();
-			while (this.isRunning) {
-				Future<AsynchronousSocketChannel> future = this.channel
-						.accept();
-				AsynchronousSocketChannel socket = future.get();
-				this.accept(socket);
-			}
-		} catch (InterruptedException | ExecutionException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
-		}
-	}
 
-	@Override
-	public void stop() throws NFlightException {
-		try {
-			this.channel.close();
-			this.interrupt();
-		} catch (IOException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
-		}
-	}
 
 	@Override
 	public void accept(NetworkChannel socketChannel) throws NFlightException {

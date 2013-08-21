@@ -50,7 +50,6 @@ public class BlockingSocketServiceImpl extends AbstractSocketServiceTask
 	/** The thread pool. */
 	private ThreadPoolExecutor threadPool;
 
-
 	/**
 	 * Instantiates a new blocking socket service impl.
 	 * 
@@ -59,8 +58,7 @@ public class BlockingSocketServiceImpl extends AbstractSocketServiceTask
 	 * @throws NFlightException
 	 *             the n flight exception
 	 */
-	public BlockingSocketServiceImpl(
-			SocketServiceDescriptor serviceDescriptor)
+	public BlockingSocketServiceImpl(SocketServiceDescriptor serviceDescriptor)
 			throws NFlightException {
 		super(
 				Config.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_BLOCKING_RUNNING));
@@ -74,6 +72,52 @@ public class BlockingSocketServiceImpl extends AbstractSocketServiceTask
 						Config.getInt(SocketServiceConfig.KEY_INT_SOCKET_BLOCKING_SERVICE_THREAD_POOL_MONITORING_DELAY_SECONDS));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.abreqadhabra.nflight.application.common.launcher.concurrent.
+	 * AbstractRunnable#start()
+	 */
+	@Override
+	public void startup() throws NFlightException {
+		try {
+			this.bind();
+			while (this.isRunning) {
+				SocketChannel socket = this.channel.accept();
+				this.accept(socket);
+			}
+		} catch (IOException e) {
+			throw new SocketServiceException(e);
+		} catch (Exception e) {
+			throw new UnexpectedException(e);
+		}
+	}
+
+	@Override
+	public boolean status() {
+		return this.isRunning;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.abreqadhabra.nflight.application.common.launcher.concurrent.
+	 * AbstractRunnable#stop()
+	 */
+	@Override
+	public void shutdown() throws NFlightException {
+		try {
+			this.channel.close();
+			this.threadPool.shutdown();
+			if (!"main".equals(Thread.currentThread().getName())) {
+				this.interrupt();
+			}
+		} catch (IOException e) {
+			throw new SocketServiceException(e);
+		}
+		
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -180,44 +224,6 @@ public class BlockingSocketServiceImpl extends AbstractSocketServiceTask
 		this.threadPool.submit(new BlockingSocketReceiver(socket));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.abreqadhabra.nflight.application.common.launcher.concurrent.
-	 * AbstractRunnable#start()
-	 */
-	@Override
-	public void start() throws NFlightException {
-		try {
-			this.bind();
-			while (this.isRunning) {
-				SocketChannel socket = this.channel.accept();
-				this.accept(socket);
-			}
-		} catch (IOException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
-		}
-	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.abreqadhabra.nflight.application.common.launcher.concurrent.
-	 * AbstractRunnable#stop()
-	 */
-	@Override
-	public void stop() throws NFlightException {
-		try {
-			this.channel.close();
-			this.threadPool.shutdown();
-			this.interrupt();
-		} catch (IOException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
-		}
-	}
 
 }

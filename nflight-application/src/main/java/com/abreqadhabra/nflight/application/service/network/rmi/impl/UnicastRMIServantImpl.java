@@ -13,6 +13,7 @@ import com.abreqadhabra.nflight.application.service.network.rmi.RMIServiceDescri
 import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfig;
 import com.abreqadhabra.nflight.application.service.network.rmi.exception.RMIServantException;
 import com.abreqadhabra.nflight.application.service.network.rmi.helper.UnicastRMIServantHelper;
+import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
@@ -30,10 +31,21 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 	}
 
 	@Override
-	protected void start() throws NFlightRemoteException {
+	public void startup() throws NFlightRemoteException  {
 		bind();
 	}
 
+	@Override
+	public boolean status() throws NFlightRemoteException {
+		return this.isRunning;
+	}
+	
+	@Override
+	public void shutdown() throws NFlightRemoteException {
+		UnicastRMIServantHelper.unbind(this.registry, this.boundName);
+		this.interrupt();
+	}
+	
 	private void bind() throws NFlightRemoteException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
@@ -64,13 +76,12 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 		}
 	}
 
-	private Remote exportObjectRemoteObject() throws RemoteException {
-		return UnicastRemoteObject.exportObject(this, 0);
+	private Remote exportObjectRemoteObject() throws NFlightRemoteException  {
+		try {
+			return UnicastRemoteObject.exportObject(this, 0);
+		} catch (RemoteException e) {
+			throw new RMIServantException(e);
+		}
 	}
 
-	@Override
-	protected void stop() throws NFlightRemoteException {
-		UnicastRMIServantHelper.unbind(this.registry, this.boundName);
-		this.interrupt();
-	}
 }

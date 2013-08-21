@@ -8,7 +8,13 @@ import com.abreqadhabra.nflight.common.exception.NFlightException;
 /**
  * The Interface SocketService.
  */
-public interface SocketService {
+public interface SocketService{
+	
+	public void startup() throws  NFlightException ;
+
+	public boolean status()  throws   NFlightException ;
+
+	public void shutdown() throws   NFlightException ;
 	
 	/**
 	 * Bind.
@@ -18,21 +24,7 @@ public interface SocketService {
 	 */
 	public void bind() throws NFlightException;
 	
-	/**
-	 * Start.
-	 * 
-	 * @throws NFlightException
-	 *             the n flight exception
-	 */
-	public void start() throws NFlightException;
-	
-	/**
-	 * Stop.
-	 * 
-	 * @throws NFlightException
-	 *             the n flight exception
-	 */
-	public void stop() throws NFlightException;
+
 	
 	/**
 	 * Accept.

@@ -43,38 +43,9 @@ public class UnicastSocketServiceImpl extends AbstractSocketServiceTask
 		this.channel = serviceDescriptor.getDatagramChannel();
 		this.endpoint = serviceDescriptor.getEndpoint();
 	}
-	
-	@Override
-	public void bind() throws NFlightException {
-		final Thread CURRENT_THREAD = Thread.currentThread();
-		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
-				.getMethodName();
-		try {
-			// create a new server-socket channel & selector
-			this.selector = Selector.open();
-			// check that both of them were successfully opened
-			if (this.selector.isOpen() && this.channel.isOpen()) {
-				this.channel.bind(this.endpoint);
-				// Register the server socket channel, indicating an interest in
-				// accepting new connections
-				this.channel.register(this.selector, SelectionKey.OP_READ);
-				// display a waiting message while ... waiting clients
-				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
-						METHOD_NAME, "Waiting for connections ..."
-								+ this.endpoint);
-			} else {
-				throw new SocketServiceException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
-			}
-		} catch (IOException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
-		}
-
-	}
 
 	@Override
-	public void start() throws NFlightException {
+	public void startup() throws NFlightException {
 		final Thread CURRENT_THREAD = Thread.currentThread();
 		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
 				.getMethodName();
@@ -121,7 +92,12 @@ public class UnicastSocketServiceImpl extends AbstractSocketServiceTask
 	}
 
 	@Override
-	public void stop() throws NFlightException {
+	public boolean status() {
+		return this.isRunning;
+	}
+
+	@Override
+	public void shutdown() throws NFlightException {
 		try {
 			this.isRunning = false;
 			this.selector.close();
@@ -132,6 +108,36 @@ public class UnicastSocketServiceImpl extends AbstractSocketServiceTask
 		} catch (Exception e) {
 			throw new UnexpectedException(e);
 		}
+	}
+
+	
+	@Override
+	public void bind() throws NFlightException {
+		final Thread CURRENT_THREAD = Thread.currentThread();
+		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
+				.getMethodName();
+		try {
+			// create a new server-socket channel & selector
+			this.selector = Selector.open();
+			// check that both of them were successfully opened
+			if (this.selector.isOpen() && this.channel.isOpen()) {
+				this.channel.bind(this.endpoint);
+				// Register the server socket channel, indicating an interest in
+				// accepting new connections
+				this.channel.register(this.selector, SelectionKey.OP_READ);
+				// display a waiting message while ... waiting clients
+				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
+						METHOD_NAME, "Waiting for connections ..."
+								+ this.endpoint);
+			} else {
+				throw new SocketServiceException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
+			}
+		} catch (IOException e) {
+			throw new SocketServiceException(e);
+		} catch (Exception e) {
+			throw new UnexpectedException(e);
+		}
+
 	}
 
 	@Override

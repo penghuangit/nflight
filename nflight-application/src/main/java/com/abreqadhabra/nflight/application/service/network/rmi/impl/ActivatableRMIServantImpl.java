@@ -53,10 +53,30 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 	}
 
 	@Override
-	protected void start() throws NFlightRemoteException {
+	public void startup() throws NFlightRemoteException {
 		if (this.isRunning) {
 			ActivatableRMIServantHelper.checkActivationSystem();
 			bind();
+		}
+	}
+	
+
+	@Override
+	public boolean status() throws NFlightRemoteException{
+		return this.isRunning;
+	}
+	
+	@Override
+	public void shutdown() throws NFlightRemoteException {
+		try {
+			this.registry.unbind(this.boundName);
+			ActivatableRMIServantHelper.uninstall(this.activationID);
+			ActivatableRMIServantHelper.stopActivationSystem();
+			this.interrupt();
+		} catch (RemoteException | NotBoundException e) {
+			throw new RMIServantException(e);
+		} catch (Exception e) {
+			throw new UnexpectedRemoteException(e);
 		}
 	}
 
@@ -88,27 +108,20 @@ public class ActivatableRMIServantImpl extends AbstractRMIServant {
 
 	}
 
-	private Remote exportObjectRemoteObject() throws IOException {
-		String className = THIS_CLAZZ.getName();
-		String codebase = RMIServantConfig.STR_PREFIX_RMI_ACTIVATABLE_CODEBASE
-				+ RMIServantConfig.PATH_APPLICATION_CODEBASE.toString();
-		String policyfile = RMIServantConfig.PATH_RMI_ACTIVATABLE_POLICY
-				.toString();
-		MarshalledObject<Object> data = new MarshalledObject<Object>(
-				RMIServantConfig.PATH_RMI_ACTIVATABLE_MARSHALLED_OBJECT
-						.toString());
-		return ActivatableRMIServantHelper.install(className, codebase,
-				policyfile, data);
-	}
-
-	@Override
-	protected void stop() throws NFlightException, NFlightRemoteException {
+	private Remote exportObjectRemoteObject() throws NFlightRemoteException {
 		try {
-			this.registry.unbind(this.boundName);
-			ActivatableRMIServantHelper.uninstall(this.activationID);
-			ActivatableRMIServantHelper.stopActivationSystem();
-			this.interrupt();
-		} catch (RemoteException | NotBoundException e) {
+			String className = THIS_CLAZZ.getName();
+			String codebase = RMIServantConfig.STR_PREFIX_RMI_ACTIVATABLE_CODEBASE
+					+ RMIServantConfig.PATH_APPLICATION_CODEBASE.toString();
+			String policyfile = RMIServantConfig.PATH_RMI_ACTIVATABLE_POLICY
+					.toString();
+			MarshalledObject<Object> data = new MarshalledObject<Object>(
+					RMIServantConfig.PATH_RMI_ACTIVATABLE_MARSHALLED_OBJECT
+							.toString());
+
+			return ActivatableRMIServantHelper.install(className, codebase,
+					policyfile, data);
+		} catch (IOException e) {
 			throw new RMIServantException(e);
 		} catch (Exception e) {
 			throw new UnexpectedRemoteException(e);

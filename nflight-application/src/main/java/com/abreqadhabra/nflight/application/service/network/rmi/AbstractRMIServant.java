@@ -54,7 +54,7 @@ public abstract class AbstractRMIServant extends AbstractServiceCallable
 	}
 
 	@Override
-	public String sayHello() throws NFlightRemoteException {
+	public String sayHello() throws NFlightRemoteException{
 		return this.boundName + ": Hello, world!";
 	}
 
@@ -82,7 +82,7 @@ public abstract class AbstractRMIServant extends AbstractServiceCallable
 				try {
 					LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME,
 							"Stopping...");
-					AbstractRMIServant.this.stop();
+					AbstractRMIServant.this.shutdown();
 					LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME,
 							"Stopped");
 				} catch (Exception e) {

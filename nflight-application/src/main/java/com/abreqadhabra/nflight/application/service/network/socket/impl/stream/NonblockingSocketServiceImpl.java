@@ -66,47 +66,13 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceTask
 		this.channel = serviceDescriptor.getServerSocketChannel();
 		this.endpoint = serviceDescriptor.getEndpoint();
 	}
-
-	/* (non-Javadoc)
-	 * @see com.abreqadhabra.nflight.application.service.network.socket.SocketService#bind()
-	 */
-	@Override
-	public void bind() throws NFlightException {
-		final Thread CURRENT_THREAD = Thread.currentThread();
-		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
-				.getMethodName();
-		try {
-			// create a new server-socket channel & selector
-			this.selector = Selector.open();
-			// check that both of them were successfully opened
-			if (this.selector.isOpen() && this.channel.isOpen()) {
-				int backlog = Config
-						.getInt(SocketServiceConfig.KEY_INT_SOCKET_NONBLOCKING_BIND_BACKLOG);
-				// create a new server-socket channel
-				this.channel.bind(this.endpoint, backlog);
-				// Register the server socket channel, indicating an interest in
-				// accepting new connections
-				this.channel.register(this.selector, SelectionKey.OP_ACCEPT);
-				// display a waiting message while ... waiting clients
-				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
-						METHOD_NAME, "Waiting for connections ..."
-								+ this.endpoint);
-
-			} else {
-				throw new SocketServiceException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
-			}
-		} catch (IOException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
-		}
-	}
+	
 
 	/* (non-Javadoc)
 	 * @see com.abreqadhabra.nflight.application.common.launcher.concurrent.AbstractRunnable#start()
 	 */
 	@Override
-	public void start() throws NFlightException {
+	public void startup() throws NFlightException {
 		final Thread CURRENT_THREAD = Thread.currentThread();
 		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
 				.getMethodName();
@@ -161,11 +127,16 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceTask
 		}
 	}
 
+	@Override
+	public boolean status() {
+		return this.isRunning;
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.abreqadhabra.nflight.application.common.launcher.concurrent.AbstractRunnable#stop()
 	 */
 	@Override
-	public void stop() throws NFlightException {
+	public void shutdown() throws NFlightException {
 		try {
 			this.isRunning = false;
 			this.selector.close();
@@ -177,6 +148,42 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceTask
 			throw new UnexpectedException(e);
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see com.abreqadhabra.nflight.application.service.network.socket.SocketService#bind()
+	 */
+	@Override
+	public void bind() throws NFlightException {
+		final Thread CURRENT_THREAD = Thread.currentThread();
+		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
+				.getMethodName();
+		try {
+			// create a new server-socket channel & selector
+			this.selector = Selector.open();
+			// check that both of them were successfully opened
+			if (this.selector.isOpen() && this.channel.isOpen()) {
+				int backlog = Config
+						.getInt(SocketServiceConfig.KEY_INT_SOCKET_NONBLOCKING_BIND_BACKLOG);
+				// create a new server-socket channel
+				this.channel.bind(this.endpoint, backlog);
+				// Register the server socket channel, indicating an interest in
+				// accepting new connections
+				this.channel.register(this.selector, SelectionKey.OP_ACCEPT);
+				// display a waiting message while ... waiting clients
+				LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(),
+						METHOD_NAME, "Waiting for connections ..."
+								+ this.endpoint);
+
+			} else {
+				throw new SocketServiceException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
+			}
+		} catch (IOException e) {
+			throw new SocketServiceException(e);
+		} catch (Exception e) {
+			throw new UnexpectedException(e);
+		}
+	}
+
 
 	/* (non-Javadoc)
 	 * @see com.abreqadhabra.nflight.application.service.network.socket.SocketService#accept(java.nio.channels.NetworkChannel)

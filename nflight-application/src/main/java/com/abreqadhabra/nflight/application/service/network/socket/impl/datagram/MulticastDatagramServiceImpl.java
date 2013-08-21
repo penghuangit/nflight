@@ -32,8 +32,7 @@ public class MulticastDatagramServiceImpl extends AbstractSocketServiceTask
 	private InetSocketAddress endpoint;
 
 	public MulticastDatagramServiceImpl(
-			SocketServiceDescriptor serviceDescriptor)
-			throws NFlightException {
+			SocketServiceDescriptor serviceDescriptor) throws NFlightException {
 		super(
 				Config.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_MULTICAST_RUNNING));
 		this.channel = serviceDescriptor.getDatagramChannel();
@@ -41,25 +40,7 @@ public class MulticastDatagramServiceImpl extends AbstractSocketServiceTask
 	}
 
 	@Override
-	public void bind() throws NFlightException {
-		final Thread CURRENT_THREAD = Thread.currentThread();
-		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
-				.getMethodName();
-		try {
-			// create a new server-socket channel & selector
-			this.channel.bind(this.endpoint);
-			// display a waiting message while ... waiting clients
-			LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
-					"Waiting for connections ..." + this.endpoint);
-		} catch (IOException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
-		}
-	}
-
-	@Override
-	public void start() throws NFlightException {
+	public void startup() throws NFlightException {
 
 		try {
 			this.bind();
@@ -78,22 +59,44 @@ public class MulticastDatagramServiceImpl extends AbstractSocketServiceTask
 			throw new UnexpectedException(e);
 		}
 	}
+	
+	@Override
+	public boolean status() {
+		return this.isRunning;
+	}
 
 	@Override
-	public void stop() throws NFlightException {
-		final Thread CURRENT_THREAD = Thread.currentThread();
+	public void shutdown() throws NFlightException {
 		try {
 			this.isRunning = false;
 			this.channel.close();
-			System.out.println(">>>>>>>>>>>>>>"+CURRENT_THREAD.getName());
-
-			this.interrupt(CURRENT_THREAD);
+			this.interrupt();
 		} catch (IOException e) {
 			throw new SocketServiceException(e);
 		} catch (Exception e) {
 			throw new UnexpectedException(e);
 		}
 	}
+	
+	@Override
+	public void bind() throws NFlightException {
+		final Thread CURRENT_THREAD = Thread.currentThread();
+		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
+				.getMethodName();
+		try {
+			// create a new server-socket channel & selector
+			this.channel.bind(this.endpoint);
+			// display a waiting message while ... waiting clients
+			LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
+					"Waiting for connections ..." + this.endpoint);
+		} catch (IOException e) {
+			throw new SocketServiceException(e);
+		} catch (Exception e) {
+			throw new UnexpectedException(e);
+		}
+	}
+
+
 
 	@Override
 	public void accept(NetworkChannel socketChannel) throws NFlightException {

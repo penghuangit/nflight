@@ -46,7 +46,7 @@ public abstract class AbstractSocketServiceTask extends AbstractServiceCallable 
 				try {
 					LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME,
 							"Stopping...");
-					AbstractSocketServiceTask.this.stop();
+					AbstractSocketServiceTask.this.shutdown();
 					LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME,
 							"Stopped");
 				} catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.abreqadhabra.nflight.application.service.container.client;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
@@ -112,6 +113,7 @@ public class SocketFactory {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
+		try{
 		// display a connecting message while ... waiting clients
 		LOGGER.logp(Level.INFO, THIS_CLAZZ.getSimpleName(), METHOD_NAME,
 				"connecting ..." + endpoint);
@@ -145,5 +147,9 @@ public class SocketFactory {
 		} else {
 			throw new IllegalStateException("채널이 열려있지 않습니다.");
 		}
+		}catch(ConnectException e){
+			
+		}
+		return channel;
 	}
 }

@@ -9,6 +9,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.NetworkChannel;
 import java.nio.channels.SocketChannel;
+import java.rmi.Remote;
 import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -204,9 +205,9 @@ public class ServiceClientTest {
 								+ ThreadHelper.getThreadName(Thread
 										.currentThread()));
 				try {
-					RMIServant stub = (RMIServant) this.registry
+					 Remote stub = this.registry
 							.lookup(this.boundName);
-					String response = stub.sayHello();
+					String response = ((RMIServant) stub).sayHello();
 					Thread.sleep(this.millis);
 					System.out.println(stub + "\t:\t" + response);
 				} catch (Exception e) {
@@ -264,11 +265,13 @@ public class ServiceClientTest {
 								+ message.getBytes().length
 								+ " bytes to the Server!");
 					} else if (this.channel instanceof SocketChannel) {
+						if(this.channel.isOpen()){
 						((SocketChannel) this.channel)
 								.write(getStringToByteBuffer(message));
 						System.out.println(message + ": Sccessfully sent "
 								+ message.getBytes().length
 								+ " bytes to the Server!");
+						}
 					} else if (this.channel instanceof DatagramChannel) {
 						int sent = ((DatagramChannel) this.channel).send(
 								getStringToByteBuffer(message), this.endpoint);
