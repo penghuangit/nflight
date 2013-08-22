@@ -115,7 +115,7 @@ public class ServiceClientTest {
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(),
 						"\n" + NFlightException.getStackTrace(ne));
-				ThreadHelper.interrupt(Thread.currentThread());
+				ThreadHelper.interrupt(CLAZZ_NAME, Thread.currentThread());
 			} else {
 				e.printStackTrace();
 				ThreadHelper.shutdown();

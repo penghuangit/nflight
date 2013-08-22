@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.NetworkChannel;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.rmi.RemoteException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,18 +22,16 @@ import com.abreqadhabra.nflight.application.service.network.socket.SocketService
 import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfig;
 import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
+import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class BlockingSocketServiceImpl.
- */
+
 public class BlockingSocketServiceImpl extends AbstractSocketServiceTask
 		implements
 			SocketService {
 
-	/** The this clazz. */
+
 	private static Class<BlockingSocketServiceImpl> THIS_CLAZZ = BlockingSocketServiceImpl.class;
 
 	/** The clazz name. */
@@ -79,17 +78,15 @@ public class BlockingSocketServiceImpl extends AbstractSocketServiceTask
 	 * AbstractRunnable#start()
 	 */
 	@Override
-	public void startup() throws NFlightException {
+	public void behavior() {
 		try {
 			this.bind();
 			while (this.isRunning) {
 				SocketChannel socket = this.channel.accept();
 				this.accept(socket);
 			}
-		} catch (IOException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
+		} catch (IOException | NFlightException e) {
+
 		}
 	}
 
@@ -97,7 +94,7 @@ public class BlockingSocketServiceImpl extends AbstractSocketServiceTask
 	public boolean status() {
 		return this.isRunning;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -105,19 +102,19 @@ public class BlockingSocketServiceImpl extends AbstractSocketServiceTask
 	 * AbstractRunnable#stop()
 	 */
 	@Override
-	public void shutdown() throws NFlightException {
-		try {
-			this.channel.close();
-			this.threadPool.shutdown();
-			if (!"main".equals(Thread.currentThread().getName())) {
-				this.interrupt();
+	public void shutdown() throws NFlightException, NFlightRemoteException {
+		Thread CURRENT_THREAD = Thread.currentThread();
+		if (!"main".equals(CURRENT_THREAD.getName())) {
+			try {
+				this.channel.close();
+				this.threadPool.shutdown();
+				this.interrupt(CLAZZ_NAME);
+			} catch (IOException e) {
+
 			}
-		} catch (IOException e) {
-			throw new SocketServiceException(e);
 		}
-		
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -224,6 +221,11 @@ public class BlockingSocketServiceImpl extends AbstractSocketServiceTask
 		this.threadPool.submit(new BlockingSocketReceiver(socket));
 	}
 
+	@Override
+	public String sayHello() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 }

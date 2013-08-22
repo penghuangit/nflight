@@ -9,6 +9,7 @@ import java.nio.channels.NetworkChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,17 +36,16 @@ public class UnicastSocketServiceImpl extends AbstractSocketServiceTask
 	private InetSocketAddress endpoint;
 	private Selector selector;
 
-	public UnicastSocketServiceImpl(
-			SocketServiceDescriptor serviceDescriptor)
+	public UnicastSocketServiceImpl(SocketServiceDescriptor serviceDescriptor)
 			throws NFlightException {
-		super(
-				Config.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_UNICAST_RUNNING));
+		super(Config
+				.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_UNICAST_RUNNING));
 		this.channel = serviceDescriptor.getDatagramChannel();
 		this.endpoint = serviceDescriptor.getEndpoint();
 	}
 
 	@Override
-	public void startup() throws NFlightException {
+	public void behavior() {
 		final Thread CURRENT_THREAD = Thread.currentThread();
 		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
 				.getMethodName();
@@ -84,10 +84,8 @@ public class UnicastSocketServiceImpl extends AbstractSocketServiceTask
 					}
 				}
 			}
-		} catch (IOException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
+		} catch (IOException | NFlightException e) {
+
 		}
 	}
 
@@ -97,20 +95,20 @@ public class UnicastSocketServiceImpl extends AbstractSocketServiceTask
 	}
 
 	@Override
-	public void shutdown() throws NFlightException {
-		try {
-			this.isRunning = false;
-			this.selector.close();
-			this.channel.close();
-			this.interrupt();
-		} catch (IOException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
+	public void shutdown() {
+		Thread CURRENT_THREAD = Thread.currentThread();
+		if (!"main".equals(CURRENT_THREAD.getName())) {
+			try {
+				this.isRunning = false;
+				this.selector.close();
+				this.channel.close();
+				this.interrupt(CLAZZ_NAME);
+			} catch (IOException e) {
+
+			}
 		}
 	}
 
-	
 	@Override
 	public void bind() throws NFlightException {
 		final Thread CURRENT_THREAD = Thread.currentThread();
@@ -185,6 +183,12 @@ public class UnicastSocketServiceImpl extends AbstractSocketServiceTask
 		} catch (Exception e) {
 			throw new UnexpectedException(e);
 		}
+	}
+
+	@Override
+	public String sayHello() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

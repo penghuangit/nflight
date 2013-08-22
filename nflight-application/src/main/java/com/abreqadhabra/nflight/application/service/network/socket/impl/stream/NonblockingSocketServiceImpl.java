@@ -8,6 +8,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,25 +31,24 @@ import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 public class NonblockingSocketServiceImpl extends AbstractSocketServiceTask
 		implements
 			SocketService {
-	
+
 	/** The this clazz. */
 	private static Class<NonblockingSocketServiceImpl> THIS_CLAZZ = NonblockingSocketServiceImpl.class;
-	
+
 	/** The clazz name. */
 	private static String CLAZZ_NAME = THIS_CLAZZ.getName();
-	
+
 	/** The logger. */
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	/** The channel. */
 	private ServerSocketChannel channel;
-	
+
 	/** The endpoint. */
 	private InetSocketAddress endpoint;
-	
+
 	/** The selector. */
 	private Selector selector;
-
 
 	/**
 	 * Instantiates a new nonblocking socket service impl.
@@ -59,20 +59,21 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceTask
 	 *             the n flight exception
 	 */
 	public NonblockingSocketServiceImpl(
-			SocketServiceDescriptor serviceDescriptor)
-			throws NFlightException {
+			SocketServiceDescriptor serviceDescriptor) throws NFlightException {
 		super(
 				Config.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_NONBLOCKING_RUNNING));
 		this.channel = serviceDescriptor.getServerSocketChannel();
 		this.endpoint = serviceDescriptor.getEndpoint();
 	}
-	
 
-	/* (non-Javadoc)
-	 * @see com.abreqadhabra.nflight.application.common.launcher.concurrent.AbstractRunnable#start()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.abreqadhabra.nflight.application.common.launcher.concurrent.
+	 * AbstractRunnable#start()
 	 */
 	@Override
-	public void startup() throws NFlightException {
+	public void behavior() {
 		final Thread CURRENT_THREAD = Thread.currentThread();
 		final String METHOD_NAME = CURRENT_THREAD.getStackTrace()[1]
 				.getMethodName();
@@ -120,10 +121,8 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceTask
 					}
 				}
 			}
-		} catch (IOException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
+		} catch (IOException | NFlightException e) {
+
 		}
 	}
 
@@ -131,26 +130,34 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceTask
 	public boolean status() {
 		return this.isRunning;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.abreqadhabra.nflight.application.common.launcher.concurrent.AbstractRunnable#stop()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.abreqadhabra.nflight.application.common.launcher.concurrent.
+	 * AbstractRunnable#stop()
 	 */
 	@Override
-	public void shutdown() throws NFlightException {
-		try {
-			this.isRunning = false;
-			this.selector.close();
-			this.channel.close();
-			this.interrupt();
-		} catch (IOException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
+	public void shutdown() {
+		Thread CURRENT_THREAD = Thread.currentThread();
+		if (!"main".equals(CURRENT_THREAD.getName())) {
+			try {
+				this.isRunning = false;
+				this.selector.close();
+				this.channel.close();
+				this.interrupt(CLAZZ_NAME);
+			} catch (IOException e) {
+
+			}
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.abreqadhabra.nflight.application.service.network.socket.SocketService#bind()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.abreqadhabra.nflight.application.service.network.socket.SocketService
+	 * #bind()
 	 */
 	@Override
 	public void bind() throws NFlightException {
@@ -184,9 +191,12 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceTask
 		}
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.abreqadhabra.nflight.application.service.network.socket.SocketService#accept(java.nio.channels.NetworkChannel)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.abreqadhabra.nflight.application.service.network.socket.SocketService
+	 * #accept(java.nio.channels.NetworkChannel)
 	 */
 	@Override
 	public void accept(NetworkChannel socketChannel) throws NFlightException {
@@ -211,16 +221,24 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceTask
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.abreqadhabra.nflight.application.service.network.socket.SocketService#send(java.nio.channels.SocketChannel)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.abreqadhabra.nflight.application.service.network.socket.SocketService
+	 * #send(java.nio.channels.SocketChannel)
 	 */
 	@Override
 	public void send(SocketChannel socket) {
 		// 큐에 있는 스트림을 전송
 	}
 
-	/* (non-Javadoc)
-	 * @see com.abreqadhabra.nflight.application.service.network.socket.SocketService#send(java.nio.channels.SocketChannel, java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.abreqadhabra.nflight.application.service.network.socket.SocketService
+	 * #send(java.nio.channels.SocketChannel, java.lang.Object)
 	 */
 	@Override
 	public void send(SocketChannel socket, Object message)
@@ -231,8 +249,12 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceTask
 		LOGGER.logp(Level.FINER, CLAZZ_NAME, METHOD_NAME, "send");
 	}
 
-	/* (non-Javadoc)
-	 * @see com.abreqadhabra.nflight.application.service.network.socket.SocketService#receive(java.nio.channels.NetworkChannel)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.abreqadhabra.nflight.application.service.network.socket.SocketService
+	 * #receive(java.nio.channels.NetworkChannel)
 	 */
 	@Override
 	public void receive(NetworkChannel socketChannel) throws NFlightException {
@@ -272,5 +294,11 @@ public class NonblockingSocketServiceImpl extends AbstractSocketServiceTask
 				throw new UnexpectedException(e);
 			}
 		}
+	}
+
+	@Override
+	public String sayHello() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

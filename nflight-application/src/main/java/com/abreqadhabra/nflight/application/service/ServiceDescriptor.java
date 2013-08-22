@@ -3,21 +3,46 @@ package com.abreqadhabra.nflight.application.service;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
 import com.abreqadhabra.nflight.application.service.conf.ServiceConfig.ENUM_SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfig;
 import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketServiceConfig;
+import com.abreqadhabra.nflight.application.service.thread.ServiceThreadFactory;
 
 public class ServiceDescriptor {
 
 	private ENUM_SERVICE_TYPE serviceType;
+	private ExecutorService executor;
+	private ExecutorCompletionService<Object> completionService;
 	protected InetSocketAddress endpoint;
 
 	public ServiceDescriptor(ENUM_SERVICE_TYPE serviceType) {
 		this.serviceType = serviceType;
+		this.executor = this.getSingleThreadExecutor(serviceType);
+		this.completionService = new ExecutorCompletionService<Object>(
+				this.executor);
 		// 서비스에서 사용할 주소 객체를 생성 (IP 주소는 로컬 주소를 자동 할당)
-		this.endpoint = getEndpoint(serviceType);
+		this.endpoint = this.getEndpoint(serviceType);
+	}
+
+	private ExecutorService getSingleThreadExecutor(
+			ENUM_SERVICE_TYPE serviceType2) {
+		ThreadFactory threadFactory = new ServiceThreadFactory(
+				this.serviceType.name());
+		return Executors.newSingleThreadExecutor(threadFactory);
+	}
+
+	public ExecutorService getExecutor() {
+		return this.executor;
+	}
+
+	public ExecutorCompletionService<Object> getCompletionService() {
+		return this.completionService;
 	}
 
 	public InetSocketAddress getEndpoint() {
@@ -53,12 +78,12 @@ public class ServiceDescriptor {
 		if (key != null) {
 			port = Config.getInt(key);
 		}
-		
-		return getEndpoint(port);
+
+		return this.getEndpoint(port);
 	}
 
 	private InetSocketAddress getEndpoint(int port) {
-		return getEndpoint(null, port);
+		return this.getEndpoint(null, port);
 	}
 
 	private InetSocketAddress getEndpoint(InetAddress addr, int port) {

@@ -16,7 +16,7 @@ public abstract class AbstractServiceCallable implements Callable<Object> {
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
 	private Thread shutdownHookThread;
-
+	
 	public AbstractServiceCallable() {
 	}
 
@@ -32,7 +32,7 @@ public abstract class AbstractServiceCallable implements Callable<Object> {
 				+ ThreadHelper.getThreadName(CURRENT_THREAD));
 
 		try {
-			this.startup();
+			this.behavior();
 		} catch (Exception e) {
 			StackTraceElement[] current = e.getStackTrace();
 			if (e instanceof NFlightException) {
@@ -40,19 +40,23 @@ public abstract class AbstractServiceCallable implements Callable<Object> {
 				LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 						current[0].getMethodName(),
 						"\n" + NFlightException.getStackTrace(ne));
-				this.interrupt();
+				this.interrupt(CLAZZ_NAME);
 			} else {
 				e.printStackTrace();
 				ThreadHelper.shutdown();
 			}
 		}
 		return this;
+	
 	}
 
-	protected abstract void startup() throws NFlightRemoteException, NFlightException ;
+	public abstract void behavior() throws NFlightException,
+			NFlightRemoteException;
+
 	
-	protected abstract void shutdown() throws NFlightRemoteException, NFlightException ;
-	
+	public abstract void shutdown() throws NFlightException,
+			NFlightRemoteException;
+
 	protected abstract void setShutdownHook();
 
 	protected Thread getShutdownHookThread() {
@@ -70,7 +74,7 @@ public abstract class AbstractServiceCallable implements Callable<Object> {
 	 * 
 	 * @param thread
 	 */
-	protected void interrupt() {
-		ThreadHelper.interrupt(Thread.currentThread());
+	protected void interrupt(String className) {
+		ThreadHelper.interrupt(className, Thread.currentThread());
 	}
 }

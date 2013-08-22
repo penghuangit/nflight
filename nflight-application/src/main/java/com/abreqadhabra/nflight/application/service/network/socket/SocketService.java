@@ -3,18 +3,14 @@ package com.abreqadhabra.nflight.application.service.network.socket;
 import java.nio.channels.NetworkChannel;
 import java.nio.channels.SocketChannel;
 
+import com.abreqadhabra.nflight.application.service.Service;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
 
 /**
  * The Interface SocketService.
  */
-public interface SocketService{
+public interface SocketService extends Service{
 	
-	public void startup() throws  NFlightException ;
-
-	public boolean status()  throws   NFlightException ;
-
-	public void shutdown() throws   NFlightException ;
 	
 	/**
 	 * Bind.

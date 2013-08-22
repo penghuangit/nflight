@@ -7,6 +7,7 @@ import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.NetworkChannel;
 import java.nio.channels.SocketChannel;
+import java.rmi.RemoteException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -23,9 +24,9 @@ import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class AsynchronousSocketServiceImpl
-		extends
-			AbstractSocketServiceTask implements SocketService {
+public class AsynchronousSocketServiceImpl extends AbstractSocketServiceTask
+		implements
+			SocketService {
 	private static Class<AsynchronousSocketServiceImpl> THIS_CLAZZ = AsynchronousSocketServiceImpl.class;
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
@@ -33,16 +34,16 @@ public class AsynchronousSocketServiceImpl
 	private AsynchronousServerSocketChannel channel;
 	private InetSocketAddress endpoint;
 
-	public AsynchronousSocketServiceImpl(SocketServiceDescriptor serviceDescriptor)
-			throws NFlightException {
-		super(
-				Config.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_ASYNC_RUNNING));
+	public AsynchronousSocketServiceImpl(
+			SocketServiceDescriptor serviceDescriptor) throws NFlightException {
+		super(Config
+				.getBoolean(SocketServiceConfig.KEY_BOO_SOCKET_ASYNC_RUNNING));
 		this.channel = serviceDescriptor.getAsynchronousChannel();
 		this.endpoint = serviceDescriptor.getEndpoint();
 	}
 
 	@Override
-	public void startup() throws NFlightException {
+	public void behavior() {
 		try {
 			this.bind();
 			while (this.isRunning) {
@@ -51,10 +52,8 @@ public class AsynchronousSocketServiceImpl
 				AsynchronousSocketChannel socket = future.get();
 				this.accept(socket);
 			}
-		} catch (InterruptedException | ExecutionException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
+		} catch (InterruptedException | ExecutionException | NFlightException e) {
+
 		}
 	}
 
@@ -62,19 +61,22 @@ public class AsynchronousSocketServiceImpl
 	public boolean status() {
 		return this.isRunning;
 	}
-	
+
 	@Override
-	public void shutdown() throws NFlightException {
-		try {
-			this.channel.close();
-			this.interrupt();
-		} catch (IOException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
+	public void shutdown() {
+		Thread CURRENT_THREAD = Thread.currentThread();
+		System.out.println(CLAZZ_NAME + ":" + CURRENT_THREAD);
+		
+		if (!"main".equals(CURRENT_THREAD.getName())) {
+			try {
+				this.channel.close();
+				this.interrupt(CLAZZ_NAME);
+			} catch (IOException e) {
+
+			}
 		}
 	}
-	
+
 	@Override
 	public void bind() throws NFlightException {
 		final Thread CURRENT_THREAD = Thread.currentThread();
@@ -94,8 +96,6 @@ public class AsynchronousSocketServiceImpl
 			throw new UnexpectedException(e);
 		}
 	}
-
-
 
 	@Override
 	public void accept(NetworkChannel socketChannel) throws NFlightException {
@@ -162,5 +162,11 @@ public class AsynchronousSocketServiceImpl
 		} catch (Exception e) {
 			throw new UnexpectedException(e);
 		}
+	}
+
+	@Override
+	public String sayHello() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

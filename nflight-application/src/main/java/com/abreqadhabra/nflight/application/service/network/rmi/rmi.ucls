@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true">  
-  <class id="1" language="java" name="com.abreqadhabra.nflight.application.service.network.rmi.AbstractRMIServant" 
+  <class id="1" language="java" name="com.abreqadhabra.nflight.application.service.network.rmi.AbstractRMIServantTask" 
     project="nflight-application" 
-    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/network/rmi/AbstractRMIServant.java" 
+    file="/nflight-application/src/main/java/com/abreqadhabra/nflight/application/service/network/rmi/AbstractRMIServantTask.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="297" width="276" x="1039" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 

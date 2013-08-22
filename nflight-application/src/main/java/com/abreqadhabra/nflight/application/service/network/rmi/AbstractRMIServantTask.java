@@ -11,10 +11,10 @@ import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public abstract class AbstractRMIServant extends AbstractServiceCallable
+public abstract class AbstractRMIServantTask extends AbstractServiceCallable
 		implements
 			RMIServant {
-	private static Class<AbstractRMIServant> THIS_CLAZZ = AbstractRMIServant.class;
+	private static Class<AbstractRMIServantTask> THIS_CLAZZ = AbstractRMIServantTask.class;
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
 
@@ -24,7 +24,7 @@ public abstract class AbstractRMIServant extends AbstractServiceCallable
 	protected Registry registry;
 	protected String boundName;
 
-	public AbstractRMIServant() {
+	public AbstractRMIServantTask() {
 	}
 
 	/**
@@ -41,7 +41,7 @@ public abstract class AbstractRMIServant extends AbstractServiceCallable
 	 * @throws NFlightRemoteException
 	 *             the n flight remote exception
 	 */
-	public AbstractRMIServant(boolean isRunning, String hostString, int port,
+	public AbstractRMIServantTask(boolean isRunning, String hostString, int port,
 			String serviceName) throws NFlightRemoteException {
 		this.isRunning = isRunning;
 		this.hostString = hostString;
@@ -82,7 +82,7 @@ public abstract class AbstractRMIServant extends AbstractServiceCallable
 				try {
 					LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME,
 							"Stopping...");
-					AbstractRMIServant.this.shutdown();
+					AbstractRMIServantTask.this.shutdown();
 					LOGGER.logp(Level.SEVERE, CLAZZ_NAME, METHOD_NAME,
 							"Stopped");
 				} catch (Exception e) {
@@ -92,7 +92,7 @@ public abstract class AbstractRMIServant extends AbstractServiceCallable
 						LOGGER.logp(Level.SEVERE, current[0].getClassName(),
 								current[0].getMethodName(), "\n"
 										+ NFlightException.getStackTrace(ne));
-						ThreadHelper.interrupt(Thread.currentThread());
+						ThreadHelper.interrupt(CLAZZ_NAME, Thread.currentThread());
 					} else {
 						e.printStackTrace();
 						ThreadHelper.shutdown();

@@ -1,13 +1,9 @@
 package com.abreqadhabra.nflight.application.common.launcher.concurrent.thread;
 
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.common.Env;
-import com.abreqadhabra.nflight.application.common.launcher.concurrent.executor.ThreadPoolImpl;
-import com.abreqadhabra.nflight.application.common.launcher.concurrent.executor.monitor.ThreadPoolMonitorServiceImpl;
-import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ThreadHelper {
@@ -20,15 +16,16 @@ public class ThreadHelper {
 
 	/**
 	 * stop execution of the task
+	 * @param className 
 	 * 
 	 * @param thread
 	 */
-	public static void interrupt(Thread thread) {
+	public static void interrupt(String className, Thread thread) {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
 
 		LOGGER.logp(Level.SEVERE, THIS_CLAZZ.getName(), METHOD_NAME,
-				thread.getName() + ": Thread was interrupted");
+				thread.getName() + ": Thread was interrupted by " + className);
 		thread.interrupt();
 	}
 

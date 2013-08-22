@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.NetworkChannel;
 import java.nio.channels.SocketChannel;
+import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,6 +19,7 @@ import com.abreqadhabra.nflight.application.service.network.socket.conf.SocketSe
 import com.abreqadhabra.nflight.application.service.network.socket.exception.SocketServiceException;
 import com.abreqadhabra.nflight.application.service.network.socket.helper.SocketServiceHelper;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
+import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
@@ -40,7 +42,7 @@ public class MulticastDatagramServiceImpl extends AbstractSocketServiceTask
 	}
 
 	@Override
-	public void startup() throws NFlightException {
+	public void behavior() {
 
 		try {
 			this.bind();
@@ -54,30 +56,28 @@ public class MulticastDatagramServiceImpl extends AbstractSocketServiceTask
 				throw new SocketServiceException("서버 소켓 채널 또는 셀렉터가 열려있지 않습니다.");
 			}
 		} catch (NFlightException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
+
 		}
 	}
-	
+
 	@Override
 	public boolean status() {
 		return this.isRunning;
 	}
 
 	@Override
-	public void shutdown() throws NFlightException {
-		try {
-			this.isRunning = false;
-			this.channel.close();
-			this.interrupt();
-		} catch (IOException e) {
-			throw new SocketServiceException(e);
-		} catch (Exception e) {
-			throw new UnexpectedException(e);
+	public void shutdown() throws NFlightException, NFlightRemoteException {
+		Thread CURRENT_THREAD = Thread.currentThread();
+		if (!"main".equals(CURRENT_THREAD.getName())) {
+			try {
+				this.isRunning = false;
+				this.channel.close();
+				this.interrupt(CLAZZ_NAME);
+			} catch (IOException e) {
+			}
 		}
 	}
-	
+
 	@Override
 	public void bind() throws NFlightException {
 		final Thread CURRENT_THREAD = Thread.currentThread();
@@ -95,8 +95,6 @@ public class MulticastDatagramServiceImpl extends AbstractSocketServiceTask
 			throw new UnexpectedException(e);
 		}
 	}
-
-
 
 	@Override
 	public void accept(NetworkChannel socketChannel) throws NFlightException {
@@ -144,4 +142,11 @@ public class MulticastDatagramServiceImpl extends AbstractSocketServiceTask
 			throw new UnexpectedException(e);
 		}
 	}
+
+	@Override
+	public String sayHello() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

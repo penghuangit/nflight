@@ -8,17 +8,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.abreqadhabra.nflight.application.common.launcher.Config;
-import com.abreqadhabra.nflight.application.service.network.rmi.AbstractRMIServant;
+import com.abreqadhabra.nflight.application.service.network.rmi.AbstractRMIServantTask;
 import com.abreqadhabra.nflight.application.service.network.rmi.RMIServiceDescriptor;
 import com.abreqadhabra.nflight.application.service.network.rmi.conf.RMIServantConfig;
 import com.abreqadhabra.nflight.application.service.network.rmi.exception.RMIServantException;
 import com.abreqadhabra.nflight.application.service.network.rmi.helper.UnicastRMIServantHelper;
-import com.abreqadhabra.nflight.common.exception.NFlightException;
 import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.exception.UnexpectedRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
-public class UnicastRMIServantImpl extends AbstractRMIServant {
+public class UnicastRMIServantImpl extends AbstractRMIServantTask {
 	private static Class<UnicastRMIServantImpl> THIS_CLAZZ = UnicastRMIServantImpl.class;
 	private static String CLAZZ_NAME = THIS_CLAZZ.getSimpleName();
 	private static Logger LOGGER = LoggingHelper.getLogger(THIS_CLAZZ);
@@ -26,26 +25,35 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 	public UnicastRMIServantImpl(RMIServiceDescriptor serviceDescriptor)
 			throws NFlightRemoteException {
 		super(Config.getBoolean(RMIServantConfig.KEY_STR_RMI_UNICAST_RUNNING),
-				serviceDescriptor.getHostAddress(), serviceDescriptor.getPort(), Config
+				serviceDescriptor.getHostAddress(),
+				serviceDescriptor.getPort(), Config
 						.get(RMIServantConfig.KEY_STR_RMI_UNICAST_BOUND_NAME));
 	}
 
 	@Override
-	public void startup() throws NFlightRemoteException  {
-		bind();
+	public void behavior() {
+		try {
+			bind();
+		} catch (NFlightRemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public boolean status() throws NFlightRemoteException {
 		return this.isRunning;
 	}
-	
+
 	@Override
 	public void shutdown() throws NFlightRemoteException {
-		UnicastRMIServantHelper.unbind(this.registry, this.boundName);
-		this.interrupt();
+		Thread CURRENT_THREAD = Thread.currentThread();
+		if (!"main".equals(CURRENT_THREAD.getName())) {
+			UnicastRMIServantHelper.unbind(this.registry, this.boundName);
+			this.interrupt(CLAZZ_NAME);
+		}
 	}
-	
+
 	private void bind() throws NFlightRemoteException {
 		String METHOD_NAME = Thread.currentThread().getStackTrace()[1]
 				.getMethodName();
@@ -76,7 +84,7 @@ public class UnicastRMIServantImpl extends AbstractRMIServant {
 		}
 	}
 
-	private Remote exportObjectRemoteObject() throws NFlightRemoteException  {
+	private Remote exportObjectRemoteObject() throws NFlightRemoteException {
 		try {
 			return UnicastRemoteObject.exportObject(this, 0);
 		} catch (RemoteException e) {
