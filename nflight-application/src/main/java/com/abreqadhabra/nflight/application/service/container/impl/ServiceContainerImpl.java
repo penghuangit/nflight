@@ -23,7 +23,6 @@ import com.abreqadhabra.nflight.application.service.conf.ServiceConfig;
 import com.abreqadhabra.nflight.application.service.conf.ServiceConfig.ENUM_SERVICE_TYPE;
 import com.abreqadhabra.nflight.application.service.thread.ServiceThreadFactory;
 import com.abreqadhabra.nflight.common.exception.NFlightException;
-import com.abreqadhabra.nflight.common.exception.NFlightRemoteException;
 import com.abreqadhabra.nflight.common.logging.LoggingHelper;
 
 public class ServiceContainerImpl {
